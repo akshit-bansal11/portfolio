@@ -1,6 +1,6 @@
-import Canopy from '@/assets/images/projects/Websites/canopy.png';
-import Medishare from '@/assets/images/projects/Websites/medishare.webp';
-import ColorSpace from '@/assets/images/projects/Websites/color-space.png';
+import Canopy from '@/assets/images/projects/websites/canopy.png';
+import Medishare from '@/assets/images/projects/websites/medishare.webp';
+import ColorSpace from '@/assets/images/projects/websites/color-space.png';
 import { ProjectItem } from "@/types";
 
 export const projects: ProjectItem[] = [
