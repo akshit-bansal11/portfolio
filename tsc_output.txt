@@ -1,0 +1,51 @@
+.next/dev/types/validator.ts(42,39): error TS2306: File 'J:/Career/my-site/src/app/all-skills/page.tsx' is not a module.
+src/components/layout/NavBar.tsx(11,28): error TS2307: Cannot find module '@/config/navConfig' or its corresponding type declarations.
+src/components/layout/NavBar.tsx(47,27): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/components/layout/NavBar.tsx(89,40): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/components/layout/NavBar.tsx(89,46): error TS7006: Parameter 'index' implicitly has an 'any' type.
+src/components/layout/ProfileHeader.tsx(17,13): error TS2322: Type '{ children: Element; asChild: true; variant: string; className: string; }' is not assignable to type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+  Property 'variant' does not exist on type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+src/components/layout/ProfileHeader.tsx(37,13): error TS2322: Type '{ children: Element; asChild: true; variant: string; size: string; className: string; }' is not assignable to type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+  Property 'variant' does not exist on type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+src/components/layout/ProfileHeader.tsx(57,17): error TS2322: Type '{ children: (string | Element)[]; variant: string; className: string; }' is not assignable to type 'IntrinsicAttributes & BadgeProps'.
+  Property 'variant' does not exist on type 'IntrinsicAttributes & BadgeProps'.
+src/components/layout/ProfileHeader.tsx(103,25): error TS2322: Type '{ children: Element; asChild: true; variant: string; size: string; className: string; }' is not assignable to type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+  Property 'variant' does not exist on type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+src/components/sections/Projects.tsx(15,25): error TS2322: Type '{ children: Element; variant: string; className: string; asChild: true; }' is not assignable to type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+  Property 'variant' does not exist on type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+src/components/ui/badge.tsx(2,40): error TS2307: Cannot find module 'class-variance-authority' or its corresponding type declarations.
+src/components/ui/badge.tsx(30,29): error TS2339: Property 'variant' does not exist on type 'BadgeProps'.
+src/components/ui/button.tsx(2,22): error TS2307: Cannot find module '@radix-ui/react-slot' or its corresponding type declarations.
+src/components/ui/button.tsx(3,40): error TS2307: Cannot find module 'class-variance-authority' or its corresponding type declarations.
+src/components/ui/button.tsx(43,17): error TS2339: Property 'variant' does not exist on type 'ButtonProps'.
+src/components/ui/button.tsx(43,26): error TS2339: Property 'size' does not exist on type 'ButtonProps'.
+src/components/ui/common/cards/EduItem.tsx(32,36): error TS2322: Type '{ children: (string | Element)[]; variant: string; className: string; }' is not assignable to type 'IntrinsicAttributes & BadgeProps'.
+  Property 'variant' does not exist on type 'IntrinsicAttributes & BadgeProps'.
+src/components/ui/common/cards/ExpItem.tsx(32,36): error TS2322: Type '{ children: (string | Element)[]; variant: string; className: string; }' is not assignable to type 'IntrinsicAttributes & BadgeProps'.
+  Property 'variant' does not exist on type 'IntrinsicAttributes & BadgeProps'.
+src/components/ui/common/cards/ProjectCard.tsx(67,17): error TS2322: Type '{ children: string; key: number; variant: string; className: string; }' is not assignable to type 'IntrinsicAttributes & BadgeProps'.
+  Property 'variant' does not exist on type 'IntrinsicAttributes & BadgeProps'.
+src/components/ui/common/cards/ProjectCard.tsx(80,33): error TS2322: Type '{ children: Element; asChild: true; size: string; className: string; }' is not assignable to type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+  Property 'size' does not exist on type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+src/components/ui/common/cards/ProjectCard.tsx(87,33): error TS2322: Type '{ children: Element; asChild: true; size: string; variant: string; className: string; }' is not assignable to type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+  Property 'size' does not exist on type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+src/components/ui/common/cards/ProjectCard.tsx(94,33): error TS2322: Type '{ children: Element; asChild: true; size: string; variant: string; className: string; }' is not assignable to type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+  Property 'size' does not exist on type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+src/components/ui/common/cards/ProjectCardSmall.tsx(76,17): error TS2322: Type '{ children: string; key: number; variant: string; className: string; }' is not assignable to type 'IntrinsicAttributes & BadgeProps'.
+  Property 'variant' does not exist on type 'IntrinsicAttributes & BadgeProps'.
+src/components/ui/common/cards/ProjectCardSmall.tsx(87,29): error TS2322: Type '{ children: Element; asChild: true; size: string; className: string; }' is not assignable to type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+  Property 'size' does not exist on type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+src/components/ui/common/cards/ProjectCardSmall.tsx(94,29): error TS2322: Type '{ children: Element; asChild: true; size: string; variant: string; className: string; }' is not assignable to type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+  Property 'size' does not exist on type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+src/components/ui/common/cards/ProjectCardSmallWimg.tsx(46,17): error TS2322: Type '{ children: string; key: number; variant: string; className: string; }' is not assignable to type 'IntrinsicAttributes & BadgeProps'.
+  Property 'variant' does not exist on type 'IntrinsicAttributes & BadgeProps'.
+src/components/ui/common/cards/ProjectCardSmallWimg.tsx(57,29): error TS2322: Type '{ children: Element; asChild: true; size: string; variant: string; className: string; }' is not assignable to type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+  Property 'size' does not exist on type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+src/components/ui/common/cards/SkillItem.tsx(19,17): error TS2322: Type '{ children: Element[]; variant: string; className: string; }' is not assignable to type 'IntrinsicAttributes & BadgeProps'.
+  Property 'variant' does not exist on type 'IntrinsicAttributes & BadgeProps'.
+src/components/ui/navigation-menu.tsx(2,42): error TS2307: Cannot find module '@radix-ui/react-navigation-menu' or its corresponding type declarations.
+src/components/ui/navigation-menu.tsx(3,21): error TS2307: Cannot find module 'class-variance-authority' or its corresponding type declarations.
+src/components/ui/navigation-menu.tsx(4,29): error TS2307: Cannot find module 'lucide-react' or its corresponding type declarations.
+src/components/ui/separator.tsx(2,37): error TS2307: Cannot find module '@radix-ui/react-separator' or its corresponding type declarations.
+src/lib/utils.ts(1,39): error TS2307: Cannot find module 'clsx' or its corresponding type declarations.
+src/lib/utils.ts(2,25): error TS2307: Cannot find module 'tailwind-merge' or its corresponding type declarations.
