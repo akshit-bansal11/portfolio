@@ -1,6 +1,6 @@
 // websites
 import Canopy from '@/assets/images/projects/websites/canopy.png'
-import Medishare from '@/assets/images/projects/websites/mediShare.webp'
+import Medishare from '@/assets/images/projects/websites/medishare.webp'
 import ColorSpace from '@/assets/images/projects/websites/color-space.png';
 import Influera from '@/assets/images/projects/websites/influera.png';
 
