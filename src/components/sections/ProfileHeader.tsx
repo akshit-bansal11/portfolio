@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { FaCircle, FaLocationDot, FaArrowDownLong } from "react-icons/fa6";
-import { Gmail } from "@/components/icons/gmail-icon";
+import { GmailIcon } from "@/components/icons/gmail-icon";
 import animeChar from "@/assets/images/animeChar.svg";
 import { socialLinks } from "@/data/socialLinksData";
 
@@ -48,7 +48,7 @@ function GmailButton() {
         target="_blank"
         rel="noopener noreferrer"
       >
-        <Gmail className="h-full hover:scale-110 hover:rotate-10 transition-transform duration-200 w-full object-contain" />
+        <GmailIcon className="h-full hover:scale-110 hover:rotate-10 transition-transform duration-200 w-full object-contain" />
       </a>
     </Button>
   );

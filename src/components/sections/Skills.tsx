@@ -14,18 +14,12 @@ import ScrollSection from "@/components/ui/common/sections/ScrollSection";
 import ScrollSectionHeading from "@/components/ui/common/headings/ScrollSectionHeading";
 
 //--------------------|       CONFIG       |--------------------//
-import { Firebase } from "@/components/icons/firebase-icon";
-import { Nextjs } from "@/components/icons/next-icon";
-import { React as ReactIcon } from "@/components/icons/react-icon";
-import { TailwindCSS } from "@/components/icons/tailwind-icon";
-import { TypeScript } from "@/components/icons/ts-icon";
-
 const topSkills = [
-  { name: "TypeScript", Icon: TypeScript },
-  { name: "React", Icon: ReactIcon },
-  { name: "Next.js", Icon: Nextjs },
-  { name: "Tailwind CSS", Icon: TailwindCSS },
-  { name: "Firebase", Icon: Firebase },
+  { name: "TypeScript", Icon: "https://svgl.app/library/typescript.svg" },
+  { name: "React", Icon: "https://svgl.app/library/react_dark.svg" },
+  { name: "Next.js", Icon: "https://svgl.app/library/nextjs_icon_dark.svg" },
+  { name: "Tailwind CSS", Icon: "https://svgl.app/library/tailwindcss.svg" },
+  { name: "Firebase", Icon: "https://svgl.app/library/firebase.svg" },
 ];
 
 //--------------------|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|--------------------//
@@ -57,7 +51,7 @@ export default function Skills() {
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
             >
-              <SkillItem {...skill} />
+              <SkillItem {...skill} disableHover={true} />
             </motion.div>
           ))}
         </div>

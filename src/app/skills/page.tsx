@@ -35,7 +35,7 @@ export default function SkillsPage() {
             className="text-neutral-500 text-lg max-w-2xl"
           >
             A comprehensive list of technologies, tools, and languages I've
-            mastered over the years to build premium digital experiences.
+            used over the years to build premium digital experiences.
           </motion.p>
         </div>
 
@@ -49,7 +49,7 @@ export default function SkillsPage() {
                 viewport={{ once: true }}
                 className="flex items-center gap-4"
               >
-                <h2 className="text-2xl md:text-3xl font-bold text-neutral-200 capitalize tracking-tight">
+                <h2 className="text-xl md:text-2xl font-light text-neutral-200 capitalize tracking-tight">
                   {category.title}
                 </h2>
                 <div className="h-[1px] flex-grow bg-neutral-800/50" />
@@ -68,7 +68,11 @@ export default function SkillsPage() {
                       stiffness: 100,
                     }}
                   >
-                    <SkillItem Icon={skill.Icon} name={skill.name} />
+                    <SkillItem
+                      Icon={skill.Icon}
+                      name={skill.name}
+                      disableHover={true}
+                    />
                   </motion.div>
                 ))}
               </div>

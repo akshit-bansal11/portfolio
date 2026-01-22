@@ -51,7 +51,7 @@ export default function NavBar({ page }: NavBarProps) {
 
         // Combined scroll handler for both active tab reset and navbar position
         const handleScroll = () => {
-             const scrollY = window.scrollY;
+            const scrollY = window.scrollY;
             if (scrollY < 100) {
                 setActiveTab(null);
                 setIsScrolled(false);
