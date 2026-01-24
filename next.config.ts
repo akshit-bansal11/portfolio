@@ -10,6 +10,11 @@ const nextConfig: NextConfig = {
         hostname: "api.svgl.app",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "svgl.app",
+        pathname: "/**",
+      },
     ],
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",

@@ -3,7 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import NavBar from "@/components/layout/NavBar";
 import LightRays from "@/components/LightRays";
-import SplashCursor from "@/components/SplashCursor";
+import WelcomeAnimation from "@/components/ui/WelcomeAnimation";
+import { AnimationProvider } from "@/context/AnimationContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,21 +35,24 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased selection:bg-white selection:text-black`}
       >
-        <div className="fixed inset-0 -z-10 bg-black">
-          <LightRays
-            raysOrigin="top-center"
-            raysColor="#ffffff"
-            raysSpeed={1}
-            lightSpread={1}
-            rayLength={2}
-            pulsating={false}
-            fadeDistance={1}
-            saturation={1}
-            followMouse={false}
-          />
-        </div>
-        <NavBar />
-        {children}
+        <AnimationProvider>
+          <div className="fixed inset-0 -z-10 bg-black">
+            <LightRays
+              raysOrigin="top-center"
+              raysColor="#ffffff"
+              raysSpeed={1}
+              lightSpread={1}
+              rayLength={2}
+              pulsating={false}
+              fadeDistance={1}
+              saturation={1}
+              followMouse={false}
+            />
+          </div>
+          <WelcomeAnimation />
+          <NavBar />
+          {children}
+        </AnimationProvider>
       </body>
     </html>
   );

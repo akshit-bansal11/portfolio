@@ -25,6 +25,9 @@ export default function NavBar({ page }: NavBarProps) {
     const [hoveredTab, setHoveredTab] = useState<string | null>(null);
     const [isScrolled, setIsScrolled] = useState(false);
 
+    // Skip effect if navbar is hidden
+    const isHidden = pathname === '/skills' || pathname === '/projects';
+
     // Simple intersection observer logic to track active section
     useEffect(() => {
         if (configKey !== 'home') return; // Only for home page with scroll sections
@@ -77,6 +80,8 @@ export default function NavBar({ page }: NavBarProps) {
             setActiveTab(id);
         }
     };
+
+    if (isHidden) return null;
 
     return (
         <AnimatePresence mode="wait">

@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { FiGithub } from 'react-icons/fi';
 import { FaExternalLinkAlt } from 'react-icons/fa';
-import { StaticImageData } from 'next/image';
+import Image, { StaticImageData } from 'next/image';
 
 interface ProjectCardSmallProps {
   title: string;
@@ -43,7 +43,7 @@ export default function ProjectCardSmall({
       className="w-full max-w-md"
     >
       <Card className="group overflow-hidden border-neutral-800 bg-neutral-900/50 backdrop-blur-sm transition-all duration-300 hover:border-neutral-700 hover:shadow-xl hover:shadow-black/50 h-full flex flex-col">
-        <div className="overflow-hidden border-b border-neutral-800 h-48">
+        <div className="relative overflow-hidden border-b border-neutral-800 h-48">
           {iframe ? (
             <iframe
               src={iframe}
@@ -52,10 +52,12 @@ export default function ProjectCardSmall({
               allowFullScreen
             />
           ) : (
-            <img
-              src={typeof image === 'string' ? image : image!.src}
+            <Image
+              src={image!}
               alt={`${title} preview`}
-              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              fill
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           )}
         </div>

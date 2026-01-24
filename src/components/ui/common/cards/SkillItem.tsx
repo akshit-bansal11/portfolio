@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import React from "react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 interface SkillItemProps {
@@ -31,9 +32,11 @@ const SkillItem = ({ Icon, name, disableHover = false }: SkillItemProps) => {
         )}
       >
         {isStringIcon ? (
-          <img
+          <Image
             src={Icon}
             alt={name}
+            width={64}
+            height={64}
             className={cn(
               "h-12 w-12 md:h-16 md:w-16 object-contain transition-all duration-500",
               !disableHover

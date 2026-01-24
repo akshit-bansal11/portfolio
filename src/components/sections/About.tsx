@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useRef, useEffect, ReactNode } from "react";
-import { motion, useAnimation, Variant, Variants } from "framer-motion";
+import { motion, useAnimation as useFramerAnimation, Variant, Variants } from "framer-motion";
 import { CardContent } from "@/components/ui/card";
+import { useAnimation } from "@/context/AnimationContext";
 
 interface AboutProps {
     text?: string;
@@ -19,6 +20,8 @@ export default function About({
     direction = "top",
     className = "text-4xl md:text-6xl lg:text-7xl font-thin tracking-tight text-center",
 }: AboutProps) {
+    const { isWelcomeComplete } = useAnimation();
+
     const buildKeyframes = (from: any, steps: any[]) => {
         const keys = new Set([
             ...Object.keys(from),
@@ -115,21 +118,21 @@ export default function About({
                         };
 
                         return (
-                            <motion.span
-                                key={index}
-                                className="inline-block will-change-[transform,filter,opacity]"
-                                initial={fromSnapshot}
-                                animate={inView ? animateKeyframes : fromSnapshot}
-                                transition={spanTransition}
-                                onAnimationComplete={
-                                    index === elements.length - 1 ? onAnimationComplete : undefined
-                                }
-                            >
-                                {segment === " " ? "\u00A0" : segment}
-                                {animateBy === "words" && index < elements.length - 1 && "\u00A0"}
-                            </motion.span>
-                        );
-                    })}
+                                <motion.span
+                                    key={index}
+                                    className="inline-block will-change-[transform,filter,opacity]"
+                                    initial={fromSnapshot}
+                                    animate={inView && isWelcomeComplete ? animateKeyframes : fromSnapshot}
+                                    transition={spanTransition}
+                                    onAnimationComplete={
+                                        index === elements.length - 1 ? onAnimationComplete : undefined
+                                    }
+                                >
+                                    {segment === " " ? "\u00A0" : segment}
+                                    {animateBy === "words" && index < elements.length - 1 && "\u00A0"}
+                                </motion.span>
+                            );
+                        })}
                 </p>
 
             </div>
@@ -141,7 +144,8 @@ export default function About({
             <motion.section
                 id="about"
                 initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                animate={isWelcomeComplete ? undefined : { opacity: 0, y: 40 }}
+                whileInView={isWelcomeComplete ? { opacity: 1, y: 0 } : undefined}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
                 className="w-full flex flex-col items-center text-center px-6 py-12 relative"
@@ -158,7 +162,8 @@ export default function About({
                 {/* Subtext */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    animate={isWelcomeComplete ? undefined : { opacity: 0, y: 20 }}
+                    whileInView={isWelcomeComplete ? { opacity: 1, y: 0 } : undefined}
                     transition={{ delay: 0.6, duration: 0.6 }}
                     className="mt-8 max-w-4xl relative"
                 >

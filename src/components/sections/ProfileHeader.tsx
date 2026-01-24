@@ -3,9 +3,8 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { FaCircle, FaLocationDot, FaArrowDownLong } from "react-icons/fa6";
+import { FaLocationDot, FaArrowDownLong } from "react-icons/fa6";
 import { GmailIcon } from "@/components/icons/gmail-icon";
-import animeChar from "@/assets/images/animeChar.svg";
 import { socialLinks } from "@/data/socialLinksData";
 
 const Resume = "/akshit_bansal.pdf";
@@ -115,7 +114,7 @@ function DevInfo() {
         transition={{ duration: 1 }}
         className="text-lg md:text-xl lg:text-2xl text-neutral-400 font-light"
       >
-        MERN-Stack Developer
+        Next.js Full-Stack Developer
       </motion.h2>
       <div className="flex items-center gap-2 text-neutral-500 text-sm md:text-base">
         <FaLocationDot />
@@ -192,7 +191,7 @@ export default function ProfileHeader() {
   return (
     <div
       id="profile"
-      className="flex w-full max-w-7xl mx-auto items-center justify-between px-4 md:px-8 py-10 flex-col md:flex-row gap-8 md:gap-0"
+      className="flex w-full max-w-7xl mx-auto mt-50 mb-30 items-center justify-between px-4 md:px-8 py-10 flex-col md:flex-row gap-8 md:gap-0"
     >
       <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12 w-full">
         <ProfileImage />

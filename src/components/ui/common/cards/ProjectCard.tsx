@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React from 'react';
+import { animate } from 'animejs';
 import { motion } from 'framer-motion';
 import {
   Card,
@@ -13,7 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { FiGithub } from 'react-icons/fi';
 import { FaExternalLinkAlt, FaFigma } from 'react-icons/fa';
-import { StaticImageData } from 'next/image';
+import Image, { StaticImageData } from 'next/image';
 
 interface ProjectCardProps {
   title: string;
@@ -42,12 +44,29 @@ export default function ProjectCard({
       transition={{ duration: 0.5, ease: 'easeOut' }}
       className="w-full max-w-lg"
     >
-      <Card className="group overflow-hidden border-neutral-800 bg-neutral-900/50 backdrop-blur-sm transition-all duration-300 hover:border-neutral-700 hover:shadow-xl hover:shadow-black/50">
-        <div className="overflow-hidden border-b border-neutral-800">
-          <img
-            src={typeof image === 'string' ? image : image.src}
+      <Card
+        onMouseEnter={(e) => {
+          // Animate badges
+          const badges = e.currentTarget.querySelectorAll('.project-badge');
+          if (badges.length) {
+            animate(badges, {
+              translateY: [-5, 0],
+              opacity: [0.5, 1], // subtle flash
+              delay: (_el: any, i: number) => i * 50,
+              easing: 'easeOutElastic(1, .8)',
+              duration: 600
+            });
+          }
+        }}
+        className="group overflow-hidden border-neutral-800 bg-neutral-900/50 backdrop-blur-sm transition-all duration-300 hover:border-neutral-700 hover:shadow-xl hover:shadow-black/50"
+      >
+        <div className="relative overflow-hidden border-b border-neutral-800 aspect-video">
+          <Image
+            src={image}
             alt={`${title} preview`}
-            className="aspect-video w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </div>
 
@@ -66,7 +85,7 @@ export default function ProjectCard({
               <Badge
                 key={index}
                 variant="secondary"
-                className="bg-neutral-800 text-neutral-300 hover:bg-neutral-700 hover:text-white"
+                className="project-badge bg-neutral-800 text-neutral-300 hover:bg-neutral-700 hover:text-white"
               >
                 {tech}
               </Badge>

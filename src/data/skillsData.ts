@@ -8,6 +8,7 @@ import { ChatgptDarkIcon } from "@/components/icons/chatgpt-dark-icon";
 import { FirestoreIcon } from "@/components/icons/firestore-icon";
 import { VercelBlobDarkIcon } from "@/components/icons/vercel-blob-dark-icon";
 import { ReactRouterIcon } from "@/components/icons/reactrouter";
+import { SqlIcon } from "@/components/icons/sql";
 
 export interface Skill {
     name: string;
@@ -16,12 +17,31 @@ export interface Skill {
 
 export interface SkillCategory {
     title: string;
+    description: string;
+    projectCount: string;
+    certifications: Skill[];
     skills: Skill[];
 }
 
 export const skillsData: SkillCategory[] = [
     {
         title: "Core Frontend & UI/UX",
+        description: "Crafting fast, responsive, and accessible user interfaces where design decisions are guided by usability, motion, and real interaction patterns. This stack is how I translate ideas into clean, intuitive experiences—balancing aesthetics with performance and maintainability.",
+        projectCount: "25+",
+        certifications: [
+            { name: "NodeJS - Full Stack (Bangalore Computer Education)", Icon: "https://svgl.app/library/html5.svg" },
+            { name: "Front-End Development - HTML (Great Learning)", Icon: "https://svgl.app/library/html5.svg" },
+            { name: "HTML Attributes & Tags (Great Learning)", Icon: "https://svgl.app/library/html5.svg" },
+            { name: "NodeJS - Full Stack (Bangalore Computer Education)", Icon: "https://svgl.app/library/css.svg" },
+            { name: "CSS(Basic) (HackerRank)", Icon: "https://svgl.app/library/css.svg" },
+            { name: "Front-End Development - CSS (Great Learning)", Icon: "https://svgl.app/library/css.svg" },
+            { name: "CSS Properties (Great Learning)", Icon: "https://svgl.app/library/css.svg" },
+            { name: "NodeJS - Full Stack (Bangalore Computer Education)", Icon: "https://svgl.app/library/javascript.svg" },
+            { name: "JavaScript (Basic) HackerRank", Icon: "https://svgl.app/library/javascript.svg" },
+            { name: "NodeJS - Full Stack (Bangalore Computer Education)", Icon: JqueryIcon },
+            { name: "MERN Stack (Sun Soft Technologies)", Icon: "https://svgl.app/library/react_dark.svg" },
+            { name: "MERN Stack (Sun Soft Technologies)", Icon: "https://svgl.app/library/tailwindcss.svg" },
+        ],
         skills: [
             { name: "HTML5", Icon: "https://svgl.app/library/html5.svg" },
             { name: "CSS3", Icon: "https://svgl.app/library/css.svg" },
@@ -46,6 +66,18 @@ export const skillsData: SkillCategory[] = [
     },
     {
         title: "Backend & Databases",
+        description: "Designing reliable backend systems that handle data, business logic, and scale without becoming fragile. I use these tools to build APIs, manage persistence, and ensure applications remain fast, secure, and predictable as complexity grows.",
+        projectCount: "15+",
+        certifications: [
+            { name: "SQL(Basic) (HackerRank)", Icon: SqlIcon },
+            { name: "NodeJS - Full Stack (Bangalore Computer Education)", Icon: "https://svgl.app/library/nodejs.svg" },
+            { name: "NodeJS - Full Stack (Bangalore Computer Education)", Icon: "https://svgl.app/library/expressjs_dark.svg" },
+            { name: "NodeJS - Full Stack (Bangalore Computer Education)", Icon: "https://svgl.app/library/mysql-icon-dark.svg" },
+            { name: "MERN Stack (Sun Soft Technologies)", Icon: "https://svgl.app/library/mongodb-icon-dark.svg" },
+            { name: "MERN Stack (Sun Soft Technologies)", Icon: "https://svgl.app/library/nodejs.svg" },
+            { name: "MERN Stack (Sun Soft Technologies)", Icon: "https://svgl.app/library/expressjs_dark.svg" },
+
+        ],
         skills: [
             { name: "Node.js", Icon: "https://svgl.app/library/nodejs.svg" },
             { name: "Express", Icon: "https://svgl.app/library/expressjs_dark.svg" },
@@ -53,6 +85,7 @@ export const skillsData: SkillCategory[] = [
             { name: "Bun", Icon: "https://svgl.app/library/bun.svg" },
             { name: "C#", Icon: "https://svgl.app/library/csharp.svg" },
             { name: ".NET", Icon: "https://svgl.app/library/dotnet.svg" },
+            { name: "SQL", Icon: SqlIcon },
             { name: "MongoDB", Icon: "https://svgl.app/library/mongodb-icon-dark.svg" },
             { name: "MySQL", Icon: "https://svgl.app/library/mysql-icon-dark.svg" },
             { name: "PostgreSQL", Icon: "https://svgl.app/library/postgresql.svg" },
@@ -62,9 +95,19 @@ export const skillsData: SkillCategory[] = [
     },
     {
         title: "DSA & Problem Solving",
+        description: "Strengthening problem-solving instincts through data structures and algorithms, with a focus on efficiency, correctness, and edge-case thinking. This foundation sharpens how I approach real-world bugs, performance bottlenecks, and system design decisions.",
+        projectCount: "50+",
+        certifications: [
+            { name: "NodeJS - Full Stack (Bangalore Computer Education)", Icon: "https://svgl.app/library/javascript.svg" },
+            { name: "DSA (Bangalore Computer Education)", Icon: "https://svgl.app/library/c-plusplus.svg" },
+            { name: "C++ Course -Learn The Essentials (Scaler)", Icon: "https://svgl.app/library/c-plusplus.svg" },
+            { name: "C++ Complete Training Course (Udemy)", Icon: "https://svgl.app/library/c-plusplus.svg" },
+            { name: "C Programming for Beginners (Udemy)", Icon: "https://svgl.app/library/c.svg" },
+        ],
         skills: [
             { name: "JavaScript", Icon: "https://svgl.app/library/javascript.svg" },
             { name: "Python", Icon: "https://svgl.app/library/python.svg" },
+            { name: "C", Icon: "https://svgl.app/library/c.svg" },
             { name: "C++", Icon: "https://svgl.app/library/c-plusplus.svg" },
             { name: "Leetcode", Icon: LeetcodeDarkIcon },
             { name: "Hackerrank", Icon: HackerRankDarkIcon },
@@ -72,6 +115,10 @@ export const skillsData: SkillCategory[] = [
     },
     {
         title: "Dev Tools & Environments",
+        description: "Powering day-to-day development with tools that improve speed, reliability, and collaboration. From version control to build systems and IDEs, this category reflects how I reduce friction, automate workflows, and stay productive across projects.",
+        projectCount: "All",
+        certifications: [
+        ],
         skills: [
             { name: "Git", Icon: "https://svgl.app/library/git.svg" },
             { name: "GitHub", Icon: "https://svgl.app/library/github_dark.svg" },
@@ -89,6 +136,11 @@ export const skillsData: SkillCategory[] = [
     },
     {
         title: "Storage & Media",
+        description: "Managing files, images, and media assets with a focus on performance, scalability, and cost efficiency. These tools help me handle uploads, optimize delivery, and integrate cloud storage seamlessly into full-stack applications.",
+        projectCount: "10+",
+        certifications: [
+            { name: "NodeJS - Full Stack (Bangalore Computer Education)", Icon: "https://svgl.app/library/cloudinary.svg" },
+        ],
         skills: [
             { name: "Cloudinary", Icon: "https://svgl.app/library/cloudinary.svg" },
             { name: "Firestore", Icon: FirestoreIcon },
@@ -99,6 +151,9 @@ export const skillsData: SkillCategory[] = [
     },
     {
         title: "AI Tools & Services",
+        description: "Leveraging modern AI tools to enhance productivity and add intelligent features to applications. I use these services for automation, content generation, data extraction, and rapid prototyping—treating AI as an amplifier, not a black box.",
+        projectCount: "8+",
+        certifications: [],
         skills: [
             { name: "Gemini", Icon: "https://svgl.app/library/gemini.svg" },
             { name: "ChatGPT", Icon: ChatgptDarkIcon },
@@ -112,6 +167,11 @@ export const skillsData: SkillCategory[] = [
     },
     {
         title: "Authentication",
+        description: "Implementing secure and flexible authentication flows to protect user data and application integrity. This stack enables login systems, token-based auth, and third-party providers while balancing security, usability, and scalability.",
+        projectCount: "12+",
+        certifications: [
+            { name: "MERN Stack (Sun Soft Technologies)", Icon: "https://svgl.app/library/jwt.svg" },
+        ],
         skills: [
             { name: "Firebase", Icon: "https://svgl.app/library/firebase.svg" },
             { name: "Auth0", Icon: "https://svgl.app/library/auth0.svg" },
