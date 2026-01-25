@@ -24,7 +24,7 @@ export interface SocialLink {
 export interface ProjectItem {
     title: string;
     description: string;
-    image: StaticImageData | string;
+    GDriveID: string;
     techStack: string[];
     demoLink?: string;
     githubLink?: string;
@@ -57,7 +57,7 @@ export interface EducationItem {
 
 // Certification Types
 export interface CertificationItem {
-    certificate: string | StaticImageData;
+    GDriveID?: string;
     link?: string;
     name?: string;
 }

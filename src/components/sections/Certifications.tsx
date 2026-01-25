@@ -6,7 +6,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { FaExternalLinkAlt } from "react-icons/fa";
-import { StaticImageData } from "next/image";
+
 
 //--------------------|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|--------------------//
 //--------------------|     COMPONENTS     |--------------------//
@@ -55,7 +55,8 @@ export default function Certifications() {
 //--------------------|  UTILITY FUNCTIONS |--------------------//
 //--------------------|____________________|--------------------//
 // Reusing CertificationItem from types, but expanding if needed or just using it directly
-function Certificates({ certificate, name, link = "" }: CertificationItem) {
+// Reusing CertificationItem from types, but expanding if needed or just using it directly
+function Certificates({ GDriveID, name, link = "" }: CertificationItem) {
     const containerVariants = {
         hidden: { opacity: 0, y: 50 },
         visible: {
@@ -93,7 +94,7 @@ function Certificates({ certificate, name, link = "" }: CertificationItem) {
             >
                 <motion.img
                     className="h-auto w-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
-                    src={typeof certificate === 'string' ? certificate : certificate.src}
+                    src={GDriveID ? `https://lh3.googleusercontent.com/d/${GDriveID}` : ""}
                     alt={name || "Certificate Image"}
                 />
                 <motion.div

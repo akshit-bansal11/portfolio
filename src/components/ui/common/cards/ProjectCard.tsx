@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React from 'react';
-import { animate } from 'animejs';
+import Image from 'next/image';
+
 import { motion } from 'framer-motion';
 import {
   Card,
@@ -15,12 +16,12 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { FiGithub } from 'react-icons/fi';
 import { FaExternalLinkAlt, FaFigma } from 'react-icons/fa';
-import Image, { StaticImageData } from 'next/image';
+
 
 interface ProjectCardProps {
   title: string;
   description: string;
-  image: string | StaticImageData;
+  GDriveID?: string;
   demoLink?: string;
   designLink?: string;
   githubLink?: string;
@@ -30,12 +31,16 @@ interface ProjectCardProps {
 export default function ProjectCard({
   title,
   description,
-  image,
+  GDriveID,
   demoLink,
   designLink,
   githubLink,
   techStack = [],
 }: ProjectCardProps) {
+  const imageUrl = GDriveID
+    ? `https://lh3.googleusercontent.com/d/${GDriveID}`
+    : null;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -45,30 +50,19 @@ export default function ProjectCard({
       className="w-full max-w-lg"
     >
       <Card
-        onMouseEnter={(e) => {
-          // Animate badges
-          const badges = e.currentTarget.querySelectorAll('.project-badge');
-          if (badges.length) {
-            animate(badges, {
-              translateY: [-5, 0],
-              opacity: [0.5, 1], // subtle flash
-              delay: (_el: any, i: number) => i * 50,
-              easing: 'easeOutElastic(1, .8)',
-              duration: 600
-            });
-          }
-        }}
         className="group overflow-hidden border-neutral-800 bg-neutral-900/50 backdrop-blur-sm transition-all duration-300 hover:border-neutral-700 hover:shadow-xl hover:shadow-black/50"
       >
-        <div className="relative overflow-hidden border-b border-neutral-800 aspect-video">
-          <Image
-            src={image}
-            alt={`${title} preview`}
-            fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
-        </div>
+        {imageUrl && (
+          <div className="relative overflow-hidden border-b border-neutral-800 aspect-video">
+            <Image
+              src={imageUrl}
+              alt={`${title} preview`}
+              fill
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+          </div>
+        )}
 
         <CardHeader className="space-y-2">
           <CardTitle className="font-clash text-2xl tracking-wide text-white">

@@ -1,9 +1,4 @@
 import { SiCplusplus, SiCoursera } from "react-icons/si";
-import ceisd from '@/assets/images/certificates/ceisd.webp';
-import ceiga from '@/assets/images/certificates/ceiga.webp';
-import sqlbhack from '@/assets/images/certificates/sqlbhack.webp';
-import jsbhack from '@/assets/images/certificates/jsbhack.webp';
-import cssbhack from '@/assets/images/certificates/cssbhack.webp';
 import { AchievementItem, CertificationItem } from "@/types";
 
 export const achievements: AchievementItem[] = [
@@ -27,23 +22,33 @@ export const achievements: AchievementItem[] = [
 
 export const certifications: CertificationItem[] = [
     {
-        certificate: ceisd,
-        link: "https://www.linkedin.com/learning/certificates/b49081d79547f863f12dd8656302ede27f342d628631d481085b14b727dcc910?trk=share_certificate"
+        name: "CSS (Basic)",
+        GDriveID: "1ud6alNDvAmYybdnIqrnyJQ8IWTWNZ5Ge",
+        link: "https://www.hackerrank.com/certificates/35384d086309"
     },
     {
-        certificate: ceiga,
-        link: "https://www.linkedin.com/learning/certificates/b0d6803487e5b12b7ddf935a52b4efa6541460fcae5faacb7e7354ec96f78832?trk=share_certificate"
-    },
-    {
-        certificate: sqlbhack,
+        name: "JavaScript (Basic)",
+        GDriveID: "1tB7IPlkqKTV9S1dqLbDddi_OxdqqZ1Gi",
         link: "https://www.hackerrank.com/certificates/7f1a01b7b859"
     },
     {
-        certificate: jsbhack,
+        name: "Node.js (Basic)",
+        GDriveID: "1WiTCtljWgOWgeOH-r4Y3GHpJ6iHEAOQa",
         link: "https://www.hackerrank.com/certificates/9eabe8ab61b1"
     },
     {
-        certificate: cssbhack,
-        link: "https://www.hackerrank.com/certificates/35384d086309"
-    }
+        name: "React.js (Basic)",
+        GDriveID: "1xT_VVyVuYXa9EnDbfMaZMr4BcBoi1arV",
+        link: "https://www.hackerrank.com/certificates/9eabe8ab61b1"
+    },
+    {
+        name: "SQL (Basic)",
+        GDriveID: "1gFYPjYV4x6CidehZ2SkF1IdABiubsLls",
+        link: "https://www.hackerrank.com/certificates/9eabe8ab61b1"
+    },
+    {
+        name: "Frontend Developer (React)",
+        GDriveID: "1cMUhFRucVh1rfGw0pjKNiTk4J9G4Mxfd",
+        link: "https://www.hackerrank.com/certificates/9eabe8ab61b1"
+    },
 ];

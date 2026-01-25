@@ -1,5 +1,5 @@
 "use client";
-import React from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import {
   Card,
@@ -13,12 +13,12 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { FiGithub } from 'react-icons/fi';
 import { FaExternalLinkAlt } from 'react-icons/fa';
-import Image, { StaticImageData } from 'next/image';
+
 
 interface ProjectCardSmallProps {
   title: string;
   description: string;
-  image?: string | StaticImageData;
+  GDriveID?: string;
   iframe?: string;
   demoLink?: string;
   githubLink?: string;
@@ -28,12 +28,17 @@ interface ProjectCardSmallProps {
 export default function ProjectCardSmall({
   title,
   description,
-  image,
+  GDriveID,
   iframe,
   demoLink,
   githubLink,
   techStack = [],
 }: ProjectCardSmallProps) {
+  // Construct the URL if GDriveID is present
+  const imageUrl = GDriveID
+    ? `https://lh3.googleusercontent.com/d/${GDriveID}`
+    : null;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -43,24 +48,27 @@ export default function ProjectCardSmall({
       className="w-full max-w-md"
     >
       <Card className="group overflow-hidden border-neutral-800 bg-neutral-900/50 backdrop-blur-sm transition-all duration-300 hover:border-neutral-700 hover:shadow-xl hover:shadow-black/50 h-full flex flex-col">
-        <div className="relative overflow-hidden border-b border-neutral-800 h-48">
-          {iframe ? (
-            <iframe
-              src={iframe}
-              title={`${title} preview`}
-              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-              allowFullScreen
-            />
-          ) : (
-            <Image
-              src={image!}
-              alt={`${title} preview`}
-              fill
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            />
-          )}
-        </div>
+        {/* Render image container if we have an image or iframe */}
+        {(imageUrl || iframe) && (
+          <div className="relative overflow-hidden border-b border-neutral-800 h-48">
+            {iframe ? (
+              <iframe
+                src={iframe}
+                title={`${title} preview`}
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                allowFullScreen
+              />
+            ) : (
+              <Image
+                src={imageUrl!}
+                alt={`${title} preview`}
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              />
+            )}
+          </div>
+        )}
 
         <CardHeader className="space-y-2 p-5">
           <CardTitle className="font-clash text-xl tracking-wide text-white">
