@@ -62,11 +62,11 @@ const WelcomeAnimation = () => {
         // 3.5 Glitch effect
         tl.add('.welcome-svg', {
             translateX: [
-                 { value: 5, duration: 50 },
-                 { value: -5, duration: 50 },
-                 { value: 10, duration: 50 },
-                 { value: -10, duration: 50 },
-                 { value: 0, duration: 50 }
+                { value: 5, duration: 50 },
+                { value: -5, duration: 50 },
+                { value: 10, duration: 50 },
+                { value: -10, duration: 50 },
+                { value: 0, duration: 50 }
             ],
             skewX: [
                 { value: 20, duration: 50 },
@@ -98,7 +98,7 @@ const WelcomeAnimation = () => {
     return (
         <div
             ref={containerRef}
-            className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-black"
+            className="fixed w-full h-full z-[9999] flex flex-col items-center justify-center bg-black"
         >
             <div className="relative">
                 <svg

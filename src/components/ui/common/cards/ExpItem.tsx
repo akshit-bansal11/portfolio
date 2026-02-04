@@ -1,11 +1,10 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
-import { FaMapMarkerAlt, FaCalendarAlt, FaFilePdf } from "react-icons/fa";
+import { FaMapMarkerAlt, FaCalendarAlt } from "react-icons/fa";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { GoArrowUpRight } from "react-icons/go";
 
 interface ExpItemProps {
@@ -79,12 +78,12 @@ export default function ExpItem({
 
           {/* Certificate Link Button */}
           {certificate && (
-            <div className="absolute bottom-6 right-7">
+            <div className="mt-4 md:mt-0 md:absolute md:bottom-6 md:right-7">
               <Button
                 asChild
                 variant="outline"
                 size="sm"
-                className="group/btn gap-2 bg-amber-500/5 hover:bg-amber-500/10 border-amber-500/20 hover:border-amber-500/40 text-amber-500 transition-all duration-300 rounded-full pl-4 pr-3"
+                className="w-full md:w-auto group/btn gap-2 bg-amber-500/5 hover:bg-amber-500/10 border-amber-500/20 hover:border-amber-500/40 text-amber-500 transition-all duration-300 rounded-full pl-4 pr-3"
               >
                 <a href={certificate} target="_blank" rel="noopener noreferrer">
                   <span className="text-xs font-semibold tracking-wide uppercase">

@@ -57,6 +57,7 @@ export default function SkillsPage() {
                     "bg-gradient-to-r from-white via-neutral-400 to-neutral-600",
                     "bg-clip-text text-transparent"
                   )}
+                  style={{ WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}
                 >
                   Skills & Tools
                 </motion.h1>
@@ -131,7 +132,7 @@ export default function SkillsPage() {
                     {category.title}
                   </h2>
 
-                  <div className="grid grid-cols-12 auto-rows-[140px] gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-12 auto-rows-auto md:auto-rows-[140px] gap-6">
                     <CategoryBento
                       category={category}
                       reversed={index % 2 !== 0}

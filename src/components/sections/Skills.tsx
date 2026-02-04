@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { GoArrowUpRight } from "react-icons/go";
 
+import { SiNextdotjs } from "react-icons/si";
+
 //--------------------|       COMMON       |--------------------//
 import ScrollSection from "@/components/ui/common/sections/ScrollSection";
 import ScrollSectionHeading from "@/components/ui/common/headings/ScrollSectionHeading";
@@ -17,7 +19,7 @@ import ScrollSectionHeading from "@/components/ui/common/headings/ScrollSectionH
 const topSkills = [
   { name: "TypeScript", Icon: "https://svgl.app/library/typescript.svg" },
   { name: "React", Icon: "https://svgl.app/library/react_dark.svg" },
-  { name: "Next.js", Icon: "https://svgl.app/library/nextjs_icon_dark.svg" },
+  { name: "Next.js", Icon: SiNextdotjs },
   { name: "Tailwind CSS", Icon: "https://svgl.app/library/tailwindcss.svg" },
   { name: "Firebase", Icon: "https://svgl.app/library/firebase.svg" },
 ];

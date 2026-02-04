@@ -19,8 +19,10 @@ function ScrollSectionHeading({ heading }: ScrollSectionHeadingProps) {
                 "bg-gradient-to-r from-amber-500 via-orange-500 to-pink-500",
                 "hover:bg-gradient-to-r hover:to-amber-500 hover:via-orange-500 hover:from-pink-500",
                 "transition-colors ease-in-out duration-500",
-                "bg-clip-text text-transparent"
+                "transition-colors ease-in-out duration-500",
+                "bg-clip-text text-transparent bg-gradient-to-r"
             )}
+            style={{ WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}
         >
             {heading}
         </motion.h1>

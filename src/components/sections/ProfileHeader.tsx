@@ -130,7 +130,7 @@ function SocialLinks() {
       {socialLinks.map(({ Icon, href }, index) => (
         <motion.div
           key={href}
-          initial={{ opacity: 0, x: 100 }}
+          initial={{ opacity: 0, x: 10 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.4, delay: index * 0.1 }}
         >

@@ -39,7 +39,7 @@ export default function Certifications() {
             </div>
             <div className="flex flex-col gap-4">
                 <h1 className="text-neutral-400 text-xs md:text-sm lg:text-xl">Certifications</h1>
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {certifications.map((cert, index) => (
                         <Certificates key={index} {...cert} />
                     ))}
@@ -78,7 +78,7 @@ function Certificates({ GDriveID, name, link = "" }: CertificationItem) {
 
     return (
         <motion.div
-            className="group relative mx-auto w-full max-w-sm overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-lg dark:border-slate-700 dark:bg-slate-800"
+            className="group relative mx-auto w-full max-w-[280px] md:max-w-sm overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-lg dark:border-slate-700 dark:bg-slate-800"
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"

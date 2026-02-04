@@ -23,7 +23,7 @@ const CategoryBento = ({ category, reversed = false }: CategoryBentoProps) => {
                 viewport={{ once: true }}
                 transition={{ type: "spring", stiffness: 90 }}
                 className={cn(
-                    "col-span-12 md:col-span-5 row-span-2 rounded-3xl p-8",
+                    "col-span-1 md:col-span-5 md:row-span-2 rounded-3xl p-8",
                     "bg-gradient-to-br from-neutral-900 to-neutral-800",
                     "border border-neutral-800 flex flex-col justify-between",
                     reversed && "md:order-last"
@@ -39,7 +39,7 @@ const CategoryBento = ({ category, reversed = false }: CategoryBentoProps) => {
                     </p>
                 </div>
 
-                <div className="flex items-center gap-3 mt-4">
+                <div className="flex flex-wrap items-center gap-3 mt-4">
 
 
                     <CertificationsPill certifications={category.certifications} />
@@ -52,11 +52,11 @@ const CategoryBento = ({ category, reversed = false }: CategoryBentoProps) => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.05 }}
-                className="col-span-12 md:col-span-7 row-span-2
-                   rounded-3xl p-6
-                   bg-neutral-900/60
-                   border border-neutral-800
-                   flex flex-wrap gap-4 content-start"
+                className={cn(
+                    "col-span-1 md:col-span-7 md:row-span-2 rounded-3xl p-6",
+                    "bg-neutral-900/60 border border-neutral-800",
+                    "flex flex-wrap gap-4 content-start"
+                )}
             >
                 {category.skills.map((skill) => (
                     <SkillPill key={skill.name} skill={skill} />

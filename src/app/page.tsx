@@ -32,11 +32,11 @@ function Home() {
                     delay={150}
                     animateBy="words"
                     direction="top"
-                    className="w-fit mx-auto lg:text-[100px] md:text-[60px] mb-10 text-[30px] font-thin items-center justify-center text-white drop-shadow-2xl"
+                    className="w-fit mx-auto xl:text-[100px] lg:text-[80px] md:text-[60px] text-[30px] mb-10 font-thin items-center justify-center text-white drop-shadow-2xl"
                 />
             </HeroGeometric>
-            
-            <div className="flex pt-10 lg:px-10 md:px-15 px-5 flex-col items-center w-full gap-30 md:gap-20 lg:gap-30">
+
+            <div className="flex pt-10 px-4 md:px-10 lg:px-15 flex-col items-center w-full gap-16 md:gap-20 lg:gap-30">
                 <ProfileHeader />
                 <ScrollReveal className="w-full" delay={200}>
                     <Projects />

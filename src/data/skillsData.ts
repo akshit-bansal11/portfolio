@@ -9,6 +9,9 @@ import { FirestoreIcon } from "@/components/icons/firestore-icon";
 import { VercelBlobDarkIcon } from "@/components/icons/vercel-blob-dark-icon";
 import { ReactRouterIcon } from "@/components/icons/reactrouter";
 import { SqlIcon } from "@/components/icons/sql";
+import { FfmpegIcon } from "@/components/icons/ffmpeg-icon";
+import { FfmpegWasmIcon } from "@/components/icons/ffmpeg-wasm-icon";
+import { ElevenLabsDarkIcon } from "@/components/icons/eleven-labs-dark-icon";
 
 export interface Skill {
     name: string;
@@ -147,6 +150,8 @@ export const skillsData: SkillCategory[] = [
             { name: "SVG", Icon: "https://svgl.app/library/svg.svg" },
             { name: "Vercel Blob", Icon: VercelBlobDarkIcon },
             { name: "Azure Blob", Icon: AzureBlobDarkIcon },
+            { name: "FFmpeg", Icon: FfmpegIcon },
+            { name: "FFmpeg WASM", Icon: FfmpegWasmIcon },
         ]
     },
     {
@@ -163,6 +168,7 @@ export const skillsData: SkillCategory[] = [
             { name: "Perplexity", Icon: "https://svgl.app/library/perplexity.svg" },
             { name: "Grok", Icon: "https://svgl.app/library/grok-dark.svg" },
             { name: "Ollama", Icon: "https://svgl.app/library/ollama_dark.svg" },
+            { name: "ElevenLabs", Icon: ElevenLabsDarkIcon },
         ]
     },
     {

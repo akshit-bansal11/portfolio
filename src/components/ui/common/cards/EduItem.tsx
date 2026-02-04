@@ -23,7 +23,7 @@ export default function EduItem({ location, company, role, date }: EduItemProps)
             transition={{ duration: 0.5, ease: "easeOut" }}
             className="w-full"
         >
-            <Card className="border-neutral-800 bg-neutral-900/40 hover:bg-neutral-900/60 hover:border-neutral-700 transition-all duration-300">
+            <Card className="w-full border-neutral-800 bg-neutral-900/40 hover:bg-neutral-900/60 hover:border-neutral-700 transition-all duration-300">
                 <CardContent className="p-6">
                     <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                         <div>

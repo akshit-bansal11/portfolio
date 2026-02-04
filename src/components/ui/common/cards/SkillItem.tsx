@@ -15,7 +15,7 @@ const SkillItem = ({ Icon, name, disableHover = false }: SkillItemProps) => {
   return (
     <motion.div
       className={cn(
-        "relative flex flex-col items-center justify-center gap-4 w-32 h-32 md:w-44 md:h-44 rounded-2xl bg-neutral-900/50 border border-neutral-800/50 select-none overflow-hidden transition-all duration-300",
+        "relative flex flex-col items-center justify-center gap-4 w-24 h-24 md:w-44 md:h-44 rounded-2xl bg-neutral-900/50 border border-neutral-800/50 select-none overflow-hidden transition-all duration-300",
         !disableHover && "group hover:border-neutral-500/30 cursor-default"
       )}
       whileHover={!disableHover ? { y: -8, scale: 1.05 } : undefined}
@@ -38,7 +38,7 @@ const SkillItem = ({ Icon, name, disableHover = false }: SkillItemProps) => {
             width={64}
             height={64}
             className={cn(
-              "h-12 w-12 md:h-16 md:w-16 object-contain transition-all duration-500",
+              "h-10 w-10 md:h-16 md:w-16 object-contain transition-all duration-500",
               !disableHover
                 ? "filter grayscale group-hover:grayscale-0"
                 : "filter-none"
@@ -47,7 +47,7 @@ const SkillItem = ({ Icon, name, disableHover = false }: SkillItemProps) => {
         ) : (
           <Icon
             className={cn(
-              "h-12 w-12 md:h-16 md:w-16 transition-all duration-500",
+              "h-10 w-10 md:h-16 md:w-16 transition-all duration-500",
               !disableHover
                 ? "text-neutral-500 group-hover:text-inherit"
                 : "text-neutral-200"
