@@ -25,6 +25,7 @@ interface ProjectCardProps {
   demoLink?: string;
   designLink?: string;
   githubLink?: string;
+  siteLink?: string;
   techStack?: string[];
   openSource?: boolean;
 }
@@ -36,6 +37,7 @@ export default function ProjectCard({
   demoLink,
   designLink,
   githubLink,
+  siteLink,
   techStack = [],
   openSource,
 }: ProjectCardProps) {
@@ -97,8 +99,15 @@ export default function ProjectCard({
         </CardContent>
 
         <CardFooter className="gap-3 pt-0">
-          {demoLink || githubLink || designLink ? (
+          {demoLink || githubLink || designLink || siteLink ? (
             <>
+              {siteLink && (
+                <Button asChild size="sm" className="bg-white text-black hover:bg-neutral-200">
+                  <a href={siteLink} target="_blank" rel="noopener noreferrer">
+                    <FaExternalLinkAlt className="mr-2 h-3 w-3" /> Site
+                  </a>
+                </Button>
+              )}
               {demoLink && (
                 <Button asChild size="sm" className="bg-white text-black hover:bg-neutral-200">
                   <a href={demoLink} target="_blank" rel="noopener noreferrer">

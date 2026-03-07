@@ -28,6 +28,7 @@ export interface ProjectItem {
     techStack: string[];
     demoLink?: string;
     githubLink?: string;
+    siteLink?: string;
     openSource?: boolean;
 }
 
