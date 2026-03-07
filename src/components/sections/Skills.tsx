@@ -17,11 +17,11 @@ import ScrollSectionHeading from "@/components/ui/common/headings/ScrollSectionH
 
 //--------------------|       CONFIG       |--------------------//
 const topSkills = [
+  { name: "Next.js", Icon: SiNextdotjs },
   { name: "TypeScript", Icon: "https://svgl.app/library/typescript.svg" },
   { name: "React", Icon: "https://svgl.app/library/react_dark.svg" },
-  { name: "Next.js", Icon: SiNextdotjs },
   { name: "Tailwind CSS", Icon: "https://svgl.app/library/tailwindcss.svg" },
-  { name: "Firebase", Icon: "https://svgl.app/library/firebase.svg" },
+  { name: "Vitest", Icon: "https://svgl.app/library/vitest.svg" },
 ];
 
 //--------------------|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|--------------------//
