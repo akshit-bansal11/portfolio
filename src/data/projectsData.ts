@@ -8,7 +8,8 @@ export const projects: ProjectItem[] = [
         GDriveID: "1EWjLgw3THDGTxerk3MCOcT4URsb1E5vn",
         techStack: ['React', 'Tailwind', 'Gemini API'],
         demoLink: "https://color-space11.vercel.app/",
-        githubLink: "https://github.com/akshit-bansal11/color-space"
+        githubLink: "https://github.com/akshit-bansal11/color-space",
+        openSource: true
     },
     {
         title: "Canopy",
@@ -16,7 +17,8 @@ export const projects: ProjectItem[] = [
         GDriveID: "1BEYDeT_zqMQkLH2E7rC3uqYIAd0_cfyF",
         techStack: ['Next.js', 'TypeScript', 'Tailwind', 'Firebase'],
         demoLink: "https://use-canopy.vercel.app/",
-        githubLink: "https://github.com/akshit-bansal11/canopy"
+        githubLink: "https://github.com/akshit-bansal11/canopy",
+        openSource: true
     },
     {
         title: "Medishare",

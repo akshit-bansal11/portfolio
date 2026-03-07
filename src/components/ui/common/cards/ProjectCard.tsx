@@ -26,6 +26,7 @@ interface ProjectCardProps {
   designLink?: string;
   githubLink?: string;
   techStack?: string[];
+  openSource?: boolean;
 }
 
 export default function ProjectCard({
@@ -36,6 +37,7 @@ export default function ProjectCard({
   designLink,
   githubLink,
   techStack = [],
+  openSource,
 }: ProjectCardProps) {
   const imageUrl = GDriveID
     ? `https://lh3.googleusercontent.com/d/${GDriveID}`
@@ -65,9 +67,16 @@ export default function ProjectCard({
         )}
 
         <CardHeader className="space-y-2">
-          <CardTitle className="font-clash text-2xl tracking-wide text-white">
-            {title}
-          </CardTitle>
+          <div className="flex items-center gap-2 flex-wrap">
+            <CardTitle className="font-clash text-2xl tracking-wide text-white">
+              {title}
+            </CardTitle>
+            {openSource && (
+              <span className="inline-flex items-center rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-400">
+                open source
+              </span>
+            )}
+          </div>
           <CardDescription className="text-neutral-400 line-clamp-3">
             {description}
           </CardDescription>
