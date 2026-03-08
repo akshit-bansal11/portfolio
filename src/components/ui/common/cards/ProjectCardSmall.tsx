@@ -18,7 +18,7 @@ import { FaExternalLinkAlt } from 'react-icons/fa';
 interface ProjectCardSmallProps {
   title: string;
   description: string;
-  GDriveID?: string;
+  ImgID?: string;
   iframe?: string;
   demoLink?: string;
   githubLink?: string;
@@ -29,16 +29,16 @@ interface ProjectCardSmallProps {
 export default function ProjectCardSmall({
   title,
   description,
-  GDriveID,
+  ImgID,
   iframe,
   demoLink,
   githubLink,
   techStack = [],
   openSource,
 }: ProjectCardSmallProps) {
-  // Construct the URL if GDriveID is present
-  const imageUrl = GDriveID
-    ? `https://lh3.googleusercontent.com/d/${GDriveID}`
+  // Construct the URL if ImgID is present
+  const imageUrl = ImgID
+    ? `https://lh3.googleusercontent.com/d/${ImgID}`
     : null;
 
   return (

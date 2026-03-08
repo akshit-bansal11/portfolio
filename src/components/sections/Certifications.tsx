@@ -56,7 +56,7 @@ export default function Certifications() {
 //--------------------|____________________|--------------------//
 // Reusing CertificationItem from types, but expanding if needed or just using it directly
 // Reusing CertificationItem from types, but expanding if needed or just using it directly
-function Certificates({ GDriveID, name, link = "" }: CertificationItem) {
+function Certificates({ ImgID, name, link = "" }: CertificationItem) {
     const containerVariants = {
         hidden: { opacity: 0, y: 50 },
         visible: {
@@ -94,7 +94,7 @@ function Certificates({ GDriveID, name, link = "" }: CertificationItem) {
             >
                 <motion.img
                     className="h-auto w-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
-                    src={GDriveID ? `https://lh3.googleusercontent.com/d/${GDriveID}` : ""}
+                    src={ImgID ? `https://lh3.googleusercontent.com/d/${ImgID}` : ""}
                     alt={name || "Certificate Image"}
                 />
                 <motion.div

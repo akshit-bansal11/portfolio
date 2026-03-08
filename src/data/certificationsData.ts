@@ -23,32 +23,32 @@ export const achievements: AchievementItem[] = [
 export const certifications: CertificationItem[] = [
     {
         name: "CSS (Basic)",
-        GDriveID: "1ud6alNDvAmYybdnIqrnyJQ8IWTWNZ5Ge",
+        ImgID: "1ud6alNDvAmYybdnIqrnyJQ8IWTWNZ5Ge",
         link: "https://www.hackerrank.com/certificates/35384d086309"
     },
     {
         name: "JavaScript (Basic)",
-        GDriveID: "1tB7IPlkqKTV9S1dqLbDddi_OxdqqZ1Gi",
+        ImgID: "1tB7IPlkqKTV9S1dqLbDddi_OxdqqZ1Gi",
         link: "https://www.hackerrank.com/certificates/7f1a01b7b859"
     },
     {
         name: "Node.js (Basic)",
-        GDriveID: "1WiTCtljWgOWgeOH-r4Y3GHpJ6iHEAOQa",
+        ImgID: "1WiTCtljWgOWgeOH-r4Y3GHpJ6iHEAOQa",
         link: "https://www.hackerrank.com/certificates/9eabe8ab61b1"
     },
     {
         name: "React.js (Basic)",
-        GDriveID: "1xT_VVyVuYXa9EnDbfMaZMr4BcBoi1arV",
+        ImgID: "1xT_VVyVuYXa9EnDbfMaZMr4BcBoi1arV",
         link: "https://www.hackerrank.com/certificates/9eabe8ab61b1"
     },
     {
         name: "SQL (Basic)",
-        GDriveID: "1gFYPjYV4x6CidehZ2SkF1IdABiubsLls",
+        ImgID: "1gFYPjYV4x6CidehZ2SkF1IdABiubsLls",
         link: "https://www.hackerrank.com/certificates/9eabe8ab61b1"
     },
     {
         name: "Frontend Developer (React)",
-        GDriveID: "1cMUhFRucVh1rfGw0pjKNiTk4J9G4Mxfd",
+        ImgID: "1cMUhFRucVh1rfGw0pjKNiTk4J9G4Mxfd",
         link: "https://www.hackerrank.com/certificates/9eabe8ab61b1"
     },
 ];
