@@ -3,7 +3,15 @@ import { DetailedProjectItem } from '@/types';
 
 export const allProjects: Record<string, DetailedProjectItem[]> = {
     websites: [
-
+        {
+            type: 'large',
+            title: 'Plotline',
+            description: 'Organize your entire media library; movies, series, anime, manga, and games; all in one place. Plotline shows you exactly where to stream, buy, or rent everything you want.',
+            GDriveID: "1EKFOxm_LYakpHbmSBfCC1WWqHYLb56jk",
+            techStack: ['Next.js', 'TypeScript', 'Firebase', 'Tailwind'],
+            siteLink: "https://plotline.akshitbansal.me/",
+            openSource: false
+        },
         {
             type: 'large',
             title: 'Canopy',

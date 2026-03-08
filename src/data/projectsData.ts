@@ -5,7 +5,7 @@ export const projects: ProjectItem[] = [
     {
         title: "Plotline",
         description: "Organize your entire media library; movies, series, anime, manga, and games; all in one place. Plotline shows you exactly where to stream, buy, or rent everything you want.",
-        GDriveID: "1aBcDeFgHiJkLmNoPqRsTuVwXyZ123456",
+        GDriveID: "1EKFOxm_LYakpHbmSBfCC1WWqHYLb56jk",
         techStack: ['Next.js', 'TypeScript', 'Firebase', 'Tailwind'],
         siteLink: "https://plotline.akshitbansal.me/",
         openSource: false
@@ -28,10 +28,10 @@ export const projects: ProjectItem[] = [
         githubLink: "https://github.com/akshit-bansal11/canopy",
         openSource: true
     },
-    {
-        title: "Medishare",
-        description: "MediShare is a donation-based platform that connects medicine donors with people in need through a secure and verified system.",
-        GDriveID: "1GlKKrrpe6OmzTt-zs9u-llJK6qWUjuuC",
-        techStack: ['React', 'Node.js', 'Express', 'MongoDB']
-    }
+    // {
+    //     title: "Medishare",
+    //     description: "MediShare is a donation-based platform that connects medicine donors with people in need through a secure and verified system.",
+    //     GDriveID: "1GlKKrrpe6OmzTt-zs9u-llJK6qWUjuuC",
+    //     techStack: ['React', 'Node.js', 'Express', 'MongoDB']
+    // }
 ];
