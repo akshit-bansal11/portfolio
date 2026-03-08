@@ -15,7 +15,11 @@ export const experience: ExperienceCategory[] = [
                 role: "Full Stack (Next.js/GoLang) Intern",
                 date: "Jan 2026 - Ongoing",
                 points: [
-                    "Just Started - Learning and Working with next.js and GoLang"
+                    "Built a subtitle generator supporting video and audio files, with an option to hard-burn subtitles directly onto the output video.",
+                    "Engineered a native in-browser screen capture feature, replacing reliance on the 'Trupeer AI Screen Recorder & Video Editor' Chrome extension — enabling screen recording in enterprise environments with extension installation restrictions.",
+                    "Authored comprehensive unit tests across all routes and functions, increasing code coverage to 90%.",
+                    "Refined UI/UX with targeted improvements that boosted user engagement and overall platform usability.",
+                    "Standardized and reformatted the entire codebase within a month, doubling code quality and maintainability."
                 ]
             },
             {

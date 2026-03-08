@@ -18,9 +18,10 @@ interface ProjectCardTextProps {
   description: string;
   githubLink?: string;
   techStack?: string[];
+  openSource?: boolean;
 }
 
-export default function ProjectCardSmallWimg({ title, description, githubLink, techStack = [] }: ProjectCardTextProps) {
+export default function ProjectCardSmallWimg({ title, description, githubLink, techStack = [], openSource }: ProjectCardTextProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -31,9 +32,16 @@ export default function ProjectCardSmallWimg({ title, description, githubLink, t
     >
       <Card className="group border-neutral-800 bg-neutral-900/50 backdrop-blur-sm transition-all duration-300 hover:border-neutral-700 hover:shadow-xl hover:shadow-black/50 h-full flex flex-col">
         <CardHeader className="space-y-2 p-6 pb-2">
-          <CardTitle className="font-clash text-xl tracking-wide text-white">
-            {title}
-          </CardTitle>
+          <div className="flex items-center gap-2 flex-wrap">
+            <CardTitle className="font-clash text-xl tracking-wide text-white">
+              {title}
+            </CardTitle>
+            {openSource && (
+              <span className="inline-flex items-center rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-400">
+                open source
+              </span>
+            )}
+          </div>
           <CardDescription className="text-neutral-400 text-sm">
             {description}
           </CardDescription>

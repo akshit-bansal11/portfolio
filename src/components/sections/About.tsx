@@ -174,7 +174,7 @@ export default function About({
                             crafting practical, scalable, and visually appealing web applications.
                         </p>
                         <p className="mt-4">
-                            I specialize in the <span className="text-pink-400 font-semibold">MERN stack</span> and love
+                            I specialize in <span className="text-pink-400 font-semibold">Next.js and Typescript</span> and love
                             solving real problems by blending clean code with thoughtful design.
                             From seamless UIs to reliable backends, I enjoy turning ideas into
                             experiences people actually use.
