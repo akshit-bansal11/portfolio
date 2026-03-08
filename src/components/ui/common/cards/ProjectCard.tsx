@@ -99,15 +99,15 @@ export default function ProjectCard({
         </CardContent>
 
         <CardFooter className="gap-3 pt-0">
-          {demoLink || githubLink || designLink || siteLink ? (
+          {designLink && (
+            <Button asChild size="sm" variant="outline" className="border-neutral-700 bg-transparent text-neutral-300 hover:bg-neutral-800 hover:text-white">
+              <a href={designLink} target="_blank" rel="noopener noreferrer">
+                <FaFigma className="mr-2 h-4 w-4" /> Design
+              </a>
+            </Button>
+          )}
+          {openSource === true && (
             <>
-              {siteLink && (
-                <Button asChild size="sm" className="bg-white text-black hover:bg-neutral-200">
-                  <a href={siteLink} target="_blank" rel="noopener noreferrer">
-                    <FaExternalLinkAlt className="mr-2 h-3 w-3" /> Site
-                  </a>
-                </Button>
-              )}
               {demoLink && (
                 <Button asChild size="sm" className="bg-white text-black hover:bg-neutral-200">
                   <a href={demoLink} target="_blank" rel="noopener noreferrer">
@@ -122,18 +122,14 @@ export default function ProjectCard({
                   </a>
                 </Button>
               )}
-              {designLink && (
-                <Button asChild size="sm" variant="outline" className="border-neutral-700 bg-transparent text-neutral-300 hover:bg-neutral-800 hover:text-white">
-                  <a href={designLink} target="_blank" rel="noopener noreferrer">
-                    <FaFigma className="mr-2 h-4 w-4" /> Design
-                  </a>
-                </Button>
-              )}
             </>
-          ) : (
-            <div className="text-xs font-semibold uppercase tracking-wider text-amber-500/80">
-              * Private Project
-            </div>
+          )}
+          {openSource === false && siteLink && (
+            <Button asChild size="sm" className="bg-white text-black hover:bg-neutral-200">
+              <a href={siteLink} target="_blank" rel="noopener noreferrer">
+                <FaExternalLinkAlt className="mr-2 h-3 w-3" /> Site
+              </a>
+            </Button>
           )}
         </CardFooter>
       </Card>

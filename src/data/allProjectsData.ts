@@ -32,13 +32,13 @@ export const allProjects: Record<string, DetailedProjectItem[]> = {
             githubLink: "https://github.com/akshit-bansal11/color-space",
             openSource: true
         },
-        {
-            type: 'large',
-            title: 'Medishare',
-            description: 'MediShare is a donation-based platform that connects medicine donors with people in need through a secure and verified system.',
-            GDriveID: "1GlKKrrpe6OmzTt-zs9u-llJK6qWUjuuC",
-            techStack: ['React', 'Node.js', 'Express', 'MongoDB', 'Tailwind CSS', 'Cloudinary', 'Gemini API']
-        },
+        // {
+        //     type: 'large',
+        //     title: 'Medishare',
+        //     description: 'MediShare is a donation-based platform that connects medicine donors with people in need through a secure and verified system.',
+        //     GDriveID: "1GlKKrrpe6OmzTt-zs9u-llJK6qWUjuuC",
+        //     techStack: ['React', 'Node.js', 'Express', 'MongoDB', 'Tailwind CSS', 'Cloudinary', 'Gemini API']
+        // },
         {
             type: 'large',
             title: 'Influera',
@@ -46,7 +46,8 @@ export const allProjects: Record<string, DetailedProjectItem[]> = {
             GDriveID: "1Y6T0_ui76QlbfO6emonj9_sVzMuzuBdB",
             techStack: ['React', 'Node.js', 'Express', 'MongoDB', 'Tailwind CSS', 'Cloudinary', 'Gemini API'],
             demoLink: "https://influera.onrender.com/",
-            githubLink: "https://github.com/akshit-bansal11/influera"
+            githubLink: "https://github.com/akshit-bansal11/influera",
+            openSource: true
         },
     ],
     games: [
@@ -57,7 +58,8 @@ export const allProjects: Record<string, DetailedProjectItem[]> = {
             GDriveID: "1CrYa0y4R1bd5a8AJ4fh7K7zIIRWws1Nz",
             techStack: ['HTML', 'CSS', 'JavaScript'],
             demoLink: 'https://akshit-bansal11.github.io/rock-paper-scissors/',
-            githubLink: 'https://github.com/akshit-bansal11/rock-paper-scissors'
+            githubLink: 'https://github.com/akshit-bansal11/rock-paper-scissors',
+            openSource: true
         },
         {
             type: 'small',
@@ -66,7 +68,8 @@ export const allProjects: Record<string, DetailedProjectItem[]> = {
             GDriveID: "1ejz6HO0-UO0AzVIf-7I9NM4WEz-MuhRT",
             techStack: ['HTML', 'CSS', 'JavaScript'],
             demoLink: 'https://akshit-bansal11.github.io/drum-kit/',
-            githubLink: 'https://github.com/akshit-bansal11/drum-kit'
+            githubLink: 'https://github.com/akshit-bansal11/drum-kit',
+            openSource: true
         },
         {
             type: 'small',
@@ -75,7 +78,8 @@ export const allProjects: Record<string, DetailedProjectItem[]> = {
             GDriveID: "1Mj6liVIv1aofQI8vghKLggzBlv3M4CWm",
             techStack: ['React', 'Tailwind'],
             demoLink: 'https://memory-game-akshit-bansal11.vercel.app/',
-            githubLink: 'https://github.com/akshit-bansal11/memory-game'
+            githubLink: 'https://github.com/akshit-bansal11/memory-game',
+            openSource: true
         },
         {
             type: 'small',
@@ -84,7 +88,8 @@ export const allProjects: Record<string, DetailedProjectItem[]> = {
             GDriveID: "1kNEVXin8r_cT9yOMBRPrdGV1tmBLIOJw",
             techStack: ['HTML', 'CSS', 'JavaScript'],
             demoLink: 'https://akshit-bansal11.github.io/tic-tac-toe/',
-            githubLink: 'https://github.com/akshit-bansal11/tic-tac-toe'
+            githubLink: 'https://github.com/akshit-bansal11/tic-tac-toe',
+            openSource: true
         },
         {
             type: 'small',
@@ -92,7 +97,8 @@ export const allProjects: Record<string, DetailedProjectItem[]> = {
             description: 'A simple batting strike calculator built with Python. Calculate your batting strike rate and average.',
             GDriveID: "1XrsTNP5zjki8ABpnRoUQX-ssM2vgOq8x",
             techStack: ['Python'],
-            githubLink: 'https://github.com/akshit-bansal11/batting-strike-calculator'
+            githubLink: 'https://github.com/akshit-bansal11/batting-strike-calculator',
+            openSource: true
         }
     ],
     tools: [
@@ -103,7 +109,8 @@ export const allProjects: Record<string, DetailedProjectItem[]> = {
             GDriveID: "1TXRLBAgVKxXP6y8hVkldOMx2eBTYF9ll",
             techStack: ['React', 'Tailwind'],
             githubLink: 'https://akshit-bansal11.github.io/bar-clock/',
-            demoLink: 'https://bar-clock-akshit-bansal11.vercel.app/'
+            demoLink: 'https://bar-clock-akshit-bansal11.vercel.app/',
+            openSource: true
         },
         {
             type: 'small',
@@ -111,7 +118,8 @@ export const allProjects: Record<string, DetailedProjectItem[]> = {
             description: 'A Real-Time Audio Visualizer built with C# & .NET. Visualizes the audio from all sources and from any audio device connected to the system.',
             GDriveID: "1XrsTNP5zjki8ABpnRoUQX-ssM2vgOq8x",
             techStack: ['C#', '.NET'],
-            githubLink: 'https://github.com/akshit-bansal11/audio-visualizer'
+            githubLink: 'https://github.com/akshit-bansal11/audio-visualizer',
+            openSource: true
         },
         {
             type: 'small',
@@ -120,7 +128,8 @@ export const allProjects: Record<string, DetailedProjectItem[]> = {
             GDriveID: "1jS6Xkx30U5Xu18b0n59HAyHarwSTJmGK",
             techStack: ['React', 'Tailwind'],
             demoLink: 'https://counter-akshit-bansal11.vercel.app/',
-            githubLink: 'https://github.com/akshit-bansal11/counter/'
+            githubLink: 'https://github.com/akshit-bansal11/counter/',
+            openSource: true
         },
         {
             type: 'small',
@@ -129,7 +138,8 @@ export const allProjects: Record<string, DetailedProjectItem[]> = {
             GDriveID: "1pwID1hVLiMiH5DMx5tdugb5nQ4O236Io",
             techStack: ['HTML', 'Tailwind', 'JavaScript'],
             githubLink: 'https://github.com/akshit-bansal11/analog-digital-clock',
-            demoLink: 'https://akshit-bansal11.github.io/analog-digital-clock/'
+            demoLink: 'https://akshit-bansal11.github.io/analog-digital-clock/',
+            openSource: true
         },
         {
             type: 'small',
@@ -138,7 +148,8 @@ export const allProjects: Record<string, DetailedProjectItem[]> = {
             GDriveID: "1uKOvrjtr2zEqqXb-y2w5uR_sU2CB8G79",
             techStack: ['React', 'Tailwind'],
             githubLink: 'https://github.com/akshit-bansal11/to-do-list',
-            demoLink: 'https://to-do-list-akshit-bansal11.vercel.app/'
+            demoLink: 'https://to-do-list-akshit-bansal11.vercel.app/',
+            openSource: true
         },
         {
             type: 'small',
@@ -147,7 +158,8 @@ export const allProjects: Record<string, DetailedProjectItem[]> = {
             GDriveID: "1xvrg4vDrll3iIF_TTP5p-BjTsYFUO3NR",
             techStack: ['HTML', 'Tailwind', 'JavaScript'],
             githubLink: 'https://github.com/akshit-bansal11/digital-clock',
-            demoLink: 'https://akshit-bansal11.github.io/digital-clock/'
+            demoLink: 'https://akshit-bansal11.github.io/digital-clock/',
+            openSource: true
         },
         {
             type: 'small',
@@ -155,7 +167,8 @@ export const allProjects: Record<string, DetailedProjectItem[]> = {
             description: 'A simple login/signup system built with C++. It allows users to register and login with a username and password.',
             GDriveID: "1XrsTNP5zjki8ABpnRoUQX-ssM2vgOq8x",
             techStack: ['C++'],
-            githubLink: 'https://github.com/akshit-bansal11/cpp-login-signup'
+            githubLink: 'https://github.com/akshit-bansal11/cpp-login-signup',
+            openSource: true
         },
         {
             type: 'small',
@@ -164,15 +177,16 @@ export const allProjects: Record<string, DetailedProjectItem[]> = {
             GDriveID: "1RF_l5RkpT6qxUOlIkPyfJpkTAsszUZKx",
             techStack: ['HTML', 'CSS', 'JavaScript'],
             githubLink: 'https://github.com/akshit-bansal11/simple-calculator',
-            demoLink: 'https://akshit-bansal11.github.io/simple-calculator/'
+            demoLink: 'https://akshit-bansal11.github.io/simple-calculator/',
+            openSource: true
         }
     ],
     designs: [
         {
             type: 'large',
-            title: 'IPO Dashboard - Bluestock Fintech',
+            title: 'IPO Dashboard - Bluestock',
             description: "A dashboard design for Bluestock Fintech's IPO section, showcasing the latest IPOs, upcoming IPOs, and past IPOs.",
-            GDriveID: "1wVR_WZqPkf_EjwytRJsDrC1pC8F2pE",
+            GDriveID: "1wVR_WZqPkf_EjwytRJsDrC1pC8F2pE-I",
             techStack: ['Figma'],
             designLink: 'https://www.figma.com/design/IyF5MKCS7GP2ChFBOiWXAK/bluestock-fintech-ui-ux-team?node-id=0-1&p=f&t=uex6AqWahwZjsA3R-0'
         },
@@ -192,7 +206,8 @@ export const allProjects: Record<string, DetailedProjectItem[]> = {
             description: 'A python script to merge two or more folders.',
             GDriveID: "",
             techStack: ['Python'],
-            githubLink: 'https://github.com/akshit-bansal11/useful-scripts'
+            githubLink: 'https://github.com/akshit-bansal11/useful-scripts',
+            openSource: true
         },
         {
             type: 'smallWimg',
@@ -200,7 +215,8 @@ export const allProjects: Record<string, DetailedProjectItem[]> = {
             description: 'A python script to convert audio files from one format to another.',
             GDriveID: "",
             techStack: ['Python'],
-            githubLink: 'https://github.com/akshit-bansal11/useful-scripts'
+            githubLink: 'https://github.com/akshit-bansal11/useful-scripts',
+            openSource: true
         }
     ]
 }
