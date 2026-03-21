@@ -25,6 +25,28 @@ export const allProjects: Record<string, DetailedProjectItem[]> = {
         },
         {
             type: 'large',
+            title: 'Open Tools',
+            description: 'A growing collection of focused, local-first utilities for image, text, and design workflows. Each tool lives on its own route.',
+            imgUrl: "https://media-server.akshitbansal.me/api/images/portfolio/websites/open-tools.png",
+            // videoUrl: "https://res.cloudinary.com/dugsystpq/video/upload/v1772932699/open-tools-demo-video_apmc8u.mp4",
+            techStack: ['Next.js', 'TypeScript', 'Tailwind', 'Shadcn/ui'],
+            demoLink: 'https://use-open-tools.vercel.app/',
+            githubLink: 'https://github.com/akshit-bansal11/open-tools',
+            openSource: true
+        },
+        {
+            type: 'large',
+            title: 'cmd Ref',
+            description: 'A growing collection of coprehensive command line reference guides for various tools and technologies. Each guide provides detailed information on commands, options, and usage examples.',
+            imgUrl: "https://media-server.akshitbansal.me/api/images/portfolio/websites/cmd-ref.png",
+            // videoUrl: "https://res.cloudinary.com/dugsystpq/video/upload/v1772932699/open-tools-demo-video_apmc8u.mp4",
+            techStack: ['Next.js', 'TypeScript', 'Tailwind', 'Shadcn/ui'],
+            demoLink: 'https://cmd-ref.vercel.app/',
+            githubLink: 'https://github.com/akshit-bansal11/.cmd-ref',
+            openSource: true
+        },
+        {
+            type: 'large',
             title: 'Color Space',
             description: "Color Space is a comprehensive, all-in-one web application designed for designers and developers. It provides a full suite of tools to create, browse, extract, and convert colors and gradients, all in one centralized hub.",
             imgUrl: "https://media-server.akshitbansal.me/api/images/portfolio/websites/color-space.png",
@@ -46,13 +68,13 @@ export const allProjects: Record<string, DetailedProjectItem[]> = {
             title: 'Influera',
             description: 'Influera is a platform that connects influencers with brands for collaborations.',
             imgUrl: "https://media-server.akshitbansal.me/api/images/portfolio/websites/influera.png",
-            techStack: ['React', 'Node.js', 'Express', 'MongoDB', 'Tailwind CSS', 'Cloudinary', 'Gemini API'],
+            techStack: ['React', 'Node.js', 'MongoDB', 'Tailwind CSS'],
             demoLink: "https://influera.onrender.com/",
             githubLink: "https://github.com/akshit-bansal11/influera",
             openSource: true
         },
         {
-            type: 'small',
+            type: 'large',
             title: 'Memory Game',
             description: 'A fun and modern Memory Game built with React, Vite, Tailwind CSS, Framer Motion, and React Icons.',
             imgUrl: "https://media-server.akshitbansal.me/api/images/portfolio/websites/memory.webp",
@@ -62,7 +84,7 @@ export const allProjects: Record<string, DetailedProjectItem[]> = {
             openSource: true
         },
         {
-            type: 'small',
+            type: 'large',
             title: 'Bar Clock',
             description: 'A simple bar clock built with React & Tailwind. Displays the current time in a unique way.',
             imgUrl: "https://media-server.akshitbansal.me/api/images/portfolio/websites/bar-clock.webp",
