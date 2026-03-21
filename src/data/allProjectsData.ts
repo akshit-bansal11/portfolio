@@ -55,7 +55,7 @@ export const allProjects: Record<string, DetailedProjectItem[]> = {
             type: 'small',
             title: 'Memory Game',
             description: 'A fun and modern Memory Game built with React, Vite, Tailwind CSS, Framer Motion, and React Icons.',
-            imgUrl: "https://media-server.akshitbansal.me/api/images/portfolio/games/memory.webp",
+            imgUrl: "https://media-server.akshitbansal.me/api/images/portfolio/websites/memory.webp",
             techStack: ['React', 'Tailwind'],
             demoLink: 'https://memory-game-akshit-bansal11.vercel.app/',
             githubLink: 'https://github.com/akshit-bansal11/memory-game',
@@ -65,7 +65,7 @@ export const allProjects: Record<string, DetailedProjectItem[]> = {
             type: 'small',
             title: 'Bar Clock',
             description: 'A simple bar clock built with React & Tailwind. Displays the current time in a unique way.',
-            imgUrl: "https://media-server.akshitbansal.me/api/images/portfolio/tools/bar-clock.webp",
+            imgUrl: "https://media-server.akshitbansal.me/api/images/portfolio/websites/bar-clock.webp",
             techStack: ['React', 'Tailwind'],
             githubLink: 'https://akshit-bansal11.github.io/bar-clock/',
             demoLink: 'https://bar-clock-akshit-bansal11.vercel.app/',
@@ -95,7 +95,6 @@ export const allProjects: Record<string, DetailedProjectItem[]> = {
             type: 'smallWimg',
             title: 'Merge Folders',
             description: 'A python script to merge two or more folders.',
-            imgUrl: "https://media-server.akshitbansal.me/api/images/portfolio/scripts/merge-folders.png",
             techStack: ['Python'],
             githubLink: 'https://github.com/akshit-bansal11/useful-scripts',
             openSource: true
@@ -104,7 +103,6 @@ export const allProjects: Record<string, DetailedProjectItem[]> = {
             type: 'smallWimg',
             title: 'Audio Converter',
             description: 'A python script to convert audio files from one format to another.',
-            imgUrl: "https://media-server.akshitbansal.me/api/images/portfolio/scripts/audio-converter.png",
             techStack: ['Python'],
             githubLink: 'https://github.com/akshit-bansal11/useful-scripts',
             openSource: true
