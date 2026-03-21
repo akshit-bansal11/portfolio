@@ -1,23 +1,8 @@
 import React from "react";
-import { ClionIcon } from "@/components/icons/clion-icon";
-import { AzureBlobDarkIcon } from "@/components/icons/azure-blob-dark-icon";
-import { JqueryIcon } from "@/components/icons/jquery-icon";
-import { LeetcodeDarkIcon } from "@/components/icons/leetcode-dark-icon";
-import { HackerRankDarkIcon } from "@/components/icons/hackerrank-dark-icon";
-import { ChatgptDarkIcon } from "@/components/icons/chatgpt-dark-icon";
-import { FirestoreIcon } from "@/components/icons/firestore-icon";
-import { VercelBlobDarkIcon } from "@/components/icons/vercel-blob-dark-icon";
-import { ReactRouterIcon } from "@/components/icons/reactrouter";
-import { SqlIcon } from "@/components/icons/sql";
-import { FfmpegIcon } from "@/components/icons/ffmpeg-icon";
-import { FfmpegWasmIcon } from "@/components/icons/ffmpeg-wasm-icon";
-import { ElevenLabsDarkIcon } from "@/components/icons/eleven-labs-dark-icon";
-import { JsdomIcon } from "@/components/icons/jsdom-icon"
-import { HappyDomIcon } from "@/components/icons/happy-dom-icon"
 
 export interface Skill {
     name: string;
-    Icon: string | React.ElementType;
+    Icon: string;
 }
 
 export interface SkillCategory {
@@ -41,7 +26,7 @@ export const skillsData: SkillCategory[] = [
             { name: "CSS Properties (Great Learning)", Icon: "https://svgl.app/library/css.svg" },
             { name: "NodeJS - Full Stack (Bangalore Computer Education)", Icon: "https://svgl.app/library/javascript.svg" },
             { name: "JavaScript (Basic) HackerRank", Icon: "https://svgl.app/library/javascript.svg" },
-            { name: "NodeJS - Full Stack (Bangalore Computer Education)", Icon: JqueryIcon },
+            { name: "NodeJS - Full Stack (Bangalore Computer Education)", Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/jquery.svg" },
             { name: "MERN Stack (Sun Soft Technologies)", Icon: "https://svgl.app/library/react_dark.svg" },
             { name: "MERN Stack (Sun Soft Technologies)", Icon: "https://svgl.app/library/tailwindcss.svg" },
         ],
@@ -61,8 +46,8 @@ export const skillsData: SkillCategory[] = [
             { name: "Motion", Icon: "https://svgl.app/library/motion_dark.svg" },
             { name: "Radix UI", Icon: "https://svgl.app/library/radix-ui_dark.svg" },
             { name: "Redux", Icon: "https://svgl.app/library/redux.svg" },
-            { name: "React Router", Icon: ReactRouterIcon },
-            { name: "jQuery", Icon: JqueryIcon },
+            { name: "React Router", Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/reactrouter-dark.svg" },
+            { name: "jQuery", Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/jquery.svg" },
             { name: "Bootstrap", Icon: "https://svgl.app/library/bootstrap.svg" },
             { name: "Material UI", Icon: "https://svgl.app/library/materialui.svg" },
         ]
@@ -71,7 +56,7 @@ export const skillsData: SkillCategory[] = [
         title: "Backend & Databases",
         description: "Designing reliable backend systems that handle data, business logic, and scale without becoming fragile. I use these tools to build APIs, manage persistence, and ensure applications remain fast, secure, and predictable as complexity grows.",
         certifications: [
-            { name: "SQL(Basic) (HackerRank)", Icon: SqlIcon },
+            { name: "SQL(Basic) (HackerRank)", Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/sql.svg" },
             { name: "NodeJS - Full Stack (Bangalore Computer Education)", Icon: "https://svgl.app/library/nodejs.svg" },
             { name: "NodeJS - Full Stack (Bangalore Computer Education)", Icon: "https://svgl.app/library/expressjs_dark.svg" },
             { name: "NodeJS - Full Stack (Bangalore Computer Education)", Icon: "https://svgl.app/library/mysql-icon-dark.svg" },
@@ -87,7 +72,7 @@ export const skillsData: SkillCategory[] = [
             { name: "Bun", Icon: "https://svgl.app/library/bun.svg" },
             { name: "C#", Icon: "https://svgl.app/library/csharp.svg" },
             { name: ".NET", Icon: "https://svgl.app/library/dotnet.svg" },
-            { name: "SQL", Icon: SqlIcon },
+            { name: "SQL", Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/sql.svg" },
             { name: "MongoDB", Icon: "https://svgl.app/library/mongodb-icon-dark.svg" },
             { name: "MySQL", Icon: "https://svgl.app/library/mysql-icon-dark.svg" },
             { name: "PostgreSQL", Icon: "https://svgl.app/library/postgresql.svg" },
@@ -110,8 +95,8 @@ export const skillsData: SkillCategory[] = [
             { name: "Python", Icon: "https://svgl.app/library/python.svg" },
             { name: "C", Icon: "https://svgl.app/library/c.svg" },
             { name: "C++", Icon: "https://svgl.app/library/c-plusplus.svg" },
-            { name: "Leetcode", Icon: LeetcodeDarkIcon },
-            { name: "Hackerrank", Icon: HackerRankDarkIcon },
+            { name: "Leetcode", Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/leetcode-dark.svg" },
+            { name: "Hackerrank", Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/hacker-rank-dark.svg" },
         ]
     },
     {
@@ -131,7 +116,7 @@ export const skillsData: SkillCategory[] = [
             { name: "vscode", Icon: "https://svgl.app/library/vscode.svg" },
             { name: "pycharm", Icon: "https://svgl.app/library/pycharm.svg" },
             { name: "webstorm", Icon: "https://svgl.app/library/webstorm.svg" },
-            { name: "CLion", Icon: ClionIcon },
+            { name: "CLion", Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/c-lion.svg" },
         ]
     },
     {
@@ -142,12 +127,12 @@ export const skillsData: SkillCategory[] = [
         ],
         skills: [
             { name: "Cloudinary", Icon: "https://svgl.app/library/cloudinary.svg" },
-            { name: "Firestore", Icon: FirestoreIcon },
+            { name: "Firestore", Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/firestore.svg" },
             { name: "SVG", Icon: "https://svgl.app/library/svg.svg" },
-            { name: "Vercel Blob", Icon: VercelBlobDarkIcon },
-            { name: "Azure Blob", Icon: AzureBlobDarkIcon },
-            { name: "FFmpeg", Icon: FfmpegIcon },
-            { name: "FFmpeg WASM", Icon: FfmpegWasmIcon },
+            { name: "Vercel Blob", Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/vercel-blob-dark.svg" },
+            { name: "Azure Blob", Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/azure-blob-dark.svg" },
+            { name: "FFmpeg", Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/ffmpeg.svg" },
+            { name: "FFmpeg WASM", Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/ffmpeg-wasm.svg" },
         ]
     },
     {
@@ -156,14 +141,14 @@ export const skillsData: SkillCategory[] = [
         certifications: [],
         skills: [
             { name: "Gemini", Icon: "https://svgl.app/library/gemini.svg" },
-            { name: "ChatGPT", Icon: ChatgptDarkIcon },
+            { name: "ChatGPT", Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/chatgpt-dark.svg" },
             { name: "Claude", Icon: "https://svgl.app/library/claude-ai-icon.svg" },
             { name: "Firebase Studio", Icon: "https://svgl.app/library/firebase-studio.svg" },
             { name: "MCP", Icon: "https://svgl.app/library/model-context-protocol-dark.svg" },
             { name: "Perplexity", Icon: "https://svgl.app/library/perplexity.svg" },
             { name: "Grok", Icon: "https://svgl.app/library/grok-dark.svg" },
             { name: "Ollama", Icon: "https://svgl.app/library/ollama_dark.svg" },
-            { name: "ElevenLabs", Icon: ElevenLabsDarkIcon },
+            { name: "ElevenLabs", Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/eleven-labs-dark.svg" },
         ]
     },
     {
@@ -187,8 +172,8 @@ export const skillsData: SkillCategory[] = [
         skills: [
             { name: "Vitest", Icon: "https://svgl.app/library/vitest.svg" },
             { name: "Jest", Icon: "https://svgl.app/library/jest.svg" },
-            { name: "happy-dom", Icon: HappyDomIcon },
-            { name: "jsdom", Icon: JsdomIcon },
+            { name: "happy-dom", Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/happy-dom.svg" },
+            { name: "jsdom", Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/jsdom.svg" },
         ]
     }
 ];

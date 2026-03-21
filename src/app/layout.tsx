@@ -36,6 +36,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const isWelcomeAnimationDisabled =
+    process.env.WELCOME_ANIMATION_DISABLED?.trim().toLowerCase() === "true";
+
   return (
     <html lang="en" className="dark">
       <body
@@ -55,7 +58,7 @@ export default function RootLayout({
               followMouse={false}
             />
           </div>
-          <WelcomeAnimation />
+          <WelcomeAnimation disabled={isWelcomeAnimationDisabled} />
           <NavBar />
           {children}
         </AnimationProvider>

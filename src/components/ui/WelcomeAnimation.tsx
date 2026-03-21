@@ -5,12 +5,21 @@ import { createTimeline } from 'animejs';
 import { createDrawable } from 'animejs/svg';
 import { useAnimation } from '@/context/AnimationContext';
 
-const WelcomeAnimation = () => {
+interface WelcomeAnimationProps {
+    disabled?: boolean;
+}
+
+const WelcomeAnimation = ({ disabled = false }: WelcomeAnimationProps) => {
     const [showAnimation, setShowAnimation] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
     const { setWelcomeComplete } = useAnimation();
 
     useEffect(() => {
+        if (disabled) {
+            setWelcomeComplete(true);
+            return;
+        }
+
         // const hasSeen = sessionStorage.getItem('portfolio-welcome-v1');
         // console.log('WelcomeAnimation: hasSeen?', hasSeen);
         // if (!hasSeen) {
@@ -18,7 +27,7 @@ const WelcomeAnimation = () => {
             setShowAnimation(true);
         }, 50);
         // }
-    }, []);
+    }, [disabled, setWelcomeComplete]);
 
     useEffect(() => {
         if (!showAnimation || !containerRef.current) return;
