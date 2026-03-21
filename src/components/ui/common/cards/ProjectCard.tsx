@@ -2,6 +2,7 @@
 "use client";
 import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
+import { createPortal } from 'react-dom';
 
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -32,11 +33,14 @@ interface ProjectCardProps {
 }
 
 function VideoModal({ videoUrl, title, onClose }: { videoUrl: string; title: string; onClose: () => void }) {
+  const [mounted, setMounted] = useState(false);
+
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === 'Escape') onClose();
   }, [onClose]);
 
   useEffect(() => {
+    setMounted(true);
     document.addEventListener('keydown', handleKeyDown);
     document.body.style.overflow = 'hidden';
     return () => {
@@ -45,9 +49,11 @@ function VideoModal({ videoUrl, title, onClose }: { videoUrl: string; title: str
     };
   }, [handleKeyDown]);
 
-  return (
+  if (!mounted) return null;
+
+  const modalContent = (
     <motion.div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -80,6 +86,8 @@ function VideoModal({ videoUrl, title, onClose }: { videoUrl: string; title: str
       </motion.div>
     </motion.div>
   );
+
+  return createPortal(modalContent, document.body);
 }
 
 export default function ProjectCard({
