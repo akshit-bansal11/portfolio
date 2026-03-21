@@ -49,7 +49,8 @@ export const allProjects: Record<string, DetailedProjectItem[]> = {
         "A growing collection of coprehensive command line reference guides for various tools and technologies. Each guide provides detailed information on commands, options, and usage examples.",
       imgUrl:
         "https://media-server.akshitbansal.me/api/images/portfolio/websites/cmd-ref.png",
-      // videoUrl: "https://res.cloudinary.com/dugsystpq/video/upload/v1772932699/open-tools-demo-video_apmc8u.mp4",
+      videoUrl:
+        "https://res.cloudinary.com/dugsystpq/video/upload/v1772932699/open-tools-demo-video_apmc8u.mp4https://res.cloudinary.com/dugsystpq/video/upload/v1774103321/cmd-ref-demo_q6uwee.mp4",
       techStack: ["Next.js", "TypeScript", "Tailwind", "Shadcn/ui"],
       demoLink: "https://cmd-ref.vercel.app/",
       githubLink: "https://github.com/akshit-bansal11/.cmd-ref",
