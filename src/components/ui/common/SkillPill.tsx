@@ -12,7 +12,6 @@ interface SkillPillProps {
 
 const SkillPill = ({ skill }: SkillPillProps) => {
     const Icon = skill.Icon;
-    const isStringIcon = typeof Icon === "string";
 
     return (
         <motion.div
@@ -24,17 +23,13 @@ const SkillPill = ({ skill }: SkillPillProps) => {
                 "text-sm text-neutral-200 select-none"
             )}
         >
-            {isStringIcon ? (
-                <Image
-                    src={Icon}
-                    alt={skill.name}
-                    width={20}
-                    height={20}
-                    className="h-5 w-5 object-contain"
-                />
-            ) : (
-                <Icon className="h-5 w-5 text-neutral-300" />
-            )}
+            <Image
+                src={Icon}
+                alt={skill.name}
+                width={20}
+                height={20}
+                className="h-5 w-5 object-contain"
+            />
 
             <span className="whitespace-nowrap">{skill.name}</span>
         </motion.div>
