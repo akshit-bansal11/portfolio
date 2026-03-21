@@ -22,32 +22,32 @@ export const achievements: AchievementItem[] = [
 export const certifications: CertificationItem[] = [
     {
         name: "CSS (Basic)",
-        ImgID: "1ud6alNDvAmYybdnIqrnyJQ8IWTWNZ5Ge",
+        imgUrl: "https://media-server.akshitbansal.me/api/images/portfolio/certificates/css-basic.png",
         link: "https://www.hackerrank.com/certificates/35384d086309"
     },
     {
         name: "JavaScript (Basic)",
-        ImgID: "1tB7IPlkqKTV9S1dqLbDddi_OxdqqZ1Gi",
+        imgUrl: "https://media-server.akshitbansal.me/api/images/portfolio/certificates/js-basic.png",
         link: "https://www.hackerrank.com/certificates/7f1a01b7b859"
     },
     {
         name: "Node.js (Basic)",
-        ImgID: "1WiTCtljWgOWgeOH-r4Y3GHpJ6iHEAOQa",
+        imgUrl: "https://media-server.akshitbansal.me/api/images/portfolio/certificates/node-basic.png",
         link: "https://www.hackerrank.com/certificates/9eabe8ab61b1"
     },
     {
         name: "React.js (Basic)",
-        ImgID: "1xT_VVyVuYXa9EnDbfMaZMr4BcBoi1arV",
+        imgUrl: "https://media-server.akshitbansal.me/api/images/portfolio/certificates/react-basic.png",
         link: "https://www.hackerrank.com/certificates/9eabe8ab61b1"
     },
     {
         name: "SQL (Basic)",
-        ImgID: "1gFYPjYV4x6CidehZ2SkF1IdABiubsLls",
+        imgUrl: "https://media-server.akshitbansal.me/api/images/portfolio/certificates/sql-basic.png",
         link: "https://www.hackerrank.com/certificates/9eabe8ab61b1"
     },
     {
         name: "Frontend Developer (React)",
-        ImgID: "1cMUhFRucVh1rfGw0pjKNiTk4J9G4Mxfd",
+        imgUrl: "https://media-server.akshitbansal.me/api/images/portfolio/certificates/front-react.png",
         link: "https://www.hackerrank.com/certificates/9eabe8ab61b1"
     },
 ];

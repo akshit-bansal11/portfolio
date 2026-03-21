@@ -60,7 +60,7 @@ export interface EducationItem {
 
 // Certification Types
 export interface CertificationItem {
-    ImgID?: string;
+    imgUrl?: string;
     link?: string;
     name?: string;
 }
