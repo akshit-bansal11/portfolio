@@ -6,6 +6,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { FaExternalLinkAlt } from "react-icons/fa";
+import Image from "next/image";
 
 
 //--------------------|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|--------------------//
@@ -28,7 +29,15 @@ export default function Certifications() {
                         <SkillBadge
                             key={index}
                             name={item.name}
-                            icon={<item.icon />}
+                            icon={
+                                <Image
+                                    src={item.icon}
+                                    alt={item.name}
+                                    width={40}
+                                    height={40}
+                                    className="h-10 w-10 object-contain"
+                                />
+                            }
                             stars={item.stars}
                             source={item.source}
                             delay={item.delay}

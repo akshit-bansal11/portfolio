@@ -1,10 +1,9 @@
-import { SiCplusplus, SiCoursera } from "react-icons/si";
 import { AchievementItem, CertificationItem } from "@/types";
 
 export const achievements: AchievementItem[] = [
     {
         name: "C++",
-        icon: SiCplusplus,
+        icon: "https://svgl.app/library/c-plusplus.svg",
         stars: 5,
         source: "HackerRank",
         delay: 0.2,
@@ -12,7 +11,7 @@ export const achievements: AchievementItem[] = [
     },
     {
         name: "C",
-        icon: SiCoursera, // Note: Using SiCoursera as placeholder for C icon requested in original file? Or is C icon SiCoursera? Original file used SiCoursera for "C".
+        icon: "https://svgl.app/library/c.svg",
         stars: 2,
         source: "HackerRank",
         delay: 0,

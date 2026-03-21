@@ -14,15 +14,14 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { FiGithub } from 'react-icons/fi';
-import { FaExternalLinkAlt, FaFigma, FaPlay } from 'react-icons/fa';
+import { FaGithub, FaGlobe, FaFigma, FaPlay } from 'react-icons/fa6';
 import { IoClose } from 'react-icons/io5';
 
 
 interface ProjectCardProps {
   title: string;
   description: string;
-  ImgID?: string;
+  imgUrl?: string;
   videoUrl?: string;
   demoLink?: string;
   designLink?: string;
@@ -86,7 +85,7 @@ function VideoModal({ videoUrl, title, onClose }: { videoUrl: string; title: str
 export default function ProjectCard({
   title,
   description,
-  ImgID,
+  imgUrl,
   videoUrl,
   demoLink,
   designLink,
@@ -96,9 +95,7 @@ export default function ProjectCard({
   openSource,
 }: ProjectCardProps) {
   const [showVideo, setShowVideo] = useState(false);
-  const imageUrl = ImgID
-    ? `https://lh3.googleusercontent.com/d/${ImgID}`
-    : null;
+  const imageUrl = imgUrl ?? null;
 
   return (
     <>
@@ -178,14 +175,14 @@ export default function ProjectCard({
                 {demoLink && (
                   <Button asChild size="sm" className="bg-white text-black hover:bg-neutral-200">
                     <a href={demoLink} target="_blank" rel="noopener noreferrer">
-                      <FaExternalLinkAlt className="mr-2 h-3 w-3" /> Demo
+                      <FaGlobe className="mr-2 h-5 w-5" /> Demo
                     </a>
                   </Button>
                 )}
                 {githubLink && (
                   <Button asChild size="sm" variant="outline" className="border-neutral-700 bg-transparent text-neutral-300 hover:bg-neutral-800 hover:text-white">
                     <a href={githubLink} target="_blank" rel="noopener noreferrer">
-                      <FiGithub className="mr-2 h-4 w-4" /> GitHub
+                      <FaGithub className="mr-2 h-5 w-5" /> GitHub
                     </a>
                   </Button>
                 )}
@@ -194,7 +191,7 @@ export default function ProjectCard({
             {openSource === false && siteLink && (
               <Button asChild size="sm" className="bg-white text-black hover:bg-neutral-200">
                 <a href={siteLink} target="_blank" rel="noopener noreferrer">
-                  <FaExternalLinkAlt className="mr-2 h-3 w-3" /> Site
+                  <FaGlobe className="mr-2 h-5 w-5" /> Site
                 </a>
               </Button>
             )}

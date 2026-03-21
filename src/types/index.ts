@@ -24,7 +24,7 @@ export interface SocialLink {
 export interface ProjectItem {
     title: string;
     description: string;
-    ImgID: string;
+    imgUrl?: string;
     videoUrl?: string;
     techStack: string[];
     demoLink?: string;
@@ -68,7 +68,7 @@ export interface CertificationItem {
 // Achievement/SkillBadge in Certifications
 export interface AchievementItem {
     name: string;
-    icon: IconType;
+    icon: string;
     stars: number;
     source: string;
     delay: number;

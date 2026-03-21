@@ -49,35 +49,23 @@ const sectionConfigs: {
     dataKey: ProjectCategory
 }[] = [
         {
-            id: 'websites',
-            heading: 'websites',
+            id: 'web',
+            heading: 'Web',
             // Updated layout to use specific grid cols for better responsiveness
             layout: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center',
-            dataKey: 'websites'
-        },
-        {
-            id: 'games',
-            heading: 'games',
-            layout: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center',
-            dataKey: 'games'
-        },
-        {
-            id: 'tools',
-            heading: 'tools',
-            layout: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center',
-            dataKey: 'tools'
+            dataKey: 'Web'
         },
         {
             id: 'designs',
-            heading: 'designs',
+            heading: 'Designs',
             layout: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center',
-            dataKey: 'designs'
+            dataKey: 'Designs'
         },
         {
             id: 'scripts',
-            heading: 'scripts',
+            heading: 'Scripts',
             layout: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center',
-            dataKey: 'scripts'
+            dataKey: 'Scripts'
         }
     ]
 

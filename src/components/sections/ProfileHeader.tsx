@@ -1,9 +1,10 @@
 "use client";
 import React from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
+import { FaLocationDot, FaArrowDownLong } from "react-icons/fa6";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { FaLocationDot, FaArrowDownLong } from "react-icons/fa6";
 import { socialLinks } from "@/data/socialLinksData";
 
 const Resume = "/akshit_bansal.pdf";
@@ -149,9 +150,6 @@ function SocialLinks() {
   );
 }
 
-import Image from "next/image";
-import pfp from "@/assets/images/pfp.png";
-import pfpHover from "@/assets/images/pfp-hover.png";
 
 function ProfileImage() {
   return (
