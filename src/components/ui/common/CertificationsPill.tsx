@@ -60,17 +60,13 @@ const CertificationsPill = ({ certifications }: CertificationsPillProps) => {
                                         className="flex items-start gap-3"
                                     >
                                         <div className="w-6 h-6 flex items-center justify-start shrink-0 pt-0.5">
-                                            {typeof Icon === "string" ? (
-                                                <Image
-                                                    src={Icon}
-                                                    alt={cert.name}
-                                                    width={16}
-                                                    height={16}
-                                                    className="w-4 h-4 object-contain"
-                                                />
-                                            ) : (
-                                                <Icon className="w-4 h-4 text-neutral-400" />
-                                            )}
+                                            <Image
+                                                src={Icon}
+                                                alt={cert.name}
+                                                width={16}
+                                                height={16}
+                                                className="w-4 h-4 object-contain"
+                                            />
                                         </div>
                                         <span className="text-xs text-neutral-200">
                                             {cert.name}
@@ -99,17 +95,13 @@ const CertificationsPill = ({ certifications }: CertificationsPillProps) => {
                                             key={idx}
                                             className="w-6 h-6 flex items-center justify-start"
                                         >
-                                            {typeof Icon === "string" ? (
-                                                <Image
-                                                    src={Icon}
-                                                    alt={cert.name}
-                                                    width={16}
-                                                    height={16}
-                                                    className="w-4 h-4 object-contain"
-                                                />
-                                            ) : (
-                                                <Icon className="w-4 h-4 text-neutral-400" />
-                                            )}
+                                            <Image
+                                                src={Icon}
+                                                alt={cert.name}
+                                                width={16}
+                                                height={16}
+                                                className="w-4 h-4 object-contain"
+                                            />
                                         </div>
                                     );
                                 })}
