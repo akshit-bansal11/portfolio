@@ -16,7 +16,7 @@ const SkillItem = ({ Icon, name, disableHover = false }: SkillItemProps) => {
     <motion.div
       className={cn(
         "relative flex flex-col items-center justify-center gap-4 w-24 h-24 md:w-44 md:h-44 rounded-2xl bg-neutral-900/50 border border-neutral-800/50 select-none overflow-hidden transition-all duration-300",
-        !disableHover && "group hover:border-neutral-500/30 cursor-default"
+        !disableHover && "group hover:border-neutral-500/30 cursor-default",
       )}
       whileHover={!disableHover ? { y: -8, scale: 1.05 } : undefined}
     >
@@ -28,7 +28,7 @@ const SkillItem = ({ Icon, name, disableHover = false }: SkillItemProps) => {
       <div
         className={cn(
           "relative z-10 flex items-center justify-center transition-transform duration-500",
-          !disableHover && "group-hover:scale-110"
+          !disableHover && "group-hover:scale-110",
         )}
       >
         {isStringIcon ? (
@@ -41,7 +41,7 @@ const SkillItem = ({ Icon, name, disableHover = false }: SkillItemProps) => {
               "h-10 w-10 md:h-16 md:w-16 object-contain transition-all duration-500",
               !disableHover
                 ? "filter grayscale group-hover:grayscale-0"
-                : "filter-none"
+                : "filter-none",
             )}
           />
         ) : (
@@ -50,7 +50,7 @@ const SkillItem = ({ Icon, name, disableHover = false }: SkillItemProps) => {
               "h-10 w-10 md:h-16 md:w-16 transition-all duration-500",
               !disableHover
                 ? "text-neutral-500 group-hover:text-inherit"
-                : "text-neutral-200"
+                : "text-neutral-200",
             )}
           />
         )}
@@ -59,7 +59,9 @@ const SkillItem = ({ Icon, name, disableHover = false }: SkillItemProps) => {
       <span
         className={cn(
           "relative z-10 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] transition-colors duration-500",
-          !disableHover ? "text-neutral-500 group-hover:text-white" : "text-neutral-200"
+          !disableHover
+            ? "text-neutral-500 group-hover:text-white"
+            : "text-neutral-200",
         )}
       >
         {name}

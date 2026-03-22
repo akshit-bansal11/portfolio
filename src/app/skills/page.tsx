@@ -19,7 +19,7 @@ export default function SkillsPage() {
       .map((category) => ({
         ...category,
         skills: category.skills.filter((skill) =>
-          skill.name.toLowerCase().includes(searchQuery.toLowerCase())
+          skill.name.toLowerCase().includes(searchQuery.toLowerCase()),
         ),
       }))
       .filter((category) => category.skills.length > 0);
@@ -35,7 +35,6 @@ export default function SkillsPage() {
   return (
     <main className="min-h-screen bg-black text-white pt-32 pb-24 px-6 md:px-16">
       <div className="max-w-7xl mx-auto space-y-24">
-
         {/* Header & Controls */}
         <div className="space-y-12">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
@@ -55,9 +54,12 @@ export default function SkillsPage() {
                   className={cn(
                     "text-5xl md:text-7xl font-bold",
                     "bg-gradient-to-r from-white via-neutral-400 to-neutral-600",
-                    "bg-clip-text text-transparent"
+                    "bg-clip-text text-transparent",
                   )}
-                  style={{ WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}
+                  style={{
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                  }}
                 >
                   Skills & Tools
                 </motion.h1>
@@ -68,8 +70,8 @@ export default function SkillsPage() {
                   transition={{ delay: 0.1 }}
                   className="text-neutral-500 max-w-2xl text-lg"
                 >
-                  Technologies and tools I’ve used to design, build, scale,
-                  and polish modern digital products.
+                  Technologies and tools I’ve used to design, build, scale, and
+                  polish modern digital products.
                 </motion.p>
               </div>
             </div>
@@ -90,7 +92,7 @@ export default function SkillsPage() {
                 className={cn(
                   "w-full bg-neutral-900/50 border border-neutral-800 rounded-2xl py-4 pl-12 pr-6",
                   "text-neutral-200 placeholder:text-neutral-600 focus:outline-none focus:border-neutral-600",
-                  "focus:ring-1 focus:ring-neutral-600 transition-all"
+                  "focus:ring-1 focus:ring-neutral-600 transition-all",
                 )}
               />
             </motion.div>
@@ -110,7 +112,7 @@ export default function SkillsPage() {
                 className={cn(
                   "px-4 py-2 rounded-full bg-neutral-900/40 border border-neutral-800",
                   "text-sm text-neutral-400 hover:text-white hover:border-neutral-600",
-                  "transition-all whitespace-nowrap"
+                  "transition-all whitespace-nowrap",
                 )}
               >
                 {category.title}
@@ -123,11 +125,12 @@ export default function SkillsPage() {
         <div className="space-y-32">
           {filteredCategories.length > 0 ? (
             filteredCategories.map((category, index) => (
-              <ScrollReveal key={category.title} delay={index * 100} className="w-full">
-                <section
-                  id={category.title}
-                  className="space-y-8 scroll-mt-32"
-                >
+              <ScrollReveal
+                key={category.title}
+                delay={index * 100}
+                className="w-full"
+              >
+                <section id={category.title} className="space-y-8 scroll-mt-32">
                   <h2 className="text-xl md:text-2xl font-light tracking-tight text-neutral-300">
                     {category.title}
                   </h2>
@@ -143,7 +146,9 @@ export default function SkillsPage() {
             ))
           ) : (
             <div className="text-center py-32 space-y-4">
-              <p className="text-neutral-500 text-lg">No skills found matching &quot;{searchQuery}&quot;</p>
+              <p className="text-neutral-500 text-lg">
+                No skills found matching &quot;{searchQuery}&quot;
+              </p>
               <button
                 onClick={() => setSearchQuery("")}
                 className="text-white hover:underline underline-offset-4"

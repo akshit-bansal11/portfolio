@@ -1,6 +1,6 @@
 "use client";
-import React from 'react';
-import { motion } from 'framer-motion';
+import React from "react";
+import { motion } from "framer-motion";
 import {
   Card,
   CardHeader,
@@ -8,10 +8,10 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { FiGithub } from 'react-icons/fi';
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { FiGithub } from "react-icons/fi";
 
 interface ProjectCardTextProps {
   title: string;
@@ -21,13 +21,19 @@ interface ProjectCardTextProps {
   openSource?: boolean;
 }
 
-export default function ProjectCardSmallWimg({ title, description, githubLink, techStack = [], openSource }: ProjectCardTextProps) {
+export default function ProjectCardSmallWimg({
+  title,
+  description,
+  githubLink,
+  techStack = [],
+  openSource,
+}: ProjectCardTextProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.5, ease: 'easeOut' }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
       className="w-full max-w-md"
     >
       <Card className="group border-neutral-800 bg-neutral-900/50 backdrop-blur-sm transition-all duration-300 hover:border-neutral-700 hover:shadow-xl hover:shadow-black/50 h-full flex flex-col">
@@ -63,7 +69,12 @@ export default function ProjectCardSmallWimg({ title, description, githubLink, t
 
         <CardFooter className="p-6 pt-0">
           {githubLink && (
-            <Button asChild size="sm" variant="outline" className="h-8 text-xs border-neutral-700 bg-transparent text-neutral-300 hover:bg-neutral-800 hover:text-white w-full">
+            <Button
+              asChild
+              size="sm"
+              variant="outline"
+              className="h-8 text-xs border-neutral-700 bg-transparent text-neutral-300 hover:bg-neutral-800 hover:text-white w-full"
+            >
               <a href={githubLink} target="_blank" rel="noopener noreferrer">
                 <FiGithub className="mr-1.5 h-3 w-3" /> GitHub
               </a>

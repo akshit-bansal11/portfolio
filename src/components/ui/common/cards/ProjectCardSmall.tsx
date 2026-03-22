@@ -1,6 +1,6 @@
 "use client";
-import Image from 'next/image';
-import { motion } from 'framer-motion';
+import Image from "next/image";
+import { motion } from "framer-motion";
 import {
   Card,
   CardHeader,
@@ -8,12 +8,11 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { FiGithub } from 'react-icons/fi';
-import { FaExternalLinkAlt } from 'react-icons/fa';
-
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { FiGithub } from "react-icons/fi";
+import { FaExternalLinkAlt } from "react-icons/fa";
 
 interface ProjectCardSmallProps {
   title: string;
@@ -43,7 +42,7 @@ export default function ProjectCardSmall({
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.5, ease: 'easeOut' }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
       className="w-full max-w-md"
     >
       <Card className="group overflow-hidden border-neutral-800 bg-neutral-900/50 backdrop-blur-sm transition-all duration-300 hover:border-neutral-700 hover:shadow-xl hover:shadow-black/50 h-full flex flex-col">
@@ -101,14 +100,23 @@ export default function ProjectCardSmall({
 
         <CardFooter className="gap-2 p-5">
           {demoLink && (
-            <Button asChild size="sm" className="h-8 text-xs bg-white text-black hover:bg-neutral-200">
+            <Button
+              asChild
+              size="sm"
+              className="h-8 text-xs bg-white text-black hover:bg-neutral-200"
+            >
               <a href={demoLink} target="_blank" rel="noopener noreferrer">
                 <FaExternalLinkAlt className="mr-1.5 h-3 w-3" /> Demo
               </a>
             </Button>
           )}
           {githubLink && (
-            <Button asChild size="sm" variant="outline" className="h-8 text-xs border-neutral-700 bg-transparent text-neutral-300 hover:bg-neutral-800 hover:text-white">
+            <Button
+              asChild
+              size="sm"
+              variant="outline"
+              className="h-8 text-xs border-neutral-700 bg-transparent text-neutral-300 hover:bg-neutral-800 hover:text-white"
+            >
               <a href={githubLink} target="_blank" rel="noopener noreferrer">
                 <FiGithub className="mr-1.5 h-3 w-3" /> GitHub
               </a>

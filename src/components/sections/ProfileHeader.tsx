@@ -47,7 +47,11 @@ function GmailButton() {
         target="_blank"
         rel="noopener noreferrer"
       >
-        <img className="hover:scale-115 active:scale-80 duration-100" src="https://svgl.app/library/gmail.svg" alt="Gmail" />
+        <img
+          className="hover:scale-115 active:scale-80 duration-100"
+          src="https://svgl.app/library/gmail.svg"
+          alt="Gmail"
+        />
       </a>
     </Button>
   );
@@ -150,7 +154,6 @@ function SocialLinks() {
   );
 }
 
-
 function ProfileImage() {
   return (
     <motion.div
@@ -164,7 +167,9 @@ function ProfileImage() {
       <div className="relative h-full w-full rounded-full overflow-hidden bg-neutral-900 shadow-xl">
         {/* Base Image */}
         <Image
-          src={"https://media-server.akshitbansal.me/api/images/credentials/pfp.webp"}
+          src={
+            "https://media-server.akshitbansal.me/api/images/credentials/pfp.webp"
+          }
           alt="Profile"
           fill
           className="object-cover grayscale transition-opacity duration-500 group-hover:opacity-0"
@@ -173,7 +178,9 @@ function ProfileImage() {
         />
         {/* Hover Image */}
         <Image
-          src={"https://media-server.akshitbansal.me/api/images/credentials/pfp-hover.webp"}
+          src={
+            "https://media-server.akshitbansal.me/api/images/credentials/pfp-hover.webp"
+          }
           alt="Profile Hover"
           fill
           className="object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
