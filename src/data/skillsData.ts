@@ -310,7 +310,7 @@ export const skillsData: SkillCategory[] = [
       { name: "Authy", Icon: "https://svgl.app/library/authy.svg" },
       { name: "JWT", Icon: "https://svgl.app/library/jwt.svg" },
       { name: "Auth.js", Icon: "https://svgl.app/library/authjs.svg" },
-      { name: "Passport.js", Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/passportjs.svg" },
+      { name: "Passport.js", Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/passport-js-dark.svg" },
     ],
   },
   {
