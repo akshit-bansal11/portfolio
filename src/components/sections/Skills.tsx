@@ -15,14 +15,8 @@ import { SiNextdotjs } from "react-icons/si";
 import ScrollSection from "@/components/ui/common/sections/ScrollSection";
 import ScrollSectionHeading from "@/components/ui/common/headings/ScrollSectionHeading";
 
-//--------------------|       CONFIG       |--------------------//
-const topSkills = [
-  { name: "Next.js", Icon: SiNextdotjs },
-  { name: "TypeScript", Icon: "https://svgl.app/library/typescript.svg" },
-  { name: "React", Icon: "https://svgl.app/library/react_dark.svg" },
-  { name: "Tailwind CSS", Icon: "https://svgl.app/library/tailwindcss.svg" },
-  { name: "Vitest", Icon: "https://svgl.app/library/vitest.svg" },
-];
+//--------------------|       DATA       |--------------------//
+import { topSkills } from "@/data/skillsData";
 
 //--------------------|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|--------------------//
 //--------------------|    MAIN RENDER     |--------------------//

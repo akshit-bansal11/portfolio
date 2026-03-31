@@ -12,6 +12,14 @@ export interface SkillCategory {
   skills: Skill[];
 }
 
+export const topSkills: Skill[] = [
+  { name: "Next.js", Icon: "https://svgl.app/library/nextjs_icon_dark.svg" },
+  { name: "TypeScript", Icon: "https://svgl.app/library/typescript.svg" },
+  { name: "React", Icon: "https://svgl.app/library/react_dark.svg" },
+  { name: "Tailwind CSS", Icon: "https://svgl.app/library/tailwindcss.svg" },
+  { name: "Vitest", Icon: "https://svgl.app/library/vitest.svg" },
+];
+
 export const skillsData: SkillCategory[] = [
   {
     title: "Core Frontend & UI/UX",
@@ -154,6 +162,8 @@ export const skillsData: SkillCategory[] = [
       { name: "PostgreSQL", Icon: "https://svgl.app/library/postgresql.svg" },
       { name: "Supabase", Icon: "https://svgl.app/library/supabase.svg" },
       { name: "Firebase", Icon: "https://svgl.app/library/firebase.svg" },
+      { name: "Upstash", Icon: "https://svgl.app/library/upstash.svg" },
+      { name: "Redis", Icon: "https://svgl.app/library/redis.svg" },
     ],
   },
   {
@@ -285,7 +295,7 @@ export const skillsData: SkillCategory[] = [
     ],
   },
   {
-    title: "Authentication",
+    title: "Auth & Security",
     description:
       "Implementing secure and flexible authentication flows to protect user data and application integrity. This stack enables login systems, token-based auth, and third-party providers while balancing security, usability, and scalability.",
     certifications: [
@@ -300,6 +310,7 @@ export const skillsData: SkillCategory[] = [
       { name: "Authy", Icon: "https://svgl.app/library/authy.svg" },
       { name: "JWT", Icon: "https://svgl.app/library/jwt.svg" },
       { name: "Auth.js", Icon: "https://svgl.app/library/authjs.svg" },
+      { name: "Passport.js", Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/passportjs.svg" },
     ],
   },
   {
