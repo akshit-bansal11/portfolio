@@ -6,9 +6,6 @@ import {
 	FaLaptopCode,
 	FaUser,
 } from "react-icons/fa";
-// Removed FaShapes as it might be causing issues if strictly using fa. Replaced or removed.
-// If FaShapes is needed, we can try to import it from fa6 specifically if generic fa doesn't have it.
-// Providing a fallback or just removing it for now to fix build.
 import { FaShapes } from "react-icons/fa6";
 import type { NavItem } from "@/types";
 

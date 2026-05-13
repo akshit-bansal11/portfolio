@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/unsupported-syntax */
 "use client";
 import { useEffect, useRef } from "react";
 
@@ -1104,7 +1105,6 @@ function SplashCursor({
 			window.removeEventListener("touchmove", handleTouchMove);
 			window.removeEventListener("touchend", handleTouchEnd);
 		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [
 		VELOCITY_DISSIPATION,
 		TRANSPARENT,

@@ -22,9 +22,7 @@ export const useAnime = <T extends HTMLElement>(params: AnimationParams) => {
 			return;
 		}
 
-		const rest = Object.fromEntries(
-			Object.entries(params).filter(([key]) => key !== "targets"),
-		);
+		const rest = Object.fromEntries(Object.entries(params).filter(([key]) => key !== "targets"));
 
 		animationRef.current = animate(ref.current, rest);
 
