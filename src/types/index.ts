@@ -58,6 +58,11 @@ export interface CertificationItem {
 	name?: string;
 }
 
+export interface GoogleBadgeItem {
+	gBadgeTitle: string;
+	gBadgeLink: string;
+}
+
 // Achievement/SkillBadge in Certifications
 export interface AchievementItem {
 	name: string;

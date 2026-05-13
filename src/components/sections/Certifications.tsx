@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { FaExternalLinkAlt } from "react-icons/fa";
+import GoogleBadgeCard from "@/components/ui/common/cards/GoogleBadgeCard";
 import SkillBadge from "@/components/ui/common/cards/SkillBadge";
 import ScrollSectionHeading from "@/components/ui/common/headings/ScrollSectionHeading";
 //--------------------|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|--------------------//
@@ -10,12 +11,22 @@ import ScrollSectionHeading from "@/components/ui/common/headings/ScrollSectionH
 //--------------------|____________________|--------------------//
 import ScrollSection from "@/components/ui/common/sections/ScrollSection";
 import { achievements, certifications } from "@/data/certificationsData";
+import { googleBadges } from "@/data/googleBadgesData";
 import type { CertificationItem } from "@/types";
 
 export default function Certifications() {
 	return (
 		<ScrollSection id="attainments">
 			<ScrollSectionHeading heading="attainments" />
+			<div className="flex flex-col gap-4">
+				<h1 className="text-neutral-400 text-xs md:text-sm lg:text-xl">Google Cloud Badges</h1>
+				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+					{googleBadges.map((badge, index) => (
+						<GoogleBadgeCard key={index} {...badge} />
+					))}
+				</div>
+			</div>
+
 			<div className="flex flex-col gap-4">
 				<h1 className="text-neutral-400 text-xs md:text-sm lg:text-xl">Achievements</h1>
 				<div className="flex lg:gap-4 gap-2">
@@ -40,7 +51,7 @@ export default function Certifications() {
 					))}
 				</div>
 			</div>
-			<div className="flex flex-col gap-4">
+			<div className="flex flex-col gap-4 mb-8">
 				<h1 className="text-neutral-400 text-xs md:text-sm lg:text-xl">Certifications</h1>
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 					{certifications.map((cert, index) => (
