@@ -51,26 +51,32 @@ export interface EducationItem {
 	date: string;
 }
 
-// Certification Types
-export interface CertificationItem {
-	imgUrl?: string;
-	link?: string;
-	name?: string;
-}
+// Attainments Types
 
 export interface GoogleBadgeItem {
 	gBadgeTitle: string;
 	gBadgeLink: string;
 }
 
-// Achievement/SkillBadge in Certifications
-export interface AchievementItem {
-	name: string;
-	icon: string;
-	stars: number;
-	source: string;
-	delay: number;
-	link: string;
+// export interface HackerRankBadgeItem {
+// 	name: string;
+// 	icon: string;
+// 	stars: number;
+// 	source: string;
+// 	delay: number;
+// 	link: string;
+// }
+
+export interface HackerRankCertificationItem {
+	imgUrl?: string;
+	link?: string;
+	name?: string;
+}
+
+export interface LinkedInCertificationItem {
+	imgUrl?: string;
+	link?: string;
+	name?: string;
 }
 
 // Nav Types

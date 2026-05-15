@@ -10,7 +10,14 @@ interface SkillBadgeProps {
 	link?: string;
 }
 
-const SkillBadge = ({ name, icon, stars, source = "", delay = 0, link = "" }: SkillBadgeProps) => {
+const HackerRankSkillBadge = ({
+	name,
+	icon,
+	stars,
+	source = "",
+	delay = 0,
+	link = "",
+}: SkillBadgeProps) => {
 	const totalStars = 5;
 
 	return (
@@ -69,4 +76,4 @@ const SkillBadge = ({ name, icon, stars, source = "", delay = 0, link = "" }: Sk
 	);
 };
 
-export default SkillBadge;
+export default HackerRankSkillBadge;
