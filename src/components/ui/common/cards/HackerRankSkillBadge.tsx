@@ -1,78 +1,138 @@
+"use client";
+
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { FaStar } from "react-icons/fa6";
+import { GoArrowUpRight } from "react-icons/go";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface SkillBadgeProps {
 	name: string;
-	icon: React.ReactNode;
+	icon: string;
 	stars: number;
 	source?: string;
 	delay?: number;
 	link?: string;
+	color?: string;
 }
+
+// Pointy-top hexagon (matches the reference image shape)
+const HEX_CLIP = "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)";
 
 const HackerRankSkillBadge = ({
 	name,
 	icon,
 	stars,
-	source = "",
 	delay = 0,
 	link = "",
+	color = "#22C55E",
 }: SkillBadgeProps) => {
 	const totalStars = 5;
 
+	// Derive a subtle glow rgba from the hex color
+	const glowColor = `${color}40`; // 25% opacity version
+
 	return (
-		<motion.a
-			href={link}
-			target="_blank"
-			rel="noopener noreferrer"
+		<motion.div
 			initial={{ y: 20, opacity: 0 }}
 			whileInView={{
 				y: 0,
 				opacity: 1,
 				transition: { duration: 0.5, ease: "easeOut", delay },
 			}}
-			whileHover={{ y: -5 }}
-			className="block group"
+			whileHover={{ y: -6 }}
+			viewport={{ once: true, amount: 0.3 }}
+			className="flex flex-col items-center gap-4 group"
 		>
-			<div className="relative flex flex-col items-center w-32 md:w-44 aspect-[4/5] rounded-2xl bg-neutral-900/40 border border-neutral-800/50 hover:border-neutral-700/80 transition-all duration-500 overflow-hidden backdrop-blur-sm group-hover:shadow-[0_0_20px_rgba(255,255,255,0.05)]">
-				{/* Animated Glow on Hover */}
-				<div className="absolute inset-0 bg-gradient-to-t from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+			{/* ── Hexagon Badge ── */}
+			<div className="relative">
+				{/* Outer hex — acts as the colored border */}
+				<div
+					style={{
+						clipPath: HEX_CLIP,
+						background: color,
+						width: "130px",
+						height: "150px",
+						padding: "3px",
+						display: "flex",
+						alignItems: "center",
+						justifyContent: "center",
+						filter: `drop-shadow(0 0 12px ${glowColor})`,
+						transition: "filter 0.4s ease",
+					}}
+					className="group-hover:[filter:drop-shadow(0_0_20px_var(--badge-glow))]"
+				>
+					{/* Inner hex — dark fill */}
+					<div
+						style={{
+							clipPath: HEX_CLIP,
+							background: "linear-gradient(160deg, #1a1a1a 0%, #0d0d0d 100%)",
+							width: "calc(100% - 1px)",
+							height: "calc(100% - 1px)",
+							display: "flex",
+							flexDirection: "column",
+							alignItems: "center",
+							justifyContent: "center",
+							gap: "6px",
+						}}
+					>
+						{/* Icon */}
+						<Image
+							src={icon}
+							alt={name}
+							width={36}
+							height={36}
+							className="h-9 w-9 object-contain drop-shadow-md transition-transform duration-400 group-hover:scale-110"
+						/>
 
-				<div className="flex flex-col items-center justify-center p-5 gap-4 flex-1 w-full relative z-10">
-					{/* Icon Container with subtle glass effect */}
-					<div className="p-3.5 rounded-xl bg-neutral-950/60 border border-neutral-800 group-hover:border-neutral-600 transition-all duration-500 group-hover:scale-110 group-hover:shadow-lg">
-						<div className="text-3xl md:text-4xl text-white drop-shadow-md">{icon}</div>
-					</div>
-
-					<div className="flex flex-col items-center gap-1.5">
-						<h3 className="text-sm md:text-base font-bold text-neutral-200 tracking-tight group-hover:text-white transition-colors">
+						{/* Name */}
+						<span
+							style={{ color: "#e5e5e5" }}
+							className="text-xs font-bold tracking-wide text-center px-2 leading-tight group-hover:text-white transition-colors"
+						>
 							{name}
-						</h3>
+						</span>
 
-						{/* Premium Star Rating */}
-						<div className="flex gap-1">
+						{/* Stars */}
+						<div className="flex gap-0.5">
 							{[...Array(totalStars)].map((_, idx) => (
 								<FaStar
 									key={idx}
-									className={`text-[10px] md:text-xs transition-colors duration-500 ${
-										idx < stars
-											? "text-amber-400 drop-shadow-[0_0_5px_rgba(251,191,36,0.5)]"
-											: "text-neutral-700"
-									}`}
+									style={{
+										fontSize: "9px",
+										color: idx < stars ? color : "#3a3a3a",
+										filter: idx < stars ? `drop-shadow(0 0 3px ${glowColor})` : "none",
+										transition: "color 0.3s",
+									}}
 								/>
 							))}
 						</div>
 					</div>
 				</div>
-
-				{/* Source Footer */}
-				<div className="w-full flex items-center justify-center py-2.5 px-3 bg-neutral-950/40 border-t border-neutral-800/80 group-hover:bg-neutral-900/60 transition-colors">
-					<span className="text-[9px] md:text-[11px] text-green-400 font-bold tracking-[0.2em] uppercase transition-colors group-hover:text-green-300">
-						{source}
-					</span>
-				</div>
 			</div>
-		</motion.a>
+
+			{/* ── Card footer — mirrors GoogleBadgeCard layout ── */}
+			<div className={cn("w-full flex items-center gap-2 px-3")}>
+				<div className="flex-1 border-t border-neutral-800/60" />
+				<Button
+					variant="outline"
+					size="icon"
+					onClick={() => window.open(link, "_blank", "noopener,noreferrer")}
+					style={{
+						borderColor: `${color}60`,
+						color: color,
+					}}
+					className={cn(
+						"h-8 w-8 rounded-full bg-neutral-900/50",
+						"hover:bg-neutral-800 transition-all duration-300",
+					)}
+				>
+					<GoArrowUpRight className="h-4 w-4" />
+				</Button>
+				<div className="flex-1 border-t border-neutral-800/60" />
+			</div>
+		</motion.div>
 	);
 };
 

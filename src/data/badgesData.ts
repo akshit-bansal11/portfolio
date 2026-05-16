@@ -1,23 +1,25 @@
-import type { GoogleBadgeItem /*HackerRankBadgeItem*/ } from "@/types";
+import type { GoogleBadgeItem, HackerRankBadgeItem } from "@/types";
 
-// export const hackerRankBadges: HackerRankBadgeItem[] = [
-// 	{
-// 		name: "C++",
-// 		icon: "https://svgl.app/library/c-plusplus.svg",
-// 		stars: 5,
-// 		source: "HackerRank",
-// 		delay: 0.2,
-// 		link: "https://www.hackerrank.com/profile/akshitbansal11",
-// 	},
-// 	{
-// 		name: "C",
-// 		icon: "https://svgl.app/library/c.svg",
-// 		stars: 2,
-// 		source: "HackerRank",
-// 		delay: 0,
-// 		link: "https://www.hackerrank.com/profile/akshitbansal11",
-// 	},
-// ];
+export const hackerRankBadges: HackerRankBadgeItem[] = [
+	{
+		name: "C++",
+		icon: "https://svgl.app/library/c-plusplus.svg",
+		stars: 5,
+		source: "HackerRank",
+		delay: 0.2,
+		link: "https://www.hackerrank.com/profile/akshitbansal11",
+		color: "#F9C549",
+	},
+	{
+		name: "C",
+		icon: "https://svgl.app/library/c.svg",
+		stars: 2,
+		source: "HackerRank",
+		delay: 0,
+		link: "https://www.hackerrank.com/profile/akshitbansal11",
+		color: "#E8957E",
+	},
+];
 
 export const googleBadges: GoogleBadgeItem[] = [
 	{

@@ -58,25 +58,32 @@ export interface GoogleBadgeItem {
 	gBadgeLink: string;
 }
 
-// export interface HackerRankBadgeItem {
-// 	name: string;
-// 	icon: string;
-// 	stars: number;
-// 	source: string;
-// 	delay: number;
-// 	link: string;
-// }
+export interface HackerRankBadgeItem {
+	name: string;
+	icon: string;
+	stars: number;
+	source: string;
+	delay: number;
+	link: string;
+	color?: string;
+}
+
+export interface CertificationProvider {
+	name: string;
+	logoUrl: string;
+}
 
 export interface HackerRankCertificationItem {
-	imgUrl?: string;
-	link?: string;
-	name?: string;
+	name: string;
+	providers: CertificationProvider[];
+	link: string;
 }
 
 export interface LinkedInCertificationItem {
-	imgUrl?: string;
-	link?: string;
-	name?: string;
+	name: string;
+	providers: CertificationProvider[];
+	skills: string[];
+	link: string;
 }
 
 // Nav Types
