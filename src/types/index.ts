@@ -70,19 +70,13 @@ export interface HackerRankBadgeItem {
 
 export interface CertificationProvider {
 	name: string;
-	logoUrl: string;
+	logoUrl?: string;
 }
 
-export interface HackerRankCertificationItem {
+export interface CertificationItem {
 	name: string;
 	providers: CertificationProvider[];
-	link: string;
-}
-
-export interface LinkedInCertificationItem {
-	name: string;
-	providers: CertificationProvider[];
-	skills: string[];
+	skills?: string[];
 	link: string;
 }
 

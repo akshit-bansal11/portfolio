@@ -1,6 +1,6 @@
-import type { HackerRankCertificationItem, LinkedInCertificationItem } from "@/types";
+import type { CertificationItem } from "@/types";
 
-export const linkedInCertificationsData: LinkedInCertificationItem[] = [
+export const linkedInCertificationsData: CertificationItem[] = [
 	{
 		name: "Career Essentials in Generative AI",
 		providers: [
@@ -27,7 +27,7 @@ export const linkedInCertificationsData: LinkedInCertificationItem[] = [
 	},
 ];
 
-export const hackerRankCertificationsData: HackerRankCertificationItem[] = [
+export const hackerRankCertificationsData: CertificationItem[] = [
 	{
 		name: "CSS (Basic)",
 		providers: [
@@ -93,5 +93,61 @@ export const hackerRankCertificationsData: HackerRankCertificationItem[] = [
 			},
 		],
 		link: "https://www.hackerrank.com/certificates/9eabe8ab61b1",
+	},
+];
+
+export const udemyCertificationsData: CertificationItem[] = [
+	{
+		name: "C++ Complete Training Course for C++ Beginners All In One",
+		providers: [
+			{
+				name: "Udemy",
+				logoUrl: "https://svgl.app/library/udemy.svg",
+			},
+		],
+		link: "#",
+	},
+	{
+		name: "C Programming For Beginners - Master the C Language",
+		providers: [
+			{
+				name: "Udemy",
+				logoUrl: "https://svgl.app/library/udemy.svg",
+			},
+		],
+		link: "#",
+	},
+];
+
+export const scalerCertificationsData: CertificationItem[] = [
+	{
+		name: "C++ Course: Learn the Essentials",
+		providers: [
+			{
+				name: "Scaler",
+			},
+		],
+		link: "#",
+	},
+	{
+		name: "Become a MAANG Engineer",
+		providers: [
+			{
+				name: "Scaler",
+			},
+		],
+		link: "#",
+	},
+];
+
+export const cuvetteCertificationsData: CertificationItem[] = [
+	{
+		name: "Workshop: Build Blinkit Clone Using AI",
+		providers: [
+			{
+				name: "Cuvette",
+			},
+		],
+		link: "#",
 	},
 ];

@@ -1,9 +1,8 @@
 "use client";
 
+import CertificationCard from "@/components/ui/common/cards/CertificationCard";
 import GoogleBadgeCard from "@/components/ui/common/cards/GoogleBadgeCard";
-import HackerRankCertificationCard from "@/components/ui/common/cards/HackerRankCertificationCard";
 import HackerRankSkillBadge from "@/components/ui/common/cards/HackerRankSkillBadge";
-import LinkedInCertificationCard from "@/components/ui/common/cards/LinkedInCertificationCard";
 import ScrollSectionHeading from "@/components/ui/common/headings/ScrollSectionHeading";
 
 //--------------------|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|--------------------//
@@ -12,8 +11,11 @@ import ScrollSectionHeading from "@/components/ui/common/headings/ScrollSectionH
 import ScrollSection from "@/components/ui/common/sections/ScrollSection";
 import { googleBadges, hackerRankBadges } from "@/data/badgesData";
 import {
+	cuvetteCertificationsData,
 	hackerRankCertificationsData,
 	linkedInCertificationsData,
+	scalerCertificationsData,
+	udemyCertificationsData,
 } from "@/data/certificationsData";
 
 export default function Certifications() {
@@ -37,18 +39,40 @@ export default function Certifications() {
 			</div>
 
 			<div className="flex flex-col gap-4">
-				<h1 className="text-neutral-100 text-xs md:text-sm lg:text-2xl">Certifications</h1>
+				<h1 className="text-neutral-100 text-xs md:text-sm lg:text-2xl mt-4">Certifications</h1>
+				
 				<h1 className="text-neutral-400 text-xs md:text-sm lg:text-xl">LinkedIn & Microsoft</h1>
 				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 					{linkedInCertificationsData.map((cert, index) => (
-						<LinkedInCertificationCard key={index} {...cert} />
+						<CertificationCard key={index} {...cert} showSkillBadges={true} />
 					))}
 				</div>
 
-				<h1 className="text-neutral-400 text-xs md:text-sm lg:text-xl">HackerRank</h1>
+				<h1 className="text-neutral-400 text-xs md:text-sm lg:text-xl mt-2">HackerRank</h1>
 				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 					{hackerRankCertificationsData.map((cert, index) => (
-						<HackerRankCertificationCard key={index} {...cert} />
+						<CertificationCard key={index} {...cert} showSkillBadges={false} />
+					))}
+				</div>
+
+				<h1 className="text-neutral-400 text-xs md:text-sm lg:text-xl mt-2">Udemy</h1>
+				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+					{udemyCertificationsData.map((cert, index) => (
+						<CertificationCard key={index} {...cert} showSkillBadges={false} />
+					))}
+				</div>
+
+				<h1 className="text-neutral-400 text-xs md:text-sm lg:text-xl mt-2">Scaler</h1>
+				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+					{scalerCertificationsData.map((cert, index) => (
+						<CertificationCard key={index} {...cert} showSkillBadges={false} />
+					))}
+				</div>
+
+				<h1 className="text-neutral-400 text-xs md:text-sm lg:text-xl mt-2">Cuvette</h1>
+				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+					{cuvetteCertificationsData.map((cert, index) => (
+						<CertificationCard key={index} {...cert} showSkillBadges={false} />
 					))}
 				</div>
 			</div>

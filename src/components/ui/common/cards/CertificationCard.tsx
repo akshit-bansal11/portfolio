@@ -4,14 +4,19 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { GoArrowUpRight } from "react-icons/go";
 import { Button } from "@/components/ui/button";
-import type { LinkedInCertificationItem } from "@/types";
+import type { CertificationItem } from "@/types";
 
-export default function LinkedInCertificationCard({
+export interface CertificationCardProps extends CertificationItem {
+	showSkillBadges?: boolean;
+}
+
+export default function CertificationCard({
 	name,
 	providers,
 	skills,
 	link,
-}: LinkedInCertificationItem) {
+	showSkillBadges = false,
+}: CertificationCardProps) {
 	const containerVariants = {
 		hidden: { opacity: 0, y: 50 },
 		visible: {
@@ -42,13 +47,19 @@ export default function LinkedInCertificationCard({
 							key={idx}
 							className="flex items-center justify-center w-12 h-12 rounded-xl bg-white/5 border border-white/10"
 						>
-							<Image
-								src={p.logoUrl}
-								alt={p.name}
-								width={24}
-								height={24}
-								className="object-contain w-6 h-6"
-							/>
+							{p.logoUrl ? (
+								<Image
+									src={p.logoUrl}
+									alt={p.name}
+									width={24}
+									height={24}
+									className="object-contain w-6 h-6"
+								/>
+							) : (
+								<span className="text-lg font-bold text-neutral-300">
+									{p.name.charAt(0)}
+								</span>
+							)}
 						</div>
 					))}
 				</div>
@@ -62,16 +73,18 @@ export default function LinkedInCertificationCard({
 				</div>
 
 				{/* Skills Pills */}
-				<div className="flex flex-wrap gap-2 mt-2">
-					{skills.map((skill, idx) => (
-						<span
-							key={idx}
-							className="px-2.5 py-1 text-xs font-medium text-neutral-300 bg-neutral-800/50 rounded-full border border-neutral-700/50"
-						>
-							{skill}
-						</span>
-					))}
-				</div>
+				{showSkillBadges && skills && skills.length > 0 && (
+					<div className="flex flex-wrap gap-2 mt-2">
+						{skills.map((skill, idx) => (
+							<span
+								key={idx}
+								className="px-2.5 py-1 text-xs font-medium text-neutral-300 bg-neutral-800/50 rounded-full border border-neutral-700/50"
+							>
+								{skill}
+							</span>
+						))}
+					</div>
+				)}
 			</div>
 
 			{/* Link Button */}
