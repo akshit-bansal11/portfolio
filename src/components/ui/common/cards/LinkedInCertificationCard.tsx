@@ -81,7 +81,7 @@ export default function LinkedInCertificationCard({
 					variant="outline"
 					size="icon"
 					onClick={() => window.open(link, "_blank", "noopener,noreferrer")}
-					className="h-8 w-8 rounded-full bg-neutral-900/50 border-neutral-700 text-neutral-300 hover:bg-neutral-800 hover:text-white transition-all duration-300 shrink-0"
+					className="h-8 w-8 rounded-full cursor-pointer bg-neutral-900/50 border-neutral-700 text-neutral-300 hover:bg-neutral-800 hover:text-white transition-all duration-300 shrink-0"
 				>
 					<GoArrowUpRight className="h-4 w-4" />
 				</Button>
