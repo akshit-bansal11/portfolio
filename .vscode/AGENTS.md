@@ -261,7 +261,7 @@ Always:
 <div className="text-rose-600 dark:text-rose-400">
 
 // Acceptable — dynamic CSS var only
-<div style={{ '--brand': color } as React.CSSProperties} className="text-[var(--brand)]">
+<div style={{ '--brand': color } as React.CSSProperties} className="text-(--brand)">
 ```
 
 ---
