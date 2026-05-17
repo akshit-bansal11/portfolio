@@ -20,7 +20,7 @@ export default function GoogleBadgeCard({ gBadgeTitle, gBadgeLink }: GoogleBadge
 			{/* Top section: Google Logo + Cloud */}
 			<div className="flex items-center justify-center gap-2">
 				<Image
-					src="https://svgl.app/library/google.svg"
+					src="https://svgl.app/library/google-cloud.svg"
 					alt="Google"
 					width={20}
 					height={20}
