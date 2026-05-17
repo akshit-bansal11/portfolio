@@ -16,7 +16,7 @@ function CVButton() {
 			className="group gap-2 border-neutral-500 bg-neutral-900/50 hover:bg-neutral-800 hover:text-amber-400 hover:border-amber-400/50 transition-all duration-300"
 		>
 			<a href={Resume} download="akshit_bansal.pdf" target="_blank" rel="noopener noreferrer">
-				<span>Download CV</span>
+				<span>Resume</span>
 				<motion.div
 					animate={{ y: [0, 3, 0] }}
 					transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
