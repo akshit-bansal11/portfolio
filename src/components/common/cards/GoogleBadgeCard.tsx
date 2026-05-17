@@ -2,8 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { GoArrowUpRight } from "react-icons/go";
-import { Button } from "@/components/ui/button";
+import ExternalLinkBadge from "@/components/common/badges/ExternalLinkBadge";
 import { cn } from "@/lib/utils";
 import type { GoogleBadgeItem } from "@/types";
 
@@ -41,21 +40,10 @@ export default function GoogleBadgeCard({ gBadgeTitle, gBadgeLink }: GoogleBadge
 			</div>
 
 			{/* Divider with icon row */}
-			<div className="flex items-center gap-2">
-				<div className="flex-1 border-t border-neutral-800/60" />
-				<Button
-					variant="outline"
-					size="icon"
-					onClick={() => window.open(gBadgeLink, "_blank", "noopener,noreferrer")}
-					className={cn(
-						"h-8 w-8 rounded-full border-neutral-700 bg-neutral-900/50",
-						"hover:bg-neutral-800 hover:text-amber-400 hover:border-amber-400/50 transition-all duration-300",
-					)}
-				>
-					<GoArrowUpRight className="h-4 w-4" />
-				</Button>
-				<div className="flex-1 border-t border-neutral-800/60" />
-			</div>
+			<ExternalLinkBadge
+				href={gBadgeLink}
+				buttonClassName="hover:text-amber-400 hover:border-amber-400/50"
+			/>
 		</motion.div>
 	);
 }

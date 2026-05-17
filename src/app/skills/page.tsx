@@ -56,10 +56,6 @@ export default function SkillsPage() {
 										"bg-gradient-to-r from-white via-neutral-400 to-neutral-600",
 										"bg-clip-text text-transparent",
 									)}
-									style={{
-										WebkitBackgroundClip: "text",
-										WebkitTextFillColor: "transparent",
-									}}
 								>
 									Skills & Tools
 								</motion.h1>

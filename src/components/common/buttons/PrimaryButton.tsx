@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
 import type React from "react";
+import { useNavClick } from "@/hooks/use-nav-click";
 
 interface PrimaryButtonProps {
 	onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
@@ -22,16 +22,7 @@ export default function PrimaryButton({
 	icon,
 	text = "Button",
 }: PrimaryButtonProps) {
-	const router = useRouter();
-	const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-		if (onClick) onClick(e);
-		if (to) {
-			if (!to.startsWith("/")) {
-				const section = document.getElementById(to);
-				if (section) section.scrollIntoView({ behavior: "smooth" });
-			} else router.push(to);
-		}
-	};
+	const handleClick = useNavClick(to, onClick);
 	return (
 		<motion.div
 			initial={{ scale: 1 }}

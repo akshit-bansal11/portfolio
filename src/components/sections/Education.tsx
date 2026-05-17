@@ -1,7 +1,7 @@
 "use client";
-import EduItem from "@/components/ui/common/cards/EduItem";
-import ScrollSectionHeading from "@/components/ui/common/headings/ScrollSectionHeading";
-import ScrollSection from "@/components/ui/common/sections/ScrollSection";
+import EduItem from "@/components/common/cards/EduItem";
+import ScrollSectionHeading from "@/components/common/headings/ScrollSectionHeading";
+import ScrollSection from "@/components/common/sections/ScrollSection";
 import { education } from "@/data/educationData";
 
 export default function Education() {

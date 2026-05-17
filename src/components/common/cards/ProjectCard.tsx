@@ -15,7 +15,17 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import OpenSourceBadge from "@/components/common/badges/OpenSourceBadge";
+import { cn } from "@/lib/utils";
 import type { ProjectItem } from "@/types";
+
+interface ProjectCardProps extends ProjectItem {
+	/** Embed an iframe preview instead of a static image */
+	iframe?: string;
+	/** 'small' → max-w-md + h-48 media; 'default' → max-w-lg + aspect-video media */
+	size?: "default" | "small";
+	className?: string;
+}
 
 function VideoModal({
 	videoUrl,
@@ -94,15 +104,19 @@ export default function ProjectCard({
 	description,
 	imgUrl,
 	videoUrl,
+	iframe,
 	demoLink,
 	designLink,
 	githubLink,
 	siteLink,
 	techStack = [],
 	openSource,
-}: ProjectItem) {
+	size = "default",
+	className,
+}: ProjectCardProps) {
 	const [showVideo, setShowVideo] = useState(false);
-	const hasImage = !!imgUrl;
+
+	const hasMedia = !!(imgUrl || iframe);
 	const hasFooter = !!(demoLink || designLink || githubLink || siteLink);
 
 	return (
@@ -112,19 +126,33 @@ export default function ProjectCard({
 				whileInView={{ opacity: 1, y: 0 }}
 				viewport={{ once: true, amount: 0.2 }}
 				transition={{ duration: 0.5, ease: "easeOut" }}
-				className="w-full max-w-lg"
+				className={cn("w-full", size === "small" ? "max-w-md" : "max-w-lg", className)}
 			>
 				<Card className="group overflow-hidden border-neutral-800 bg-neutral-900/50 backdrop-blur-sm transition-all duration-300 hover:border-neutral-700 hover:shadow-xl hover:shadow-black/50 h-full flex flex-col">
-					{hasImage && (
-						<div className="relative overflow-hidden border-b border-neutral-800 aspect-video">
-							<Image
-								src={imgUrl || ""}
-								alt={`${title} preview`}
-								fill
-								className="object-cover transition-transform duration-500 group-hover:scale-105"
-								sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-							/>
-							{videoUrl && (
+					{hasMedia && (
+						<div
+							className={cn(
+								"relative overflow-hidden border-b border-neutral-800",
+								size === "small" ? "h-48" : "aspect-video",
+							)}
+						>
+							{iframe ? (
+								<iframe
+									src={iframe}
+									title={`${title} preview`}
+									className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+									allowFullScreen
+								/>
+							) : (
+								<Image
+									src={imgUrl ?? ""}
+									alt={`${title} preview`}
+									fill
+									className="object-cover transition-transform duration-500 group-hover:scale-105"
+									sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+								/>
+							)}
+							{videoUrl && !iframe && (
 								<button
 									type="button"
 									onClick={() => setShowVideo(true)}
@@ -142,11 +170,7 @@ export default function ProjectCard({
 					<CardHeader className="space-y-2 flex-grow">
 						<div className="flex items-center gap-2 flex-wrap">
 							<CardTitle className="font-clash text-xl tracking-wide text-white">{title}</CardTitle>
-							{openSource && (
-								<span className="inline-flex items-center rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-400">
-									open source
-								</span>
-							)}
+							{openSource && <OpenSourceBadge />}
 						</div>
 						<CardDescription className="text-neutral-400 line-clamp-3">
 							{description}

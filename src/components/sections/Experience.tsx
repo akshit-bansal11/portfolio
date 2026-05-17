@@ -1,10 +1,10 @@
 "use client";
-import ExpItem from "@/components/ui/common/cards/ExpItem";
-import ScrollSectionHeading from "@/components/ui/common/headings/ScrollSectionHeading";
+import ExpItem from "@/components/common/cards/ExpItem";
+import ScrollSectionHeading from "@/components/common/headings/ScrollSectionHeading";
 //--------------------|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|--------------------//
 //--------------------|     COMPONENTS     |--------------------//
 //--------------------|____________________|--------------------//
-import ScrollSection from "@/components/ui/common/sections/ScrollSection";
+import ScrollSection from "@/components/common/sections/ScrollSection";
 import { experience } from "@/data/experienceData";
 
 //--------------------|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|--------------------//

@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import LightRays from "@/components/LightRays";
+import LightRays from "@/components/effects/LightRays";
 import NavBar from "@/components/layout/NavBar";
 import WelcomeAnimation from "@/components/ui/WelcomeAnimation";
 import { AnimationProvider } from "@/context/AnimationContext";

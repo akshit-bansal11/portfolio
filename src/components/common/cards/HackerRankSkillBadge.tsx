@@ -3,9 +3,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { FaStar } from "react-icons/fa6";
-import { GoArrowUpRight } from "react-icons/go";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import ExternalLinkBadge from "@/components/common/badges/ExternalLinkBadge";
 
 interface SkillBadgeProps {
 	name: string;
@@ -113,25 +111,15 @@ const HackerRankSkillBadge = ({
 			</div>
 
 			{/* ── Card footer — mirrors GoogleBadgeCard layout ── */}
-			<div className={cn("w-full flex items-center gap-2 px-3")}>
-				<div className="flex-1 border-t border-neutral-800/60" />
-				<Button
-					variant="outline"
-					size="icon"
-					onClick={() => window.open(link, "_blank", "noopener,noreferrer")}
-					style={{
-						borderColor: `${color}60`,
-						color: color,
-					}}
-					className={cn(
-						"h-8 w-8 rounded-full bg-neutral-900/50",
-						"hover:bg-neutral-800 transition-all duration-300",
-					)}
-				>
-					<GoArrowUpRight className="h-4 w-4" />
-				</Button>
-				<div className="flex-1 border-t border-neutral-800/60" />
-			</div>
+			<ExternalLinkBadge
+				href={link}
+				className="px-3 w-full"
+				style={{
+					// NOTE: Dynamic hex-derived border and text color — must stay inline; cannot be expressed as Tailwind class
+					borderColor: `${color}60`,
+					color,
+				}}
+			/>
 		</motion.div>
 	);
 };

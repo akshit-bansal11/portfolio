@@ -2,9 +2,9 @@
 import Link from "next/link";
 import { GoArrowUpRight } from "react-icons/go";
 import { Button } from "@/components/ui/button";
-import ProjectCard from "@/components/ui/common/cards/ProjectCard";
-import ScrollSectionHeading from "@/components/ui/common/headings/ScrollSectionHeading";
-import ScrollSection from "@/components/ui/common/sections/ScrollSection";
+import ProjectCard from "@/components/common/cards/ProjectCard";
+import ScrollSectionHeading from "@/components/common/headings/ScrollSectionHeading";
+import ScrollSection from "@/components/common/sections/ScrollSection";
 import { projects } from "@/data/projectsData";
 
 export default function Projects() {

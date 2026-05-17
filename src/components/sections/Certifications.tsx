@@ -1,14 +1,14 @@
 "use client";
 
-import CertificationCard from "@/components/ui/common/cards/CertificationCard";
-import GoogleBadgeCard from "@/components/ui/common/cards/GoogleBadgeCard";
-import HackerRankSkillBadge from "@/components/ui/common/cards/HackerRankSkillBadge";
-import ScrollSectionHeading from "@/components/ui/common/headings/ScrollSectionHeading";
+import CertificationCard from "@/components/common/cards/CertificationCard";
+import GoogleBadgeCard from "@/components/common/cards/GoogleBadgeCard";
+import HackerRankSkillBadge from "@/components/common/cards/HackerRankSkillBadge";
+import ScrollSectionHeading from "@/components/common/headings/ScrollSectionHeading";
 
 //--------------------|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|--------------------//
 //--------------------|     COMPONENTS     |--------------------//
 //--------------------|____________________|--------------------//
-import ScrollSection from "@/components/ui/common/sections/ScrollSection";
+import ScrollSection from "@/components/common/sections/ScrollSection";
 import { googleBadges, hackerRankBadges } from "@/data/badgesData";
 import {
 	cuvetteCertificationsData,
@@ -40,7 +40,7 @@ export default function Certifications() {
 
 			<div className="flex flex-col gap-4">
 				<h1 className="text-neutral-100 text-xs md:text-sm lg:text-2xl mt-4">Certifications</h1>
-				
+
 				<h1 className="text-neutral-400 text-xs md:text-sm lg:text-xl">LinkedIn & Microsoft</h1>
 				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 					{linkedInCertificationsData.map((cert, index) => (

@@ -1,8 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import CertificationsPill from "@/components/ui/common/CertificationsPill";
-import SkillPill from "@/components/ui/common/SkillPill";
+import CertificationsPill from "@/components/common/pills/CertificationsPill";
+import SkillPill from "@/components/common/pills/SkillPill";
 import type { SkillCategory } from "@/data/skillsData";
 import { cn } from "@/lib/utils";
 

@@ -2,8 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { GoArrowUpRight } from "react-icons/go";
-import { Button } from "@/components/ui/button";
+import ExternalLinkBadge from "@/components/common/badges/ExternalLinkBadge";
 import type { CertificationItem } from "@/types";
 
 export interface CertificationCardProps extends CertificationItem {
@@ -56,9 +55,7 @@ export default function CertificationCard({
 									className="object-contain w-6 h-6"
 								/>
 							) : (
-								<span className="text-lg font-bold text-neutral-300">
-									{p.name.charAt(0)}
-								</span>
+								<span className="text-lg font-bold text-neutral-300">{p.name.charAt(0)}</span>
 							)}
 						</div>
 					))}
@@ -88,16 +85,8 @@ export default function CertificationCard({
 			</div>
 
 			{/* Link Button */}
-			<div className="mt-6 flex items-center justify-between">
-				<div className="flex-1 border-t border-neutral-800/60 mr-4" />
-				<Button
-					variant="outline"
-					size="icon"
-					onClick={() => window.open(link, "_blank", "noopener,noreferrer")}
-					className="h-8 w-8 rounded-full cursor-pointer bg-neutral-900/50 border-neutral-700 text-neutral-300 hover:bg-neutral-800 hover:text-white transition-all duration-300 shrink-0"
-				>
-					<GoArrowUpRight className="h-4 w-4" />
-				</Button>
+			<div className="mt-6">
+				<ExternalLinkBadge href={link} />
 			</div>
 		</motion.div>
 	);

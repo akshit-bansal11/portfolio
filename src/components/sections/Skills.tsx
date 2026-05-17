@@ -3,10 +3,10 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { GoArrowUpRight } from "react-icons/go";
 import { Button } from "@/components/ui/button";
-import SkillItem from "@/components/ui/common/cards/SkillItem";
-import ScrollSectionHeading from "@/components/ui/common/headings/ScrollSectionHeading";
+import SkillItem from "@/components/common/cards/SkillItem";
+import ScrollSectionHeading from "@/components/common/headings/ScrollSectionHeading";
 //--------------------|       COMMON       |--------------------//
-import ScrollSection from "@/components/ui/common/sections/ScrollSection";
+import ScrollSection from "@/components/common/sections/ScrollSection";
 
 //--------------------|       DATA       |--------------------//
 import { topSkills } from "@/data/skillsData";

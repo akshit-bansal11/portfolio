@@ -21,7 +21,6 @@ const WelcomeAnimation = ({ disabled = false }: WelcomeAnimationProps) => {
 		}
 
 		// const hasSeen = sessionStorage.getItem('portfolio-welcome-v1');
-		// console.log('WelcomeAnimation: hasSeen?', hasSeen);
 		// if (!hasSeen) {
 		setTimeout(() => {
 			setShowAnimation(true);
@@ -32,11 +31,9 @@ const WelcomeAnimation = ({ disabled = false }: WelcomeAnimationProps) => {
 	useEffect(() => {
 		if (!showAnimation || !containerRef.current) return;
 
-		console.log("WelcomeAnimation: Starting animation");
 		// Initialize Timeline
 		const tl = createTimeline({
 			onComplete: () => {
-				console.log("WelcomeAnimation: Animation complete");
 				// sessionStorage.setItem('portfolio-welcome-v1', 'true');
 				setShowAnimation(false);
 				setWelcomeComplete(true);
@@ -47,11 +44,13 @@ const WelcomeAnimation = ({ disabled = false }: WelcomeAnimationProps) => {
 		const drawables = createDrawable(".welcome-svg path");
 
 		// 1. Draw strokes
+		// NOTE: animejs v4 createDrawable return type is not publicly typed — the cast to `string` satisfies the tl.add() overload that accepts a selector-like target
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		tl.add(drawables as unknown as string, {
 			draw: ["0 0", "0 1"],
 			easing: "easeInOutSine",
 			duration: 4000,
+			// NOTE: animejs v4 stagger delay function signature (_el, i) is not reflected in @types/animejs v3 — suppression is legitimate until types are updated
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			delay: (_el: unknown, i: number) => i * 250,
 		});
