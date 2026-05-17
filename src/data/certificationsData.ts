@@ -139,15 +139,3 @@ export const scalerCertificationsData: CertificationItem[] = [
 		link: "#",
 	},
 ];
-
-export const cuvetteCertificationsData: CertificationItem[] = [
-	{
-		name: "Workshop: Build Blinkit Clone Using AI",
-		providers: [
-			{
-				name: "Cuvette",
-			},
-		],
-		link: "#",
-	},
-];

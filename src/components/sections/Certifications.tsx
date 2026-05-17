@@ -11,7 +11,6 @@ import ScrollSectionHeading from "@/components/common/headings/ScrollSectionHead
 import ScrollSection from "@/components/common/sections/ScrollSection";
 import { googleBadges, hackerRankBadges } from "@/data/badgesData";
 import {
-	cuvetteCertificationsData,
 	hackerRankCertificationsData,
 	linkedInCertificationsData,
 	scalerCertificationsData,
@@ -65,13 +64,6 @@ export default function Certifications() {
 				<h1 className="text-neutral-400 text-xs md:text-sm lg:text-xl mt-2">Scaler</h1>
 				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 					{scalerCertificationsData.map((cert, index) => (
-						<CertificationCard key={index} {...cert} showSkillBadges={false} />
-					))}
-				</div>
-
-				<h1 className="text-neutral-400 text-xs md:text-sm lg:text-xl mt-2">Cuvette</h1>
-				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-					{cuvetteCertificationsData.map((cert, index) => (
 						<CertificationCard key={index} {...cert} showSkillBadges={false} />
 					))}
 				</div>

@@ -33,7 +33,7 @@ export default function GoogleBadgeCard({ gBadgeTitle, gBadgeLink }: GoogleBadge
 			<div className="border-t border-neutral-800" />
 
 			{/* Middle section: Badge Title */}
-			<div className="flex-1 flex items-center justify-center min-h-[3rem]">
+			<div className="flex-1 flex items-center justify-center min-h-12">
 				<h3 className="text-white font-semibold text-sm md:text-base text-center line-clamp-2 leading-tight">
 					{gBadgeTitle}
 				</h3>
