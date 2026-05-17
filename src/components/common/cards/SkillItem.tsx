@@ -22,7 +22,7 @@ const SkillItem = ({ Icon, name, disableHover = false }: SkillItemProps) => {
 		>
 			{/* Background Glow Effect */}
 			{!disableHover && (
-				<div className="absolute inset-0 bg-gradient-to-br from-neutral-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+				<div className="absolute inset-0 bg-linear-to-br from-neutral-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 			)}
 
 			<div

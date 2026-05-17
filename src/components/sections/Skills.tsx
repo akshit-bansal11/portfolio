@@ -40,7 +40,7 @@ export default function Skills() {
 							viewport={{ once: true }}
 							transition={{ delay: index * 0.1 }}
 						>
-							<SkillItem {...skill} disableHover={true} />
+							<SkillItem {...skill} /*disableHover={true}*/ />
 						</motion.div>
 					))}
 				</div>
