@@ -183,7 +183,7 @@ export default function ProfileHeader() {
 	return (
 		<div
 			id="profile"
-			className="flex w-full max-w-7xl mx-auto mt-50 mb-30 items-center justify-between px-4 md:px-8 py-10 flex-col md:flex-row gap-8 md:gap-0"
+			className="flex w-full max-w-7xl mx-auto items-center justify-between px-4 md:px-8 py-10 flex-col md:flex-row gap-8 md:gap-0"
 		>
 			<div className="flex flex-col md:flex-row items-center gap-8 md:gap-12 w-full">
 				<ProfileImage />
