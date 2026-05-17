@@ -19,7 +19,7 @@ function Home() {
 		<div className="flex flex-col items-center w-full">
 			<HeroGeometric>
 				<About
-					text="Building Practical Web Experiences"
+					text="I Build Fast, Production-Grade Next.js Apps"
 					delay={150}
 					animateBy="words"
 					direction="top"
