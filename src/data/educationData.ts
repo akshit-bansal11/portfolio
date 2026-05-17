@@ -16,7 +16,7 @@ export const education: EducationItem[] = [
 	{
 		location: "Punjab, India",
 		company: "Central Board of Secondary Education",
-		role: "Metriculation",
+		role: "Matriculation",
 		date: "2019 - 2020",
 	},
 ];
