@@ -13,8 +13,6 @@ import { googleBadges, hackerRankBadges } from "@/data/badgesData";
 import {
 	hackerRankCertificationsData,
 	linkedInCertificationsData,
-	scalerCertificationsData,
-	udemyCertificationsData,
 } from "@/data/certificationsData";
 
 export default function Certifications() {
@@ -50,20 +48,6 @@ export default function Certifications() {
 				<h1 className="text-neutral-400 text-xs md:text-sm lg:text-xl mt-2">HackerRank</h1>
 				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 					{hackerRankCertificationsData.map((cert, index) => (
-						<CertificationCard key={index} {...cert} showSkillBadges={false} />
-					))}
-				</div>
-
-				<h1 className="text-neutral-400 text-xs md:text-sm lg:text-xl mt-2">Udemy</h1>
-				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-					{udemyCertificationsData.map((cert, index) => (
-						<CertificationCard key={index} {...cert} showSkillBadges={false} />
-					))}
-				</div>
-
-				<h1 className="text-neutral-400 text-xs md:text-sm lg:text-xl mt-2">Scaler</h1>
-				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-					{scalerCertificationsData.map((cert, index) => (
 						<CertificationCard key={index} {...cert} showSkillBadges={false} />
 					))}
 				</div>
