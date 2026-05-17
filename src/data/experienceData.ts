@@ -1,3 +1,5 @@
+import trupeerLogo from "@/assets/images/trupeer-dark.svg";
+import { type Skill, skillsData } from "@/data/skillsData";
 import type { ExperienceItem } from "@/types";
 
 export interface ExperienceCategory {
@@ -5,22 +7,62 @@ export interface ExperienceCategory {
 	items: ExperienceItem[];
 }
 
+// Flatten skillsData once so we can pick by name without duplicating icon URLs.
+const allSkills: Skill[] = skillsData.flatMap((category) => category.skills);
+
+const skillByName = (name: string): Skill | undefined =>
+	allSkills.find((skill) => skill.name === name);
+
+const pickSkills = (...names: string[]): Skill[] =>
+	names.map(skillByName).filter((skill): skill is Skill => Boolean(skill));
+
 export const experience: ExperienceCategory[] = [
 	{
 		title: "Internship",
 		items: [
 			{
-				location: "On-Site",
+				location: "Bengaluru (On-Site)",
 				company: "Trupeer",
-				role: "Full Stack (Next.js/GoLang) Intern",
+				role: "Full Stack Developer (Next.js & Typescript)",
 				date: "Jan 2026 - Ongoing",
+				logo: trupeerLogo,
+				generalPoint:
+					"Contributed across a distributed, microservices-oriented architecture spanning a Next.js web application, Chrome extension, and Node.js backend — interfacing with REST APIs, MongoDB, Redis, third-party webhooks, and containerized deployments throughout the feature lifecycle.",
 				points: [
-					"Built a subtitle generator supporting video and audio files, with an option to hard-burn subtitles directly onto the output video.",
-					"Engineered a native in-browser screen capture feature, replacing reliance on the 'Trupeer AI Screen Recorder & Video Editor' Chrome extension — enabling screen recording in enterprise environments with extension installation restrictions.",
-					"Authored comprehensive unit tests across all routes and functions, increasing code coverage to 90%.",
-					"Refined UI/UX with targeted improvements that boosted user engagement and overall platform usability.",
-					"Standardized and reformatted the entire codebase within a month, doubling code quality and maintainability.",
+					{
+						label: "Subtitle System",
+						body: "Eliminated server-side subtitle processing by engineering a fully client-side pipeline using FFmpeg WASM and ElevenLabs Scribe v2 for in-browser transcription and SRT editing; reduced compute costs ~70% and enabled 90+ language support.",
+					},
+					{
+						label: "Chrome Extension Recording Pipeline",
+						body: "Migrated from MediaRecorder to the Web Codecs API; replaced in-memory buffering with IndexedDB-based chunked writes to prevent data loss on sessions exceeding 30 minutes; added exponential-backoff upload retry for failure resilience. Built a fallback web recorder for extension-restricted enterprise environments.",
+					},
+					{
+						label: "API Security & Testing",
+						body: "Hardened the password reset flow to OWASP A07:2021 compliance via Upstash Redis sliding-window rate limiting, short-lived JWT token caching, reCAPTCHA v3 risk scoring, and honeypot field injection detection. Established Vitest testing infrastructure from zero — covering Auth0 middleware, token refresh, signup routes, and Stripe/Intercom/Mixpanel integrations.",
+					},
+					{
+						label: "Frontend Revamp",
+						body: "Sole intern on a full-stack Next.js 14 App Router rewrite (TypeScript, Tailwind CSS, shadcn/ui, Framer Motion); architected a typed REST client abstraction layer, Zod-based form validation, and webhook-driven optimistic UI for async event reconciliation across the Organization module.",
+					},
 				],
+				skills: pickSkills(
+					"Next.js",
+					"TypeScript",
+					"React",
+					"Tailwind CSS",
+					"Shadcn",
+					"Motion",
+					"Node.js",
+					"MongoDB",
+					"Redis",
+					"Upstash",
+					"Auth0",
+					"JWT",
+					"Vitest",
+					"FFmpeg WASM",
+					"ElevenLabs",
+				),
 			},
 			// {
 			//   location: "Remote",
@@ -43,6 +85,8 @@ export const experience: ExperienceCategory[] = [
 				company: "Bangalore Computer Education",
 				role: "MERN Stack Development + AI Integration Training",
 				date: "June 2025 - Aug 2025",
+				generalPoint:
+					"Hands-on training building production-style MERN applications with first-class AI integration, focused on shipping responsive, maintainable full-stack features end-to-end.",
 				points: [
 					"MongoDB, Express.js, React.js, Node.js, Gemini API, Redux Toolkit, and Tailwind CSS.",
 					"Developed a full-stack web application with AI integration for enhanced user experience.",
@@ -50,12 +94,23 @@ export const experience: ExperienceCategory[] = [
 				],
 				certificate:
 					"https://drive.google.com/file/d/1rY3FJ0Zfqx1hOdFl-vjG_Pl1Wp1BqcG8/view?usp=sharing",
+				skills: pickSkills(
+					"MongoDB",
+					"Express",
+					"React",
+					"Node.js",
+					"Redux",
+					"Tailwind CSS",
+					"Gemini",
+				),
 			},
 			{
 				location: "Punjab, India",
 				company: "Bangalore Computer Education",
 				role: "Data Structures and Algorithms Training",
 				date: "Dec 2024 - Mar 2025",
+				generalPoint:
+					"Structured DSA program centered on building strong problem-solving instincts — practicing time and space tradeoffs across competitive programming patterns.",
 				points: [
 					"In-depth training in data structures and algorithms, focusing on problem-solving skills.",
 					"Covered topics such as arrays, linked lists, trees, graphs, sorting algorithms, and dynamic programming.",
@@ -63,12 +118,15 @@ export const experience: ExperienceCategory[] = [
 				],
 				certificate:
 					"https://drive.google.com/file/d/1mfCPu-_HIxtpQ9BmfRtOwTAolsryGTap/view?usp=sharing",
+				skills: pickSkills("C++", "JavaScript", "Leetcode", "Hackerrank"),
 			},
 			{
 				location: "Punjab, India",
 				company: "Bangalore Computer Education",
 				role: "NodeJS Full Stack Development Training",
 				date: "June 2024 - July 2024",
+				generalPoint:
+					"Foundational full-stack training built around the Node.js ecosystem — server-side fundamentals, RESTful API design, persistence, and core security and performance practices.",
 				points: [
 					"Comprehensive training in Node.js for full-stack development.",
 					"Learned to build RESTful APIs, manage databases, and create dynamic web applications.",
@@ -76,6 +134,16 @@ export const experience: ExperienceCategory[] = [
 				],
 				certificate:
 					"https://drive.google.com/file/d/1B-axWT0ka9cSEM2wT0wOrLmXubBDln5a/view?usp=sharing",
+				skills: pickSkills(
+					"HTML5",
+					"CSS3",
+					"JavaScript",
+					"jQuery",
+					"Node.js",
+					"Express",
+					"MySQL",
+					"Cloudinary",
+				),
 			},
 		],
 	},

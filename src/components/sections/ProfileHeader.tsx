@@ -34,7 +34,7 @@ function GmailButton() {
 			asChild
 			variant="ghost"
 			size="icon"
-			className="h-10 w-10 !bg-transparent hover:!bg-transparent active:!bg-transparent hover:scale-110 transition-transform duration-200 shadow-none border-none"
+			className="h-10 w-10 bg-transparent! hover:bg-transparent! active:bg-transparent! hover:scale-110 transition-transform duration-200 shadow-none border-none"
 		>
 			<a href="mailto:artistbansal2004@gmail.com" target="_blank" rel="noopener noreferrer">
 				<Image

@@ -22,7 +22,7 @@ const CategoryBento = ({ category, reversed = false }: CategoryBentoProps) => {
 				transition={{ type: "spring", stiffness: 90 }}
 				className={cn(
 					"col-span-1 md:col-span-5 md:row-span-2 rounded-3xl p-8",
-					"bg-gradient-to-br from-neutral-900 to-neutral-800",
+					"bg-linear-to-br from-neutral-900 to-neutral-800",
 					"border border-neutral-800 flex flex-col justify-between",
 					reversed && "md:order-last",
 				)}

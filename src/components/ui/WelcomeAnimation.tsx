@@ -20,42 +20,30 @@ const WelcomeAnimation = ({ disabled = false }: WelcomeAnimationProps) => {
 			return;
 		}
 
-		// const hasSeen = sessionStorage.getItem('portfolio-welcome-v1');
-		// if (!hasSeen) {
 		setTimeout(() => {
 			setShowAnimation(true);
 		}, 50);
-		// }
 	}, [disabled, setWelcomeComplete]);
 
 	useEffect(() => {
 		if (!showAnimation || !containerRef.current) return;
 
-		// Initialize Timeline
 		const tl = createTimeline({
 			onComplete: () => {
-				// sessionStorage.setItem('portfolio-welcome-v1', 'true');
 				setShowAnimation(false);
 				setWelcomeComplete(true);
 			},
 		});
 
-		// Use createDrawable for the paths
 		const drawables = createDrawable(".welcome-svg path");
 
-		// 1. Draw strokes
-		// NOTE: animejs v4 createDrawable return type is not publicly typed — the cast to `string` satisfies the tl.add() overload that accepts a selector-like target
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		tl.add(drawables as unknown as string, {
 			draw: ["0 0", "0 1"],
 			easing: "easeInOutSine",
 			duration: 4000,
-			// NOTE: animejs v4 stagger delay function signature (_el, i) is not reflected in @types/animejs v3 — suppression is legitimate until types are updated
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			delay: (_el: unknown, i: number) => i * 250,
 		});
 
-		// 2. Fade in fill
 		tl.add(
 			".welcome-svg path",
 			{
@@ -66,12 +54,10 @@ const WelcomeAnimation = ({ disabled = false }: WelcomeAnimationProps) => {
 			"-=2000",
 		);
 
-		// 3. Stay for a bit
 		tl.add({
 			duration: 800,
 		});
 
-		// 3.5 Glitch effect
 		tl.add(".welcome-svg", {
 			translateX: [
 				{ value: 5, duration: 50 },
@@ -95,7 +81,6 @@ const WelcomeAnimation = ({ disabled = false }: WelcomeAnimationProps) => {
 			duration: 500,
 		});
 
-		// 4. Fade out the whole screen
 		tl.add(containerRef.current, {
 			scale: [1, 1.5],
 			opacity: [1, 0],
@@ -109,7 +94,7 @@ const WelcomeAnimation = ({ disabled = false }: WelcomeAnimationProps) => {
 	return (
 		<div
 			ref={containerRef}
-			className="fixed w-full h-full z-[9999] flex flex-col items-center justify-center bg-black"
+			className="fixed w-full h-full z-9999 flex flex-col items-center justify-center bg-black"
 		>
 			<div className="relative">
 				<svg

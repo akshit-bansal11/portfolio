@@ -2,11 +2,11 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { GoArrowUpRight } from "react-icons/go";
-import { Button } from "@/components/ui/button";
 import SkillItem from "@/components/common/cards/SkillItem";
 import ScrollSectionHeading from "@/components/common/headings/ScrollSectionHeading";
 //--------------------|       COMMON       |--------------------//
 import ScrollSection from "@/components/common/sections/ScrollSection";
+import { Button } from "@/components/ui/button";
 
 //--------------------|       DATA       |--------------------//
 import { topSkills } from "@/data/skillsData";

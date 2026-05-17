@@ -1,4 +1,6 @@
+import type { StaticImageData } from "next/image";
 import type { IconType } from "react-icons";
+import type { Skill } from "@/data/skillsData";
 
 // Skills Types
 export interface SkillItem {
@@ -34,13 +36,23 @@ export interface ProjectItem {
 }
 
 // Experience Types
+export interface ExperienceLabeledPoint {
+	label: string;
+	body: string;
+}
+
+export type ExperiencePoint = string | ExperienceLabeledPoint;
+
 export interface ExperienceItem {
 	location: string;
 	company: string;
 	role: string;
 	date: string;
-	points: string[];
+	points: ExperiencePoint[];
+	generalPoint?: string;
 	certificate?: string;
+	logo?: string | StaticImageData;
+	skills?: Skill[];
 }
 
 // Education Types

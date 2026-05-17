@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { FaFigma, FaGithub, FaGlobe, FaPlay } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
+import OpenSourceBadge from "@/components/common/badges/OpenSourceBadge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +16,6 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import OpenSourceBadge from "@/components/common/badges/OpenSourceBadge";
 import { cn } from "@/lib/utils";
 import type { ProjectItem } from "@/types";
 
@@ -59,7 +59,7 @@ function VideoModal({
 
 	return createPortal(
 		<motion.div
-			className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+			className="fixed inset-0 z-9999 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
 			initial={{ opacity: 0 }}
 			animate={{ opacity: 1 }}
 			exit={{ opacity: 0 }}
@@ -167,7 +167,7 @@ export default function ProjectCard({
 						</div>
 					)}
 
-					<CardHeader className="space-y-2 flex-grow">
+					<CardHeader className="space-y-2 grow">
 						<div className="flex items-center gap-2 flex-wrap">
 							<CardTitle className="font-clash text-xl tracking-wide text-white">{title}</CardTitle>
 							{openSource && <OpenSourceBadge />}

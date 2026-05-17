@@ -23,14 +23,8 @@ export default function ScrollReveal({
 		const element = ref.current;
 		if (!element) return;
 
-		// Determine initial transform based on direction
 		const initialY = direction === "up" ? 50 : 0;
 		const initialX = direction === "left" ? 50 : direction === "right" ? -50 : 0;
-
-		// Set initial state
-		// We can't use anime.set easily if imported as { animate }.
-		// We'll rely on CSS or immediate animate call with duration 0.
-		// Ideally user CSS class `opacity-0` handles the flash.
 
 		const observer = new IntersectionObserver(
 			(entries) => {
