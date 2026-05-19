@@ -10,6 +10,7 @@ import {
 	NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { navConfigs } from "@/config/navConfig";
+import { useAnimation } from "@/context/AnimationContext";
 import { cn } from "@/lib/utils";
 
 interface NavBarProps {
@@ -23,9 +24,14 @@ export default function NavBar({ page }: NavBarProps) {
 	const [activeTab, setActiveTab] = useState<string | null>(null);
 	const [hoveredTab, setHoveredTab] = useState<string | null>(null);
 	const [isScrolled, setIsScrolled] = useState(false);
+	const { isHeroComplete } = useAnimation();
 
 	// Skip effect if navbar is hidden
 	const isHidden = pathname === "/skills" || pathname === "/projects";
+
+	// On the home page the navbar waits for the horizontal hero to
+	// finish so it doesn't compete with the intro choreography.
+	const isGatedByHero = configKey === "home" && !isHeroComplete;
 
 	// Simple intersection observer logic to track active section
 	useEffect(() => {
@@ -79,7 +85,7 @@ export default function NavBar({ page }: NavBarProps) {
 		}
 	};
 
-	if (isHidden) return null;
+	if (isHidden || isGatedByHero) return null;
 
 	return (
 		<AnimatePresence mode="wait">
