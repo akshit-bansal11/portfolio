@@ -87,11 +87,7 @@ export const experience: ExperienceCategory[] = [
 				date: "June 2025 - Aug 2025",
 				generalPoint:
 					"Hands-on training building production-style MERN applications with first-class AI integration, focused on shipping responsive, maintainable full-stack features end-to-end.",
-				points: [
-					"MongoDB, Express.js, React.js, Node.js, Gemini API, Redux Toolkit, and Tailwind CSS.",
-					"Developed a full-stack web application with AI integration for enhanced user experience.",
-					"Focused on building scalable, maintainable, and efficient web applications.",
-				],
+				points: [],
 				certificate:
 					"https://drive.google.com/file/d/1rY3FJ0Zfqx1hOdFl-vjG_Pl1Wp1BqcG8/view?usp=sharing",
 				skills: pickSkills(
@@ -111,11 +107,7 @@ export const experience: ExperienceCategory[] = [
 				date: "Dec 2024 - Mar 2025",
 				generalPoint:
 					"Structured DSA program centered on building strong problem-solving instincts — practicing time and space tradeoffs across competitive programming patterns.",
-				points: [
-					"In-depth training in data structures and algorithms, focusing on problem-solving skills.",
-					"Covered topics such as arrays, linked lists, trees, graphs, sorting algorithms, and dynamic programming.",
-					"Emphasized practical applications and coding challenges to enhance algorithmic thinking.",
-				],
+				points: [],
 				certificate:
 					"https://drive.google.com/file/d/1mfCPu-_HIxtpQ9BmfRtOwTAolsryGTap/view?usp=sharing",
 				skills: pickSkills("C++", "JavaScript", "Leetcode", "Hackerrank"),
@@ -127,11 +119,7 @@ export const experience: ExperienceCategory[] = [
 				date: "June 2024 - July 2024",
 				generalPoint:
 					"Foundational full-stack training built around the Node.js ecosystem — server-side fundamentals, RESTful API design, persistence, and core security and performance practices.",
-				points: [
-					"Comprehensive training in Node.js for full-stack development.",
-					"Learned to build RESTful APIs, manage databases, and create dynamic web applications.",
-					"Focused on best practices in backend development, including security and performance optimization.",
-				],
+				points: [],
 				certificate:
 					"https://drive.google.com/file/d/1B-axWT0ka9cSEM2wT0wOrLmXubBDln5a/view?usp=sharing",
 				skills: pickSkills(

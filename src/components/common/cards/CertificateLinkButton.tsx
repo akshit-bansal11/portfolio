@@ -1,5 +1,4 @@
 import { GoArrowUpRight } from "react-icons/go";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface CertificateLinkButtonProps {
@@ -10,21 +9,34 @@ interface CertificateLinkButtonProps {
 export default function CertificateLinkButton({ href, className }: CertificateLinkButtonProps) {
 	return (
 		<div className={className}>
-			<Button
-				asChild
-				variant="outline"
-				size="sm"
+			<a
+				href={href}
+				target="_blank"
+				rel="noopener noreferrer"
 				className={cn(
-					"w-full md:w-auto group/btn gap-2 rounded-full pl-4 pr-3",
-					"bg-amber-500/5 hover:bg-amber-500/10 border-amber-500/20 hover:border-amber-500/40 text-amber-500",
-					"transition-all duration-300",
+					"group/btn inline-flex items-center overflow-hidden rounded-full",
+					"bg-white/5 border border-white/15 hover:border-white/30",
+					"hover:bg-white/10 transition-all duration-300",
+					"h-8 w-8 hover:w-[115px]",
 				)}
 			>
-				<a href={href} target="_blank" rel="noopener noreferrer">
-					<span className="text-xs font-semibold tracking-wide uppercase">View Certificate</span>
-					<GoArrowUpRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
-				</a>
-			</Button>
+				{/* Label slides in from right, hidden at rest */}
+				<span
+					className={cn(
+						"text-white text-xs font-semibold tracking-wide uppercase whitespace-nowrap",
+						"w-0 group-hover/btn:w-auto overflow-hidden",
+						"pl-0 group-hover/btn:pl-3",
+						"transition-all duration-300 ease-in-out",
+					)}
+				>
+					Credential
+				</span>
+
+				{/* Arrow icon — always visible, centered at rest */}
+				<span className="flex items-center justify-center shrink-0 w-8 h-8">
+					<GoArrowUpRight className="h-4 w-4 text-white transition-transform duration-300 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
+				</span>
+			</a>
 		</div>
 	);
 }
