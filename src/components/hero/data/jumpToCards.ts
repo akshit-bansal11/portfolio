@@ -40,4 +40,18 @@ export const JUMP_TO_CARDS: JumpToCardData[] = [
 		detail: "Degrees, coursework & academic highlights",
 		colorClass: "border-violet-500/40 shadow-violet-500/20 hover:border-violet-400/70",
 	},
+	{
+		label: "By The Numbers",
+		sectionId: "by-the-numbers",
+		description: "Commits, repos & time",
+		detail: "Live GitHub stats and months of professional experience",
+		colorClass: "border-cyan-500/40 shadow-cyan-500/20 hover:border-cyan-400/70",
+	},
+	{
+		label: "Testimonials",
+		sectionId: "testimonials",
+		description: "What people say",
+		detail: "Colleagues, instructors & collaborators share their experience",
+		colorClass: "border-pink-500/40 shadow-pink-500/20 hover:border-pink-400/70",
+	},
 ];
