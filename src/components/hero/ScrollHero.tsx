@@ -1,21 +1,20 @@
 "use client";
 
 /**
- * Three-stage scroll-driven hero:
+ * Four-stage scroll-driven hero:
  *
  *   Stage 1 – tagline   : word-by-word reveal on black
- *   Stage 2 – profile   : image + name + role slide in and peak large
- *   Stage 3 – socials   : profile shrinks + floats up; resume + social
- *                         icons rise from the bottom
- *
- * Vertical scroll is consumed by the tall wrapper while the canvas
- * stays sticky. A trailing buffer prevents accidental jumps into the
- * vertical sections that follow.
+ *   Stage 2 – profile   : logo flips to photo; hover callouts appear
+ *   Stage 3 – socials   : callouts fade; profile shrinks up; resume +
+ *                         social icons rise from the bottom
+ *   Stage 4 – jumpto    : profile + socials slide left; JumpTo panel
+ *                         slides in from the right
  */
 
 import { useMotionValueEvent } from "framer-motion";
 import { useAnimation } from "@/context/AnimationContext";
 import HeroBackdrop from "./components/HeroBackdrop";
+import JumpToPanel from "./components/JumpToPanel";
 import ProfileCluster from "./components/ProfileCluster";
 import ScrollIndicator from "./components/ScrollIndicator";
 import SocialsStage from "./components/SocialsStage";
@@ -48,6 +47,7 @@ export default function ScrollHero() {
 				<TaglineStage progress={progress} active={isWelcomeComplete} />
 				<ProfileCluster progress={progress} />
 				<SocialsStage progress={progress} />
+				<JumpToPanel progress={progress} />
 
 				<ScrollIndicator progress={progress} />
 			</div>

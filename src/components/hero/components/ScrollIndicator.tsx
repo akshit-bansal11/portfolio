@@ -17,8 +17,8 @@ interface ScrollIndicatorProps {
 }
 
 export default function ScrollIndicator({ progress }: ScrollIndicatorProps) {
-	// Visible at very start (0 .. ~0.06) and very end (~0.94 .. 1).
-	const opacity = useTransform(progress, [0, 0.04, 0.08, 0.92, 0.96, 1], [1, 1, 0, 0, 1, 1]);
+	// Visible throughout the entire horizontal scroll, fades in at start and out at the very end.
+	const opacity = useTransform(progress, [0, 0.04, 0.96, 1], [0, 1, 1, 0]);
 
 	return (
 		<motion.div

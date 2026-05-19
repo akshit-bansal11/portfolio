@@ -4,8 +4,8 @@
  * Third beat: resume button + brand-coloured social icons rise from
  * the bottom of the canvas as the profile cluster shrinks upward.
  *
- * The resume button leads by a small offset so it lands a beat before
- * the social icons. Everything dwells docked once settled.
+ * During stage 4 (jumpto) the whole group slides left in sync with
+ * the profile cluster to make room for the JumpTo panel.
  */
 
 import { type MotionValue, motion, useTransform } from "framer-motion";
@@ -65,7 +65,10 @@ export default function SocialsStage({ progress }: SocialsStageProps) {
 	const settled = entryEnd(HERO_STAGES.socials.range);
 	const entrySpan = settled - start;
 
-	// Whole container: rises from 80 → 0 across entry, dwells.
+	const jumptoStart = HERO_STAGES.jumpto.range[0];
+	const jumptoSettled = entryEnd(HERO_STAGES.jumpto.range);
+
+	// ── Rise from bottom during socials entry ─────────────────────────
 	const containerOpacity = useTransform(
 		progress,
 		[start, start + entrySpan * 0.3, settled, 1],
@@ -73,14 +76,21 @@ export default function SocialsStage({ progress }: SocialsStageProps) {
 	);
 	const containerY = useTransform(progress, [start, settled, 1], ["80px", "0px", "0px"]);
 
-	// Resume button enters in the first 35% of the entry span.
+	// ── Slide left during jumpto entry ────────────────────────────────
+	const containerX = useTransform(
+		progress,
+		[jumptoStart, jumptoSettled, 1],
+		["0vw", "-28vw", "-28vw"],
+	);
+
+	// Resume: leads the reveal (first 35% of entry)
 	const resumeEnd = start + entrySpan * 0.35;
 	const resumeOpacity = useTransform(progress, [start, resumeEnd], [0, 1]);
 	const resumeY = useTransform(progress, [start, resumeEnd], [28, 0]);
 
 	return (
 		<motion.div
-			style={{ opacity: containerOpacity, y: containerY }}
+			style={{ opacity: containerOpacity, y: containerY, x: containerX }}
 			className="absolute inset-x-0 bottom-16 md:bottom-20 flex flex-col items-center gap-4 md:gap-5"
 		>
 			{/* Resume CTA */}
@@ -96,7 +106,6 @@ export default function SocialsStage({ progress }: SocialsStageProps) {
 				/>
 				<div className="relative flex gap-3 md:gap-4 px-4 py-3 rounded-2xl bg-neutral-900/70 backdrop-blur-md border border-neutral-700/60 shadow-xl pointer-events-auto">
 					{heroSocialLinks.map(({ Icon, href, name }, index) => {
-						// Stagger each icon across the entry window.
 						const itemStart = start + entrySpan * (0.2 + index * 0.1);
 						const itemEnd = Math.min(settled, itemStart + entrySpan * 0.22);
 						return (

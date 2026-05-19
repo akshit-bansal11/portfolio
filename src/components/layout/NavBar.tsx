@@ -89,8 +89,8 @@ export default function NavBar({ page }: NavBarProps) {
 
 	return (
 		<AnimatePresence mode="wait">
-			{!isScrolled ? (
-				/* TOP NAVBAR */
+			{/* TOP NAVBAR — visible after hero completes but before any section is active */}
+			{!isScrolled && (
 				<motion.div
 					key="top-navbar"
 					initial={{ y: -100, opacity: 0 }}
@@ -143,11 +143,7 @@ export default function NavBar({ page }: NavBarProps) {
 													initial={{ opacity: 0, scale: 0.95 }}
 													animate={{ opacity: 1, scale: 1 }}
 													exit={{ opacity: 0, scale: 0.95 }}
-													transition={{
-														type: "spring",
-														bounce: 0.2,
-														duration: 0.6,
-													}}
+													transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
 												/>
 											)}
 										</NavigationMenuItem>
@@ -157,8 +153,10 @@ export default function NavBar({ page }: NavBarProps) {
 						</NavigationMenu>
 					</div>
 				</motion.div>
-			) : (
-				/* SIDE NAVBAR */
+			)}
+
+			{/* SIDE NAVBAR — only when the user is inside a named section */}
+			{isScrolled && activeTab && (
 				<motion.div
 					key="side-navbar"
 					initial={{ x: 100, opacity: 0 }}
@@ -211,11 +209,7 @@ export default function NavBar({ page }: NavBarProps) {
 													initial={{ opacity: 0, scale: 0.95 }}
 													animate={{ opacity: 1, scale: 1 }}
 													exit={{ opacity: 0, scale: 0.95 }}
-													transition={{
-														type: "spring",
-														bounce: 0.2,
-														duration: 0.6,
-													}}
+													transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
 												/>
 											)}
 										</NavigationMenuItem>
