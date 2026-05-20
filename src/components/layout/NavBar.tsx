@@ -182,43 +182,47 @@ export default function NavBar({ page }: NavBarProps) {
 					animate={{ x: 0, opacity: 1 }}
 					exit={{ x: 100, opacity: 0 }}
 					transition={{ duration: 0.5, ease: "easeInOut" }}
-					className="hidden md:flex fixed top-0 right-0 h-full flex-col justify-center pr-4 z-50 pointer-events-none"
+					className="hidden md:flex fixed top-0 right-0 h-full flex-col justify-center pr-3 z-50 pointer-events-none"
 				>
-					<div className="bg-neutral-900/80 backdrop-blur-md rounded-full border border-neutral-700/50 p-2 shadow-xl pointer-events-auto flex flex-col items-center">
+					<div className="bg-neutral-900/80 backdrop-blur-md rounded-full border border-neutral-700/50 p-1.5 shadow-xl pointer-events-auto flex flex-col items-center">
 						<NavigationMenu>
-							<NavigationMenuList className="flex-col space-y-4">
+							<NavigationMenuList className="flex-col space-y-2">
 								{/* Vertical icon-only stack of nav entries. */}
 								{navItems.map((item, index) => {
 									const Icon = item.icon;
 									const isRoute = item.to?.startsWith("/");
 									const isActive = activeTab === item.to || (isRoute && pathname === item.to);
 									const isHovered = hoveredTab === item.to;
+									const colorClass = item.color ?? "text-neutral-400";
 
 									return (
 										<NavigationMenuItem key={index} className="relative">
 											{isRoute ? (
 												<Link
 													href={item.to}
-													className="relative z-20 flex items-center justify-center p-2 text-sm font-medium text-neutral-400 transition-colors duration-200 hover:text-white"
+													className={cn(
+														"relative z-20 flex items-center justify-center p-1.5 text-sm font-medium transition-colors duration-200",
+														isActive || isHovered ? colorClass : "text-neutral-500",
+													)}
 													onMouseEnter={() => setHoveredTab(item.to)}
 													onMouseLeave={() => setHoveredTab(null)}
 													onClick={() => setActiveTab(item.to)}
 													data-active={isActive ? "true" : undefined}
 												>
-													{Icon && <Icon className="h-5 w-5" />}
+													{Icon && <Icon className="h-4 w-4" strokeWidth={1.5} />}
 												</Link>
 											) : (
 												<button
 													type="button"
 													className={cn(
-														"relative z-20 flex items-center justify-center p-2 text-sm font-medium transition-colors duration-200 cursor-pointer focus:outline-none",
-														isActive ? "text-white" : "text-neutral-400 hover:text-white",
+														"relative z-20 flex items-center justify-center p-1.5 text-sm font-medium transition-colors duration-200 cursor-pointer focus:outline-none",
+														isActive || isHovered ? colorClass : "text-neutral-500",
 													)}
 													onClick={(e) => handleScroll(e, item.to)}
 													onMouseEnter={() => setHoveredTab(item.to)}
 													onMouseLeave={() => setHoveredTab(null)}
 												>
-													{Icon && <Icon className="h-5 w-5" />}
+													{Icon && <Icon className="h-4 w-4" strokeWidth={1.5} />}
 												</button>
 											)}
 

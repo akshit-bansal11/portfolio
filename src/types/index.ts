@@ -84,11 +84,12 @@ export interface CertificationItem {
 	link: string;
 }
 
-// One row in the global navbar (label, target, icon).
+// One row in the global navbar (label, target, icon, soft accent color).
 export interface NavItem {
 	text: string;
 	to: string;
 	icon: IconType;
+	color?: string;
 }
 
 // Identifier of one of the four hero scroll stages.
