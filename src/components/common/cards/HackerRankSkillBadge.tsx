@@ -59,7 +59,7 @@ const HackerRankSkillBadge = ({
 						filter: `drop-shadow(0 0 12px ${glowColor})`,
 						transition: "filter 0.4s ease",
 					}}
-					className="group-hover:[filter:drop-shadow(0_0_20px_var(--badge-glow))]"
+					className="group-hover:filter-[drop-shadow(0_0_20px_var(--badge-glow))]"
 				>
 					{/* Inner hex — dark fill */}
 					<div
