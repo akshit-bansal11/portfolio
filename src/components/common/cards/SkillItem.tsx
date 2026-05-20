@@ -1,15 +1,25 @@
+/*
+ * SkillItem.tsx
+ * Square skill tile rendering an icon and uppercase
+ * tracked label. Shows a grayscale-to-color hover effect
+ * with a glow and underline accent unless disabled.
+ */
+
 import { motion } from "framer-motion";
 import Image from "next/image";
 import type React from "react";
 import { cn } from "@/lib/utils";
 
+// Public props for the tile.
 interface SkillItemProps {
 	Icon: string | React.ElementType;
 	name: string;
 	disableHover?: boolean;
 }
 
+// Renders one skill tile.
 const SkillItem = ({ Icon, name, disableHover = false }: SkillItemProps) => {
+	// Distinguish between remote URL icon vs a React component icon.
 	const isStringIcon = typeof Icon === "string";
 
 	return (
@@ -25,6 +35,7 @@ const SkillItem = ({ Icon, name, disableHover = false }: SkillItemProps) => {
 				<div className="absolute inset-0 bg-linear-to-br from-neutral-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 			)}
 
+			{/* Icon container with hover scale. */}
 			<div
 				className={cn(
 					"relative z-10 flex items-center justify-center transition-transform duration-500",
@@ -52,6 +63,7 @@ const SkillItem = ({ Icon, name, disableHover = false }: SkillItemProps) => {
 				)}
 			</div>
 
+			{/* Tile label, becomes white on hover. */}
 			<span
 				className={cn(
 					"relative z-10 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] transition-colors duration-500",

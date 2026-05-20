@@ -1,21 +1,33 @@
+/*
+ * experienceData.ts
+ * Source-of-truth for the Experience section.
+ * Groups entries into categories (Internship, Training) and
+ * resolves their tech-stack pills against shared skillsData
+ * so icon URLs aren't duplicated.
+ */
+
 import trupeerLogo from "@/assets/images/trupeer-dark.svg";
 import { type Skill, skillsData } from "@/data/skillsData";
 import type { ExperienceItem } from "@/types";
 
+// One named group of experience cards (e.g. "Internship", "Training").
 export interface ExperienceCategory {
 	title: string;
 	items: ExperienceItem[];
 }
 
-// Flatten skillsData once so we can pick by name without duplicating icon URLs.
+// Flatten every category's skills into one master list for lookup.
 const allSkills: Skill[] = skillsData.flatMap((category) => category.skills);
 
+// Resolve a single skill by display name.
 const skillByName = (name: string): Skill | undefined =>
 	allSkills.find((skill) => skill.name === name);
 
+// Pick a typed list of Skill objects from a free-form name list.
 const pickSkills = (...names: string[]): Skill[] =>
 	names.map(skillByName).filter((skill): skill is Skill => Boolean(skill));
 
+// All experience entries, grouped by category, in display order.
 export const experience: ExperienceCategory[] = [
 	{
 		title: "Internship",

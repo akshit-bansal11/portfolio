@@ -1,5 +1,12 @@
+/*
+ * educationData.ts
+ * Static list of academic entries shown in the Education section.
+ * Ordered newest-first; rendered as plain stacked cards.
+ */
+
 import type { EducationItem } from "@/types";
 
+// Education timeline entries (degree, schooling, board exams).
 export const education: EducationItem[] = [
 	{
 		location: "Punjab, India",

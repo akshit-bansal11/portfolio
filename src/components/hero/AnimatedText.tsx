@@ -1,20 +1,21 @@
-"use client";
-
-/**
+/*
+ * AnimatedText.tsx
  * Reusable word/letter blur-reveal text animation.
- *
- * Extracted from the original About implementation so it can be reused
- * by both the tagline and the about line in the scroll hero. Honors an
- * `active` flag so the parent can gate the animation behind external
- * readiness signals (welcome animation finishing, scroll progress, …).
+ * Splits the text into segments and animates each
+ * with a staggered blur+slide entry. Supports gating
+ * via the `active` flag and per-segment styling.
  */
+
+"use client";
 
 import { motion } from "framer-motion";
 import { useMemo } from "react";
 import type { AnimatedTextProps } from "@/types";
 
+// Internal: a single keyframe-state snapshot.
 type Snapshot = Record<string, string | number>;
 
+// Build a per-property keyframe array from a `from` snapshot and intermediate `steps`.
 const buildKeyframes = (from: Snapshot, steps: Snapshot[]) => {
 	const keys = new Set([...Object.keys(from), ...steps.flatMap((s) => Object.keys(s))]);
 	const keyframes: Record<string, (string | number)[]> = {};
@@ -24,8 +25,10 @@ const buildKeyframes = (from: Snapshot, steps: Snapshot[]) => {
 	return keyframes;
 };
 
+// Per-step duration of the blur-reveal animation.
 const STEP_DURATION = 0.35;
 
+// Renders the staggered word/letter reveal.
 export default function AnimatedText({
 	text,
 	stagger = 150,
@@ -36,17 +39,21 @@ export default function AnimatedText({
 	active = true,
 	wordClassName,
 }: AnimatedTextProps) {
+	// Split target text into words or letters depending on the mode.
 	const elements = useMemo(
 		() => (animateBy === "words" ? text.split(" ") : text.split("")),
 		[text, animateBy],
 	);
 
+	// Pre-compute the from/to keyframes, total duration, and timing array.
 	const { fromSnapshot, animateKeyframes, totalDuration, times } = useMemo(() => {
+		// Initial state — blurred and offset above or below.
 		const from: Snapshot =
 			direction === "top"
 				? { filter: "blur(10px)", opacity: 0, y: -50 }
 				: { filter: "blur(10px)", opacity: 0, y: 50 };
 
+		// Two-step settle: half-blur halfway, fully sharp at the end.
 		const to: Snapshot[] = [
 			{ filter: "blur(5px)", opacity: 0.5, y: direction === "top" ? 5 : -5 },
 			{ filter: "blur(0px)", opacity: 1, y: 0 },
@@ -66,6 +73,7 @@ export default function AnimatedText({
 	return (
 		<p className={`flex flex-wrap ${className}`}>
 			{elements.map((segment, index) => {
+				// Per-segment transition with a stagger offset.
 				const transition = {
 					duration: totalDuration,
 					times,

@@ -1,3 +1,11 @@
+/*
+ * navigation-menu.tsx
+ * Shadcn-style wrappers around Radix's Navigation Menu.
+ * Re-exports composable primitives (Root, List, Item,
+ * Trigger, Content, Link, Indicator, Viewport) styled
+ * to match the project's dark theme.
+ */
+
 import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu";
 import { cva } from "class-variance-authority";
 import { ChevronDown } from "lucide-react";
@@ -5,6 +13,7 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+// Animated viewport that hosts the active menu's content panel.
 const NavigationMenuViewport = React.forwardRef<
 	React.ElementRef<typeof NavigationMenuPrimitive.Viewport>,
 	React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Viewport>
@@ -26,6 +35,7 @@ const NavigationMenuViewport = React.forwardRef<
 ));
 NavigationMenuViewport.displayName = NavigationMenuPrimitive.Viewport.displayName;
 
+// Top-level navigation root that hosts the list and viewport.
 const NavigationMenu = React.forwardRef<
 	React.ElementRef<typeof NavigationMenuPrimitive.Root>,
 	React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Root>
@@ -43,6 +53,7 @@ const NavigationMenu = React.forwardRef<
 ));
 NavigationMenu.displayName = NavigationMenuPrimitive.Root.displayName;
 
+// List wrapper for navigation items.
 const NavigationMenuList = React.forwardRef<
 	React.ElementRef<typeof NavigationMenuPrimitive.List>,
 	React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.List>
@@ -55,12 +66,15 @@ const NavigationMenuList = React.forwardRef<
 ));
 NavigationMenuList.displayName = NavigationMenuPrimitive.List.displayName;
 
+// Re-export the bare item primitive — no extra styling needed.
 const NavigationMenuItem = NavigationMenuPrimitive.Item;
 
+// Shared trigger style (used by NavigationMenuTrigger and exported standalone).
 const navigationMenuTriggerStyle = cva(
 	"group inline-flex h-10 w-max items-center justify-center rounded-md bg-transparent px-4 py-2 text-sm font-medium transition-colors hover:bg-neutral-800 hover:text-neutral-100 focus:bg-neutral-800 focus:text-neutral-100 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-neutral-800/50 data-[state=open]:bg-neutral-800/50",
 );
 
+// Trigger button for a navigation submenu, with rotating chevron.
 const NavigationMenuTrigger = React.forwardRef<
 	React.ElementRef<typeof NavigationMenuPrimitive.Trigger>,
 	React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Trigger>
@@ -79,6 +93,7 @@ const NavigationMenuTrigger = React.forwardRef<
 ));
 NavigationMenuTrigger.displayName = NavigationMenuPrimitive.Trigger.displayName;
 
+// Content panel that slides in/out for the active trigger.
 const NavigationMenuContent = React.forwardRef<
 	React.ElementRef<typeof NavigationMenuPrimitive.Content>,
 	React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Content>
@@ -94,8 +109,10 @@ const NavigationMenuContent = React.forwardRef<
 ));
 NavigationMenuContent.displayName = NavigationMenuPrimitive.Content.displayName;
 
+// Re-export the link primitive — used for clickable menu items.
 const NavigationMenuLink = NavigationMenuPrimitive.Link;
 
+// Optional caret indicator that follows the active trigger.
 const NavigationMenuIndicator = React.forwardRef<
 	React.ElementRef<typeof NavigationMenuPrimitive.Indicator>,
 	React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Indicator>

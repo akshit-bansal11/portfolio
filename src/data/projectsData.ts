@@ -1,5 +1,13 @@
+/*
+ * projectsData.ts
+ * Source-of-truth for the Projects section and /projects page.
+ * Grouped by category (Web, Designs, Scripts) so the page can
+ * render each category as its own scroll-revealed grid.
+ */
+
 import type { ProjectItem } from "@/types";
 
+// Dictionary of category → ordered project entries.
 export const projects: Record<string, ProjectItem[]> = {
 	Web: [
 		{

@@ -1,3 +1,11 @@
+/*
+ * ByTheNumbers.tsx
+ * "By The Numbers" stats section.
+ * Fetches live GitHub stats from the local API route,
+ * combines them with hardcoded years values, and animates
+ * each card's value with a number counter on scroll-in.
+ */
+
 "use client";
 
 import { animate, createScope } from "animejs";
@@ -5,8 +13,7 @@ import { useEffect, useRef, useState } from "react";
 import ScrollSectionHeading from "@/components/common/headings/ScrollSectionHeading";
 import ScrollSection from "@/components/common/sections/ScrollSection";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
+// Shape of a single stat card displayed in the section.
 interface StatCard {
 	id: string;
 	value: number;
@@ -17,8 +24,7 @@ interface StatCard {
 	glowClass: string;
 }
 
-// ─── Animated counter ─────────────────────────────────────────────────────────
-
+// Animated number counter using anime.js, scoped to a single span.
 function CounterValue({
 	target,
 	suffix,
@@ -30,15 +36,18 @@ function CounterValue({
 	triggered: boolean;
 	accentClass: string;
 }) {
+	// Ref to the inner span the counter writes into.
 	const spanRef = useRef<HTMLSpanElement>(null);
 	const scopeRef = useRef<ReturnType<typeof createScope> | null>(null);
 
 	useEffect(() => {
+		// Wait for the trigger flag before kicking off the count-up.
 		if (!triggered || !spanRef.current) return;
 
 		const obj = { val: 0 };
 		scopeRef.current = createScope({ root: spanRef });
 
+		// Animate val 0 → target and write each frame as a localized number.
 		animate(obj, {
 			val: [0, target],
 			duration: 1800,
@@ -63,8 +72,7 @@ function CounterValue({
 	);
 }
 
-// ─── Stat card ────────────────────────────────────────────────────────────────
-
+// One stat card, including the counter and label rows.
 function StatCard({ card, triggered }: { card: StatCard; triggered: boolean }) {
 	return (
 		<div
@@ -85,6 +93,7 @@ function StatCard({ card, triggered }: { card: StatCard; triggered: boolean }) {
 				accentClass={card.accentClass}
 			/>
 
+			{/* Card label + descriptive sublabel. */}
 			<div className="flex flex-col gap-0.5">
 				<span className="text-white text-sm md:text-base font-semibold leading-tight">
 					{card.label}
@@ -95,12 +104,11 @@ function StatCard({ card, triggered }: { card: StatCard; triggered: boolean }) {
 	);
 }
 
-// ─── Main section ─────────────────────────────────────────────────────────────
-
-// ↓ Update these manually as time passes
+// Hardcoded years values — bump manually as time passes.
 const YEARS_PROFESSIONAL = 1.4; // Jan 2026 – present
 const YEARS_BUILDING = 5; // June 2024 – present
 
+// Card definitions sans the live `value` (filled in at runtime).
 const BASE_STATS: Omit<StatCard, "value">[] = [
 	{
 		id: "commits",
@@ -136,14 +144,17 @@ const BASE_STATS: Omit<StatCard, "value">[] = [
 	},
 ];
 
+// Top-level section component.
 export default function ByTheNumbers() {
+	// Whether the counters should start animating.
 	const [triggered, setTriggered] = useState(false);
+	// Live stat list once values have been resolved.
 	const [stats, setStats] = useState<StatCard[]>([]);
 	const sectionRef = useRef<HTMLElement>(null);
 
-	// Compute time-based stats on mount
+	// Resolve initial stat values: GitHub data + static years.
 	useEffect(() => {
-		// These will be replaced by live GitHub data if the API succeeds
+		// Default values used until the GitHub fetch resolves (or fails).
 		const placeholders: Record<string, number> = {
 			commits: 0,
 			repos: 0,
@@ -151,7 +162,7 @@ export default function ByTheNumbers() {
 			building: YEARS_BUILDING,
 		};
 
-		// Fetch live GitHub stats
+		// Fetch live stats from the internal API; merge into the card list.
 		fetch("/api/github-stats")
 			.then((r) => r.json())
 			.then((data: { publicRepos: number; totalCommits: number }) => {
@@ -164,7 +175,7 @@ export default function ByTheNumbers() {
 			});
 	}, []);
 
-	// Trigger counter animation when section scrolls into view
+	// Trigger the counter animation once the section enters the viewport.
 	useEffect(() => {
 		if (stats.length === 0) return;
 		const el = sectionRef.current;
@@ -186,16 +197,17 @@ export default function ByTheNumbers() {
 
 	return (
 		<ScrollSection id="by-the-numbers">
+			{/* Section heading row. */}
 			<div className="flex w-full gap-2 items-baseline mb-4 md:mb-6">
 				<ScrollSectionHeading heading="by the numbers" />
 			</div>
 
+			{/* Card grid (or skeleton placeholders while stats are loading). */}
 			<section ref={sectionRef} className="w-full">
 				<div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
 					{stats.length > 0
 						? stats.map((card) => <StatCard key={card.id} card={card} triggered={triggered} />)
-						: // Skeleton while stats load
-							Array.from({ length: 4 }).map((_, i) => (
+						: Array.from({ length: 4 }).map((_, i) => (
 								<div
 									key={i}
 									className="rounded-2xl bg-neutral-900/40 border border-neutral-800 h-36 animate-pulse flex-1 min-w-[160px]"

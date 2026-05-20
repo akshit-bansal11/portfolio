@@ -1,3 +1,11 @@
+/*
+ * Certifications.tsx
+ * "Attainments" section.
+ * Renders the badges block (Google Cloud + HackerRank star
+ * badges) followed by the certifications block grouped by
+ * issuer (LinkedIn/Microsoft, HackerRank).
+ */
+
 "use client";
 
 import CertificationCard from "@/components/common/cards/CertificationCard";
@@ -5,9 +13,6 @@ import GoogleBadgeCard from "@/components/common/cards/GoogleBadgeCard";
 import HackerRankSkillBadge from "@/components/common/cards/HackerRankSkillBadge";
 import ScrollSectionHeading from "@/components/common/headings/ScrollSectionHeading";
 
-//--------------------|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|--------------------//
-//--------------------|     COMPONENTS     |--------------------//
-//--------------------|____________________|--------------------//
 import ScrollSection from "@/components/common/sections/ScrollSection";
 import { googleBadges, hackerRankBadges } from "@/data/badgesData";
 import {
@@ -15,10 +20,12 @@ import {
 	linkedInCertificationsData,
 } from "@/data/certificationsData";
 
+// Top-level Attainments section component.
 export default function Certifications() {
 	return (
 		<ScrollSection id="attainments">
 			<ScrollSectionHeading heading="attainments" />
+			{/* Badges block (Google + HackerRank). */}
 			<div className="flex flex-col gap-4">
 				<h1 className="text-neutral-100 text-xs md:text-sm lg:text-2xl">Badges</h1>
 				<h1 className="text-neutral-400 text-xs md:text-sm lg:text-xl">Google Cloud</h1>
@@ -35,6 +42,7 @@ export default function Certifications() {
 				</div>
 			</div>
 
+			{/* Certifications block (LinkedIn/Microsoft + HackerRank). */}
 			<div className="flex flex-col gap-4">
 				<h1 className="text-neutral-100 text-xs md:text-sm lg:text-2xl mt-4">Certifications</h1>
 

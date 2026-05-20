@@ -1,16 +1,18 @@
-"use client";
-
-/**
- * Download-resume CTA shown above the social cluster in the final
- * beat. Mirrors the styling of the original `ProfileHeader` resume
- * button so the look-and-feel stays consistent across surfaces.
+/*
+ * ResumeButton.tsx
+ * Download-resume CTA shown above the social icon row
+ * during the hero socials stage. Wraps a Button-as-anchor
+ * with a subtly bouncing arrow indicator.
  */
+
+"use client";
 
 import { motion } from "framer-motion";
 import { FaArrowDownLong } from "react-icons/fa6";
 import { Button } from "@/components/ui/button";
 import { RESUME_FILENAME, RESUME_PATH } from "@/data/heroContent";
 
+// Renders the resume download button.
 export default function ResumeButton() {
 	return (
 		<Button
@@ -20,6 +22,7 @@ export default function ResumeButton() {
 		>
 			<a href={RESUME_PATH} download={RESUME_FILENAME} target="_blank" rel="noopener noreferrer">
 				<span className="text-sm md:text-base font-medium">Download Resume</span>
+				{/* Subtly bouncing down-arrow indicator. */}
 				<motion.span
 					animate={{ y: [0, 3, 0] }}
 					transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}

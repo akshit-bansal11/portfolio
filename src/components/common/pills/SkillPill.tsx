@@ -1,3 +1,10 @@
+/*
+ * SkillPill.tsx
+ * Compact pill displaying a skill's icon and name.
+ * Used across category bento grids and experience
+ * cards as a unified tech-stack chip.
+ */
+
 "use client";
 
 import { motion } from "framer-motion";
@@ -5,11 +12,14 @@ import Image from "next/image";
 import type { Skill } from "@/data/skillsData";
 import { cn } from "@/lib/utils";
 
+// Public props for the pill.
 interface SkillPillProps {
 	skill: Skill;
 }
 
+// Renders a single skill pill.
 const SkillPill = ({ skill }: SkillPillProps) => {
+	// Pull the icon URL off the skill object for clarity.
 	const Icon = skill.Icon;
 
 	return (

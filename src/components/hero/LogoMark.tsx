@@ -1,7 +1,11 @@
-/**
- * The "AB" logo mark used inside the profile circle before the image
- * flips in. Reuses the same SVG paths as WelcomeAnimation.
+/*
+ * LogoMark.tsx
+ * "AB" SVG logo shown inside the profile circle before
+ * the photo flips in. Reuses the same path data as the
+ * WelcomeAnimation logo for visual consistency.
  */
+
+// Renders the AB logo SVG with optional className overrides.
 export default function LogoMark({ className = "" }: { className?: string }) {
 	return (
 		<svg

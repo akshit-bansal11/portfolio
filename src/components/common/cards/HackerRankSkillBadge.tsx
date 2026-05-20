@@ -1,3 +1,11 @@
+/*
+ * HackerRankSkillBadge.tsx
+ * Hexagonal HackerRank skill badge.
+ * Renders a colored, glowing hex containing the language
+ * icon, name, and 1–5 star rating, plus an external link
+ * badge tinted with the same brand color underneath.
+ */
+
 "use client";
 
 import { motion } from "framer-motion";
@@ -5,6 +13,7 @@ import Image from "next/image";
 import { FaStar } from "react-icons/fa6";
 import ExternalLinkBadge from "@/components/common/badges/ExternalLinkBadge";
 
+// Public props for the badge.
 interface SkillBadgeProps {
 	name: string;
 	icon: string;
@@ -18,6 +27,7 @@ interface SkillBadgeProps {
 // Pointy-top hexagon (matches the reference image shape)
 const HEX_CLIP = "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)";
 
+// Renders the hex badge plus its footer link.
 const HackerRankSkillBadge = ({
 	name,
 	icon,
@@ -26,10 +36,11 @@ const HackerRankSkillBadge = ({
 	link = "",
 	color = "#22C55E",
 }: SkillBadgeProps) => {
+	// Fixed 5-star scale; lit count comes from `stars` prop.
 	const totalStars = 5;
 
 	// Derive a subtle glow rgba from the hex color
-	const glowColor = `${color}40`; // 25% opacity version
+	const glowColor = `${color}40`;
 
 	return (
 		<motion.div

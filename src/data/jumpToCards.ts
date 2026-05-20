@@ -1,9 +1,13 @@
-/**
- * Cards shown in the JumpTo panel (stage 4). Each maps to a section
- * anchor already present on the page.
+/*
+ * jumpToCards.ts
+ * Card definitions for the JumpTo panel (hero stage 4).
+ * Each card targets an in-page section anchor and carries
+ * its own border/glow color scheme used by the panel grid.
  */
+
 import type { JumpToCardData } from "@/types";
 
+// Ordered list of jump-to cards rendered in the panel.
 export const JUMP_TO_CARDS: JumpToCardData[] = [
 	{
 		label: "Projects",

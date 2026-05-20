@@ -1,3 +1,11 @@
+/*
+ * CertificationsPill.tsx
+ * Hover-expandable pill that previews a list of
+ * certifications backing a skills category. Collapsed
+ * shows stacked logos; expanded reveals the full list
+ * with each certification's name beside its icon.
+ */
+
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
@@ -5,11 +13,14 @@ import Image from "next/image";
 import { useState } from "react";
 import type { Skill } from "@/data/skillsData";
 
+// Public props for the pill.
 interface CertificationsPillProps {
 	certifications: Skill[];
 }
 
+// Renders the dual-state hover pill.
 const CertificationsPill = ({ certifications }: CertificationsPillProps) => {
+	// Whether the user is currently hovering the pill (drives expanded state).
 	const [isHovered, setIsHovered] = useState(false);
 
 	if (certifications.length === 0) return null;
@@ -23,6 +34,7 @@ const CertificationsPill = ({ certifications }: CertificationsPillProps) => {
 			onMouseEnter={() => setIsHovered(true)}
 			onMouseLeave={() => setIsHovered(false)}
 		>
+			{/* Animated container that morphs between collapsed and expanded layouts. */}
 			<motion.div
 				layout
 				transition={{
@@ -33,6 +45,7 @@ const CertificationsPill = ({ certifications }: CertificationsPillProps) => {
 			>
 				<AnimatePresence mode="wait">
 					{isHovered ? (
+						// ── Expanded view — full named list. ────────────────────
 						<motion.div
 							key="expanded"
 							initial={{ opacity: 0 }}
@@ -49,6 +62,7 @@ const CertificationsPill = ({ certifications }: CertificationsPillProps) => {
 								Certifications
 							</motion.span>
 
+							{/* One row per certification, slightly staggered in. */}
 							{certifications.map((cert, idx) => {
 								const Icon = cert.Icon;
 								return (
@@ -77,6 +91,7 @@ const CertificationsPill = ({ certifications }: CertificationsPillProps) => {
 							})}
 						</motion.div>
 					) : (
+						// ── Collapsed view — overlapping icons only. ────────────
 						<motion.div
 							key="collapsed"
 							initial={{ opacity: 0, scale: 0.95 }}
@@ -107,7 +122,7 @@ const CertificationsPill = ({ certifications }: CertificationsPillProps) => {
 				</AnimatePresence>
 			</motion.div>
 
-			{/* Layout placeholder */}
+			{/* Layout placeholder so the absolutely-positioned pill reserves height. */}
 			<div className="h-8 px-3 invisible">Certs</div>
 		</div>
 	);

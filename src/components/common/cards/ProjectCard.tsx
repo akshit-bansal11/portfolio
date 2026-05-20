@@ -1,3 +1,11 @@
+/*
+ * ProjectCard.tsx
+ * Card for one project in the Projects grid.
+ * Optionally displays a media preview (image or iframe),
+ * a video play overlay that opens a modal, the project's
+ * title/description/tech stack, and footer action buttons.
+ */
+
 "use client";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
@@ -19,14 +27,14 @@ import {
 import { cn } from "@/lib/utils";
 import type { ProjectItem } from "@/types";
 
+// Public props: extends ProjectItem with optional iframe + sizing.
 interface ProjectCardProps extends ProjectItem {
-	/** Embed an iframe preview instead of a static image */
 	iframe?: string;
-	/** 'small' → max-w-md + h-48 media; 'default' → max-w-lg + aspect-video media */
 	size?: "default" | "small";
 	className?: string;
 }
 
+// Modal that plays the demo video; mounted into document.body via a portal.
 function VideoModal({
 	videoUrl,
 	title,
@@ -36,8 +44,10 @@ function VideoModal({
 	title: string;
 	onClose: () => void;
 }) {
+	// Defer mounting until after first client render so createPortal is safe.
 	const [mounted, setMounted] = useState(false);
 
+	// Esc key closes the modal.
 	const handleKeyDown = useCallback(
 		(e: KeyboardEvent) => {
 			if (e.key === "Escape") onClose();
@@ -46,6 +56,7 @@ function VideoModal({
 	);
 
 	useEffect(() => {
+		// Mark mounted, lock body scroll, and bind the Esc listener.
 		setMounted(true);
 		document.addEventListener("keydown", handleKeyDown);
 		document.body.style.overflow = "hidden";
@@ -65,6 +76,7 @@ function VideoModal({
 			exit={{ opacity: 0 }}
 			onClick={onClose}
 		>
+			{/* Inner panel; stops click-through from closing the modal. */}
 			<motion.div
 				className="relative w-full max-w-4xl aspect-video rounded-xl overflow-hidden bg-black shadow-2xl"
 				initial={{ scale: 0.9, opacity: 0 }}
@@ -99,6 +111,7 @@ function VideoModal({
 	);
 }
 
+// Renders one project card.
 export default function ProjectCard({
 	title,
 	description,
@@ -114,8 +127,10 @@ export default function ProjectCard({
 	size = "default",
 	className,
 }: ProjectCardProps) {
+	// Tracks whether the demo video modal is open.
 	const [showVideo, setShowVideo] = useState(false);
 
+	// Small render flags — drives optional sections of the card.
 	const hasMedia = !!(imgUrl || iframe);
 	const hasFooter = !!(demoLink || designLink || githubLink || siteLink);
 
@@ -129,6 +144,7 @@ export default function ProjectCard({
 				className={cn("w-full", size === "small" ? "max-w-md" : "max-w-lg", className)}
 			>
 				<Card className="group overflow-hidden border-neutral-800 bg-neutral-900/50 backdrop-blur-sm transition-all duration-300 hover:border-neutral-700 hover:shadow-xl hover:shadow-black/50 h-full flex flex-col">
+					{/* Top media block — image, iframe, or play-button overlay. */}
 					{hasMedia && (
 						<div
 							className={cn(
@@ -152,6 +168,7 @@ export default function ProjectCard({
 									sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
 								/>
 							)}
+							{/* Play overlay only when a video is attached and we're not iframing. */}
 							{videoUrl && !iframe && (
 								<button
 									type="button"
@@ -167,6 +184,7 @@ export default function ProjectCard({
 						</div>
 					)}
 
+					{/* Title + description + optional open-source badge. */}
 					<CardHeader className="space-y-2 grow">
 						<div className="flex items-center gap-2 flex-wrap">
 							<CardTitle className="font-clash text-xl tracking-wide text-white">{title}</CardTitle>
@@ -177,6 +195,7 @@ export default function ProjectCard({
 						</CardDescription>
 					</CardHeader>
 
+					{/* Tech stack tag list. */}
 					<CardContent className="pb-0">
 						<div className="flex flex-wrap gap-1.5">
 							{techStack.map((tech, index) => (
@@ -191,6 +210,7 @@ export default function ProjectCard({
 						</div>
 					</CardContent>
 
+					{/* Footer action buttons — only the link types that are provided. */}
 					{hasFooter && (
 						<CardFooter className="gap-2 pt-4 flex-wrap">
 							{designLink && (
@@ -236,6 +256,7 @@ export default function ProjectCard({
 				</Card>
 			</motion.div>
 
+			{/* Demo video modal mounts to body via portal; AnimatePresence handles exit. */}
 			<AnimatePresence>
 				{showVideo && videoUrl && (
 					<VideoModal videoUrl={videoUrl} title={title} onClose={() => setShowVideo(false)} />

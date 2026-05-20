@@ -1,19 +1,12 @@
-"use client";
-
-/**
- * Profile cluster — handles the whole lifecycle:
- *
- *  profile entry   → slides in from right; circle shows the AB logo
- *  profile settled → circle flips (3-D card flip) to reveal profile photo;
- *                    "Hover me" callout appears left; "Hi!" on right after hover
- *  socials entry   → callouts fade out; cluster shrinks + floats up
- *  jumpto entry    → whole cluster slides left to make room for the panel
- *
- * The halo and conic ring sit INSIDE the preserve-3d container so they
- * flip as a sandwich with the front/back faces — they are visible from
- * both sides (no backfaceVisibility: hidden) which keeps the visual
- * continuous during the rotation.
+/*
+ * ProfileCluster.tsx
+ * Profile cluster handling the full hero lifecycle.
+ * Slides in, flips logo→photo on click, fades the
+ * hover callouts as socials begin, shrinks upward,
+ * and slides left to make room for the JumpTo panel.
  */
+
+"use client";
 
 import { type MotionValue, motion, useMotionValueEvent, useTransform } from "framer-motion";
 import Image from "next/image";
@@ -23,14 +16,18 @@ import { PROFILE_IMAGE_HOVER_URL, PROFILE_NAME, PROFILE_ROLE } from "@/data/hero
 import HoverCallout from "./HoverCallout";
 import LogoMark from "./LogoMark";
 
+// Public props for the cluster.
 interface ProfileClusterProps {
 	progress: MotionValue<number>;
 }
 
+// Pre-compute name halves so the gradient styling can target the surname.
 const FIRST_NAME = PROFILE_NAME.split(" ")[0];
 const LAST_NAME = PROFILE_NAME.split(" ").slice(1).join(" ");
 
+// Renders the entire profile cluster across all four hero stages.
 export default function ProfileCluster({ progress }: ProfileClusterProps) {
+	// Pull stage ranges and their settled points for transform math.
 	const profile = HERO_STAGES.profile.range;
 	const socials = HERO_STAGES.socials.range;
 	const jumpto = HERO_STAGES.jumpto.range;
@@ -39,25 +36,30 @@ export default function ProfileCluster({ progress }: ProfileClusterProps) {
 	const socialsSettled = entryEnd(socials);
 	const jumptoSettled = entryEnd(jumpto);
 
+	// Tracks whether the photo side of the flip card is showing.
 	const [flipped, setFlipped] = useState(false);
 
-	// Auto-flip when jumpto stage begins (if not already flipped); reset when scrolled back before profile
+	// Auto-flip when jumpto stage begins; reset if scrolled back before profile.
 	useMotionValueEvent(progress, "change", (latest) => {
 		if (latest >= jumpto[0] && !flipped) setFlipped(true);
 		if (latest < profile[0] + 0.01 && flipped) setFlipped(false);
 	});
 
+	// Horizontal motion: enter from right, hold center, slide left for jumpto.
 	const x = useTransform(
 		progress,
 		[profile[0], profileSettled, jumpto[0], jumptoSettled, 1],
 		["55vw", "0vw", "0vw", "-28vw", "-28vw"],
 	);
+	// Vertical motion: drift upward as socials begin to make space.
 	const y = useTransform(
 		progress,
 		[profile[0], profile[1], socialsSettled, 1],
 		["0vh", "0vh", "-15vh", "-15vh"],
 	);
+	// Fade in at profile entry.
 	const opacity = useTransform(progress, [profile[0], profileSettled], [0, 1]);
+	// Subtle scale: grow during entry, shrink during socials.
 	const scale = useTransform(
 		progress,
 		[profile[0], profileSettled, profile[1], socialsSettled, 1],
@@ -66,6 +68,7 @@ export default function ProfileCluster({ progress }: ProfileClusterProps) {
 
 	return (
 		<>
+			{/* Floating callouts around the profile circle. */}
 			<HoverCallout side="left" progress={progress} hovered={flipped} />
 			<HoverCallout side="right" progress={progress} />
 

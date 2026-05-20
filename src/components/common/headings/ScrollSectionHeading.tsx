@@ -1,12 +1,21 @@
+/*
+ * ScrollSectionHeading.tsx
+ * Standard section heading used at the top of every
+ * scroll section. Reveals from the left and animates
+ * its gradient fill on hover.
+ */
+
 "use client";
 
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
+// Public props for the heading.
 interface ScrollSectionHeadingProps {
 	heading: string;
 }
 
+// Renders the gradient-filled, slide-in section heading.
 function ScrollSectionHeading({ heading }: ScrollSectionHeadingProps) {
 	return (
 		<motion.h1

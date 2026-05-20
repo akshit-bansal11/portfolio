@@ -1,15 +1,16 @@
-"use client";
-
-/**
- * Decorative backdrop for the scroll hero. Composes the same five
- * coloured shapes used by the original `HeroGeometric` plus the soft
- * indigo/rose ambient gradient and top/bottom vignette.
- *
- * Kept stateless so it can be dropped into any pinned canvas.
+/*
+ * HeroBackdrop.tsx
+ * Decorative backdrop layered behind the hero canvas.
+ * Combines an ambient brand gradient, five floating
+ * colored ElegantShape spheres, and a soft top/bottom
+ * vignette to blend into the next section.
  */
+
+"use client";
 
 import ElegantShape from "./ElegantShape";
 
+// Renders the full hero backdrop layer stack.
 export default function HeroBackdrop() {
 	return (
 		<>

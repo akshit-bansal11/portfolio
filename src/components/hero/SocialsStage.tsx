@@ -1,26 +1,27 @@
-"use client";
-
-/**
- * Third beat: resume button + brand-coloured social icons rise from
- * the bottom of the canvas as the profile cluster shrinks upward.
- *
- * During stage 4 (jumpto) the whole group slides left in sync with
- * the profile cluster to make room for the JumpTo panel.
+/*
+ * SocialsStage.tsx
+ * Hero stage 3 — resume CTA + social icons rise from
+ * the bottom while the profile shrinks upward, then
+ * the whole group slides left during stage 4 (jumpto).
  */
+
+"use client";
 
 import { type MotionValue, motion, useTransform } from "framer-motion";
 import type { IconType } from "react-icons";
 import { Button } from "@/components/ui/button";
-import { heroSocialLinks } from "@/data/heroSocialLinks";
-import { cn } from "@/lib/utils";
 import { entryEnd, HERO_STAGES } from "@/config/heroStages";
+import { heroSocialLinks } from "@/data/heroSocialLinks";
 import { getSocialAccent } from "@/data/socialAccents";
+import { cn } from "@/lib/utils";
 import ResumeButton from "./ResumeButton";
 
+// Public props for the stage.
 interface SocialsStageProps {
 	progress: MotionValue<number>;
 }
 
+// Per-icon props for one social button.
 interface SocialItemProps {
 	progress: MotionValue<number>;
 	itemStart: number;
@@ -30,9 +31,12 @@ interface SocialItemProps {
 	Icon: IconType;
 }
 
+// Renders one staggered social icon button.
 function SocialItem({ progress, itemStart, itemEnd, href, label, Icon }: SocialItemProps) {
+	// Per-icon rise + fade tied to its slice of the entry span.
 	const y = useTransform(progress, [itemStart, itemEnd], [36, 0]);
 	const opacity = useTransform(progress, [itemStart, itemEnd], [0, 1]);
+	// Brand accent classes for hover and ring colors.
 	const accent = getSocialAccent(label);
 
 	return (
@@ -60,11 +64,14 @@ function SocialItem({ progress, itemStart, itemEnd, href, label, Icon }: SocialI
 	);
 }
 
+// Renders the full socials stage layout (resume + icon row).
 export default function SocialsStage({ progress }: SocialsStageProps) {
+	// Stage 3 progress range / span.
 	const [start] = HERO_STAGES.socials.range;
 	const settled = entryEnd(HERO_STAGES.socials.range);
 	const entrySpan = settled - start;
 
+	// Stage 4 thresholds drive the left-slide of this whole group.
 	const jumptoStart = HERO_STAGES.jumpto.range[0];
 	const jumptoSettled = entryEnd(HERO_STAGES.jumpto.range);
 
@@ -83,7 +90,7 @@ export default function SocialsStage({ progress }: SocialsStageProps) {
 		["0vw", "-28vw", "-28vw"],
 	);
 
-	// Resume: leads the reveal (first 35% of entry)
+	// Resume button leads the reveal during the first 35% of the entry span.
 	const resumeEnd = start + entrySpan * 0.35;
 	const resumeOpacity = useTransform(progress, [start, resumeEnd], [0, 1]);
 	const resumeY = useTransform(progress, [start, resumeEnd], [28, 0]);
@@ -100,11 +107,13 @@ export default function SocialsStage({ progress }: SocialsStageProps) {
 
 			{/* Social icons row */}
 			<div className="relative">
+				{/* Soft colored glow behind the icon strip. */}
 				<div
 					aria-hidden
 					className="absolute -inset-3 rounded-2xl bg-linear-to-r from-indigo-500/20 via-rose-500/20 to-amber-400/20 blur-xl"
 				/>
 				<div className="relative flex gap-3 md:gap-4 px-4 py-3 rounded-2xl bg-neutral-900/70 backdrop-blur-md border border-neutral-700/60 shadow-xl pointer-events-auto">
+					{/* Each icon gets its own staggered reveal window. */}
 					{heroSocialLinks.map(({ Icon, href, name }, index) => {
 						const itemStart = start + entrySpan * (0.2 + index * 0.1);
 						const itemEnd = Math.min(settled, itemStart + entrySpan * 0.22);

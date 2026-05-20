@@ -1,15 +1,16 @@
-"use client";
-
-/**
- * Floating, slowly-drifting blurred sphere accent. Ported from the
- * original HeroGeometric so the new scroll hero keeps the same
- * brand "constellation" of indigo / rose / violet / amber / cyan
- * shapes in the background.
+/*
+ * ElegantShape.tsx
+ * Slowly drifting blurred sphere accent.
+ * Used by HeroBackdrop to scatter colored, pill-like
+ * gradients behind the hero canvas for depth and warmth.
  */
+
+"use client";
 
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
+// Public props for the shape.
 interface ElegantShapeProps {
 	className?: string;
 	delay?: number;
@@ -19,6 +20,7 @@ interface ElegantShapeProps {
 	gradient?: string;
 }
 
+// Renders the floating blurred sphere accent.
 export default function ElegantShape({
 	className,
 	delay = 0,
@@ -28,6 +30,7 @@ export default function ElegantShape({
 	gradient = "from-white/[0.08]",
 }: ElegantShapeProps) {
 	return (
+		// Outer wrapper handles the initial fade/rotate-in entrance.
 		<motion.div
 			initial={{ opacity: 0, y: -150, rotate: rotate - 15 }}
 			animate={{ opacity: 1, y: 0, rotate }}
@@ -39,12 +42,14 @@ export default function ElegantShape({
 			}}
 			className={cn("absolute", className)}
 		>
+			{/* Inner wrapper drives the slow, looping vertical drift. */}
 			<motion.div
 				animate={{ y: [0, 15, 0] }}
 				transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
 				style={{ width, height }}
 				className="relative"
 			>
+				{/* Final visual: a blurred gradient pill with a soft inner glow. */}
 				<div
 					className={cn(
 						"absolute inset-0 rounded-full",

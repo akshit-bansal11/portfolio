@@ -1,3 +1,10 @@
+/*
+ * GoogleBadgeCard.tsx
+ * Card for one Google Cloud Skill Boost generative-AI badge.
+ * Shows a Google Cloud header strip, the badge title,
+ * and an external-link badge that opens the public proof.
+ */
+
 "use client";
 
 import { motion } from "framer-motion";
@@ -6,6 +13,7 @@ import ExternalLinkBadge from "@/components/common/badges/ExternalLinkBadge";
 import { cn } from "@/lib/utils";
 import type { GoogleBadgeItem } from "@/types";
 
+// Renders a single Google badge card.
 export default function GoogleBadgeCard({ gBadgeTitle, gBadgeLink }: GoogleBadgeItem) {
 	return (
 		<motion.div

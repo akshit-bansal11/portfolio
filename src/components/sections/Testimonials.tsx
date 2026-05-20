@@ -1,3 +1,11 @@
+/*
+ * Testimonials.tsx
+ * Auto-scrolling testimonials section.
+ * Renders an infinite horizontal track of testimonial
+ * cards that pauses on hover or touch. Uses fade masks
+ * on the edges and seamlessly loops via duplicate cards.
+ */
+
 "use client";
 
 import { motion } from "framer-motion";
@@ -6,8 +14,7 @@ import ScrollSectionHeading from "@/components/common/headings/ScrollSectionHead
 import ScrollSection from "@/components/common/sections/ScrollSection";
 import { testimonials } from "@/data/testimonialsData";
 
-// ─── Individual card ─────────────────────────────────────────────────────────
-
+// One testimonial card.
 function TestimonialCard({
 	name,
 	email,
@@ -28,24 +35,24 @@ function TestimonialCard({
 				"shadow-lg shadow-black/30",
 			].join(" ")}
 		>
-			{/* Quote mark */}
+			{/* Decorative serif quote mark. */}
 			<span className="text-3xl leading-none text-neutral-600 font-serif select-none">"</span>
 
-			{/* Testimonial text */}
+			{/* Testimonial body text. */}
 			<p className="text-neutral-300 text-sm md:text-base leading-relaxed font-light flex-1">
 				{text}
 			</p>
 
-			{/* Author row */}
+			{/* Author row: avatar + name/role/email. */}
 			<div className="flex items-center gap-3 pt-2 border-t border-neutral-800">
-				{/* Avatar */}
+				{/* Initials avatar tinted with the per-author accent color. */}
 				<div
 					className={`w-10 h-10 rounded-full ${accentColor} flex items-center justify-center shrink-0`}
 				>
 					<span className="text-white text-xs font-bold tracking-wide">{initials}</span>
 				</div>
 
-				{/* Name / role */}
+				{/* Name / role / email column. */}
 				<div className="flex flex-col min-w-0">
 					<span className="text-white text-sm font-semibold truncate">{name}</span>
 					<span className="text-neutral-500 text-xs truncate">
@@ -58,17 +65,18 @@ function TestimonialCard({
 	);
 }
 
-// ─── Auto-scrolling track ─────────────────────────────────────────────────────
-
+// Auto-scrolling track that pauses on hover/touch and loops seamlessly.
 function ScrollTrack({ children }: { children: React.ReactNode }) {
 	const trackRef = useRef<HTMLDivElement>(null);
 	const animFrameRef = useRef<number | null>(null);
-	const speed = 0.5; // px per frame
+	// Auto-scroll speed in pixels per frame.
+	const speed = 0.5;
 
 	useEffect(() => {
 		const el = trackRef.current;
 		if (!el) return;
 
+		// Whether the user is currently hovering/holding the track.
 		let isPaused = false;
 
 		const onEnter = () => {
@@ -83,10 +91,10 @@ function ScrollTrack({ children }: { children: React.ReactNode }) {
 		el.addEventListener("touchstart", onEnter, { passive: true });
 		el.addEventListener("touchend", onLeave);
 
+		// Per-frame scroll tick that loops back at the half-mark.
 		const tick = () => {
 			if (!isPaused && el) {
 				el.scrollLeft += speed;
-				// Seamless loop: when we've scrolled past the first half, jump back
 				if (el.scrollLeft >= el.scrollWidth / 2) {
 					el.scrollLeft = 0;
 				}
@@ -110,7 +118,7 @@ function ScrollTrack({ children }: { children: React.ReactNode }) {
 			ref={trackRef}
 			className="flex gap-4 overflow-x-auto scroll-smooth"
 			style={{
-				// Hide native scrollbar visually but keep it functional
+				// Hide native scrollbar visually but keep scroll functional.
 				scrollbarWidth: "none",
 				msOverflowStyle: "none",
 			}}
@@ -120,15 +128,14 @@ function ScrollTrack({ children }: { children: React.ReactNode }) {
 	);
 }
 
-// ─── Main section ─────────────────────────────────────────────────────────────
-
+// Top-level Testimonials section component.
 export default function Testimonials() {
-	// Duplicate cards for seamless infinite loop
+	// Duplicate the cards so the seamless loop has continuous content.
 	const doubled = [...testimonials, ...testimonials];
 
 	return (
 		<ScrollSection id="testimonials">
-			{/* Heading */}
+			{/* Heading row. */}
 			<div className="flex w-full gap-2 items-baseline mb-4 md:mb-6">
 				<ScrollSectionHeading heading="testimonials" />
 			</div>
@@ -140,11 +147,11 @@ export default function Testimonials() {
 				transition={{ duration: 0.6 }}
 				className="relative w-full overflow-hidden"
 			>
-				{/* Left fade mask */}
+				{/* Edge fade masks on either side of the track. */}
 				<div className="pointer-events-none absolute left-0 top-0 h-full w-16 md:w-28 z-10 bg-linear-to-r from-background to-transparent" />
-				{/* Right fade mask */}
 				<div className="pointer-events-none absolute right-0 top-0 h-full w-16 md:w-28 z-10 bg-linear-to-l from-background to-transparent" />
 
+				{/* The auto-scrolling cards track. */}
 				<ScrollTrack>
 					{doubled.map((t, i) => (
 						<TestimonialCard key={`${t.id}-${i}`} {...t} />

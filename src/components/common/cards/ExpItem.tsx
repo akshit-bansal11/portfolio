@@ -1,3 +1,11 @@
+/*
+ * ExpItem.tsx
+ * Single experience entry card.
+ * Composes ExpHeader, an optional summary paragraph,
+ * a bulleted points list, a row of skill pills, and
+ * a credential link button when provided.
+ */
+
 "use client";
 import { motion } from "framer-motion";
 import CertificateLinkButton from "@/components/common/cards/CertificateLinkButton";
@@ -8,6 +16,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import type { ExperienceItem } from "@/types";
 
+// Renders one experience card.
 export default function ExpItem({
 	location,
 	company,
@@ -19,6 +28,7 @@ export default function ExpItem({
 	logo,
 	skills = [],
 }: ExperienceItem) {
+	// Logo presence drives padding / background variants below.
 	const hasLogo = !!logo;
 
 	return (
@@ -37,21 +47,27 @@ export default function ExpItem({
 						: "bg-neutral-900/50 group-hover:border-neutral-700/50",
 				)}
 			>
+				{/* Soft top-left highlight overlay. */}
 				<div className="absolute inset-0 bg-linear-to-br from-white/5 to-transparent pointer-events-none" />
 
 				<CardContent className={cn("relative z-10", hasLogo ? "p-6 md:p-7" : "p-7")}>
+					{/* Top header row (logo + meta or text-only). */}
 					<ExpHeader company={company} role={role} location={location} date={date} logo={logo} />
 
+					{/* Optional intro paragraph. */}
 					{generalPoint && (
 						<p className="mt-6 text-[14px] md:text-[15px] text-neutral-400 leading-relaxed">
 							{generalPoint}
 						</p>
 					)}
 
+					{/* Bulleted achievements/responsibilities list. */}
 					<ExpPointsList points={points} indented={hasLogo} />
 
+					{/* Skill pills row. */}
 					<ExpSkillsList skills={skills} />
 
+					{/* Optional credential/proof link button (positioned per layout). */}
 					{certificate && (
 						<CertificateLinkButton
 							href={certificate}

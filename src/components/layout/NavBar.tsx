@@ -1,3 +1,12 @@
+/*
+ * NavBar.tsx
+ * Persistent global navigation.
+ * Two presentations toggled by scroll position: a
+ * top-center pill while at the top, and a vertical
+ * right-edge dock once the user is inside a section.
+ * Hidden entirely on /skills and /projects routes.
+ */
+
 "use client";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
@@ -13,30 +22,36 @@ import { navConfigs } from "@/config/navConfig";
 import { useAnimation } from "@/context/AnimationContext";
 import { cn } from "@/lib/utils";
 
+// Public props for the navbar.
 interface NavBarProps {
 	page?: string;
 }
 
+// Renders the global navbar.
 export default function NavBar({ page }: NavBarProps) {
+	// Resolve which navigation set to render based on the current route.
 	const pathname = usePathname();
 	const configKey = page || (pathname === "/" ? "home" : "projects");
 	const navItems = navConfigs[configKey] || navConfigs.home;
+	// Currently-active section id (from intersection observer).
 	const [activeTab, setActiveTab] = useState<string | null>(null);
+	// Currently-hovered tab (drives the animated highlight).
 	const [hoveredTab, setHoveredTab] = useState<string | null>(null);
+	// True once the user has scrolled past the top region.
 	const [isScrolled, setIsScrolled] = useState(false);
 	const { isHeroComplete } = useAnimation();
 
 	// Skip effect if navbar is hidden
 	const isHidden = pathname === "/skills" || pathname === "/projects";
 
-	// On the home page the navbar waits for the horizontal hero to
-	// finish so it doesn't compete with the intro choreography.
+	// On the home page the navbar waits until the hero choreography finishes.
 	const isGatedByHero = configKey === "home" && !isHeroComplete;
 
-	// Simple intersection observer logic to track active section
+	// Track active section + scroll position for switching presentations.
 	useEffect(() => {
-		if (configKey !== "home") return; // Only for home page with scroll sections
+		if (configKey !== "home") return;
 
+		// Update activeTab when a section becomes 50% visible.
 		const handleIntersection = (entries: IntersectionObserverEntry[]) => {
 			entries.forEach((entry) => {
 				if (entry.isIntersecting) {
@@ -46,10 +61,11 @@ export default function NavBar({ page }: NavBarProps) {
 		};
 
 		const observer = new IntersectionObserver(handleIntersection, {
-			threshold: 0.5, // 50% visibility
+			threshold: 0.5,
 			rootMargin: "-10% 0px -10% 0px",
 		});
 
+		// Observe every nav target that maps to an in-page section.
 		navItems.forEach((item) => {
 			if (!item.to.startsWith("/")) {
 				const element = document.getElementById(item.to);
@@ -57,7 +73,7 @@ export default function NavBar({ page }: NavBarProps) {
 			}
 		});
 
-		// Combined scroll handler for both active tab reset and navbar position
+		// Combined scroll handler: resets active state at top, flips presentation.
 		const handleScroll = () => {
 			const scrollY = window.scrollY;
 			if (scrollY < 100) {
@@ -76,6 +92,7 @@ export default function NavBar({ page }: NavBarProps) {
 		};
 	}, [configKey, navItems]);
 
+	// Click handler for in-page nav buttons (smooth scroll + activate tab).
 	const handleScroll = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
 		e.preventDefault();
 		const element = document.getElementById(id);
@@ -89,7 +106,7 @@ export default function NavBar({ page }: NavBarProps) {
 
 	return (
 		<AnimatePresence mode="wait">
-			{/* TOP NAVBAR — visible after hero completes but before any section is active */}
+			{/* TOP NAVBAR — visible at the top of the page. */}
 			{!isScrolled && (
 				<motion.div
 					key="top-navbar"
@@ -102,6 +119,7 @@ export default function NavBar({ page }: NavBarProps) {
 					<div className="bg-neutral-900/80 backdrop-blur-md rounded-full border border-neutral-700/50 p-1.5 shadow-xl pointer-events-auto">
 						<NavigationMenu>
 							<NavigationMenuList className="flex-row space-x-1">
+								{/* Render each nav entry with the correct presentation/handler. */}
 								{navItems.map((item, index) => {
 									const _Icon = item.icon;
 									const isRoute = item.to?.startsWith("/");
@@ -136,6 +154,7 @@ export default function NavBar({ page }: NavBarProps) {
 												</button>
 											)}
 
+											{/* Animated active/hover highlight pill. */}
 											{((isActive && !hoveredTab) || isHovered) && (
 												<motion.div
 													layoutId="nav-box-top"
@@ -155,7 +174,7 @@ export default function NavBar({ page }: NavBarProps) {
 				</motion.div>
 			)}
 
-			{/* SIDE NAVBAR — only when the user is inside a named section */}
+			{/* SIDE NAVBAR — appears when inside a named section. */}
 			{isScrolled && activeTab && (
 				<motion.div
 					key="side-navbar"
@@ -168,6 +187,7 @@ export default function NavBar({ page }: NavBarProps) {
 					<div className="bg-neutral-900/80 backdrop-blur-md rounded-full border border-neutral-700/50 p-2 shadow-xl pointer-events-auto flex flex-col items-center">
 						<NavigationMenu>
 							<NavigationMenuList className="flex-col space-y-4">
+								{/* Vertical icon-only stack of nav entries. */}
 								{navItems.map((item, index) => {
 									const Icon = item.icon;
 									const isRoute = item.to?.startsWith("/");
@@ -202,6 +222,7 @@ export default function NavBar({ page }: NavBarProps) {
 												</button>
 											)}
 
+											{/* Animated active/hover highlight pill (side variant). */}
 											{((isActive && !hoveredTab) || isHovered) && (
 												<motion.div
 													layoutId="nav-box-side"

@@ -1,3 +1,11 @@
+/*
+ * WelcomeAnimation.tsx
+ * One-time SVG draw-on welcome animation shown over a
+ * black overlay on first load. Uses anime.js to draw,
+ * shake, and zoom out the AB logo, then notifies the
+ * AnimationContext that the welcome step is done.
+ */
+
 "use client";
 
 import { createTimeline } from "animejs";
@@ -5,21 +13,27 @@ import { createDrawable } from "animejs/svg";
 import { useEffect, useRef, useState } from "react";
 import { useAnimation } from "@/context/AnimationContext";
 
+// Public props for the animation.
 interface WelcomeAnimationProps {
 	disabled?: boolean;
 }
 
+// Renders the welcome overlay (or skips it when disabled).
 const WelcomeAnimation = ({ disabled = false }: WelcomeAnimationProps) => {
+	// Whether the animation overlay is currently mounted.
 	const [showAnimation, setShowAnimation] = useState(false);
+	// Ref to the outer overlay used by the closing zoom-out animation.
 	const containerRef = useRef<HTMLDivElement>(null);
 	const { setWelcomeComplete } = useAnimation();
 
 	useEffect(() => {
+		// Skip animation entirely if disabled by env flag.
 		if (disabled) {
 			setWelcomeComplete(true);
 			return;
 		}
 
+		// Defer mount slightly so the overlay paints in.
 		setTimeout(() => {
 			setShowAnimation(true);
 		}, 50);
@@ -28,6 +42,7 @@ const WelcomeAnimation = ({ disabled = false }: WelcomeAnimationProps) => {
 	useEffect(() => {
 		if (!showAnimation || !containerRef.current) return;
 
+		// Build the multi-step timeline with completion callback.
 		const tl = createTimeline({
 			onComplete: () => {
 				setShowAnimation(false);
@@ -35,8 +50,10 @@ const WelcomeAnimation = ({ disabled = false }: WelcomeAnimationProps) => {
 			},
 		});
 
+		// Convert the SVG paths into drawable handles for the stroke animation.
 		const drawables = createDrawable(".welcome-svg path");
 
+		// Step 1: stroke-draw each path with a per-path delay.
 		tl.add(drawables as unknown as string, {
 			draw: ["0 0", "0 1"],
 			easing: "easeInOutSine",
@@ -44,6 +61,7 @@ const WelcomeAnimation = ({ disabled = false }: WelcomeAnimationProps) => {
 			delay: (_el: unknown, i: number) => i * 250,
 		});
 
+		// Step 2: fade in the path fills overlapping the end of step 1.
 		tl.add(
 			".welcome-svg path",
 			{
@@ -54,10 +72,12 @@ const WelcomeAnimation = ({ disabled = false }: WelcomeAnimationProps) => {
 			"-=2000",
 		);
 
+		// Step 3: brief pause before the shake + zoom-out finale.
 		tl.add({
 			duration: 800,
 		});
 
+		// Step 4: shake/skew/scale flicker for a tactile finish.
 		tl.add(".welcome-svg", {
 			translateX: [
 				{ value: 5, duration: 50 },
@@ -81,6 +101,7 @@ const WelcomeAnimation = ({ disabled = false }: WelcomeAnimationProps) => {
 			duration: 500,
 		});
 
+		// Step 5: zoom and fade the entire overlay out.
 		tl.add(containerRef.current, {
 			scale: [1, 1.5],
 			opacity: [1, 0],
@@ -92,6 +113,7 @@ const WelcomeAnimation = ({ disabled = false }: WelcomeAnimationProps) => {
 	if (!showAnimation) return null;
 
 	return (
+		// Black overlay covering the viewport; SVG centered inside.
 		<div
 			ref={containerRef}
 			className="fixed w-full h-full z-9999 flex flex-col items-center justify-center bg-black"

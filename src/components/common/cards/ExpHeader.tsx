@@ -1,7 +1,15 @@
+/*
+ * ExpHeader.tsx
+ * Header block for an experience card. Has two layouts:
+ * with a logo (logo + divider + meta) or without
+ * (stacked headings with a side date badge).
+ */
+
 import Image, { type StaticImageData } from "next/image";
 import { FaCalendarAlt, FaMapMarkerAlt } from "react-icons/fa";
 import { Badge } from "@/components/ui/badge";
 
+// Public props for the header.
 interface ExpHeaderProps {
 	company: string;
 	role: string;
@@ -10,10 +18,13 @@ interface ExpHeaderProps {
 	logo?: string | StaticImageData;
 }
 
+// Renders the appropriate header layout based on whether a logo is provided.
 export default function ExpHeader({ company, role, location, date, logo }: ExpHeaderProps) {
+	// ── Variant A: with company logo ──────────────────────────────────
 	if (logo) {
 		return (
 			<div className="flex items-stretch gap-4 md:gap-6">
+				{/* Logo tile. */}
 				<div className="relative h-14 w-14 md:h-20 md:w-20 shrink-0 rounded-xl bg-white/5 border border-neutral-800 overflow-hidden">
 					<Image
 						src={logo}
@@ -24,11 +35,13 @@ export default function ExpHeader({ company, role, location, date, logo }: ExpHe
 					/>
 				</div>
 
+				{/* Vertical divider rule between logo and text. */}
 				<div
 					aria-hidden
 					className="w-px self-stretch bg-linear-to-b from-transparent via-neutral-700/70 to-transparent"
 				/>
 
+				{/* Text column: company / role / location + date. */}
 				<div className="flex flex-1 flex-col justify-center min-w-0 gap-1.5">
 					<span className="text-2xl font-thin text-neutral-400">{company}</span>
 					<h3 className="text-lg md:text-2xl font-clash font-bold text-white tracking-wide leading-tight group-hover:text-amber-400 transition-colors duration-300">
@@ -52,14 +65,17 @@ export default function ExpHeader({ company, role, location, date, logo }: ExpHe
 		);
 	}
 
+	// ── Variant B: text-only header (no logo) ─────────────────────────
 	return (
 		<div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-6">
+			{/* Left column: company + role. */}
 			<div className="space-y-1">
 				<h3 className="text-2xl font-clash font-bold text-white tracking-wide group-hover:text-amber-400 transition-colors duration-300">
 					{company}
 				</h3>
 				<p className="text-lg text-neutral-300 font-medium tracking-wide">{role}</p>
 			</div>
+			{/* Right column: date badge + location. */}
 			<div className="flex flex-col md:items-end gap-3">
 				<Badge
 					variant="outline"

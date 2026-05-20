@@ -1,8 +1,18 @@
+/*
+ * skillsData.ts
+ * Source-of-truth for the Skills section and /skills page.
+ * Defines a Skill (name + icon URL), a SkillCategory grouping,
+ * a "topSkills" highlight list, and the full categorised
+ * `skillsData` array consumed by every skill-related view.
+ */
+
+// One displayable skill: name and a remote icon URL.
 export interface Skill {
 	name: string;
 	Icon: string;
 }
 
+// One category of related skills, plus optional certification icons.
 export interface SkillCategory {
 	title: string;
 	description: string;
@@ -10,6 +20,7 @@ export interface SkillCategory {
 	skills: Skill[];
 }
 
+// Five featured skills shown on the home page Skills card.
 export const topSkills: Skill[] = [
 	{ name: "Next.js", Icon: "https://svgl.app/library/nextjs_icon_dark.svg" },
 	{ name: "TypeScript", Icon: "https://svgl.app/library/typescript.svg" },
@@ -18,6 +29,7 @@ export const topSkills: Skill[] = [
 	{ name: "Vitest", Icon: "https://svgl.app/library/vitest.svg" },
 ];
 
+// Full skills matrix used on the /skills bento grid page.
 export const skillsData: SkillCategory[] = [
 	{
 		title: "Core Frontend & UI/UX",

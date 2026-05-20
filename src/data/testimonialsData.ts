@@ -1,3 +1,11 @@
+/*
+ * testimonialsData.ts
+ * Static list of testimonials shown in the auto-scrolling
+ * Testimonials section. Each entry carries author identity,
+ * accent color (avatar tint), and the quoted feedback text.
+ */
+
+// Shape of one testimonial entry rendered as a card.
 export interface TestimonialItem {
 	id: string;
 	name: string;
@@ -9,6 +17,7 @@ export interface TestimonialItem {
 	text: string;
 }
 
+// All testimonials in display order; duplicated at render-time for looping.
 export const testimonials: TestimonialItem[] = [
 	{
 		id: "1",

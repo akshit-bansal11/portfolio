@@ -1,3 +1,11 @@
+/*
+ * CategoryBento.tsx
+ * Bento-grid pair for one skills category on /skills.
+ * Left: anchor card with title, description, and a
+ * certifications hover pill. Right: skill cluster of
+ * SkillPills. Order can be reversed per row.
+ */
+
 "use client";
 
 import { motion } from "framer-motion";
@@ -6,11 +14,13 @@ import SkillPill from "@/components/common/pills/SkillPill";
 import type { SkillCategory } from "@/data/skillsData";
 import { cn } from "@/lib/utils";
 
+// Public props for the bento group.
 interface CategoryBentoProps {
 	category: SkillCategory;
 	reversed?: boolean;
 }
 
+// Renders the anchor card + skill cluster pair.
 const CategoryBento = ({ category, reversed = false }: CategoryBentoProps) => {
 	return (
 		<>
@@ -27,12 +37,14 @@ const CategoryBento = ({ category, reversed = false }: CategoryBentoProps) => {
 					reversed && "md:order-last",
 				)}
 			>
+				{/* Title + description copy. */}
 				<div className="space-y-4">
 					<h3 className="text-3xl font-semibold text-white leading-tight">{category.title}</h3>
 
 					<p className="text-neutral-400 text-sm md:text-base max-w-sm">{category.description}</p>
 				</div>
 
+				{/* Hover-expand certifications pill at the bottom. */}
 				<div className="flex flex-wrap items-center gap-3 mt-4">
 					<CertificationsPill certifications={category.certifications} />
 				</div>

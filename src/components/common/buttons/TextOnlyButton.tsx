@@ -1,8 +1,16 @@
+/*
+ * TextOnlyButton.tsx
+ * Lightweight text-only navigation button with a small
+ * hover/tap scale effect. Routes clicks through the
+ * useNavClick hook so it works for both anchors and routes.
+ */
+
 "use client";
 import { motion } from "framer-motion";
 import type React from "react";
 import { useNavClick } from "@/hooks/use-nav-click";
 
+// Public props for the button.
 interface TextOnlyButtonProps {
 	onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 	to?: string | null;
@@ -12,6 +20,7 @@ interface TextOnlyButtonProps {
 	text?: string;
 }
 
+// Renders the text-only animated button.
 export default function TextOnlyButton({
 	onClick,
 	to,
@@ -20,6 +29,7 @@ export default function TextOnlyButton({
 	type = "button",
 	text = "Button",
 }: TextOnlyButtonProps) {
+	// Resolves either a section scroll or route push when clicked.
 	const handleClick = useNavClick(to, onClick);
 	return (
 		<motion.button

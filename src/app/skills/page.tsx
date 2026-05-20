@@ -1,3 +1,11 @@
+/*
+ * page.tsx
+ * /skills route — full-page Skills & Tools page.
+ * Header with search filter, sticky category quick-nav,
+ * and a CategoryBento grid per category. Categories with
+ * no skills matching the query are filtered out.
+ */
+
 "use client";
 
 import { motion } from "framer-motion";
@@ -9,9 +17,12 @@ import ScrollReveal from "@/components/ui/ScrollReveal";
 import { skillsData } from "@/data/skillsData";
 import { cn } from "@/lib/utils";
 
+// Top-level /skills page component.
 export default function SkillsPage() {
+	// Live search query bound to the search input.
 	const [searchQuery, setSearchQuery] = useState("");
 
+	// Memoised filtered list of categories matching the search query.
 	const filteredCategories = useMemo(() => {
 		if (!searchQuery.trim()) return skillsData;
 
@@ -25,6 +36,7 @@ export default function SkillsPage() {
 			.filter((category) => category.skills.length > 0);
 	}, [searchQuery]);
 
+	// Smoothly scroll the page to a given category section by id.
 	const handleScrollToCategory = (title: string) => {
 		const element = document.getElementById(title);
 		if (element) {
@@ -39,6 +51,7 @@ export default function SkillsPage() {
 				<div className="space-y-12">
 					<div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
 						<div className="space-y-6">
+							{/* Back-to-home link. */}
 							<Link
 								href="/"
 								className="flex items-center gap-2 text-neutral-400 hover:text-white transition-colors w-fit group"
@@ -48,18 +61,20 @@ export default function SkillsPage() {
 							</Link>
 
 							<div className="space-y-4">
+								{/* Animated gradient page title. */}
 								<motion.h1
 									initial={{ opacity: 0, y: 24 }}
 									animate={{ opacity: 1, y: 0 }}
 									className={cn(
 										"text-5xl md:text-7xl font-bold",
-										"bg-linear-to-r from-white via-neutral-400 to-neutral-600",
+										"bg-gradient-to-r from-white via-neutral-400 to-neutral-600",
 										"bg-clip-text text-transparent",
 									)}
 								>
 									Skills & Tools
 								</motion.h1>
 
+								{/* Subheading copy. */}
 								<motion.p
 									initial={{ opacity: 0, y: 24 }}
 									animate={{ opacity: 1, y: 0 }}
@@ -101,6 +116,7 @@ export default function SkillsPage() {
 						transition={{ delay: 0.3 }}
 						className="flex flex-wrap gap-3 pb-4 border-b border-neutral-900"
 					>
+						{/* Pill button per category that scrolls to its section. */}
 						{skillsData.map((category) => (
 							<button
 								type="button"
@@ -121,6 +137,7 @@ export default function SkillsPage() {
 				{/* Bento Sections */}
 				<div className="space-y-32">
 					{filteredCategories.length > 0 ? (
+						// Render one bento section per matching category.
 						filteredCategories.map((category, index) => (
 							<ScrollReveal key={category.title} delay={index * 100} className="w-full">
 								<section id={category.title} className="space-y-8 scroll-mt-32">
@@ -135,6 +152,7 @@ export default function SkillsPage() {
 							</ScrollReveal>
 						))
 					) : (
+						// Empty-state when no skill matches the current query.
 						<div className="text-center py-32 space-y-4">
 							<p className="text-neutral-500 text-lg">
 								No skills found matching &quot;{searchQuery}&quot;

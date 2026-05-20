@@ -1,32 +1,31 @@
-"use client";
-
-/**
- * Floating callout bubbles shown while the profile is centred:
- *  LEFT  → "Hi! 👋" speech bubble, mounts only after hover (opacity also
- *           gated by stage so it never leaks into jumpto stage)
- *  RIGHT → "Hover me" with a short curved dashed arrow pointing LEFT
- *           toward the image
- *
- * Both are positioned relative to the viewport centre so they stay
- * just outside the profile circle regardless of screen size. They
- * fade out when the socials stage entry begins.
+/*
+ * HoverCallout.tsx
+ * Floating callouts shown around the profile circle.
+ * Left side: "Hi! 👋" speech bubble (gated on hover).
+ * Right side: "Click me" hint with a curved arrow.
+ * Both fade out as the socials stage begins.
  */
+
+"use client";
 
 import { AnimatePresence, type MotionValue, motion, useTransform } from "framer-motion";
 import { entryEnd, HERO_STAGES } from "@/config/heroStages";
 
+// Public props for a single callout.
 interface HoverCalloutProps {
 	side: "left" | "right";
 	progress: MotionValue<number>;
 	hovered?: boolean;
 }
 
+// Renders the appropriate callout based on `side`.
 export default function HoverCallout({ side, progress, hovered = false }: HoverCalloutProps) {
+	// Compute the hero stage progress thresholds we need below.
 	const profileSettled = entryEnd(HERO_STAGES.profile.range);
 	const socialsStart = HERO_STAGES.socials.range[0];
 	const socialsSettled = entryEnd(HERO_STAGES.socials.range);
 
-	/** Fades in when profile settles, fades out as socials begin. */
+	// Shared opacity: visible during profile dwell, fades out once socials begin.
 	const sharedOpacity = useTransform(
 		progress,
 		[profileSettled, profileSettled + 0.012, socialsStart, socialsSettled],
@@ -34,12 +33,7 @@ export default function HoverCallout({ side, progress, hovered = false }: HoverC
 	);
 
 	if (side === "left") {
-		/**
-		 * "Hi! 👋" — appears on hover, but the outer wrapper carries
-		 * sharedOpacity so it is invisible outside the profile stage even
-		 * if the user is still hovering the circle. This fixes the leak
-		 * into the jumpto stage.
-		 */
+		// ── Left callout — "Hi! 👋" speech bubble (mounts only on hover). ───
 		return (
 			<motion.div
 				style={{ opacity: sharedOpacity }}
@@ -54,6 +48,7 @@ export default function HoverCallout({ side, progress, hovered = false }: HoverC
 							exit={{ opacity: 0, x: -10, scale: 0.88 }}
 							transition={{ duration: 0.3, ease: "easeOut" }}
 						>
+							{/* Bubble body. */}
 							<div className="relative px-3 py-2 rounded-xl bg-neutral-900/85 backdrop-blur-md border border-neutral-700/60 shadow-xl">
 								<span className="text-sm md:text-base font-light text-white tracking-wide">
 									Hi! 👋
@@ -76,10 +71,7 @@ export default function HoverCallout({ side, progress, hovered = false }: HoverC
 		);
 	}
 
-	/**
-	 * "Hover me" — always visible during the profile stage.
-	 * Arrow points LEFT toward the image (callout is on the right).
-	 */
+	// ── Right callout — always-visible "Click me" hint with arrow. ────────
 	return (
 		<motion.div
 			style={{ opacity: sharedOpacity }}

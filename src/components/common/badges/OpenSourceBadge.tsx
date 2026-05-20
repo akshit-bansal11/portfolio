@@ -1,9 +1,15 @@
-// components/common/badges/OpenSourceBadge.tsx
+/*
+ * OpenSourceBadge.tsx
+ * Tiny emerald pill labelled "open source" that flags
+ * project cards whose source is publicly available.
+ */
 
+// Public props for the badge.
 interface OpenSourceBadgeProps {
 	className?: string;
 }
 
+// Renders an emerald-tinted "open source" pill.
 export default function OpenSourceBadge({ className }: OpenSourceBadgeProps) {
 	return (
 		<span

@@ -1,22 +1,19 @@
-/**
- * Brand-aligned accent colours for each social platform shown in the
- * hero. Kept separate from the canonical social data so styling can
- * evolve without touching the link list.
- *
- * Lookup is by the `name` field on the hero social entries.
+/*
+ * socialAccents.ts
+ * Brand-aligned hover accent colors for the hero social icons.
+ * Lookup is by social platform name; an unknown name falls
+ * back to a neutral amber palette.
  */
 
+// Per-platform Tailwind hover/ring class bundle.
 export interface SocialAccent {
-	/** Tailwind text colour applied on hover. */
 	hoverText: string;
-	/** Tailwind border colour applied on hover. */
 	hoverBorder: string;
-	/** Tailwind background tint applied on hover. */
 	hoverBg: string;
-	/** Tailwind ambient ring colour applied at rest for a coloured glow. */
 	ring: string;
 }
 
+// Neutral fallback used when a social name has no entry below.
 const FALLBACK: SocialAccent = {
 	hoverText: "hover:text-amber-400",
 	hoverBorder: "hover:border-amber-400/50",
@@ -24,6 +21,7 @@ const FALLBACK: SocialAccent = {
 	ring: "ring-amber-400/20",
 };
 
+// Per-platform color schemes (Gmail rose, GitHub white, etc.).
 const ACCENTS: Record<string, SocialAccent> = {
 	Gmail: {
 		hoverText: "hover:text-rose-400",
@@ -57,4 +55,5 @@ const ACCENTS: Record<string, SocialAccent> = {
 	},
 };
 
+// Resolve a per-platform accent, or the fallback if unknown.
 export const getSocialAccent = (name: string): SocialAccent => ACCENTS[name] ?? FALLBACK;

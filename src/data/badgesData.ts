@@ -1,5 +1,13 @@
+/*
+ * badgesData.ts
+ * Static lists of skill badges shown in the Attainments section.
+ * Splits into HackerRank star badges and Google Cloud
+ * generative-AI badges, each linked to its public profile URL.
+ */
+
 import type { GoogleBadgeItem, HackerRankBadgeItem } from "@/types";
 
+// HackerRank star-rated language badges with brand color and link.
 export const hackerRankBadges: HackerRankBadgeItem[] = [
 	{
 		name: "C++",
@@ -21,6 +29,7 @@ export const hackerRankBadges: HackerRankBadgeItem[] = [
 	},
 ];
 
+// Google Cloud Skill Boost generative-AI badge entries.
 export const googleBadges: GoogleBadgeItem[] = [
 	{
 		gBadgeTitle: "Gen AI Agents: Transform Your Organization",

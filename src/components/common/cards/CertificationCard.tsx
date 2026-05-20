@@ -1,3 +1,10 @@
+/*
+ * CertificationCard.tsx
+ * Card for one certification entry in the Attainments
+ * section. Shows provider logos, the credential title,
+ * optional skill pills, and a footer link badge.
+ */
+
 "use client";
 
 import { motion } from "framer-motion";
@@ -5,10 +12,12 @@ import Image from "next/image";
 import ExternalLinkBadge from "@/components/common/badges/ExternalLinkBadge";
 import type { CertificationItem } from "@/types";
 
+// Public props: extends CertificationItem with a flag to toggle skill pills.
 export interface CertificationCardProps extends CertificationItem {
 	showSkillBadges?: boolean;
 }
 
+// Renders a single certification card.
 export default function CertificationCard({
 	name,
 	providers,
@@ -16,6 +25,7 @@ export default function CertificationCard({
 	link,
 	showSkillBadges = false,
 }: CertificationCardProps) {
+	// Spring entrance animation for the whole card.
 	const containerVariants = {
 		hidden: { opacity: 0, y: 50 },
 		visible: {
@@ -46,6 +56,7 @@ export default function CertificationCard({
 							key={idx}
 							className="flex items-center justify-center w-12 h-12 rounded-xl bg-white/5 border border-white/10"
 						>
+							{/* Provider logo, with a single-letter fallback if none provided. */}
 							{p.logoUrl ? (
 								<Image
 									src={p.logoUrl}
