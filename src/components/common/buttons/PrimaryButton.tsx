@@ -48,7 +48,7 @@ export default function PrimaryButton({
 				className={`
                     flex items-center justify-center gap-2 cursor-pointer rounded-xl px-2 py-[2px]
                     bg-white
-                    hover:bg-gradient-to-br hover:from-amber-400 hover:via-orange-500 hover:to-pink-500
+                    hover:bg-linear-to-br hover:from-amber-400 hover:via-orange-500 hover:to-pink-500
                     bg-clip-text text-transparent
                     lg:text-lg md:text-sm text-[8px] font-semibold
                     transition-colors duration-200 

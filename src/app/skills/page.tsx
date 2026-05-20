@@ -67,7 +67,7 @@ export default function SkillsPage() {
 									animate={{ opacity: 1, y: 0 }}
 									className={cn(
 										"text-5xl md:text-7xl font-bold",
-										"bg-gradient-to-r from-white via-neutral-400 to-neutral-600",
+										"bg-linear-to-r from-white via-neutral-400 to-neutral-600",
 										"bg-clip-text text-transparent",
 									)}
 								>
