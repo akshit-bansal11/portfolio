@@ -9,6 +9,7 @@
 
 import { type MotionValue, motion, useTransform } from "framer-motion";
 import { FaArrowDownLong } from "react-icons/fa6";
+import { useAnimation } from "@/context/AnimationContext";
 
 // Public props for the indicator.
 interface ScrollIndicatorProps {
@@ -17,11 +18,18 @@ interface ScrollIndicatorProps {
 
 // Renders the scroll hint with mouse-shape and arrow.
 export default function ScrollIndicator({ progress }: ScrollIndicatorProps) {
-	// Fade in at the start, fade out at the end of the hero scroll.
-	const opacity = useTransform(progress, [0, 0.04, 0.96, 1], [0, 1, 1, 0]);
+	const { isWelcomeComplete } = useAnimation();
+	// Stay fully visible across the hero, fade out at the very end.
+	const opacity = useTransform(progress, [0, 0.96, 1], [1, 1, 0]);
+
+	// Hold off until the welcome overlay has finished, then appear with the hero.
+	if (!isWelcomeComplete) return null;
 
 	return (
 		<motion.div
+			initial={{ y: 8 }}
+			animate={{ y: 0 }}
+			transition={{ duration: 0.4, ease: "easeOut" }}
 			style={{ opacity }}
 			className="pointer-events-none absolute bottom-6 right-6 md:bottom-10 md:right-10 flex items-center justify-center"
 			aria-hidden
