@@ -9,7 +9,7 @@
 import { motion } from "framer-motion";
 import { FaArrowDownLong } from "react-icons/fa6";
 import { Button } from "@/components/ui/button";
-import { RESUME_FILENAME, RESUME_PATH } from "../data/heroContent";
+import { RESUME_FILENAME, RESUME_PATH } from "@/data/heroContent";
 
 export default function ResumeButton() {
 	return (

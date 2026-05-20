@@ -11,10 +11,10 @@
 import { type MotionValue, motion, useTransform } from "framer-motion";
 import type { IconType } from "react-icons";
 import { Button } from "@/components/ui/button";
+import { heroSocialLinks } from "@/data/heroSocialLinks";
 import { cn } from "@/lib/utils";
-import { entryEnd, HERO_STAGES } from "../config/stages";
-import { heroSocialLinks } from "../data/heroSocialLinks";
-import { getSocialAccent } from "../data/socialAccents";
+import { entryEnd, HERO_STAGES } from "@/config/heroStages";
+import { getSocialAccent } from "@/data/socialAccents";
 import ResumeButton from "./ResumeButton";
 
 interface SocialsStageProps {

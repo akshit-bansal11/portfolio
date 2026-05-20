@@ -10,8 +10,8 @@
 
 import { type MotionValue, motion, useTransform } from "framer-motion";
 import { Circle } from "lucide-react";
-import { entryEnd, HERO_STAGES } from "../config/stages";
-import { TAGLINE } from "../data/heroContent";
+import { entryEnd, HERO_STAGES } from "@/config/heroStages";
+import { TAGLINE } from "@/data/heroContent";
 import AnimatedText from "./AnimatedText";
 
 interface TaglineStageProps {

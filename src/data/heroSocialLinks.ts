@@ -11,7 +11,7 @@
 import type { IconType } from "react-icons";
 import { FaGithub, FaHackerrank, FaLinkedinIn } from "react-icons/fa6";
 import { SiGmail, SiGooglecloud } from "react-icons/si";
-import { EMAIL_HREF } from "./heroContent";
+import { EMAIL_HREF } from "@/data/heroContent";
 
 export interface HeroSocialLink {
 	name: string;

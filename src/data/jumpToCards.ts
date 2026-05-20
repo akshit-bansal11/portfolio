@@ -2,7 +2,7 @@
  * Cards shown in the JumpTo panel (stage 4). Each maps to a section
  * anchor already present on the page.
  */
-import type { JumpToCardData } from "../types";
+import type { JumpToCardData } from "@/types";
 
 export const JUMP_TO_CARDS: JumpToCardData[] = [
 	{

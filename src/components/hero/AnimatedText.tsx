@@ -11,7 +11,7 @@
 
 import { motion } from "framer-motion";
 import { useMemo } from "react";
-import type { AnimatedTextProps } from "../types";
+import type { AnimatedTextProps } from "@/types";
 
 type Snapshot = Record<string, string | number>;
 

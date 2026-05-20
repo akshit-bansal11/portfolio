@@ -13,14 +13,14 @@
 
 import { useMotionValueEvent } from "framer-motion";
 import { useAnimation } from "@/context/AnimationContext";
-import HeroBackdrop from "./components/HeroBackdrop";
-import JumpToPanel from "./components/JumpToPanel";
-import ProfileCluster from "./components/ProfileCluster";
-import ScrollIndicator from "./components/ScrollIndicator";
-import SocialsStage from "./components/SocialsStage";
-import TaglineStage from "./components/TaglineStage";
-import { HERO_HORIZONTAL_END, HERO_SCROLL_LENGTH_VH } from "./config/stages";
-import { useHeroScrollProgress } from "./hooks/use-hero-scroll-progress";
+import { HERO_HORIZONTAL_END, HERO_SCROLL_LENGTH_VH } from "@/config/heroStages";
+import { useHeroScrollProgress } from "@/hooks/use-hero-scroll-progress";
+import HeroBackdrop from "./HeroBackdrop";
+import JumpToPanel from "./JumpToPanel";
+import ProfileCluster from "./ProfileCluster";
+import ScrollIndicator from "./ScrollIndicator";
+import SocialsStage from "./SocialsStage";
+import TaglineStage from "./TaglineStage";
 
 export default function ScrollHero() {
 	const { wrapperRef, progress } = useHeroScrollProgress();

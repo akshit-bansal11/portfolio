@@ -18,8 +18,8 @@
 import { type MotionValue, motion, useMotionValueEvent, useTransform } from "framer-motion";
 import Image from "next/image";
 import { useState } from "react";
-import { entryEnd, HERO_STAGES } from "../config/stages";
-import { PROFILE_IMAGE_HOVER_URL, PROFILE_NAME, PROFILE_ROLE } from "../data/heroContent";
+import { entryEnd, HERO_STAGES } from "@/config/heroStages";
+import { PROFILE_IMAGE_HOVER_URL, PROFILE_NAME, PROFILE_ROLE } from "@/data/heroContent";
 import HoverCallout from "./HoverCallout";
 import LogoMark from "./LogoMark";
 

@@ -13,7 +13,7 @@
  */
 
 import { AnimatePresence, type MotionValue, motion, useTransform } from "framer-motion";
-import { entryEnd, HERO_STAGES } from "../config/stages";
+import { entryEnd, HERO_STAGES } from "@/config/heroStages";
 
 interface HoverCalloutProps {
 	side: "left" | "right";

@@ -10,7 +10,7 @@
  * (hold — user must keep scrolling before the next beat begins).
  */
 
-import type { HeroStage } from "../types";
+import type { HeroStage } from "@/types";
 
 export const HERO_STAGES = {
 	tagline: { id: "tagline", range: [0.0, 0.18] },

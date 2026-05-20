@@ -14,8 +14,8 @@
  */
 
 import { type MotionValue, motion, useTransform } from "framer-motion";
-import { entryEnd, HERO_STAGES } from "../config/stages";
-import { JUMP_TO_CARDS } from "../data/jumpToCards";
+import { entryEnd, HERO_STAGES } from "@/config/heroStages";
+import { JUMP_TO_CARDS } from "@/data/jumpToCards";
 
 interface JumpToPanelProps {
 	progress: MotionValue<number>;
