@@ -20,7 +20,7 @@ import ScrollIndicator from "./components/ScrollIndicator";
 import SocialsStage from "./components/SocialsStage";
 import TaglineStage from "./components/TaglineStage";
 import { HERO_HORIZONTAL_END, HERO_SCROLL_LENGTH_VH } from "./config/stages";
-import { useHeroScrollProgress } from "./hooks/useHeroScrollProgress";
+import { useHeroScrollProgress } from "./hooks/use-hero-scroll-progress";
 
 export default function ScrollHero() {
 	const { wrapperRef, progress } = useHeroScrollProgress();

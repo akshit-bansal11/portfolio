@@ -2,25 +2,6 @@ import type { StaticImageData } from "next/image";
 import type { IconType } from "react-icons";
 import type { Skill } from "@/data/skillsData";
 
-// Skills Types
-export interface SkillItem {
-	icon: IconType | string;
-	name: string;
-}
-
-export interface SkillCategory {
-	title: string;
-	skills: SkillItem[][];
-}
-
-// Social Links Types
-export interface SocialLink {
-	Name: string;
-	Icon: IconType;
-	href: string;
-	delay: number;
-}
-
 // Project Types
 export interface ProjectItem {
 	title: string;
