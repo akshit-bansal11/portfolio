@@ -6,7 +6,7 @@
  */
 
 // Tagline shown word-by-word in the first hero stage.
-export const TAGLINE = "I Build Fast, Production-Grade Next.js Apps";
+export const TAGLINE = "Production-Grade Next.js Apps";
 
 // Public path to the downloadable resume.
 export const RESUME_PATH = "/akshit_bansal.pdf";

@@ -107,8 +107,8 @@ function CardItem({ card, progress, cardStart, cardEnd }: CardItemProps) {
 			className={[
 				"group flex flex-col items-start gap-3 p-5 md:p-6 rounded-2xl cursor-pointer text-left",
 				"bg-neutral-950/70 backdrop-blur-sm",
-				"border shadow-lg transition-all duration-300",
-				"hover:bg-neutral-900/80 hover:scale-[1.04] hover:-translate-y-0.5",
+				"border transition-all duration-300",
+				"hover:scale-[1.04] hover:-translate-y-0.5",
 				card.colorClass,
 			].join(" ")}
 		>
