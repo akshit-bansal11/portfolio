@@ -1,10 +1,10 @@
 /*
  * NavBar.tsx
  * Persistent global navigation.
- * Two presentations toggled by scroll position: a
- * top-center pill while at the top, and a vertical
- * right-edge dock once the user is inside a section.
- * Hidden entirely on /skills and /projects routes.
+ * Centered top bar with icons and hover tooltip labels.
+ * Appears only once the user has scrolled past the full hero
+ * and reached the first content section.
+ * Hidden on /skills and /projects routes.
  */
 
 "use client";
@@ -13,235 +13,144 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type React from "react";
 import { useEffect, useState } from "react";
-import {
-	NavigationMenu,
-	NavigationMenuItem,
-	NavigationMenuList,
-} from "@/components/ui/navigation-menu";
+import { HERO_HORIZONTAL_END, HERO_SCROLL_LENGTH_VH } from "@/config/heroStages";
 import { navConfigs } from "@/config/navConfig";
 import { useAnimation } from "@/context/AnimationContext";
 import { cn } from "@/lib/utils";
 
-// Public props for the navbar.
 interface NavBarProps {
 	page?: string;
 }
 
-// Renders the global navbar.
 export default function NavBar({ page }: NavBarProps) {
-	// Resolve which navigation set to render based on the current route.
 	const pathname = usePathname();
 	const configKey = page || (pathname === "/" ? "home" : "projects");
 	const navItems = navConfigs[configKey] || navConfigs.home;
-	// Currently-active section id (from intersection observer).
-	const [activeTab, setActiveTab] = useState<string | null>(null);
-	// Currently-hovered tab (drives the animated highlight).
 	const [hoveredTab, setHoveredTab] = useState<string | null>(null);
-	// True once the user has scrolled past the top region.
-	const [isScrolled, setIsScrolled] = useState(false);
-	const { isHeroComplete } = useAnimation();
+	const { isWelcomeComplete } = useAnimation();
 
-	// Skip effect if navbar is hidden
+	// True once the user has scrolled past the entire hero wrapper
+	// and the first content section has come into view.
+	const [isPastHero, setIsPastHero] = useState(false);
+
 	const isHidden = pathname === "/skills" || pathname === "/projects";
 
-	// On the home page the navbar waits until the hero choreography finishes.
-	const isGatedByHero = configKey === "home" && !isHeroComplete;
+	// scrollY at which progress=1 for the hero wrapper: (vh - 1) * innerHeight
 
-	// Track active section + scroll position for switching presentations.
 	useEffect(() => {
 		if (configKey !== "home") return;
 
-		// Update activeTab when a section becomes 50% visible.
-		const handleIntersection = (entries: IntersectionObserverEntry[]) => {
-			entries.forEach((entry) => {
-				if (entry.isIntersecting) {
-					setActiveTab(entry.target.id);
-				}
-			});
-		};
+		const threshold = (HERO_SCROLL_LENGTH_VH / 100 - 1) * window.innerHeight;
 
-		const observer = new IntersectionObserver(handleIntersection, {
-			threshold: 0.5,
-			rootMargin: "-10% 0px -10% 0px",
-		});
-
-		// Observe every nav target that maps to an in-page section.
-		navItems.forEach((item) => {
-			if (!item.to.startsWith("/")) {
-				const element = document.getElementById(item.to);
-				if (element) observer.observe(element);
-			}
-		});
-
-		// Combined scroll handler: resets active state at top, flips presentation.
 		const handleScroll = () => {
-			const scrollY = window.scrollY;
-			if (scrollY < 100) {
-				setActiveTab(null);
-				setIsScrolled(false);
-			} else {
-				setIsScrolled(true);
-			}
+			setIsPastHero(window.scrollY >= threshold);
 		};
 
-		window.addEventListener("scroll", handleScroll);
+		// Check immediately in case the page reloads mid-scroll.
+		handleScroll();
+		window.addEventListener("scroll", handleScroll, { passive: true });
+		return () => window.removeEventListener("scroll", handleScroll);
+	}, [configKey]);
 
-		return () => {
-			observer.disconnect();
-			window.removeEventListener("scroll", handleScroll);
-		};
-	}, [configKey, navItems]);
+	// For non-home pages (e.g. /projects sub-route) always show the bar.
+	const shouldShow = isWelcomeComplete && !isHidden && (configKey !== "home" || isPastHero);
 
-	// Click handler for in-page nav buttons (smooth scroll + activate tab).
-	const handleScroll = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
+	// Click handler: scroll to an in-page section anchor.
+	const handleScrollTo = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
 		e.preventDefault();
+
+		// "profile" is the hero section — navigate to the hero's completion
+		// point (the last stage of the horizontal scroll) rather than the top.
+		if (id === "profile") {
+			const heroEnd = (HERO_SCROLL_LENGTH_VH / 100 - 1) * window.innerHeight;
+			window.scrollTo({
+				top: HERO_HORIZONTAL_END * heroEnd,
+				behavior: "smooth",
+			});
+			return;
+		}
+
 		const element = document.getElementById(id);
 		if (element) {
 			element.scrollIntoView({ behavior: "smooth" });
-			setActiveTab(id);
 		}
 	};
 
-	if (isHidden || isGatedByHero) return null;
-
 	return (
-		<AnimatePresence mode="wait">
-			{/* TOP NAVBAR — visible at the top of the page. */}
-			{!isScrolled && (
+		<AnimatePresence>
+			{shouldShow && (
 				<motion.div
-					key="top-navbar"
-					initial={{ y: -100, opacity: 0 }}
+					key="navbar"
+					initial={{ y: -80, opacity: 0 }}
 					animate={{ y: 0, opacity: 1 }}
-					exit={{ y: -100, opacity: 0 }}
-					transition={{ duration: 0.5, ease: "easeInOut" }}
-					className="hidden md:flex justify-center p-4 fixed top-0 left-0 right-0 z-50 pointer-events-none"
+					exit={{ y: -80, opacity: 0 }}
+					transition={{ duration: 0.4, ease: "easeInOut" }}
+					className="hidden md:flex justify-center pt-3 fixed top-0 left-0 right-0 z-50 pointer-events-none"
 				>
-					<div className="bg-neutral-900/80 backdrop-blur-md rounded-full border border-neutral-700/50 p-1.5 shadow-xl pointer-events-auto">
-						<NavigationMenu>
-							<NavigationMenuList className="flex-row space-x-1">
-								{/* Render each nav entry with the correct presentation/handler. */}
-								{navItems.map((item, index) => {
-									const _Icon = item.icon;
-									const isRoute = item.to?.startsWith("/");
-									const isActive = activeTab === item.to || (isRoute && pathname === item.to);
-									const isHovered = hoveredTab === item.to;
+					<div className="bg-neutral-900/80 backdrop-blur-md rounded-2xl border border-neutral-700/50 px-1.5 py-1.5 shadow-2xl pointer-events-auto">
+						<div className="flex flex-row items-center gap-0">
+							{navItems.map((item, index) => {
+								const Icon = item.icon;
+								const isRoute = item.to?.startsWith("/");
+								const isHovered = hoveredTab === item.to;
 
-									return (
-										<NavigationMenuItem key={index} className="relative">
-											{isRoute ? (
-												<Link
-													href={item.to}
-													className="relative z-20 flex items-center gap-2 px-4 py-2 text-sm font-medium text-neutral-400 transition-colors duration-200 hover:text-white"
-													onMouseEnter={() => setHoveredTab(item.to)}
-													onMouseLeave={() => setHoveredTab(null)}
-													onClick={() => setActiveTab(item.to)}
-													data-active={isActive ? "true" : undefined}
-												>
-													<span className="hidden sm:inline">{item.text}</span>
-												</Link>
-											) : (
-												<button
-													type="button"
-													className={cn(
-														"relative z-20 flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors duration-200 cursor-pointer focus:outline-none",
-														isActive ? "text-white" : "text-neutral-400 hover:text-white",
-													)}
-													onClick={(e) => handleScroll(e, item.to)}
-													onMouseEnter={() => setHoveredTab(item.to)}
-													onMouseLeave={() => setHoveredTab(null)}
-												>
-													<span className="hidden sm:inline">{item.text}</span>
-												</button>
-											)}
+								const iconEl = Icon ? (
+									<Icon className="h-[18px] w-[18px]" strokeWidth={1.5} />
+								) : null;
 
-											{/* Animated active/hover highlight pill. */}
-											{((isActive && !hoveredTab) || isHovered) && (
+								const baseClass = cn(
+									"flex items-center justify-center px-3 py-1.5 rounded-xl transition-all duration-200 text-neutral-400 cursor-pointer focus:outline-none",
+									isHovered ? "text-white bg-neutral-700/50" : "hover:text-neutral-200",
+								);
+
+								return (
+									<div key={index} className="relative flex flex-col items-center">
+										{isRoute ? (
+											<Link
+												href={item.to}
+												className={baseClass}
+												onMouseEnter={() => setHoveredTab(item.to)}
+												onMouseLeave={() => setHoveredTab(null)}
+											>
+												{iconEl}
+											</Link>
+										) : (
+											<button
+												type="button"
+												className={baseClass}
+												onClick={(e) => handleScrollTo(e, item.to)}
+												onMouseEnter={() => setHoveredTab(item.to)}
+												onMouseLeave={() => setHoveredTab(null)}
+											>
+												{iconEl}
+											</button>
+										)}
+
+										{/* Tooltip with upward arrow */}
+										<AnimatePresence>
+											{isHovered && (
 												<motion.div
-													layoutId="nav-box-top"
-													className="absolute inset-0 z-10 rounded-full bg-neutral-700/50 border border-neutral-600/50"
-													initial={{ opacity: 0, scale: 0.95 }}
-													animate={{ opacity: 1, scale: 1 }}
-													exit={{ opacity: 0, scale: 0.95 }}
-													transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-												/>
-											)}
-										</NavigationMenuItem>
-									);
-								})}
-							</NavigationMenuList>
-						</NavigationMenu>
-					</div>
-				</motion.div>
-			)}
-
-			{/* SIDE NAVBAR — appears when inside a named section. */}
-			{isScrolled && activeTab && (
-				<motion.div
-					key="side-navbar"
-					initial={{ x: 100, opacity: 0 }}
-					animate={{ x: 0, opacity: 1 }}
-					exit={{ x: 100, opacity: 0 }}
-					transition={{ duration: 0.5, ease: "easeInOut" }}
-					className="hidden md:flex fixed top-0 right-0 h-full flex-col justify-center pr-3 z-50 pointer-events-none"
-				>
-					<div className="bg-neutral-900/80 backdrop-blur-md rounded-full border border-neutral-700/50 p-1.5 shadow-xl pointer-events-auto flex flex-col items-center">
-						<NavigationMenu>
-							<NavigationMenuList className="flex-col space-y-2">
-								{/* Vertical icon-only stack of nav entries. */}
-								{navItems.map((item, index) => {
-									const Icon = item.icon;
-									const isRoute = item.to?.startsWith("/");
-									const isActive = activeTab === item.to || (isRoute && pathname === item.to);
-									const isHovered = hoveredTab === item.to;
-									const colorClass = item.color ?? "text-neutral-400";
-
-									return (
-										<NavigationMenuItem key={index} className="relative">
-											{isRoute ? (
-												<Link
-													href={item.to}
-													className={cn(
-														"relative z-20 flex items-center justify-center p-1.5 text-sm font-medium transition-colors duration-200",
-														isActive || isHovered ? colorClass : "text-neutral-500",
-													)}
-													onMouseEnter={() => setHoveredTab(item.to)}
-													onMouseLeave={() => setHoveredTab(null)}
-													onClick={() => setActiveTab(item.to)}
-													data-active={isActive ? "true" : undefined}
+													initial={{ opacity: 0, y: 4, scale: 0.95 }}
+													animate={{ opacity: 1, y: 0, scale: 1 }}
+													exit={{ opacity: 0, y: 4, scale: 0.95 }}
+													transition={{ duration: 0.12, ease: "easeOut" }}
+													className="absolute top-full mt-1.5 pointer-events-none"
 												>
-													{Icon && <Icon className="h-4 w-4" strokeWidth={1.5} />}
-												</Link>
-											) : (
-												<button
-													type="button"
-													className={cn(
-														"relative z-20 flex items-center justify-center p-1.5 text-sm font-medium transition-colors duration-200 cursor-pointer focus:outline-none",
-														isActive || isHovered ? colorClass : "text-neutral-500",
-													)}
-													onClick={(e) => handleScroll(e, item.to)}
-													onMouseEnter={() => setHoveredTab(item.to)}
-													onMouseLeave={() => setHoveredTab(null)}
-												>
-													{Icon && <Icon className="h-4 w-4" strokeWidth={1.5} />}
-												</button>
+													{/* Arrow pointing up */}
+													<div className="flex justify-center -mb-px">
+														<div className="w-2 h-2 bg-neutral-800 border-l border-t border-neutral-700/60 rotate-45 translate-y-px" />
+													</div>
+													{/* Label */}
+													<div className="px-2.5 py-1 bg-neutral-800 rounded-md text-xs font-medium text-white whitespace-nowrap border border-neutral-700/60 shadow-lg">
+														{item.text}
+													</div>
+												</motion.div>
 											)}
-
-											{/* Animated active/hover highlight pill (side variant). */}
-											{((isActive && !hoveredTab) || isHovered) && (
-												<motion.div
-													layoutId="nav-box-side"
-													className="absolute inset-0 z-10 rounded-full bg-neutral-700/50 border border-neutral-600/50"
-													initial={{ opacity: 0, scale: 0.95 }}
-													animate={{ opacity: 1, scale: 1 }}
-													exit={{ opacity: 0, scale: 0.95 }}
-													transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-												/>
-											)}
-										</NavigationMenuItem>
-									);
-								})}
-							</NavigationMenuList>
-						</NavigationMenu>
+										</AnimatePresence>
+									</div>
+								);
+							})}
+						</div>
 					</div>
 				</motion.div>
 			)}
