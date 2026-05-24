@@ -8,8 +8,14 @@
 
 "use client";
 
-import { useMotionValueEvent } from "framer-motion";
-import { HERO_HORIZONTAL_END, HERO_SCROLL_LENGTH_VH } from "@/config/heroStages";
+import { motion, useMotionValueEvent, useTransform } from "framer-motion";
+import ScrollingRibbon from "@/components/ui/ScrollingRibbon";
+import {
+	entryEnd,
+	HERO_HORIZONTAL_END,
+	HERO_SCROLL_LENGTH_VH,
+	HERO_STAGES,
+} from "@/config/heroStages";
 import { useAnimation } from "@/context/AnimationContext";
 import { useHeroScrollProgress } from "@/hooks/use-hero-scroll-progress";
 import HeroBackdrop from "./HeroBackdrop";
@@ -33,6 +39,38 @@ export default function ScrollHero() {
 		}
 	});
 
+	// ── Ribbon Animation logic ──────────────────────────────────────────
+	const socialsRange = HERO_STAGES.socials.range;
+	const socialsStart = socialsRange[0];
+	const socialsSettled = entryEnd(socialsRange);
+
+	const jumptoRange = HERO_STAGES.jumpto.range;
+	const jumptoStart = jumptoRange[0];
+	const jumptoSettled = entryEnd(jumptoRange);
+
+	// Ribbon entry opacity in stage 3 (socials)
+	const ribbonOpacity = useTransform(
+		progress,
+		[
+			socialsStart,
+			socialsStart + (socialsSettled - socialsStart) * 0.35,
+			socialsSettled,
+			jumptoStart,
+			1,
+		],
+		[0, 1, 1, 1, 1],
+	);
+
+	// Ribbon Y slide-up entry: from 30px offset to 0px
+	const ribbonY = useTransform(progress, [socialsStart, socialsSettled, 1], ["30px", "0px", "0px"]);
+
+	// Ribbon X slide-left during jumpto (stage 4)
+	const ribbonX = useTransform(
+		progress,
+		[jumptoStart, jumptoSettled, 1],
+		["0vw", "-28vw", "-28vw"],
+	);
+
 	return (
 		<section
 			id="profile"
@@ -49,6 +87,20 @@ export default function ScrollHero() {
 				{/* The four hero stages — each consumes the same scroll progress. */}
 				<TaglineStage progress={progress} active={isWelcomeComplete} />
 				<ProfileCluster progress={progress} />
+
+				{/* Scrolling Ribbon positioned between the profile cluster and the socials stage */}
+				<motion.div
+					style={{
+						opacity: ribbonOpacity,
+						y: ribbonY,
+						x: ribbonX,
+						top: "66%",
+					}}
+					className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 z-25 pointer-events-auto w-64 sm:w-72 md:w-80 lg:w-[360px]"
+				>
+					<ScrollingRibbon />
+				</motion.div>
+
 				<SocialsStage progress={progress} />
 				<JumpToPanel progress={progress} />
 

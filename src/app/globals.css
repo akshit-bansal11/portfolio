@@ -42,6 +42,26 @@
 	--font-clash: Clash, "sans-serif";
 	--font-paragraph: Paragraph, "script";
 	--font-logote: Logote, "logote";
+
+	--animate-marquee: marquee var(--marquee-duration, 25s) linear infinite;
+	--animate-marquee-reverse: marquee-reverse var(--marquee-duration, 25s) linear infinite;
+
+	@keyframes marquee {
+		from {
+			transform: translateX(0%);
+		}
+		to {
+			transform: translateX(-100%);
+		}
+	}
+	@keyframes marquee-reverse {
+		from {
+			transform: translateX(-100%);
+		}
+		to {
+			transform: translateX(0%);
+		}
+	}
 }
 
 /* Hide the native scrollbar everywhere for a cleaner look. */
