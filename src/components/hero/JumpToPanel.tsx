@@ -131,7 +131,6 @@ export default function JumpToPanel({ progress }: JumpToPanelProps) {
 	// Panel slide + fade.
 	const x = useTransform(progress, [start, settled, 1], ["60vw", "0vw", "0vw"]);
 	const opacity = useTransform(progress, [start, start + entrySpan * 0.25, settled], [0, 0.9, 1]);
-	const hintOpacity = useTransform(progress, [settled - 0.01, settled], [0, 1]);
 
 	// Active index.
 	const [active, setActive] = useState(0);
@@ -187,7 +186,7 @@ export default function JumpToPanel({ progress }: JumpToPanelProps) {
 	}, [getCtx]);
 
 	// How many items to render on either side of centre (visible on drum).
-	const visibleRadius = 2;
+	const visibleRadius = 1;
 
 	return (
 		<motion.div
@@ -216,11 +215,6 @@ export default function JumpToPanel({ progress }: JumpToPanelProps) {
 							perspective: PERSPECTIVE,
 							perspectiveOrigin: "50% 50%",
 							overflow: "hidden",
-							borderRadius: 20,
-							background: "rgba(10,10,12,0.72)",
-							backdropFilter: "blur(14px)",
-							WebkitBackdropFilter: "blur(14px)",
-							border: "1px solid rgba(255,255,255,0.07)",
 						}}
 					>
 						{/* Shading overlays — top & bottom fade to reinforce the curve */}
@@ -233,12 +227,12 @@ export default function JumpToPanel({ progress }: JumpToPanelProps) {
 								pointerEvents: "none",
 								background: [
 									"linear-gradient(to bottom,",
-									"  rgba(10,10,12,0.82) 0%,",
-									"  rgba(10,10,12,0.38) 22%,",
+									"  rgba(3,3,3,0.95) 0%,",
+									"  rgba(3,3,3,0.4) 22%,",
 									"  transparent 38%,",
 									"  transparent 62%,",
-									"  rgba(10,10,12,0.38) 78%,",
-									"  rgba(10,10,12,0.82) 100%",
+									"  rgba(3,3,3,0.4) 78%,",
+									"  rgba(3,3,3,0.95) 100%",
 									")",
 								].join(" "),
 							}}
@@ -373,14 +367,6 @@ export default function JumpToPanel({ progress }: JumpToPanelProps) {
 						})}
 					</div>
 				</div>
-
-				{/* ── Hint ─────────────────────────────────────────────── */}
-				<motion.p
-					style={{ opacity: hintOpacity }}
-					className="text-center text-[10px] md:text-xs text-neutral-600 tracking-wide pt-0.5 select-none"
-				>
-					scroll wheel rotates drum · click to jump ↓
-				</motion.p>
 			</div>
 		</motion.div>
 	);
