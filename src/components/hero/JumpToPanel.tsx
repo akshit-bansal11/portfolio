@@ -270,6 +270,7 @@ export default function JumpToPanel({ progress }: JumpToPanelProps) {
 									<button
 										type="button"
 										key={`${d}-${idx}`}
+										data-no-click-sound
 										style={{
 											...getItemStyle(d),
 											background: "none",
@@ -350,6 +351,7 @@ export default function JumpToPanel({ progress }: JumpToPanelProps) {
 									type="button"
 									key={i}
 									onClick={() => goTo(i)}
+									data-no-click-sound
 									style={{
 										width: 5,
 										height: isActive ? 16 : 5,
