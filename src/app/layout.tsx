@@ -11,8 +11,8 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import LightRays from "@/components/effects/LightRays";
-import NavBar from "@/components/layout/NavBar";
 import WelcomeAnimation from "@/components/effects/WelcomeAnimation";
+import NavBar from "@/components/layout/NavBar";
 import { AnimationProvider } from "@/context/AnimationContext";
 
 // Geist Sans loaded via next/font for the body sans stack.
