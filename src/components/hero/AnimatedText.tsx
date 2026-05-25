@@ -38,6 +38,7 @@ export default function AnimatedText({
 	onComplete,
 	active = true,
 	wordClassName,
+	delayOffset = 0,
 }: AnimatedTextProps) {
 	// Split target text into words or letters depending on the mode.
 	const elements = useMemo(
@@ -77,14 +78,14 @@ export default function AnimatedText({
 				const transition = {
 					duration: totalDuration,
 					times,
-					delay: (index * stagger) / 1000,
+					delay: (index * stagger + delayOffset) / 1000,
 					ease: (t: number) => t,
 				};
 
 				return (
 					<motion.span
 						key={`${segment}-${index}`}
-						className={`inline-block will-change-[transform,filter,opacity] ${
+						className={`inline-block py-3 will-change-[transform,filter,opacity] ${
 							wordClassName?.(segment, index) ?? ""
 						}`}
 						initial={fromSnapshot}

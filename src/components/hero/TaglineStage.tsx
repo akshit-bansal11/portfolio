@@ -11,7 +11,7 @@
 import { type MotionValue, motion, useTransform } from "framer-motion";
 import { Circle } from "lucide-react";
 import { entryEnd, HERO_STAGES } from "@/config/heroStages";
-import { TAGLINE } from "@/data/heroContent";
+import { TAGLINE, TAGLINE_ACCENT_CLASS, TAGLINE_CLASSNAME } from "@/data/heroContent";
 import AnimatedText from "./AnimatedText";
 
 // Public props for the stage.
@@ -20,21 +20,7 @@ interface TaglineStageProps {
 	active: boolean;
 }
 
-// Lookup of tagline words → gradient classes for accent styling.
-const ACCENT_WORDS: Record<string, string> = {
-	Fast: "bg-clip-text text-transparent bg-linear-to-r from-amber-300 via-amber-400 to-rose-400",
-	"Production-Grade":
-		"bg-clip-text text-transparent bg-linear-to-r from-indigo-300 via-violet-300 to-rose-300",
-	"Next.js": "bg-clip-text text-transparent bg-linear-to-r from-cyan-300 via-sky-300 to-indigo-300",
-};
-
-// Resolve any per-word gradient class, stripping trailing punctuation.
-const accentForWord = (segment: string): string | undefined => {
-	const cleaned = segment.replace(/[.,!?]+$/g, "");
-	return ACCENT_WORDS[cleaned];
-};
-
-// Renders the tagline stage (badge + animated tagline).
+// Renders the tagline stage (badge + animated single tagline).
 export default function TaglineStage({ progress, active }: TaglineStageProps) {
 	// Stage 1 range; tagline holds full opacity for most of it then fades.
 	const [start, end] = HERO_STAGES.tagline.range;
@@ -49,6 +35,9 @@ export default function TaglineStage({ progress, active }: TaglineStageProps) {
 		[start, settled, fadeStart, end],
 		["blur(0px)", "blur(0px)", "blur(0px)", "blur(8px)"],
 	);
+
+	// Apply the custom light gradient class to all words.
+	const accentForWord = () => TAGLINE_ACCENT_CLASS;
 
 	return (
 		<motion.div
@@ -68,7 +57,7 @@ export default function TaglineStage({ progress, active }: TaglineStageProps) {
 				</span>
 			</motion.div>
 
-			{/* Word-by-word reveal of the tagline with per-word gradients. */}
+			{/* Word-by-word reveal of the single tagline with light gradient. */}
 			<AnimatedText
 				text={TAGLINE}
 				stagger={150}
@@ -76,7 +65,7 @@ export default function TaglineStage({ progress, active }: TaglineStageProps) {
 				direction="top"
 				active={active}
 				wordClassName={accentForWord}
-				className="w-fit mx-auto xl:text-[120px] lg:text-[80px] md:text-[60px] text-[30px] font-thin items-center justify-center text-white drop-shadow-2xl flex-wrap"
+				className={TAGLINE_CLASSNAME}
 			/>
 		</motion.div>
 	);

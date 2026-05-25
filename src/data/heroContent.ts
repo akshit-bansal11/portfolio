@@ -6,7 +6,13 @@
  */
 
 // Tagline shown word-by-word in the first hero stage.
-export const TAGLINE = "Production-Grade Next.js Apps";
+export const TAGLINE = "Crafting Production-Grade Next.js Applications";
+
+export const TAGLINE_CLASSNAME =
+	"w-fit mx-auto xl:text-8xl lg:text-7xl md:text-6xl sm:text-5xl text-5xl font-light tracking-tight items-center justify-center text-center max-w-5xl leading-[1.2] flex-wrap";
+
+export const TAGLINE_ACCENT_CLASS =
+	"bg-clip-text text-transparent bg-linear-to-r from-indigo-300 via-violet-200 to-rose-300";
 
 // Public path to the downloadable resume.
 export const RESUME_PATH = "/akshit_bansal.pdf";

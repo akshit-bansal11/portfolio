@@ -111,6 +111,7 @@ export interface AnimatedTextProps {
 	onComplete?: () => void;
 	active?: boolean;
 	wordClassName?: (segment: string, index: number) => string | undefined;
+	delayOffset?: number;
 }
 
 // Shape of one card inside the JumpTo panel (stage 4 of the hero).
