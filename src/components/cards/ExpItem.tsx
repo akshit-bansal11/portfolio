@@ -8,13 +8,13 @@
 
 "use client";
 import { motion } from "framer-motion";
-import CertificateLinkButton from "@/components/common/cards/CertificateLinkButton";
-import ExpHeader from "@/components/common/cards/ExpHeader";
-import ExpPointsList from "@/components/common/cards/ExpPointsList";
-import ExpSkillsList from "@/components/common/cards/ExpSkillsList";
+import CertificateLinkButton from "@/components/cards/CertificateLinkButton";
+import ExpHeader from "@/components/cards/ExpHeader";
+import ExpPointsList from "@/components/cards/ExpPointsList";
+import ExpSkillsList from "@/components/cards/ExpSkillsList";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import type { ExperienceItem } from "@/types";
+import type { ExperienceItem } from "@/types/experience";
 
 // Renders one experience card.
 export default function ExpItem({

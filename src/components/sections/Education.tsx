@@ -5,10 +5,9 @@
  * standard scroll section heading.
  */
 
-"use client";
-import EduItem from "@/components/common/cards/EduItem";
-import ScrollSectionHeading from "@/components/common/headings/ScrollSectionHeading";
-import ScrollSection from "@/components/common/sections/ScrollSection";
+import EduItem from "@/components/cards/EduItem";
+import ScrollSectionHeading from "@/components/headings/ScrollSectionHeading";
+import ScrollSection from "@/components/layout/ScrollSection";
 import { education } from "@/data/educationData";
 
 // Top-level Education section component.

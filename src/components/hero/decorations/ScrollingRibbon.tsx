@@ -9,7 +9,7 @@ export default function ScrollingRibbon() {
 		<div className="relative w-full overflow-visible py-1 flex flex-col items-center">
 			{/* Ribbon Track Container - Styled as a Pill */}
 			<div
-				className="relative w-full rounded-full border border-white/[0.08] bg-black/60 backdrop-blur-md overflow-hidden py-2.5 px-4 flex group shadow-[inset_0_1px_0_rgba(255,255,255,0.03),0_4px_20px_rgba(0,0,0,0.4)] transition-all duration-300"
+				className="relative w-full rounded-full border border-white/8 bg-black/60 backdrop-blur-md overflow-hidden py-2.5 px-4 flex group shadow-[inset_0_1px_0_rgba(255,255,255,0.03),0_4px_20px_rgba(0,0,0,0.4)] transition-all duration-300"
 				style={
 					{
 						// inject the duration as custom css property
@@ -22,10 +22,10 @@ export default function ScrollingRibbon() {
 				}
 			>
 				{/* Glowing background accent behind the ribbon */}
-				<div className="absolute inset-0 opacity-10 blur-2xl -z-10 bg-gradient-to-r from-neutral-400 via-neutral-200 to-neutral-400" />
+				<div className="absolute inset-0 opacity-10 blur-2xl -z-10 bg-linear-to-r from-neutral-400 via-neutral-200 to-neutral-400" />
 
 				{/* 1st Loop Container */}
-				<div className="flex flex-row shrink-0 gap-4 min-w-full items-center select-none animate-marquee group-hover:[animation-play-state:paused]">
+				<div className="flex flex-row shrink-0 gap-4 min-w-full items-center select-none animate-marquee group-hover:paused">
 					{Array.from({ length: 3 }).map((_, i) => (
 						<div
 							key={`loop1-${i}`}
@@ -33,7 +33,7 @@ export default function ScrollingRibbon() {
 						>
 							{items.map((item, idx) => (
 								<React.Fragment key={idx}>
-									<span className="bg-gradient-to-r from-neutral-400 via-neutral-200 to-neutral-400 bg-clip-text text-transparent">
+									<span className="bg-linear-to-r from-neutral-400 via-neutral-200 to-neutral-400 bg-clip-text text-transparent">
 										{item}
 									</span>
 									<span className="text-neutral-400/80 font-black drop-shadow-none select-none text-base md:text-lg">
@@ -47,7 +47,7 @@ export default function ScrollingRibbon() {
 
 				{/* 2nd Loop Container (Identical mirror) */}
 				<div
-					className="flex flex-row shrink-0 gap-4 min-w-full items-center select-none animate-marquee group-hover:[animation-play-state:paused]"
+					className="flex flex-row shrink-0 gap-4 min-w-full items-center select-none animate-marquee group-hover:paused"
 					aria-hidden="true"
 				>
 					{Array.from({ length: 3 }).map((_, i) => (
@@ -57,7 +57,7 @@ export default function ScrollingRibbon() {
 						>
 							{items.map((item, idx) => (
 								<React.Fragment key={idx}>
-									<span className="bg-gradient-to-r from-neutral-400 via-neutral-200 to-neutral-400 bg-clip-text text-transparent">
+									<span className="bg-linear-to-r from-neutral-400 via-neutral-200 to-neutral-400 bg-clip-text text-transparent">
 										{item}
 									</span>
 									<span className="text-neutral-400/80 font-black drop-shadow-none select-none text-base md:text-lg">

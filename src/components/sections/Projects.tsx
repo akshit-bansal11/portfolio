@@ -6,12 +6,11 @@
  * page for the complete gallery.
  */
 
-"use client";
 import Link from "next/link";
 import { GoArrowUpRight } from "react-icons/go";
-import ProjectCard from "@/components/common/cards/ProjectCard";
-import ScrollSectionHeading from "@/components/common/headings/ScrollSectionHeading";
-import ScrollSection from "@/components/common/sections/ScrollSection";
+import ProjectCard from "@/components/cards/ProjectCard";
+import ScrollSectionHeading from "@/components/headings/ScrollSectionHeading";
+import ScrollSection from "@/components/layout/ScrollSection";
 import { Button } from "@/components/ui/button";
 import { projects } from "@/data/projectsData";
 

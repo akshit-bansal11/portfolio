@@ -13,8 +13,8 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import type { HomeSkill } from "@/data/homeSkillsData";
 import { cn } from "@/lib/utils";
+import type { HomeSkill } from "@/types/skill";
 
 interface HomeSkillPillProps {
 	skill: HomeSkill;

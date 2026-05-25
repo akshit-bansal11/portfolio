@@ -3,19 +3,10 @@
  * Static list of testimonials shown in the auto-scrolling
  * Testimonials section. Each entry carries author identity,
  * accent color (avatar tint), and the quoted feedback text.
+ * Types live in src/types/testimonial.ts.
  */
 
-// Shape of one testimonial entry rendered as a card.
-export interface TestimonialItem {
-	id: string;
-	name: string;
-	email: string;
-	role: string;
-	company: string;
-	initials: string;
-	accentColor: string;
-	text: string;
-}
+import type { TestimonialItem } from "@/types/testimonial";
 
 // All testimonials in display order; duplicated at render-time for looping.
 export const testimonials: TestimonialItem[] = [

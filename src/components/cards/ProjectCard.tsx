@@ -13,7 +13,6 @@ import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { FaFigma, FaGithub, FaGlobe, FaPlay } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
-import OpenSourceBadge from "@/components/common/badges/OpenSourceBadge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,7 +24,7 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import type { ProjectItem } from "@/types";
+import type { ProjectItem } from "@/types/project";
 
 // Public props: extends ProjectItem with optional iframe + sizing.
 interface ProjectCardProps extends ProjectItem {
@@ -182,7 +181,14 @@ export default function ProjectCard({
 					<CardHeader className="space-y-2 grow">
 						<div className="flex items-center gap-2 flex-wrap">
 							<CardTitle className="font-clash text-xl tracking-wide text-white">{title}</CardTitle>
-							{openSource && <OpenSourceBadge />}
+							{openSource && (
+								<Badge
+									variant="outline"
+									className="border-emerald-500/40 bg-emerald-500/10 text-emerald-400 text-xs font-medium"
+								>
+									open source
+								</Badge>
+							)}
 						</div>
 						<CardDescription className="text-neutral-400 line-clamp-3">
 							{description}

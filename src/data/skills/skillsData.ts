@@ -1,35 +1,11 @@
 /*
  * skillsData.ts
- * Source-of-truth for the Skills section and /skills page.
- * Defines a Skill (name + icon URL), a SkillCategory grouping,
- * a "topSkills" highlight list, and the full categorised
- * `skillsData` array consumed by every skill-related view.
+ * Full skills matrix used on the /skills bento grid page.
+ * Types live in src/types/skill.ts.
  */
 
-// One displayable skill: name and a remote icon URL.
-export interface Skill {
-	name: string;
-	Icon: string;
-}
+import type { SkillCategory } from "@/types/skill";
 
-// One category of related skills, plus optional certification icons.
-export interface SkillCategory {
-	title: string;
-	description: string;
-	certifications: Skill[];
-	skills: Skill[];
-}
-
-// Five featured skills shown on the home page Skills card.
-export const topSkills: Skill[] = [
-	{ name: "Next.js", Icon: "https://svgl.app/library/nextjs_icon_dark.svg" },
-	{ name: "TypeScript", Icon: "https://svgl.app/library/typescript.svg" },
-	{ name: "React", Icon: "https://svgl.app/library/react_dark.svg" },
-	{ name: "Tailwind CSS", Icon: "https://svgl.app/library/tailwindcss.svg" },
-	{ name: "Vitest", Icon: "https://svgl.app/library/vitest.svg" },
-];
-
-// Full skills matrix used on the /skills bento grid page.
 export const skillsData: SkillCategory[] = [
 	{
 		title: "Core Frontend & UI/UX",
@@ -89,16 +65,10 @@ export const skillsData: SkillCategory[] = [
 			{ name: "HTML5", Icon: "https://svgl.app/library/html5.svg" },
 			{ name: "CSS3", Icon: "https://svgl.app/library/css.svg" },
 			{ name: "JavaScript", Icon: "https://svgl.app/library/javascript.svg" },
-			{
-				name: "Tailwind CSS",
-				Icon: "https://svgl.app/library/tailwindcss.svg",
-			},
+			{ name: "Tailwind CSS", Icon: "https://svgl.app/library/tailwindcss.svg" },
 			{ name: "React", Icon: "https://svgl.app/library/react_dark.svg" },
 			{ name: "TypeScript", Icon: "https://svgl.app/library/typescript.svg" },
-			{
-				name: "Next.js",
-				Icon: "https://svgl.app/library/nextjs_icon_dark.svg",
-			},
+			{ name: "Next.js", Icon: "https://svgl.app/library/nextjs_icon_dark.svg" },
 			{ name: "Canva", Icon: "https://svgl.app/library/canva.svg" },
 			{ name: "Figma", Icon: "https://svgl.app/library/figma.svg" },
 			{ name: "Framer", Icon: "https://svgl.app/library/framer_dark.svg" },
@@ -164,10 +134,7 @@ export const skillsData: SkillCategory[] = [
 				name: "SQL",
 				Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/sql.svg",
 			},
-			{
-				name: "MongoDB",
-				Icon: "https://svgl.app/library/mongodb-icon-dark.svg",
-			},
+			{ name: "MongoDB", Icon: "https://svgl.app/library/mongodb-icon-dark.svg" },
 			{ name: "MySQL", Icon: "https://svgl.app/library/mysql-icon-dark.svg" },
 			{ name: "PostgreSQL", Icon: "https://svgl.app/library/postgresql.svg" },
 			{ name: "Supabase", Icon: "https://svgl.app/library/supabase.svg" },
@@ -287,14 +254,8 @@ export const skillsData: SkillCategory[] = [
 				Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/chatgpt-dark.svg",
 			},
 			{ name: "Claude", Icon: "https://svgl.app/library/claude-ai-icon.svg" },
-			{
-				name: "Firebase Studio",
-				Icon: "https://svgl.app/library/firebase-studio.svg",
-			},
-			{
-				name: "MCP",
-				Icon: "https://svgl.app/library/model-context-protocol-dark.svg",
-			},
+			{ name: "Firebase Studio", Icon: "https://svgl.app/library/firebase-studio.svg" },
+			{ name: "MCP", Icon: "https://svgl.app/library/model-context-protocol-dark.svg" },
 			{ name: "Perplexity", Icon: "https://svgl.app/library/perplexity.svg" },
 			{ name: "Grok", Icon: "https://svgl.app/library/grok-dark.svg" },
 			{ name: "Ollama", Icon: "https://svgl.app/library/ollama_dark.svg" },

@@ -10,9 +10,10 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
-import ScrollSectionHeading from "@/components/common/headings/ScrollSectionHeading";
-import ScrollSection from "@/components/common/sections/ScrollSection";
+import ScrollSectionHeading from "@/components/headings/ScrollSectionHeading";
+import ScrollSection from "@/components/layout/ScrollSection";
 import { testimonials } from "@/data/testimonialsData";
+import type { TestimonialItem } from "@/types/testimonial";
 
 // One testimonial card.
 function TestimonialCard({
@@ -23,7 +24,7 @@ function TestimonialCard({
 	initials,
 	accentColor,
 	text,
-}: (typeof testimonials)[number]) {
+}: TestimonialItem) {
 	return (
 		<div
 			className={[

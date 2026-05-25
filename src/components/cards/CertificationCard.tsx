@@ -9,8 +9,8 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import ExternalLinkBadge from "@/components/common/badges/ExternalLinkBadge";
-import type { CertificationItem } from "@/types";
+import ExternalLinkBadge from "@/components/badges/ExternalLinkBadge";
+import type { CertificationItem } from "@/types/certification";
 
 // Public props: extends CertificationItem with a flag to toggle skill pills.
 export interface CertificationCardProps extends CertificationItem {

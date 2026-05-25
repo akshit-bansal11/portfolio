@@ -13,8 +13,8 @@
 "use client";
 
 import { type MotionValue, motion, useMotionValueEvent } from "framer-motion";
+import { ArrowDown } from "lucide-react";
 import { useState } from "react";
-import { FaArrowDownLong } from "react-icons/fa6";
 import { HERO_HORIZONTAL_END } from "@/config/heroStages";
 import { useAnimation } from "@/context/AnimationContext";
 import { cn } from "@/lib/utils";
@@ -34,7 +34,7 @@ function Indicator({ progress }: { progress: MotionValue<number> }) {
 			animate={{ y: 0, opacity: 1 }}
 			transition={{ duration: 0.4, ease: "easeOut" }}
 			className={cn(
-				"pointer-events-none fixed bottom-4 right-4 md:bottom-7 md:right-7 z-[9999] flex items-center justify-center",
+				"pointer-events-none fixed bottom-4 right-4 md:bottom-7 md:right-7 z-9999 flex items-center justify-center",
 				"bg-neutral-950/65 backdrop-blur-md border border-neutral-800/80 shadow-[0_8px_28px_-8px_rgba(0,0,0,0.7)] rounded-xl transition-all duration-500",
 				isVertical ? "flex-col px-2.5 py-3 gap-2" : "flex-row px-3 py-2.5 gap-2",
 			)}
@@ -82,7 +82,7 @@ function Indicator({ progress }: { progress: MotionValue<number> }) {
 					transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
 					className="flex"
 				>
-					<FaArrowDownLong className="h-2.5 w-2.5 md:h-3 md:w-3" />
+					<ArrowDown className="h-2.5 w-2.5 md:h-3 md:w-3" />
 				</motion.div>
 			</motion.div>
 		</motion.div>

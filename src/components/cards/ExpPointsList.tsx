@@ -6,7 +6,7 @@
  */
 
 import { cn } from "@/lib/utils";
-import type { ExperiencePoint } from "@/types";
+import type { ExperiencePoint } from "@/types/experience";
 
 // Public props for the list.
 interface ExpPointsListProps {

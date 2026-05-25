@@ -5,6 +5,8 @@
  * top of the standard variant + size class system.
  */
 
+"use client";
+
 import { Slot } from "@radix-ui/react-slot";
 import { animate } from "animejs";
 import { cva, type VariantProps } from "class-variance-authority";

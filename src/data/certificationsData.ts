@@ -5,7 +5,7 @@
  * group can be rendered with its own heading and presentation.
  */
 
-import type { CertificationItem } from "@/types";
+import type { CertificationItem } from "@/types/certification";
 
 // LinkedIn Learning paths co-issued with Microsoft.
 export const linkedInCertificationsData: CertificationItem[] = [

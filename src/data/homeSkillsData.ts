@@ -3,20 +3,10 @@
  * Curated skill categories for the home-page Skills section.
  * A focused subset of the full skillsData enriched with
  * per-skill project / experience references shown in popovers.
+ * Types live in src/types/skill.ts.
  */
 
-// A skill with an optional list of places it was used.
-export interface HomeSkill {
-	name: string;
-	Icon: string;
-	usedIn: string[];
-}
-
-// One display category for the home-page skills grid.
-export interface HomeSkillCategory {
-	title: string;
-	skills: HomeSkill[];
-}
+import type { HomeSkillCategory } from "@/types/skill";
 
 export const homeSkillCategories: HomeSkillCategory[] = [
 	{

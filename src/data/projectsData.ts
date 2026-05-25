@@ -5,7 +5,7 @@
  * render each category as its own scroll-revealed grid.
  */
 
-import type { ProjectItem } from "@/types";
+import type { ProjectItem } from "@/types/project";
 
 // Dictionary of category → ordered project entries.
 export const projects: Record<string, ProjectItem[]> = {

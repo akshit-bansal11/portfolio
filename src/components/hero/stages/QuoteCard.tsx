@@ -91,12 +91,7 @@ export default function QuoteCard({ progress }: QuoteCardProps) {
 				{/* Glass background */}
 				<div
 					aria-hidden
-					className="absolute inset-0 rounded-2xl"
-					style={{
-						background: "rgba(6, 6, 12, 0.58)",
-						backdropFilter: "blur(20px)",
-						WebkitBackdropFilter: "blur(20px)",
-					}}
+					className="absolute inset-0 rounded-2xl bg-[rgba(6,6,12,0.58)] backdrop-blur-xl"
 				/>
 
 				{/* Dynamic specular highlight — follows mouse like a light source */}

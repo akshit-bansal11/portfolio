@@ -10,7 +10,7 @@
 
 import { motion } from "framer-motion";
 import { useMemo } from "react";
-import type { AnimatedTextProps } from "@/types";
+import type { AnimatedTextProps } from "@/types/hero";
 
 // Internal: a single keyframe-state snapshot.
 type Snapshot = Record<string, string | number>;

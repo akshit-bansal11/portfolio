@@ -6,8 +6,8 @@
  */
 
 "use client";
-import SkillPill from "@/components/common/pills/SkillPill";
-import type { Skill } from "@/data/skillsData";
+import SkillPill from "@/components/pills/SkillPill";
+import type { Skill } from "@/types/skill";
 
 // Public props for the list.
 interface ExpSkillsListProps {

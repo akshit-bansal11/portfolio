@@ -7,8 +7,9 @@
  */
 
 import trupeerLogo from "@/assets/images/trupeer-dark.svg";
-import { type Skill, skillsData } from "@/data/skillsData";
-import type { ExperienceItem } from "@/types";
+import { skillsData } from "@/data/skills";
+import type { ExperienceItem } from "@/types/experience";
+import type { Skill } from "@/types/skill";
 
 // One named group of experience cards (e.g. "Internship", "Training").
 export interface ExperienceCategory {
@@ -76,17 +77,6 @@ export const experience: ExperienceCategory[] = [
 					"ElevenLabs",
 				),
 			},
-			// {
-			//   location: "Remote",
-			//   company: "Bluestock Fintech",
-			//   role: "Software Development Engineer Intern",
-			//   date: "Oct 2024 - Nov 2024",
-			//   points: [
-			//     "Developed an IPO Dashboard, a full-stack web application for tracking IPOs.",
-			//     "Implemented real-time IPO listings, user portfolio management, and financial analytics.",
-			//     "Used Node.js, Express.js, MySQL, and frontend frameworks for seamless user experience",
-			//   ],
-			// },
 		],
 	},
 	{

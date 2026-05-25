@@ -6,10 +6,9 @@
  * category label.
  */
 
-"use client";
-import ExpItem from "@/components/common/cards/ExpItem";
-import ScrollSectionHeading from "@/components/common/headings/ScrollSectionHeading";
-import ScrollSection from "@/components/common/sections/ScrollSection";
+import ExpItem from "@/components/cards/ExpItem";
+import ScrollSectionHeading from "@/components/headings/ScrollSectionHeading";
+import ScrollSection from "@/components/layout/ScrollSection";
 import { experience } from "@/data/experienceData";
 
 // Top-level Experience section component.

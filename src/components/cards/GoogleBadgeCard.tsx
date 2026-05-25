@@ -9,9 +9,9 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import ExternalLinkBadge from "@/components/common/badges/ExternalLinkBadge";
+import ExternalLinkBadge from "@/components/badges/ExternalLinkBadge";
 import { cn } from "@/lib/utils";
-import type { GoogleBadgeItem } from "@/types";
+import type { GoogleBadgeItem } from "@/types/certification";
 
 // Renders a single Google badge card.
 export default function GoogleBadgeCard({ gBadgeTitle, gBadgeLink }: GoogleBadgeItem) {

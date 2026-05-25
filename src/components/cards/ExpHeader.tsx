@@ -5,8 +5,8 @@
  * (stacked headings with a side date badge).
  */
 
+import { Calendar, MapPin } from "lucide-react";
 import Image, { type StaticImageData } from "next/image";
-import { FaCalendarAlt, FaMapMarkerAlt } from "react-icons/fa";
 import { Badge } from "@/components/ui/badge";
 
 // Public props for the header.
@@ -49,14 +49,14 @@ export default function ExpHeader({ company, role, location, date, logo }: ExpHe
 					</h3>
 					<div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs md:text-sm text-neutral-400">
 						<span className="flex items-center gap-1.5">
-							<FaMapMarkerAlt className="h-3 w-3 text-neutral-500" />
+							<MapPin className="h-3 w-3 text-neutral-500" />
 							{location}
 						</span>
 						<span aria-hidden className="text-neutral-700">
 							•
 						</span>
 						<span className="flex items-center gap-1.5">
-							<FaCalendarAlt className="h-3 w-3 text-amber-500/70" />
+							<Calendar className="h-3 w-3 text-amber-500/70" />
 							{date}
 						</span>
 					</div>
@@ -81,11 +81,11 @@ export default function ExpHeader({ company, role, location, date, logo }: ExpHe
 					variant="outline"
 					className="px-3 py-1 bg-white/5 border-neutral-800 text-neutral-300 font-medium gap-2 hover:bg-white/10 transition-colors"
 				>
-					<FaCalendarAlt className="h-3 w-3 text-amber-500/80" />
+					<Calendar className="h-3 w-3 text-amber-500/80" />
 					{date}
 				</Badge>
 				<div className="flex items-center gap-2 text-sm text-neutral-500 font-medium px-1">
-					<FaMapMarkerAlt className="h-3 w-3 text-neutral-600" />
+					<MapPin className="h-3 w-3 text-neutral-600" />
 					<span>{location}</span>
 				</div>
 			</div>

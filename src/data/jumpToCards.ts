@@ -5,7 +5,7 @@
  * its own border/glow color scheme used by the panel grid.
  */
 
-import type { JumpToCardData } from "@/types";
+import type { JumpToCardData } from "@/types/hero";
 
 // Ordered list of jump-to cards rendered in the panel.
 export const JUMP_TO_CARDS: JumpToCardData[] = [

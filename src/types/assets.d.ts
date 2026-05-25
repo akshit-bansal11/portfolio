@@ -1,5 +1,5 @@
 /*
- * declarations.d.ts
+ * assets.d.ts
  * Ambient module declarations so non-code asset imports
  * (PDF, images, SVG, etc.) typecheck cleanly with Next.js.
  */

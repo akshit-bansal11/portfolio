@@ -16,7 +16,7 @@ import {
 	User,
 	// Quote,
 } from "lucide-react";
-import type { NavItem } from "@/types";
+import type { NavItem } from "@/types/nav";
 
 // Map of route key → ordered list of nav entries displayed in the navbar.
 export const navConfigs: Record<string, NavItem[]> = {
@@ -29,7 +29,7 @@ export const navConfigs: Record<string, NavItem[]> = {
 		{ text: "Attainments", to: "attainments", icon: Award, color: "text-rose-400/70" },
 		{ text: "Education", to: "education", icon: BookOpen, color: "text-cyan-400/70" },
 		{ text: "By the Numbers", to: "by-the-numbers", icon: BarChart2, color: "text-orange-400/70" },
-		// { text: "Testimonials", to: "testimonials",  icon: Quote,      color: "text-pink-400/70"     },
+		// { text: "Testimonials", to: "testimonials", icon: Quote, color: "text-pink-400/70" },
 	],
 	// Sub-route navigation: just a single back-to-home link.
 	projects: [{ text: "Home", to: "/", icon: Home, color: "text-neutral-400" }],

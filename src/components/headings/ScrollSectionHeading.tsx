@@ -31,7 +31,6 @@ function ScrollSectionHeading({ heading }: ScrollSectionHeadingProps) {
 				"bg-linear-to-r from-amber-500 via-orange-500 to-pink-500",
 				"hover:bg-linear-to-r hover:to-amber-500 hover:via-orange-500 hover:from-pink-500",
 				"transition-colors ease-in-out duration-500",
-				"transition-colors ease-in-out duration-500",
 				"bg-clip-text text-transparent bg-linear-to-r",
 			)}
 		>

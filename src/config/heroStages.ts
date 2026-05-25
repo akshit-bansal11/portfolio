@@ -6,7 +6,7 @@
  * read these values to drive every hero motion.
  */
 
-import type { HeroStage } from "@/types";
+import type { HeroStage } from "@/types/hero";
 
 // Progress ranges (0..1) for each of the four hero beats.
 export const HERO_STAGES = {

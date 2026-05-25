@@ -6,6 +6,7 @@
  */
 
 import type React from "react";
+import { cn } from "@/lib/utils";
 
 // Public props for the wrapper.
 interface ScrollSectionProps {
@@ -15,18 +16,17 @@ interface ScrollSectionProps {
 }
 
 // Renders a flex-column section with the shared layout.
-function ScrollSection({ id = "", children = null, className = "" }: ScrollSectionProps) {
+export default function ScrollSection({
+	id = "",
+	children = null,
+	className = "",
+}: ScrollSectionProps) {
 	return (
 		<section
 			id={id}
-			className={`
-                flex w-full flex-col lg:gap-6 md:gap-4 gap-2 lg:p-5 p-3
-                ${className}
-            `}
+			className={cn("flex w-full flex-col gap-2 p-3", "md:gap-4 lg:gap-6 lg:p-5", className)}
 		>
 			{children}
 		</section>
 	);
 }
-
-export default ScrollSection;

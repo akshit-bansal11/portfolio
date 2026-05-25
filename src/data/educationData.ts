@@ -4,7 +4,7 @@
  * Ordered newest-first; rendered as plain stacked cards.
  */
 
-import type { EducationItem } from "@/types";
+import type { EducationItem } from "@/types/education";
 
 // Education timeline entries (degree, schooling, board exams).
 export const education: EducationItem[] = [

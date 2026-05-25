@@ -10,9 +10,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import ScrollSectionHeading from "@/components/common/headings/ScrollSectionHeading";
-import HomeSkillPill from "@/components/common/pills/HomeSkillPill";
-import ScrollSection from "@/components/common/sections/ScrollSection";
+import ScrollSectionHeading from "@/components/headings/ScrollSectionHeading";
+import ScrollSection from "@/components/layout/ScrollSection";
+import HomeSkillPill from "@/components/pills/HomeSkillPill";
 import { homeSkillCategories } from "@/data/homeSkillsData";
 
 // Home-page Skills section component.

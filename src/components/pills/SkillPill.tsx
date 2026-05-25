@@ -9,8 +9,8 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import type { Skill } from "@/data/skillsData";
 import { cn } from "@/lib/utils";
+import type { Skill } from "@/types/skill";
 
 // Public props for the pill.
 interface SkillPillProps {

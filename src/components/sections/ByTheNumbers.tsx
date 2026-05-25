@@ -1,17 +1,18 @@
 /*
  * ByTheNumbers.tsx
  * "By The Numbers" stats section.
- * Fetches live GitHub stats from the local API route,
- * combines them with hardcoded years values, and animates
- * each card's value with a number counter on scroll-in.
+ * Fetches live GitHub stats via the api lib, combines them
+ * with hardcoded years values, and animates each card's
+ * value with a number counter on scroll-in.
  */
 
 "use client";
 
 import { animate, createScope } from "animejs";
 import { useEffect, useRef, useState } from "react";
-import ScrollSectionHeading from "@/components/common/headings/ScrollSectionHeading";
-import ScrollSection from "@/components/common/sections/ScrollSection";
+import ScrollSectionHeading from "@/components/headings/ScrollSectionHeading";
+import ScrollSection from "@/components/layout/ScrollSection";
+import { fetchGitHubStats } from "@/lib/api/github";
 
 // Shape of a single stat card displayed in the section.
 interface StatCard {
@@ -162,10 +163,9 @@ export default function ByTheNumbers() {
 			building: YEARS_BUILDING,
 		};
 
-		// Fetch live stats from the internal API; merge into the card list.
-		fetch("/api/github-stats")
-			.then((r) => r.json())
-			.then((data: { publicRepos: number; totalCommits: number }) => {
+		// Fetch live stats from the API lib; merge into the card list.
+		fetchGitHubStats()
+			.then((data) => {
 				placeholders.commits = data.totalCommits;
 				placeholders.repos = data.publicRepos;
 				setStats(BASE_STATS.map((s) => ({ ...s, value: placeholders[s.id] ?? 0 })));

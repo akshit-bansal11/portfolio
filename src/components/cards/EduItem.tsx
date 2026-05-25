@@ -8,20 +8,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FaCalendarAlt, FaMapMarkerAlt } from "react-icons/fa";
+import { Calendar, MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-
-// Public props for one education entry.
-interface EduItemProps {
-	location: string;
-	company: string;
-	role: string;
-	date: string;
-}
+import type { EducationItem } from "@/types/education";
 
 // Renders a single education card.
-export default function EduItem({ location, company, role, date }: EduItemProps) {
+export default function EduItem({ location, company, role, date }: EducationItem) {
 	return (
 		<motion.div
 			initial={{ opacity: 0, y: 30 }}
@@ -46,11 +39,11 @@ export default function EduItem({ location, company, role, date }: EduItemProps)
 								variant="outline"
 								className="w-fit gap-2 border-neutral-700 text-neutral-400 font-normal"
 							>
-								<FaCalendarAlt className="h-3 w-3" />
+								<Calendar className="h-3 w-3" />
 								{date}
 							</Badge>
 							<div className="flex items-center gap-2">
-								<FaMapMarkerAlt className="h-3 w-3" />
+								<MapPin className="h-3 w-3" />
 								<span>{location}</span>
 							</div>
 						</div>

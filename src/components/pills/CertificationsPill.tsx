@@ -11,7 +11,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { useState } from "react";
-import type { Skill } from "@/data/skillsData";
+import type { Skill } from "@/types/skill";
 
 // Public props for the pill.
 interface CertificationsPillProps {

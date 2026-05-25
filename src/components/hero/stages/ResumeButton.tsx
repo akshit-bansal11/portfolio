@@ -8,7 +8,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FaArrowDownLong } from "react-icons/fa6";
+import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { RESUME_FILENAME, RESUME_PATH } from "@/data/heroContent";
 
@@ -28,7 +28,7 @@ export default function ResumeButton() {
 					transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
 					className="inline-flex"
 				>
-					<FaArrowDownLong className="h-3.5 w-3.5" />
+					<ArrowDown className="h-3.5 w-3.5" />
 				</motion.span>
 			</a>
 		</Button>
