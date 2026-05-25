@@ -19,9 +19,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { JUMP_TO_CARDS } from "@/data/jumpToCards";
 
-// ─── Public props ────────────────────────────────────────────────────────────
-type JumpToPanelProps = object;
-
 // ─── Colour tokens (one per card) ────────────────────────────────────────────
 const PILL_COLORS: { border: string; glow: string; text: string }[] = [
 	{ border: "rgba(99,102,241,0.65)", glow: "rgba(99,102,241,0.28)", text: "#a5b4fc" }, // indigo
@@ -119,7 +116,7 @@ function getItemStyle(distance: number): React.CSSProperties {
 }
 
 // ─── Main component ──────────────────────────────────────────────────────────
-export default function JumpToPanel(_props: JumpToPanelProps) {
+export default function JumpToPanel() {
 	// Active index.
 	const [active, setActive] = useState(0);
 

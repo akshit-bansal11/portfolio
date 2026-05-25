@@ -11,7 +11,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { IoArrowBack } from "react-icons/io5";
 import ProjectCard from "@/components/common/cards/ProjectCard";
-import ScrollReveal from "@/components/ui/ScrollReveal";
+import ScrollReveal from "@/components/effects/ScrollReveal";
 import { projects } from "@/data/projectsData";
 import { cn } from "@/lib/utils";
 

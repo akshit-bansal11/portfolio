@@ -44,9 +44,6 @@ function VideoModal({
 	title: string;
 	onClose: () => void;
 }) {
-	// Defer mounting until after first client render so createPortal is safe.
-	const [mounted, setMounted] = useState(false);
-
 	// Esc key closes the modal.
 	const handleKeyDown = useCallback(
 		(e: KeyboardEvent) => {
@@ -56,8 +53,7 @@ function VideoModal({
 	);
 
 	useEffect(() => {
-		// Mark mounted, lock body scroll, and bind the Esc listener.
-		setMounted(true);
+		// Lock body scroll, and bind the Esc listener.
 		document.addEventListener("keydown", handleKeyDown);
 		document.body.style.overflow = "hidden";
 		return () => {
@@ -65,8 +61,6 @@ function VideoModal({
 			document.body.style.overflow = "";
 		};
 	}, [handleKeyDown]);
-
-	if (!mounted) return null;
 
 	return createPortal(
 		<motion.div

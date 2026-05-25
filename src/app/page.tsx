@@ -6,6 +6,8 @@
  * container so they animate in as the user scrolls.
  */
 
+// import Testimonials from "@/components/sections/Testimonials";
+import ScrollReveal from "@/components/effects/ScrollReveal";
 import { HeroToContentSpacer, ScrollHero } from "@/components/hero";
 import ByTheNumbers from "@/components/sections/ByTheNumbers";
 import Certifications from "@/components/sections/Certifications";
@@ -13,8 +15,6 @@ import Education from "@/components/sections/Education";
 import Experience from "@/components/sections/Experience";
 import Projects from "@/components/sections/Projects";
 import Skills from "@/components/sections/Skills";
-// import Testimonials from "@/components/sections/Testimonials";
-import ScrollReveal from "@/components/ui/ScrollReveal";
 
 // Top-level home page component.
 function Home() {

@@ -92,12 +92,6 @@ const HomeSkillPill = ({ skill }: HomeSkillPillProps) => {
 	const [hovered, setHovered] = useState(false);
 	const [anchor, setAnchor] = useState<DOMRect | null>(null);
 	const pillRef = useRef<HTMLDivElement>(null);
-	const [mounted, setMounted] = useState(false);
-
-	// Ensure we're client-side before using portals.
-	useEffect(() => {
-		setMounted(true);
-	}, []);
 
 	const handleMouseEnter = () => {
 		if (pillRef.current) {
@@ -136,8 +130,7 @@ const HomeSkillPill = ({ skill }: HomeSkillPillProps) => {
 				<span className="whitespace-nowrap text-[15px]">{skill.name}</span>
 			</motion.div>
 
-			{mounted &&
-				hovered &&
+			{hovered &&
 				anchor &&
 				skill.usedIn.length > 0 &&
 				createPortal(<Popover skill={skill} anchor={anchor} />, document.body)}

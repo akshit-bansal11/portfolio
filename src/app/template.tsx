@@ -5,7 +5,7 @@
  * changes get a brief fade-and-rise entrance animation.
  */
 
-import PageTransition from "@/components/ui/PageTransition";
+import PageTransition from "@/components/effects/PageTransition";
 
 // Default export consumed by Next.js App Router.
 export default function Template({ children }: { children: React.ReactNode }) {

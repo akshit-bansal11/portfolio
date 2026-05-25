@@ -9,7 +9,7 @@
 "use client";
 
 import { motion, useMotionValueEvent, useTransform } from "framer-motion";
-import ScrollingRibbon from "@/components/ui/ScrollingRibbon";
+import ScrollingRibbon from "@/components/hero/ScrollingRibbon";
 import {
 	entryEnd,
 	HERO_HORIZONTAL_END,

@@ -40,8 +40,7 @@ const CertificationsPill = ({ certifications }: CertificationsPillProps) => {
 				transition={{
 					layout: { type: "spring", stiffness: 300, damping: 30 },
 				}}
-				className="absolute bottom-0 left-0 bg-neutral-900/95 border border-neutral-800/50 backdrop-blur-xl overflow-hidden rounded-xl shadow-2xl"
-				style={{ transformOrigin: "bottom left" }}
+				className="absolute bottom-0 left-0 bg-neutral-900/95 border border-neutral-800/50 backdrop-blur-xl overflow-hidden rounded-xl shadow-2xl origin-bottom-left"
 			>
 				<AnimatePresence mode="wait">
 					{isHovered ? (

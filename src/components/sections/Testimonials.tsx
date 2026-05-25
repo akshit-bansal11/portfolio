@@ -36,7 +36,7 @@ function TestimonialCard({
 			].join(" ")}
 		>
 			{/* Decorative serif quote mark. */}
-			<span className="text-3xl leading-none text-neutral-600 font-serif select-none">"</span>
+			<span className="text-3xl leading-none text-neutral-600 font-serif select-none">&quot;</span>
 
 			{/* Testimonial body text. */}
 			<p className="text-neutral-300 text-sm md:text-base leading-relaxed font-light flex-1">
@@ -118,7 +118,7 @@ function ScrollTrack({ children }: { children: React.ReactNode }) {
 			ref={trackRef}
 			className="flex gap-4 overflow-x-auto scroll-smooth"
 			style={{
-				// Hide native scrollbar visually but keep scroll functional.
+				// NOTE: scrollbarWidth and msOverflowStyle are non-standard vendor properties not supported by Tailwind utilities
 				scrollbarWidth: "none",
 				msOverflowStyle: "none",
 			}}
