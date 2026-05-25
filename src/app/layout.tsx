@@ -12,6 +12,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import LightRays from "@/components/effects/LightRays";
 import WelcomeAnimation from "@/components/effects/WelcomeAnimation";
+import ScrollIndicator from "@/components/hero/decorations/ScrollIndicator";
 import NavBar from "@/components/layout/NavBar";
 import { AnimationProvider } from "@/context/AnimationContext";
 
@@ -77,6 +78,8 @@ export default function RootLayout({
 					<WelcomeAnimation disabled={isWelcomeAnimationDisabled} />
 					{/* Persistent navigation bar. */}
 					<NavBar />
+					{/* Fixed scroll affordance — stays on screen even after the hero scrolls away. */}
+					<ScrollIndicator />
 					{children}
 				</AnimationProvider>
 			</body>

@@ -9,6 +9,7 @@
 "use client";
 
 import { motion, useMotionValueEvent, useTransform } from "framer-motion";
+import { useEffect } from "react";
 import {
 	entryEnd,
 	HERO_HORIZONTAL_END,
@@ -18,7 +19,6 @@ import {
 import { useAnimation } from "@/context/AnimationContext";
 import { useHeroScrollProgress } from "@/hooks/use-hero-scroll-progress";
 import HeroBackdrop from "./backdrop/HeroBackdrop";
-import ScrollIndicator from "./decorations/ScrollIndicator";
 import ScrollingRibbon from "./decorations/ScrollingRibbon";
 import JumpToPanel from "./stages/JumpToPanel";
 import ProfileCluster from "./stages/ProfileCluster";
@@ -30,7 +30,12 @@ import TaglineStage from "./stages/TaglineStage";
 export default function ScrollHero() {
 	// Tall wrapper ref + 0..1 progress driving every stage.
 	const { wrapperRef, progress } = useHeroScrollProgress();
-	const { isWelcomeComplete, isHeroComplete, setHeroComplete } = useAnimation();
+	const { isWelcomeComplete, isHeroComplete, setHeroComplete, setHeroProgress } = useAnimation();
+
+	// Register the progress MotionValue globally so the fixed ScrollIndicator can read it.
+	useEffect(() => {
+		setHeroProgress(progress);
+	}, [progress, setHeroProgress]);
 
 	// Mark the hero "complete" once progress crosses the horizontal end threshold.
 	useMotionValueEvent(progress, "change", (latest) => {
@@ -136,8 +141,7 @@ export default function ScrollHero() {
 					</div>
 				</motion.div>
 
-				{/* Scroll affordance hint. */}
-				<ScrollIndicator progress={progress} />
+				{/* Scroll affordance hint is now rendered as a fixed overlay in layout.tsx. */}
 			</div>
 		</section>
 	);
