@@ -39,10 +39,20 @@ export default function ProfileCluster({ progress }: ProfileClusterProps) {
 	// Tracks whether the photo side of the flip card is showing.
 	const [flipped, setFlipped] = useState(false);
 
-	// Auto-flip when jumpto stage begins; reset if scrolled back before profile.
+	// Auto-flip when socials stage begins; reset if scrolled back before socials.
 	useMotionValueEvent(progress, "change", (latest) => {
-		if (latest >= jumpto[0] && !flipped) setFlipped(true);
-		if (latest < profile[0] + 0.01 && flipped) setFlipped(false);
+		const prev = progress.getPrevious();
+		if (prev !== undefined) {
+			if (prev < socials[0] && latest >= socials[0] && !flipped) {
+				setFlipped(true);
+			}
+			if (prev >= socials[0] && latest < socials[0] && flipped) {
+				setFlipped(false);
+			}
+		} else {
+			if (latest >= socials[0] && !flipped) setFlipped(true);
+			if (latest < socials[0] && flipped) setFlipped(false);
+		}
 	});
 
 	// Horizontal motion: enter from right, hold center, slide left for jumpto.
