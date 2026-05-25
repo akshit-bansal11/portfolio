@@ -21,6 +21,7 @@ import { useHeroScrollProgress } from "@/hooks/use-hero-scroll-progress";
 import HeroBackdrop from "./HeroBackdrop";
 import JumpToPanel from "./JumpToPanel";
 import ProfileCluster from "./ProfileCluster";
+import QuoteCard from "./QuoteCard";
 import ScrollIndicator from "./ScrollIndicator";
 import SocialsStage from "./SocialsStage";
 import TaglineStage from "./TaglineStage";
@@ -71,6 +72,16 @@ export default function ScrollHero() {
 		["0vw", "-28vw", "-28vw"],
 	);
 
+	// ── Stage 4 flex layout ─────────────────────────────────────────────
+	// The three-column row slides in from the right during the jumpto stage.
+	const entrySpan = jumptoSettled - jumptoStart;
+	const stage4X = useTransform(progress, [jumptoStart, jumptoSettled, 1], ["60vw", "0vw", "0vw"]);
+	const stage4Opacity = useTransform(
+		progress,
+		[jumptoStart, jumptoStart + entrySpan * 0.25, jumptoSettled],
+		[0, 0.9, 1],
+	);
+
 	return (
 		<section
 			id="profile"
@@ -102,7 +113,28 @@ export default function ScrollHero() {
 				</motion.div>
 
 				<SocialsStage progress={progress} />
-				<JumpToPanel progress={progress} />
+
+				{/* ── Stage 4: Three-column flex layout ────────────────────────
+				     Uses justify-between so the QuoteCard naturally centres
+				     between the left profile/socials region and the right
+				     JumpTo panel. Each column is a flex item. */}
+				<motion.div
+					style={{ x: stage4X, opacity: stage4Opacity }}
+					className="absolute inset-0 flex items-center justify-between px-8 md:px-12 lg:px-16 pointer-events-none z-20"
+				>
+					{/* Left spacer — matches the space occupied by profile + socials */}
+					<div className="w-[28vw] shrink-0" />
+
+					{/* Centre — Quote card */}
+					<div className="flex items-center justify-center flex-1">
+						<QuoteCard progress={progress} />
+					</div>
+
+					{/* Right — Jump to panel */}
+					<div className="shrink-0">
+						<JumpToPanel />
+					</div>
+				</motion.div>
 
 				{/* Scroll affordance hint. */}
 				<ScrollIndicator progress={progress} />

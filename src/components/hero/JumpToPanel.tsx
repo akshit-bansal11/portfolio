@@ -16,15 +16,11 @@
 
 "use client";
 
-import { type MotionValue, motion, useTransform } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { entryEnd, HERO_STAGES } from "@/config/heroStages";
 import { JUMP_TO_CARDS } from "@/data/jumpToCards";
 
 // ─── Public props ────────────────────────────────────────────────────────────
-interface JumpToPanelProps {
-	progress: MotionValue<number>;
-}
+type JumpToPanelProps = object;
 
 // ─── Colour tokens (one per card) ────────────────────────────────────────────
 const PILL_COLORS: { border: string; glow: string; text: string }[] = [
@@ -123,15 +119,7 @@ function getItemStyle(distance: number): React.CSSProperties {
 }
 
 // ─── Main component ──────────────────────────────────────────────────────────
-export default function JumpToPanel({ progress }: JumpToPanelProps) {
-	const [start] = HERO_STAGES.jumpto.range;
-	const settled = entryEnd(HERO_STAGES.jumpto.range);
-	const entrySpan = settled - start;
-
-	// Panel slide + fade.
-	const x = useTransform(progress, [start, settled, 1], ["60vw", "0vw", "0vw"]);
-	const opacity = useTransform(progress, [start, start + entrySpan * 0.25, settled], [0, 0.9, 1]);
-
+export default function JumpToPanel(_props: JumpToPanelProps) {
 	// Active index.
 	const [active, setActive] = useState(0);
 
@@ -189,13 +177,10 @@ export default function JumpToPanel({ progress }: JumpToPanelProps) {
 	const visibleRadius = 1;
 
 	return (
-		<motion.div
-			style={{ x, opacity }}
-			className="absolute inset-0 flex items-center justify-end pr-4 md:pr-10 lg:pr-16 pl-[44vw] md:pl-[46vw] pointer-events-none"
-		>
+		<div className="pointer-events-auto">
 			<div
 				ref={containerRef}
-				className="flex flex-col gap-3 pointer-events-auto"
+				className="flex flex-col gap-3"
 				style={{ width: "clamp(200px, 28vw, 320px)" }}
 			>
 				{/* ── Label ──────────────────────────────────────────── */}
@@ -370,6 +355,6 @@ export default function JumpToPanel({ progress }: JumpToPanelProps) {
 					</div>
 				</div>
 			</div>
-		</motion.div>
+		</div>
 	);
 }
