@@ -8,10 +8,10 @@
 "use client";
 
 import { type MotionValue, motion, useMotionValueEvent, useTransform } from "framer-motion";
-import { FaArrowDownLong } from "react-icons/fa6";
-import { useAnimation } from "@/context/AnimationContext";
 import { useState } from "react";
+import { FaArrowDownLong } from "react-icons/fa6";
 import { HERO_HORIZONTAL_END } from "@/config/heroStages";
+import { useAnimation } from "@/context/AnimationContext";
 import { cn } from "@/lib/utils";
 
 // Public props for the indicator.
