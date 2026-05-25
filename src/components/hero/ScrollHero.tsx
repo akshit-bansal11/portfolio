@@ -9,7 +9,6 @@
 "use client";
 
 import { motion, useMotionValueEvent, useTransform } from "framer-motion";
-import ScrollingRibbon from "@/components/hero/ScrollingRibbon";
 import {
 	entryEnd,
 	HERO_HORIZONTAL_END,
@@ -18,13 +17,14 @@ import {
 } from "@/config/heroStages";
 import { useAnimation } from "@/context/AnimationContext";
 import { useHeroScrollProgress } from "@/hooks/use-hero-scroll-progress";
-import HeroBackdrop from "./HeroBackdrop";
-import JumpToPanel from "./JumpToPanel";
-import ProfileCluster from "./ProfileCluster";
-import QuoteCard from "./QuoteCard";
-import ScrollIndicator from "./ScrollIndicator";
-import SocialsStage from "./SocialsStage";
-import TaglineStage from "./TaglineStage";
+import HeroBackdrop from "./backdrop/HeroBackdrop";
+import ScrollIndicator from "./decorations/ScrollIndicator";
+import ScrollingRibbon from "./decorations/ScrollingRibbon";
+import JumpToPanel from "./stages/JumpToPanel";
+import ProfileCluster from "./stages/ProfileCluster";
+import QuoteCard from "./stages/QuoteCard";
+import SocialsStage from "./stages/SocialsStage";
+import TaglineStage from "./stages/TaglineStage";
 
 // Renders the full pinned scroll hero.
 export default function ScrollHero() {
