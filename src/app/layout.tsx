@@ -10,7 +10,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import ClickSound from "@/components/effects/ClickSound";
 import LightRays from "@/components/effects/LightRays";
 import NavBar from "@/components/layout/NavBar";
 import WelcomeAnimation from "@/components/ui/WelcomeAnimation";
@@ -79,8 +78,6 @@ export default function RootLayout({
 					{/* Persistent navigation bar. */}
 					<NavBar />
 					{children}
-					{/* Global click sound synthesizer and floating sound toggle controller */}
-					<ClickSound />
 				</AnimationProvider>
 			</body>
 		</html>
