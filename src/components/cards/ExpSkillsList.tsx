@@ -21,7 +21,7 @@ export default function ExpSkillsList({ skills }: ExpSkillsListProps) {
 	return (
 		<div className="mt-5 flex flex-wrap gap-2">
 			{skills.map((skill) => (
-				<SkillPill key={skill.name} skill={skill} />
+				<SkillPill key={skill.name} skill={{ ...skill, variant: "expItem" }} />
 			))}
 		</div>
 	);

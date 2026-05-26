@@ -9,16 +9,6 @@ export interface GoogleBadgeItem {
 	gBadgeLink: string;
 }
 
-export interface HackerRankBadgeItem {
-	name: string;
-	icon: string;
-	stars: number;
-	source: string;
-	delay: number;
-	link: string;
-	color?: string;
-}
-
 export interface CertificationProvider {
 	name: string;
 	logoUrl?: string;

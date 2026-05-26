@@ -12,8 +12,8 @@
 import { motion } from "framer-motion";
 import ScrollSectionHeading from "@/components/headings/ScrollSectionHeading";
 import ScrollSection from "@/components/layout/ScrollSection";
-import HomeSkillPill from "@/components/pills/HomeSkillPill";
-import { homeSkillCategories } from "@/data/homeSkillsData";
+import SkillPill from "@/components/pills/SkillPill";
+import { SkillCategories } from "@/data/skillsData";
 
 // Home-page Skills section component.
 export default function Skills() {
@@ -26,7 +26,7 @@ export default function Skills() {
 
 			{/* Category blocks */}
 			<div className="flex flex-col gap-8 w-full">
-				{homeSkillCategories.map((category, catIndex) => (
+				{SkillCategories.map((category, catIndex) => (
 					<motion.div
 						key={category.title}
 						initial={{ opacity: 0, y: 16 }}
@@ -50,7 +50,7 @@ export default function Skills() {
 									viewport={{ once: true }}
 									transition={{ delay: catIndex * 0.06 + skillIndex * 0.03 }}
 								>
-									<HomeSkillPill skill={skill} />
+									<SkillPill skill={skill} />
 								</motion.div>
 							))}
 						</div>

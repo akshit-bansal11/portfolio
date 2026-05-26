@@ -1,14 +1,14 @@
 /*
- * homeSkillsData.ts
+ * SkillsData.ts
  * Curated skill categories for the home-page Skills section.
  * A focused subset of the full skillsData enriched with
  * per-skill project / experience references shown in popovers.
  * Types live in src/types/skill.ts.
  */
 
-import type { HomeSkillCategory } from "@/types/skill";
+import type { SkillCategory } from "@/types/skill";
 
-export const homeSkillCategories: HomeSkillCategory[] = [
+export const SkillCategories: SkillCategory[] = [
 	{
 		title: "Core Web",
 		skills: [

@@ -4,25 +4,16 @@
  * Skills section, experience cards, and home page pills.
  */
 
+export type SkillPillVariant = "skillSection" | "expItem";
+
 export interface Skill {
 	name: string;
 	Icon: string;
+	usedIn?: string[];
+	variant?: SkillPillVariant;
 }
 
 export interface SkillCategory {
 	title: string;
-	description: string;
-	certifications: Skill[];
 	skills: Skill[];
-}
-
-export interface HomeSkill {
-	name: string;
-	Icon: string;
-	usedIn: string[];
-}
-
-export interface HomeSkillCategory {
-	title: string;
-	skills: HomeSkill[];
 }
