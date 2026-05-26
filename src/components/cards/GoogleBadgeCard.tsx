@@ -48,10 +48,7 @@ export default function GoogleBadgeCard({ gBadgeTitle, gBadgeLink }: GoogleBadge
 			</div>
 
 			{/* Divider with icon row */}
-			<ExternalLinkBadge
-				href={gBadgeLink}
-				buttonClassName="hover:text-amber-400 hover:border-amber-400/50"
-			/>
+			<ExternalLinkBadge href={gBadgeLink} buttonClassName="hover:border-white/70" />
 		</motion.div>
 	);
 }
