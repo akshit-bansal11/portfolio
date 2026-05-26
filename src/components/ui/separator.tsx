@@ -1,8 +1,17 @@
+/*
+ * separator.tsx
+ * Shadcn-style Separator primitive.
+ * Thin wrapper around Radix's Separator that defaults
+ * to a horizontal decorative divider styled to match
+ * the project's neutral palette.
+ */
+
 import * as SeparatorPrimitive from "@radix-ui/react-separator";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+// Forwarded-ref Separator: horizontal by default, decorative by default.
 const Separator = React.forwardRef<
 	React.ElementRef<typeof SeparatorPrimitive.Root>,
 	React.ComponentPropsWithoutRef<typeof SeparatorPrimitive.Root>

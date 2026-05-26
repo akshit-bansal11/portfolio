@@ -1,100 +1,15 @@
-import type { StaticImageData } from "next/image";
-import type { IconType } from "react-icons";
-import type { Skill } from "@/data/skillsData";
+/*
+ * index.ts
+ * Barrel re-export of all domain type files.
+ * Import from this file for backward compatibility,
+ * or from individual domain files when only one domain is needed.
+ */
 
-// Skills Types
-export interface SkillItem {
-	icon: IconType | string;
-	name: string;
-}
-
-export interface SkillCategory {
-	title: string;
-	skills: SkillItem[][];
-}
-
-// Social Links Types
-export interface SocialLink {
-	Name: string;
-	Icon: IconType;
-	href: string;
-	delay: number;
-}
-
-// Project Types
-export interface ProjectItem {
-	title: string;
-	description: string;
-	imgUrl?: string;
-	videoUrl?: string;
-	techStack: string[];
-	demoLink?: string;
-	githubLink?: string;
-	siteLink?: string;
-	designLink?: string;
-	openSource?: boolean;
-}
-
-// Experience Types
-export interface ExperienceLabeledPoint {
-	label: string;
-	body: string;
-}
-
-export type ExperiencePoint = string | ExperienceLabeledPoint;
-
-export interface ExperienceItem {
-	location: string;
-	company: string;
-	role: string;
-	date: string;
-	points: ExperiencePoint[];
-	generalPoint?: string;
-	certificate?: string;
-	logo?: string | StaticImageData;
-	skills?: Skill[];
-}
-
-// Education Types
-export interface EducationItem {
-	location: string;
-	company: string;
-	role: string;
-	date: string;
-}
-
-// Attainments Types
-
-export interface GoogleBadgeItem {
-	gBadgeTitle: string;
-	gBadgeLink: string;
-}
-
-export interface HackerRankBadgeItem {
-	name: string;
-	icon: string;
-	stars: number;
-	source: string;
-	delay: number;
-	link: string;
-	color?: string;
-}
-
-export interface CertificationProvider {
-	name: string;
-	logoUrl?: string;
-}
-
-export interface CertificationItem {
-	name: string;
-	providers: CertificationProvider[];
-	skills?: string[];
-	link: string;
-}
-
-// Nav Types
-export interface NavItem {
-	text: string;
-	to: string;
-	icon: IconType;
-}
+export * from "./certification";
+export * from "./education";
+export * from "./experience";
+export * from "./hero";
+export * from "./nav";
+export * from "./project";
+export * from "./skill";
+export * from "./testimonial";

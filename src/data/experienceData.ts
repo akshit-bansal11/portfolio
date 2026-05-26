@@ -1,21 +1,31 @@
-import trupeerLogo from "@/assets/images/trupeer-dark.svg";
-import { type Skill, skillsData } from "@/data/skillsData";
-import type { ExperienceItem } from "@/types";
+/*
+ * experienceData.ts
+ * Source-of-truth for the Experience section.
+ * Groups entries into categories (Internship, Training) and
+ * resolves their tech-stack pills against shared skillsData
+ * so icon URLs aren't duplicated.
+ */
 
+import trupeerLogo from "@/assets/images/trupeer-dark.svg";
+import { skillsData } from "@/data/skillsData";
+import type { ExperienceItem } from "@/types/experience";
+import type { Skill } from "@/types/skill";
+
+// One named group of experience cards (e.g. "Internship", "Training").
 export interface ExperienceCategory {
 	title: string;
 	items: ExperienceItem[];
 }
 
-// Flatten skillsData once so we can pick by name without duplicating icon URLs.
-const allSkills: Skill[] = skillsData.flatMap((category) => category.skills);
-
+// Resolve a skill by name directly from the flat skillsData list.
 const skillByName = (name: string): Skill | undefined =>
-	allSkills.find((skill) => skill.name === name);
+	skillsData.find((skill) => skill.name === name);
 
+// Pick a typed list of Skill objects from a free-form name list.
 const pickSkills = (...names: string[]): Skill[] =>
 	names.map(skillByName).filter((skill): skill is Skill => Boolean(skill));
 
+// All experience entries, grouped by category, in display order.
 export const experience: ExperienceCategory[] = [
 	{
 		title: "Internship",
@@ -64,17 +74,6 @@ export const experience: ExperienceCategory[] = [
 					"ElevenLabs",
 				),
 			},
-			// {
-			//   location: "Remote",
-			//   company: "Bluestock Fintech",
-			//   role: "Software Development Engineer Intern",
-			//   date: "Oct 2024 - Nov 2024",
-			//   points: [
-			//     "Developed an IPO Dashboard, a full-stack web application for tracking IPOs.",
-			//     "Implemented real-time IPO listings, user portfolio management, and financial analytics.",
-			//     "Used Node.js, Express.js, MySQL, and frontend frameworks for seamless user experience",
-			//   ],
-			// },
 		],
 	},
 	{

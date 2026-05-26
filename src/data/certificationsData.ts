@@ -1,5 +1,13 @@
-import type { CertificationItem } from "@/types";
+/*
+ * certificationsData.ts
+ * Source-of-truth for the Attainments → Certifications grid.
+ * Split by issuer (LinkedIn/Microsoft, HackerRank) so each
+ * group can be rendered with its own heading and presentation.
+ */
 
+import type { CertificationItem } from "@/types/certification";
+
+// LinkedIn Learning paths co-issued with Microsoft.
 export const linkedInCertificationsData: CertificationItem[] = [
 	{
 		name: "Career Essentials in Generative AI",
@@ -27,6 +35,7 @@ export const linkedInCertificationsData: CertificationItem[] = [
 	},
 ];
 
+// HackerRank skill assessment certifications.
 export const hackerRankCertificationsData: CertificationItem[] = [
 	{
 		name: "CSS (Basic)",

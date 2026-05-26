@@ -1,7 +1,16 @@
+/*
+ * card.tsx
+ * Shadcn-style Card primitives.
+ * Exports Card plus Header, Title, Description, Content,
+ * and Footer subcomponents — light wrappers around divs
+ * and headings styled with the design tokens.
+ */
+
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+// Outer card wrapper: rounded panel with theme-aware border/background.
 const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
 	({ className, ...props }, ref) => (
 		<div
@@ -16,6 +25,7 @@ const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElemen
 );
 Card.displayName = "Card";
 
+// Header region for the card: stacked column with consistent padding.
 const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
 	({ className, ...props }, ref) => (
 		<div ref={ref} className={cn("flex flex-col space-y-1.5 p-6", className)} {...props} />
@@ -23,6 +33,7 @@ const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
 );
 CardHeader.displayName = "CardHeader";
 
+// Card title heading element (semantic h3).
 const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLHeadingElement>>(
 	({ className, ...props }, ref) => (
 		<h3
@@ -34,6 +45,7 @@ const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HT
 );
 CardTitle.displayName = "CardTitle";
 
+// Subdued description text under the title.
 const CardDescription = React.forwardRef<
 	HTMLParagraphElement,
 	React.HTMLAttributes<HTMLParagraphElement>
@@ -46,6 +58,7 @@ const CardDescription = React.forwardRef<
 ));
 CardDescription.displayName = "CardDescription";
 
+// Main body region of the card.
 const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
 	({ className, ...props }, ref) => (
 		<div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
@@ -53,6 +66,7 @@ const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDi
 );
 CardContent.displayName = "CardContent";
 
+// Footer row, typically used for action buttons.
 const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
 	({ className, ...props }, ref) => (
 		<div ref={ref} className={cn("flex items-center p-6 pt-0", className)} {...props} />

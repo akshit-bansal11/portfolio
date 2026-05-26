@@ -1,34 +1,32 @@
-import About from "@/components/sections/About";
+/*
+ * page.tsx
+ * Home page composition.
+ * Renders the four-stage scroll hero followed by every
+ * portfolio section, each wrapped in a ScrollReveal
+ * container so they animate in as the user scrolls.
+ */
+
+// import Testimonials from "@/components/sections/Testimonials";
+import ScrollReveal from "@/components/effects/ScrollReveal";
+import { HeroToContentSpacer, ScrollHero } from "@/components/hero";
+import ByTheNumbers from "@/components/sections/ByTheNumbers";
 import Certifications from "@/components/sections/Certifications";
 import Education from "@/components/sections/Education";
 import Experience from "@/components/sections/Experience";
-import ProfileHeader from "@/components/sections/ProfileHeader";
 import Projects from "@/components/sections/Projects";
 import Skills from "@/components/sections/Skills";
-import ScrollReveal from "@/components/ui/ScrollReveal";
-//--------------------|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|--------------------//
-//--------------------|     COMPONENTS     |--------------------//
-//--------------------|____________________|--------------------//
-import { HeroGeometric } from "@/components/ui/shape-landing-hero";
 
-//--------------------|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|--------------------//
-//--------------------|    MAIN RENDER     |--------------------//
-//--------------------|____________________|--------------------//
+// Top-level home page component.
 function Home() {
 	return (
 		<div className="flex flex-col items-center w-full">
-			<HeroGeometric>
-				<About
-					text="I Build Fast, Production-Grade Next.js Apps"
-					delay={150}
-					animateBy="words"
-					direction="top"
-					className="w-fit mx-auto xl:text-[100px] lg:text-[80px] md:text-[60px] text-[30px] mb-10 font-thin items-center justify-center text-white drop-shadow-2xl"
-				/>
-			</HeroGeometric>
+			{/* Pinned, scroll-driven hero choreography. */}
+			<ScrollHero />
+			{/* Empty buffer between the hero and the content sections. */}
+			<HeroToContentSpacer />
 
 			<div className="flex pt-10 px-4 md:px-10 lg:px-15 flex-col items-center w-full gap-16 md:gap-20 lg:gap-30">
-				<ProfileHeader />
+				{/* Each section is staggered in via ScrollReveal as it enters the viewport. */}
 				<ScrollReveal className="w-full" delay={200}>
 					<Projects />
 				</ScrollReveal>
@@ -44,6 +42,12 @@ function Home() {
 				<ScrollReveal className="w-full" delay={400}>
 					<Education />
 				</ScrollReveal>
+				<ScrollReveal className="w-full" delay={450}>
+					<ByTheNumbers />
+				</ScrollReveal>
+				{/* <ScrollReveal className="w-full" delay={500}> */}
+				{/* <Testimonials /> */}
+				{/* </ScrollReveal> */}
 			</div>
 		</div>
 	);

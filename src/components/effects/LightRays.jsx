@@ -1,10 +1,20 @@
+/*
+ * LightRays.jsx
+ * WebGL-driven god-rays background effect using OGL.
+ * Mounts a canvas inside the container, configures
+ * shader uniforms from props, optionally tracks the
+ * mouse, and pauses rendering when off-screen.
+ */
+
 "use client";
 import { Mesh, Program, Renderer, Triangle } from "ogl";
 import { useEffect, useRef, useState } from "react";
 import "./LightRays.css";
 
+// Default ray color when no override is provided.
 const DEFAULT_COLOR = "#ffffff";
 
+// Convert "#rrggbb" into an [r, g, b] tuple in 0..1 range.
 const hexToRgb = (hex) => {
 	const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 	return m
@@ -12,6 +22,7 @@ const hexToRgb = (hex) => {
 		: [1, 1, 1];
 };
 
+// Compute the ray-source anchor point and direction from an origin keyword.
 const getAnchorAndDir = (origin, w, h) => {
 	const outside = 0.2;
 	switch (origin) {
@@ -34,6 +45,7 @@ const getAnchorAndDir = (origin, w, h) => {
 	}
 };
 
+// Main component — renders the WebGL ray effect into a div.
 const LightRays = ({
 	raysOrigin = "top-center",
 	raysColor = DEFAULT_COLOR,
@@ -49,6 +61,7 @@ const LightRays = ({
 	distortion = 0.0,
 	className = "",
 }) => {
+	// Refs that persist WebGL/animation state across renders.
 	const containerRef = useRef(null);
 	const uniformsRef = useRef(null);
 	const rendererRef = useRef(null);
@@ -57,10 +70,12 @@ const LightRays = ({
 	const animationIdRef = useRef(null);
 	const meshRef = useRef(null);
 	const cleanupFunctionRef = useRef(null);
+	// Tracks whether the effect is on-screen so we can pause when hidden.
 	const [isVisible, setIsVisible] = useState(false);
 	const observerRef = useRef(null);
 
 	useEffect(() => {
+		// Watch the container for viewport intersection.
 		if (!containerRef.current) return;
 
 		observerRef.current = new IntersectionObserver(
@@ -82,13 +97,16 @@ const LightRays = ({
 	}, []);
 
 	useEffect(() => {
+		// Skip GL init if we're not visible or no container yet.
 		if (!isVisible || !containerRef.current) return;
 
+		// Tear down any previous instance before re-initializing.
 		if (cleanupFunctionRef.current) {
 			cleanupFunctionRef.current();
 			cleanupFunctionRef.current = null;
 		}
 
+		// Async init keeps tabs from blocking on heavy GL setup.
 		const initializeWebGL = async () => {
 			if (!containerRef.current) return;
 
@@ -96,6 +114,7 @@ const LightRays = ({
 
 			if (!containerRef.current) return;
 
+			// Create the OGL renderer at capped DPR with alpha.
 			const renderer = new Renderer({
 				dpr: Math.min(window.devicePixelRatio, 2),
 				alpha: true,
@@ -106,11 +125,13 @@ const LightRays = ({
 			gl.canvas.style.width = "100%";
 			gl.canvas.style.height = "100%";
 
+			// Replace any prior canvas inside the container.
 			while (containerRef.current.firstChild) {
 				containerRef.current.removeChild(containerRef.current.firstChild);
 			}
 			containerRef.current.appendChild(gl.canvas);
 
+			// Vertex shader — passes UVs through.
 			const vert = `
 attribute vec2 position;
 varying vec2 vUv;
@@ -119,6 +140,7 @@ void main() {
   gl_Position = vec4(position, 0.0, 1.0);
 }`;
 
+			// Fragment shader — computes the ray strength + color per pixel.
 			const frag = `precision highp float;
 
 uniform float iTime;
@@ -213,6 +235,7 @@ void main() {
   gl_FragColor  = color;
 }`;
 
+			// Initial uniform pack matching the shader signature.
 			const uniforms = {
 				iTime: { value: 0 },
 				iResolution: { value: [1, 1] },
@@ -234,6 +257,7 @@ void main() {
 			};
 			uniformsRef.current = uniforms;
 
+			// Build a single triangle covering the canvas + the shader program.
 			const geometry = new Triangle(gl);
 			const program = new Program(gl, {
 				vertex: vert,
@@ -243,6 +267,7 @@ void main() {
 			const mesh = new Mesh(gl, { geometry, program });
 			meshRef.current = mesh;
 
+			// Sync canvas size and ray anchor on every resize.
 			const updatePlacement = () => {
 				if (!containerRef.current || !renderer) return;
 
@@ -262,6 +287,7 @@ void main() {
 				uniforms.rayDir.value = dir;
 			};
 
+			// Per-frame render loop driving time and smoothed mouse position.
 			const loop = (t) => {
 				if (!rendererRef.current || !uniformsRef.current || !meshRef.current) {
 					return;
@@ -293,6 +319,7 @@ void main() {
 			updatePlacement();
 			animationIdRef.current = requestAnimationFrame(loop);
 
+			// Full teardown: cancel RAF, drop the GL context, remove canvas.
 			cleanupFunctionRef.current = () => {
 				if (animationIdRef.current) {
 					cancelAnimationFrame(animationIdRef.current);
@@ -348,6 +375,7 @@ void main() {
 	]);
 
 	useEffect(() => {
+		// Live-update uniforms when prop values change without re-creating GL.
 		if (!uniformsRef.current || !containerRef.current || !rendererRef.current) return;
 
 		const u = uniformsRef.current;
@@ -384,6 +412,7 @@ void main() {
 	]);
 
 	useEffect(() => {
+		// Track raw mouse position normalized to the container.
 		const handleMouseMove = (e) => {
 			if (!containerRef.current || !rendererRef.current) return;
 			const rect = containerRef.current.getBoundingClientRect();

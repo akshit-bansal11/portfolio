@@ -1,0 +1,130 @@
+/*
+ * CertificationsPill.tsx
+ * Hover-expandable pill that previews a list of
+ * certifications backing a skills category. Collapsed
+ * shows stacked logos; expanded reveals the full list
+ * with each certification's name beside its icon.
+ */
+
+"use client";
+
+import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
+import { useState } from "react";
+import type { Skill } from "@/types/skill";
+
+// Public props for the pill.
+interface CertificationsPillProps {
+	certifications: Skill[];
+}
+
+// Renders the dual-state hover pill.
+const CertificationsPill = ({ certifications }: CertificationsPillProps) => {
+	// Whether the user is currently hovering the pill (drives expanded state).
+	const [isHovered, setIsHovered] = useState(false);
+
+	if (certifications.length === 0) return null;
+
+	return (
+		// biome-ignore lint/a11y/useSemanticElements: using div with role="group" is appropriate here as it's not a form fieldset
+		<div
+			className="relative z-10"
+			role="group"
+			aria-label="Certifications list"
+			onMouseEnter={() => setIsHovered(true)}
+			onMouseLeave={() => setIsHovered(false)}
+		>
+			{/* Animated container that morphs between collapsed and expanded layouts. */}
+			<motion.div
+				layout
+				transition={{
+					layout: { type: "spring", stiffness: 300, damping: 30 },
+				}}
+				className="absolute bottom-0 left-0 bg-neutral-900/95 border border-neutral-800/50 backdrop-blur-xl overflow-hidden rounded-xl shadow-2xl origin-bottom-left"
+			>
+				<AnimatePresence mode="wait">
+					{isHovered ? (
+						// ── Expanded view — full named list. ────────────────────
+						<motion.div
+							key="expanded"
+							initial={{ opacity: 0 }}
+							animate={{ opacity: 1 }}
+							exit={{ opacity: 0 }}
+							transition={{ duration: 0.2, ease: "easeInOut" }}
+							className="flex flex-col gap-2 p-2 min-w-max"
+						>
+							<motion.span
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								className="text-xs text-neutral-400 font-semibold uppercase tracking-wider mb-1"
+							>
+								Certifications
+							</motion.span>
+
+							{/* One row per certification, slightly staggered in. */}
+							{certifications.map((cert, idx) => {
+								const Icon = cert.Icon;
+								return (
+									<motion.div
+										key={idx}
+										initial={{ opacity: 0, x: -4 }}
+										animate={{ opacity: 1, x: 0 }}
+										transition={{
+											opacity: { duration: 0.2, delay: idx * 0.03 },
+											x: { duration: 0.2, delay: idx * 0.03 },
+										}}
+										className="flex items-start gap-3"
+									>
+										<div className="w-6 h-6 flex items-center justify-start shrink-0 pt-0.5">
+											<Image
+												src={Icon}
+												alt={cert.name}
+												width={16}
+												height={16}
+												className="w-4 h-4 object-contain"
+											/>
+										</div>
+										<span className="text-xs text-neutral-200">{cert.name}</span>
+									</motion.div>
+								);
+							})}
+						</motion.div>
+					) : (
+						// ── Collapsed view — overlapping icons only. ────────────
+						<motion.div
+							key="collapsed"
+							initial={{ opacity: 0, scale: 0.95 }}
+							animate={{ opacity: 1, scale: 1 }}
+							exit={{ opacity: 0, scale: 0.95 }}
+							transition={{ duration: 0.2, ease: "easeInOut" }}
+							className="flex items-center gap-2 px-3 h-8 whitespace-nowrap"
+						>
+							<span className="text-xs text-neutral-300 font-medium">Certifications:</span>
+							<div className="flex -space-x-1">
+								{certifications.map((cert, idx) => {
+									const Icon = cert.Icon;
+									return (
+										<div key={idx} className="w-6 h-6 flex items-center justify-start">
+											<Image
+												src={Icon}
+												alt={cert.name}
+												width={16}
+												height={16}
+												className="w-4 h-4 object-contain"
+											/>
+										</div>
+									);
+								})}
+							</div>
+						</motion.div>
+					)}
+				</AnimatePresence>
+			</motion.div>
+
+			{/* Layout placeholder so the absolutely-positioned pill reserves height. */}
+			<div className="h-8 px-3 invisible">Certs</div>
+		</div>
+	);
+};
+
+export default CertificationsPill;

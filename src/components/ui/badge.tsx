@@ -1,8 +1,17 @@
+/*
+ * badge.tsx
+ * Shadcn-style Badge primitive.
+ * Provides a reusable pill component with default,
+ * secondary, destructive, and outline variants powered
+ * by class-variance-authority.
+ */
+
 import { cva, type VariantProps } from "class-variance-authority";
 import type * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+// Variant definition for the badge component.
 const badgeVariants = cva(
 	"inline-flex items-center rounded-full border border-neutral-200 px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-neutral-950 focus:ring-offset-2 dark:border-neutral-800 dark:focus:ring-neutral-300",
 	{
@@ -23,10 +32,12 @@ const badgeVariants = cva(
 	},
 );
 
+// Public props: standard div attrs plus the variant prop.
 export interface BadgeProps
 	extends React.HTMLAttributes<HTMLDivElement>,
 		VariantProps<typeof badgeVariants> {}
 
+// Renders the badge div with the resolved variant classes.
 function Badge({ className, variant, ...props }: BadgeProps) {
 	return <div className={cn(badgeVariants({ variant }), className)} {...props} />;
 }

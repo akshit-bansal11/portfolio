@@ -1,40 +1,75 @@
+/*
+ * globals.css
+ * Global stylesheet for the Next.js app.
+ * Loads Tailwind, registers custom display fonts,
+ * and defines the light/dark CSS theme variables
+ * consumed by tailwind via the `@theme inline` block.
+ */
+
 @import "tailwindcss";
 
 @custom-variant dark (&:is(.dark *));
 
 @plugin "tailwindcss-animate";
 
+/* Register Chillax for the brand display font. */
 @font-face {
 	font-family: "Chillax";
 	src: url("../assets/fonts/Chillax-Extralight.otf");
 }
 
+/* Register Clash Grotesk for headings. */
 @font-face {
 	font-family: "Clash";
 	src: url("../assets/fonts/ClashGrotesk-Extralight.otf");
 }
 
+/* Register the Paragraph script font for accents. */
 @font-face {
 	font-family: "Paragraph";
 	src: url("../assets/fonts/Paragraph.otf");
 }
 
+/* Register Logote, used by the welcome animation logo. */
 @font-face {
 	font-family: "Logote";
 	src: url("../assets/fonts/logote.otf");
 }
 
+/* Expose the custom font-families to Tailwind utilities. */
 @theme {
 	--font-chillax: Chillax, "sans-serif";
 	--font-clash: Clash, "sans-serif";
 	--font-paragraph: Paragraph, "script";
 	--font-logote: Logote, "logote";
+
+	--animate-marquee: marquee var(--marquee-duration, 25s) linear infinite;
+	--animate-marquee-reverse: marquee-reverse var(--marquee-duration, 25s) linear infinite;
+
+	@keyframes marquee {
+		from {
+			transform: translateX(0%);
+		}
+		to {
+			transform: translateX(-100%);
+		}
+	}
+	@keyframes marquee-reverse {
+		from {
+			transform: translateX(-100%);
+		}
+		to {
+			transform: translateX(0%);
+		}
+	}
 }
 
+/* Hide the native scrollbar everywhere for a cleaner look. */
 ::-webkit-scrollbar {
 	display: none;
 }
 
+/* Map the design-token CSS variables onto Tailwind theme tokens. */
 @theme inline {
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
@@ -82,6 +117,7 @@ body {
 	/* font-family: var(--font-clash); */
 }
 
+/* Light theme palette tokens (default). */
 :root {
 	--radius: 0.625rem;
 	--background: oklch(1 0 0);
@@ -117,6 +153,7 @@ body {
 	--sidebar-ring: oklch(0.708 0 0);
 }
 
+/* Dark theme palette tokens (applied via the `dark` class on <html>). */
 .dark {
 	--background: oklch(0.145 0 0);
 	--foreground: oklch(0.985 0 0);
@@ -151,6 +188,7 @@ body {
 	--sidebar-ring: oklch(0.556 0 0);
 }
 
+/* Base layer: apply token-driven borders and base body colors. */
 @layer base {
 	* {
 		@apply border-border outline-ring/50;

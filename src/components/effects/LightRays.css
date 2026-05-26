@@ -1,3 +1,10 @@
+/*
+ * LightRays.css
+ * Style for the LightRays canvas container.
+ * Stretches to its parent, sits above the background,
+ * and lets pointer events pass through to the page.
+ */
+
 .light-rays-container {
 	width: 100%;
 	height: 100%;

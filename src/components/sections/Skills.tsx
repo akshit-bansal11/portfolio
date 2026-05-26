@@ -1,49 +1,61 @@
+/*
+ * Skills.tsx
+ * Home-page Skills section.
+ * Shows skills grouped into categories with larger pills
+ * (vs the /skills page pills). Each pill has a hover
+ * popover listing where that skill was used.
+ * Does NOT affect the /skills page at all.
+ */
+
 "use client";
+
 import { motion } from "framer-motion";
-import Link from "next/link";
-import { GoArrowUpRight } from "react-icons/go";
-import SkillItem from "@/components/common/cards/SkillItem";
-import ScrollSectionHeading from "@/components/common/headings/ScrollSectionHeading";
-//--------------------|       COMMON       |--------------------//
-import ScrollSection from "@/components/common/sections/ScrollSection";
-import { Button } from "@/components/ui/button";
+import ScrollSectionHeading from "@/components/headings/ScrollSectionHeading";
+import ScrollSection from "@/components/layout/ScrollSection";
+import SkillPill from "@/components/pills/SkillPill";
+import { SkillCategories } from "@/data/skillsData";
 
-//--------------------|       DATA       |--------------------//
-import { topSkills } from "@/data/skillsData";
-
-//--------------------|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|--------------------//
-//--------------------|    MAIN RENDER     |--------------------//
-//--------------------|____________________|--------------------//
+// Home-page Skills section component.
 export default function Skills() {
 	return (
 		<ScrollSection id="skills">
+			{/* Heading row */}
 			<div className="flex w-full items-center justify-between gap-4 mb-8">
-				<ScrollSectionHeading heading="top skills" />
-				<Button
-					variant="ghost"
-					className="text-neutral-400 hover:text-white hover:bg-neutral-800"
-					asChild
-				>
-					<Link href="/skills">
-						See More <GoArrowUpRight className="ml-2" />
-					</Link>
-				</Button>
+				<ScrollSectionHeading heading="skills" />
 			</div>
 
-			<div className="w-full flex justify-start">
-				<div className="flex flex-wrap gap-4 justify-start">
-					{topSkills.map((skill, index) => (
-						<motion.div
-							key={index}
-							initial={{ opacity: 0, y: 20 }}
-							whileInView={{ opacity: 1, y: 0 }}
-							viewport={{ once: true }}
-							transition={{ delay: index * 0.1 }}
-						>
-							<SkillItem {...skill} /*disableHover={true}*/ />
-						</motion.div>
-					))}
-				</div>
+			{/* Category blocks */}
+			<div className="flex flex-col gap-8 w-full">
+				{SkillCategories.map((category, catIndex) => (
+					<motion.div
+						key={category.title}
+						initial={{ opacity: 0, y: 16 }}
+						whileInView={{ opacity: 1, y: 0 }}
+						viewport={{ once: true }}
+						transition={{ delay: catIndex * 0.08 }}
+						className="flex flex-col gap-3"
+					>
+						{/* Category label */}
+						<span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-neutral-500">
+							{category.title}
+						</span>
+
+						{/* Pill row */}
+						<div className="flex flex-wrap gap-2.5">
+							{category.skills.map((skill, skillIndex) => (
+								<motion.div
+									key={skill.name}
+									initial={{ opacity: 0, scale: 0.92 }}
+									whileInView={{ opacity: 1, scale: 1 }}
+									viewport={{ once: true }}
+									transition={{ delay: catIndex * 0.06 + skillIndex * 0.03 }}
+								>
+									<SkillPill skill={skill} />
+								</motion.div>
+							))}
+						</div>
+					</motion.div>
+				))}
 			</div>
 		</ScrollSection>
 	);
