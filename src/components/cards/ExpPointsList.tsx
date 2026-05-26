@@ -28,7 +28,7 @@ export default function ExpPointsList({ points, indented = false }: ExpPointsLis
 					<li key={idx} className="flex gap-3 text-neutral-400 group/item leading-relaxed">
 						{/* Amber accent bullet that brightens on hover. */}
 						<div className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500/30 group-hover/item:bg-amber-500 group-hover/item:scale-125 transition-all duration-300 shadow-[0_0_8px_rgba(245,158,11,0.3)]" />
-						<span className="text-[14px] md:text-[15px] group-hover/item:text-neutral-200 transition-colors duration-300">
+						<span className="text-[14px] md:text-[15px]">
 							{isLabeled ? (
 								<>
 									<span className="font-semibold text-neutral-200">{point.label}: </span>
