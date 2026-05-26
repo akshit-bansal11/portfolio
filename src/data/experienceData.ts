@@ -7,7 +7,7 @@
  */
 
 import trupeerLogo from "@/assets/images/trupeer-dark.svg";
-import { skillsData } from "@/data/skills";
+import { skillsData } from "@/data/skillsData";
 import type { ExperienceItem } from "@/types/experience";
 import type { Skill } from "@/types/skill";
 
@@ -17,12 +17,9 @@ export interface ExperienceCategory {
 	items: ExperienceItem[];
 }
 
-// Flatten every category's skills into one master list for lookup.
-const allSkills: Skill[] = skillsData.flatMap((category) => category.skills);
-
-// Resolve a single skill by display name.
+// Resolve a skill by name directly from the flat skillsData list.
 const skillByName = (name: string): Skill | undefined =>
-	allSkills.find((skill) => skill.name === name);
+	skillsData.find((skill) => skill.name === name);
 
 // Pick a typed list of Skill objects from a free-form name list.
 const pickSkills = (...names: string[]): Skill[] =>
