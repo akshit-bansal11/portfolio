@@ -6,8 +6,8 @@
 		"dev": "next dev --webpack",
 		"build": "next build",
 		"start": "next start",
-		"lint": "npx biome lint ./src",
-		"format": "npx biome format ./src --write && npx biome check ./src --write",
+		"lint": "npx biome lint .",
+		"format": "npx biome format . --write && npx biome check . --write",
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
