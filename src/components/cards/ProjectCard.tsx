@@ -217,24 +217,32 @@ export default function ProjectCard({
 									asChild
 									size="sm"
 									variant="outline"
-									className="border-neutral-700 bg-transparent text-neutral-300 hover:bg-neutral-800 hover:text-white"
+									className="h-7 px-1.5 text-[10px] rounded-sm lg:h-9 lg:px-3 lg:text-sm lg:rounded-md border-neutral-700 bg-transparent text-neutral-300 hover:bg-neutral-800 hover:text-white"
 								>
 									<a href={designLink} target="_blank" rel="noopener noreferrer">
-										<Figma className="mr-1.5 h-3.5 w-3.5" /> Design
+										<Figma className="mr-0.5 h-2.5 w-2.5 lg:mr-1.5 lg:h-3.5 lg:w-3.5" /> Design
 									</a>
 								</Button>
 							)}
 							{demoLink && (
-								<Button asChild size="sm" className="bg-white text-black hover:bg-neutral-200">
+								<Button
+									asChild
+									size="sm"
+									className="h-7 px-1.5 text-[10px] rounded-sm lg:h-9 lg:px-3 lg:text-sm lg:rounded-md bg-white text-black hover:bg-neutral-200"
+								>
 									<a href={demoLink} target="_blank" rel="noopener noreferrer">
-										<Globe className="mr-1.5 h-3.5 w-3.5" /> Demo
+										<Globe className="mr-0.5 h-2.5 w-2.5 lg:mr-1.5 lg:h-3.5 lg:w-3.5" /> Demo
 									</a>
 								</Button>
 							)}
 							{siteLink && (
-								<Button asChild size="sm" className="bg-white text-black hover:bg-neutral-200">
+								<Button
+									asChild
+									size="sm"
+									className="h-7 px-1.5 text-[10px] rounded-sm lg:h-9 lg:px-3 lg:text-sm lg:rounded-md bg-white text-black hover:bg-neutral-200"
+								>
 									<a href={siteLink} target="_blank" rel="noopener noreferrer">
-										<Globe className="mr-1.5 h-3.5 w-3.5" /> Site
+										<Globe className="mr-0.5 h-2.5 w-2.5 lg:mr-1.5 lg:h-3.5 lg:w-3.5" /> Site
 									</a>
 								</Button>
 							)}
@@ -243,10 +251,10 @@ export default function ProjectCard({
 									asChild
 									size="sm"
 									variant="outline"
-									className="border-neutral-700 bg-transparent text-neutral-300 hover:bg-neutral-800 hover:text-white"
+									className="h-7 px-1.5 text-[10px] rounded-sm lg:h-9 lg:px-3 lg:text-sm lg:rounded-md border-neutral-700 bg-transparent text-neutral-300 hover:bg-neutral-800 hover:text-white"
 								>
 									<a href={githubLink} target="_blank" rel="noopener noreferrer">
-										<Github className="mr-1.5 h-3.5 w-3.5" /> GitHub
+										<Github className="mr-0.5 h-2.5 w-2.5 lg:mr-1.5 lg:h-3.5 lg:w-3.5" /> GitHub
 									</a>
 								</Button>
 							)}
