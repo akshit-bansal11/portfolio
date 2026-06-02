@@ -8,8 +8,8 @@
 
 "use client";
 import { motion } from "framer-motion";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { IoArrowBack } from "react-icons/io5";
 import ProjectCard from "@/components/cards/ProjectCard";
 import ScrollReveal from "@/components/effects/ScrollReveal";
 import { projects } from "@/data/projectsData";
@@ -38,7 +38,7 @@ function Projects() {
 								href="/"
 								className="flex items-center gap-2 text-neutral-400 hover:text-white transition-colors w-fit group"
 							>
-								<IoArrowBack className="group-hover:-translate-x-1 transition-transform" />
+								<ArrowLeft className="group-hover:-translate-x-1 transition-transform h-4 w-4" />
 								Back to Home
 							</Link>
 

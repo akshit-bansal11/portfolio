@@ -6,8 +6,8 @@
  * page for the complete gallery.
  */
 
+import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
-import { GoArrowUpRight } from "react-icons/go";
 import ProjectCard from "@/components/cards/ProjectCard";
 import ScrollSectionHeading from "@/components/headings/ScrollSectionHeading";
 import ScrollSection from "@/components/layout/ScrollSection";
@@ -27,7 +27,7 @@ export default function Projects() {
 					asChild
 				>
 					<Link href="/projects">
-						See More <GoArrowUpRight className="ml-2" />
+						See More <ArrowUpRight className="ml-2 h-4 w-4" />
 					</Link>
 				</Button>
 			</div>
