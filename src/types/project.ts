@@ -13,5 +13,5 @@ export interface ProjectItem {
 	githubLink?: string;
 	siteLink?: string;
 	designLink?: string;
-	openSource?: boolean;
+	isPublic?: boolean;
 }

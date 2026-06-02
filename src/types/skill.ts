@@ -4,7 +4,7 @@
  * Skills section, experience cards, and home page pills.
  */
 
-export type SkillPillVariant = "skillSection" | "expItem";
+export type SkillPillVariant = "skillSection" | "expItem" | "projectCard";
 
 export interface Skill {
 	name: string;

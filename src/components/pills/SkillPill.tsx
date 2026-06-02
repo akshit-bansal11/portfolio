@@ -85,7 +85,9 @@ function Popover({ skill, anchor }: { skill: Skill; anchor: DOMRect }) {
 
 // Renders a single home-page skill pill with hover popover.
 const SkillPill = ({ skill }: SkillPillProps) => {
-	const isExpItem = (skill.variant ?? "skillSection") === "expItem";
+	const variant = skill.variant ?? "skillSection";
+	const isExpItem = variant === "expItem";
+	const isProjectCard = variant === "projectCard";
 	const [hovered, setHovered] = useState(false);
 	const [anchor, setAnchor] = useState<DOMRect | null>(null);
 	const pillRef = useRef<HTMLDivElement>(null);
@@ -102,6 +104,20 @@ const SkillPill = ({ skill }: SkillPillProps) => {
 		setAnchor(null);
 	};
 
+	const showPopover = variant === "skillSection";
+
+	let paddingClass = "gap-3 px-5 py-2.5";
+	let iconSize = 22;
+	let iconClassName = "h-[22px] w-[22px] object-contain";
+	let textClassName = "text-[15px] text-neutral-200";
+
+	if (isExpItem || isProjectCard) {
+		paddingClass = "gap-1 px-2 py-0.5";
+		iconSize = 12;
+		iconClassName = "h-[14px] w-[14px] object-contain opacity-85";
+		textClassName = "text-[11px] text-neutral-400";
+	}
+
 	return (
 		<>
 			<motion.div
@@ -114,31 +130,22 @@ const SkillPill = ({ skill }: SkillPillProps) => {
 					"flex items-center rounded-full cursor-default select-none",
 					"bg-neutral-800/70 border border-neutral-700/50",
 					"hover:border-neutral-500/60 hover:bg-neutral-800 transition-colors",
-					isExpItem ? "gap-2 px-4 py-2" : "gap-3 px-5 py-2.5",
+					paddingClass,
 				)}
 			>
-				<Image
-					src={skill.Icon}
-					alt={skill.name}
-					width={isExpItem ? 14 : 22}
-					height={isExpItem ? 14 : 22}
-					className={
-						isExpItem
-							? "h-[18px] w-[18px] object-contain opacity-80"
-							: "h-[22px] w-[22px] object-contain"
-					}
-				/>
-				<span
-					className={cn(
-						"whitespace-nowrap",
-						isExpItem ? "text-[13px] text-neutral-400" : "text-[15px] text-neutral-200",
-					)}
-				>
-					{skill.name}
-				</span>
+				{skill.Icon && (
+					<Image
+						src={skill.Icon}
+						alt={skill.name}
+						width={iconSize}
+						height={iconSize}
+						className={iconClassName}
+					/>
+				)}
+				<span className={cn("whitespace-nowrap", textClassName)}>{skill.name}</span>
 			</motion.div>
 
-			{!isExpItem &&
+			{showPopover &&
 				hovered &&
 				anchor &&
 				(skill.usedIn?.length ?? 0) > 0 &&
