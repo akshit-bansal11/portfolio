@@ -231,10 +231,16 @@ export default function ProjectCard({
 									asChild
 									size="sm"
 									variant="outline"
-									className="h-7 px-1.5 text-[10px] rounded-sm lg:h-9 lg:px-3 lg:text-sm lg:rounded-md border-neutral-700 bg-transparent text-neutral-300 hover:bg-neutral-800 hover:text-white"
+									className="h-5 md:h-7 px-1.5 md:px-2.5 text-[10px] md:text-xs rounded-sm lg:h-9 lg:px-3 lg:text-sm lg:rounded-md border-neutral-700 bg-transparent text-neutral-300 hover:bg-neutral-800 hover:text-white"
 								>
-									<a href={designLink} target="_blank" rel="noopener noreferrer">
-										<Figma className="mr-0.5 h-2.5 w-2.5 lg:mr-1.5 lg:h-3.5 lg:w-3.5" /> Design
+									<a
+										className="items-center"
+										href={designLink}
+										target="_blank"
+										rel="noopener noreferrer"
+									>
+										<Figma className="mr-0.5 h-2.5 w-2.5 md:h-3 md:w-3 lg:mr-1.5 lg:h-3.5 lg:w-3.5" />{" "}
+										Design
 									</a>
 								</Button>
 							)}
@@ -242,10 +248,16 @@ export default function ProjectCard({
 								<Button
 									asChild
 									size="sm"
-									className="h-7 px-1.5 text-[10px] rounded-sm lg:h-9 lg:px-3 lg:text-sm lg:rounded-md bg-white text-black hover:bg-neutral-200"
+									className="h-5 md:h-7 px-1.5 md:px-2.5 text-[10px] md:text-xs rounded-sm lg:h-9 lg:px-3 lg:text-sm lg:rounded-md bg-white text-black hover:bg-neutral-200"
 								>
-									<a href={demoLink} target="_blank" rel="noopener noreferrer">
-										<Globe className="mr-0.5 h-2.5 w-2.5 lg:mr-1.5 lg:h-3.5 lg:w-3.5" /> Demo
+									<a
+										className="items-center"
+										href={demoLink}
+										target="_blank"
+										rel="noopener noreferrer"
+									>
+										<Globe className="mr-0.5 h-2.5 w-2.5 md:h-3 md:w-3 lg:mr-1.5 lg:h-3.5 lg:w-3.5" />{" "}
+										Demo
 									</a>
 								</Button>
 							)}
@@ -253,10 +265,16 @@ export default function ProjectCard({
 								<Button
 									asChild
 									size="sm"
-									className="h-7 px-1.5 text-[10px] rounded-sm lg:h-9 lg:px-3 lg:text-sm lg:rounded-md bg-white text-black hover:bg-neutral-200"
+									className="h-5 md:h-7 px-1.5 md:px-2.5 text-[10px] md:text-xs rounded-sm lg:h-9 lg:px-3 lg:text-sm lg:rounded-md bg-white text-black hover:bg-neutral-200"
 								>
-									<a href={siteLink} target="_blank" rel="noopener noreferrer">
-										<Globe className="mr-0.5 h-2.5 w-2.5 lg:mr-1.5 lg:h-3.5 lg:w-3.5" /> Site
+									<a
+										className="items-center"
+										href={siteLink}
+										target="_blank"
+										rel="noopener noreferrer"
+									>
+										<Globe className="mr-0.5 h-2.5 w-2.5 md:h-3 md:w-3 lg:mr-1.5 lg:h-3.5 lg:w-3.5" />{" "}
+										Site
 									</a>
 								</Button>
 							)}
@@ -265,10 +283,16 @@ export default function ProjectCard({
 									asChild
 									size="sm"
 									variant="outline"
-									className="h-7 px-1.5 text-[10px] rounded-sm lg:h-9 lg:px-3 lg:text-sm lg:rounded-md border-neutral-700 bg-transparent text-neutral-300 hover:bg-neutral-800 hover:text-white"
+									className="h-5 md:h-7 px-1.5 md:px-2.5 text-[10px] md:text-xs rounded-sm lg:h-9 lg:px-3 lg:text-sm lg:rounded-md border-neutral-700 bg-transparent text-neutral-300 hover:bg-neutral-800 hover:text-white"
 								>
-									<a href={githubLink} target="_blank" rel="noopener noreferrer">
-										<Github className="mr-0.5 h-2.5 w-2.5 lg:mr-1.5 lg:h-3.5 lg:w-3.5" /> GitHub
+									<a
+										className="items-center"
+										href={githubLink}
+										target="_blank"
+										rel="noopener noreferrer"
+									>
+										<Github className="mr-0.5 h-2.5 w-2.5 md:h-3 md:w-3 lg:mr-1.5 lg:h-3.5 lg:w-3.5" />{" "}
+										GitHub
 									</a>
 								</Button>
 							)}
