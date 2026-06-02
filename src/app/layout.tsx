@@ -12,7 +12,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import LightRays from "@/components/effects/LightRays";
 import WelcomeAnimation from "@/components/effects/WelcomeAnimation";
-import ScrollIndicator from "@/components/hero/decorations/ScrollIndicator";
+import ScrollIndicator from "@/components/hero/elements/ScrollIndicator";
 import NavBar from "@/components/layout/NavBar";
 import { AnimationProvider } from "@/context/AnimationContext";
 

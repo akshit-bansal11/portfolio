@@ -14,7 +14,7 @@ import { entryEnd, HERO_STAGES } from "@/config/heroStages";
 import { heroSocialLinks } from "@/data/heroSocialLinks";
 import { getSocialAccent } from "@/data/socialAccents";
 import { cn } from "@/lib/utils";
-import ResumeButton from "./ResumeButton";
+import ResumeButton from "../elements/ResumeButton";
 
 // Public props for the stage.
 interface SocialsStageProps {

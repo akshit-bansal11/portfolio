@@ -1,9 +1,10 @@
 /*
  * page.tsx
  * Home page composition.
- * Renders the four-stage scroll hero followed by every
- * portfolio section, each wrapped in a ScrollReveal
- * container so they animate in as the user scrolls.
+ * ScrollHero is now a single responsive component — it renders
+ * a static stack on mobile/tablet (lg:hidden) and the pinned
+ * scroll-driven canvas on desktop (hidden lg:block). No separate
+ * MobileHero import is needed.
  */
 
 // import Testimonials from "@/components/sections/Testimonials";
@@ -20,10 +21,12 @@ import Skills from "@/components/sections/Skills";
 function Home() {
 	return (
 		<div className="flex flex-col items-center w-full">
-			{/* Pinned, scroll-driven hero choreography. */}
+			{/* Single responsive hero — mobile static stack + desktop scroll canvas. */}
 			<ScrollHero />
-			{/* Empty buffer between the hero and the content sections. */}
-			<HeroToContentSpacer />
+			{/* Empty buffer between the desktop hero and content sections (desktop only). */}
+			<div className="hidden lg:block">
+				<HeroToContentSpacer />
+			</div>
 
 			<div className="flex pt-10 px-4 md:px-10 lg:px-15 flex-col items-center w-full gap-16 md:gap-20 lg:gap-30">
 				{/* Each section is staggered in via ScrollReveal as it enters the viewport. */}
