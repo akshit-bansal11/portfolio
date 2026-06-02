@@ -6,15 +6,17 @@
  * surfaces that consume canonical social data.
  */
 
+import { Github, Linkedin, type LucideIcon } from "lucide-react";
 import type { IconType } from "react-icons";
-import { FaGithub, FaHackerrank, FaLinkedinIn } from "react-icons/fa6";
+import { FaHackerrank } from "react-icons/fa6";
 import { SiGmail, SiGooglecloud } from "react-icons/si";
+
 import { EMAIL_HREF } from "@/data/heroContent";
 
 // Shape of a single hero-social link entry.
 export interface HeroSocialLink {
 	name: string;
-	Icon: IconType;
+	Icon: LucideIcon | IconType;
 	href: string;
 }
 
@@ -27,12 +29,12 @@ export const heroSocialLinks: HeroSocialLink[] = [
 	},
 	{
 		name: "GitHub",
-		Icon: FaGithub,
+		Icon: Github,
 		href: "https://github.com/akshit-bansal11",
 	},
 	{
 		name: "LinkedIn",
-		Icon: FaLinkedinIn,
+		Icon: Linkedin,
 		href: "https://www.linkedin.com/in/akshit-bansal11/",
 	},
 	{

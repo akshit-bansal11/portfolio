@@ -5,7 +5,7 @@
  * "Credential" label next to the arrow icon.
  */
 
-import { GoArrowUpRight } from "react-icons/go";
+import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // Public props for the button.
@@ -44,7 +44,7 @@ export default function CertificateLinkButton({ href, className }: CertificateLi
 
 				{/* Arrow icon — always visible, centered at rest */}
 				<span className="flex items-center justify-center shrink-0 w-8 h-8">
-					<GoArrowUpRight className="h-4 w-4 text-white transition-transform duration-300 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
+					<ArrowUpRight className="h-4 w-4 text-white transition-transform duration-300 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
 				</span>
 			</a>
 		</div>

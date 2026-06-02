@@ -8,11 +8,10 @@
 
 "use client";
 import { AnimatePresence, motion } from "framer-motion";
+import { Figma, Github, Globe, Play, X } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { FaFigma, FaGithub, FaGlobe, FaPlay } from "react-icons/fa6";
-import { IoClose } from "react-icons/io5";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -84,7 +83,7 @@ function VideoModal({
 					className="absolute -top-10 right-0 z-10 text-white/70 hover:text-white transition-colors cursor-pointer"
 					aria-label="Close video modal"
 				>
-					<IoClose className="h-8 w-8" />
+					<X className="h-8 w-8" />
 				</button>
 				<video
 					src={videoUrl}
@@ -170,7 +169,7 @@ export default function ProjectCard({
 									aria-label={`Play video for ${title}`}
 								>
 									<div className="flex items-center justify-center w-12 h-12 rounded-full bg-white/90 hover:bg-white hover:scale-110 transition-all duration-300 shadow-lg">
-										<FaPlay className="h-4 w-4 text-black ml-0.5" />
+										<Play className="h-4 w-4 text-black fill-current ml-0.5" />
 									</div>
 								</button>
 							)}
@@ -221,21 +220,21 @@ export default function ProjectCard({
 									className="border-neutral-700 bg-transparent text-neutral-300 hover:bg-neutral-800 hover:text-white"
 								>
 									<a href={designLink} target="_blank" rel="noopener noreferrer">
-										<FaFigma className="mr-1.5 h-3.5 w-3.5" /> Design
+										<Figma className="mr-1.5 h-3.5 w-3.5" /> Design
 									</a>
 								</Button>
 							)}
 							{demoLink && (
 								<Button asChild size="sm" className="bg-white text-black hover:bg-neutral-200">
 									<a href={demoLink} target="_blank" rel="noopener noreferrer">
-										<FaGlobe className="mr-1.5 h-3.5 w-3.5" /> Demo
+										<Globe className="mr-1.5 h-3.5 w-3.5" /> Demo
 									</a>
 								</Button>
 							)}
 							{siteLink && (
 								<Button asChild size="sm" className="bg-white text-black hover:bg-neutral-200">
 									<a href={siteLink} target="_blank" rel="noopener noreferrer">
-										<FaGlobe className="mr-1.5 h-3.5 w-3.5" /> Site
+										<Globe className="mr-1.5 h-3.5 w-3.5" /> Site
 									</a>
 								</Button>
 							)}
@@ -247,7 +246,7 @@ export default function ProjectCard({
 									className="border-neutral-700 bg-transparent text-neutral-300 hover:bg-neutral-800 hover:text-white"
 								>
 									<a href={githubLink} target="_blank" rel="noopener noreferrer">
-										<FaGithub className="mr-1.5 h-3.5 w-3.5" /> GitHub
+										<Github className="mr-1.5 h-3.5 w-3.5" /> GitHub
 									</a>
 								</Button>
 							)}

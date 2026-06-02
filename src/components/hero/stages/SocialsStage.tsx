@@ -8,6 +8,7 @@
 "use client";
 
 import { type MotionValue, motion, useTransform } from "framer-motion";
+import type { LucideIcon } from "lucide-react";
 import type { IconType } from "react-icons";
 import { Button } from "@/components/ui/button";
 import { entryEnd, HERO_STAGES } from "@/config/heroStages";
@@ -28,7 +29,7 @@ interface SocialItemProps {
 	itemEnd: number;
 	href: string;
 	label: string;
-	Icon: IconType;
+	Icon: LucideIcon | IconType;
 }
 
 // Renders one staggered social icon button.
