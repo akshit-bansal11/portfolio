@@ -19,6 +19,7 @@ import { motion, useMotionValueEvent, useTransform } from "framer-motion";
 import Image from "next/image";
 import { useEffect } from "react";
 import type { IconType } from "react-icons";
+import ScrollReveal from "@/components/effects/ScrollReveal";
 import { Button } from "@/components/ui/button";
 import {
 	entryEnd,
@@ -47,7 +48,6 @@ import AnimatedText from "./elements/AnimatedText";
 import JumpToPanel from "./elements/JumpToPanel";
 import ProfileCluster from "./elements/ProfileCluster";
 import QuoteCard from "./elements/QuoteCard";
-import ScrollingRibbon from "./elements/ScrollingRibbon";
 import SocialsStage from "./stages/SocialsStage";
 import TaglineStage from "./stages/TaglineStage";
 
@@ -81,7 +81,7 @@ function MobileSocialButton({
 				size="icon"
 				aria-label={label}
 				className={cn(
-					"h-10 w-10 rounded-xl border-neutral-700 bg-neutral-900/60",
+					"h-9 w-9 rounded-lg border-neutral-700 bg-neutral-900/60",
 					"text-neutral-300 ring-1 transition-all duration-300",
 					accent.ring,
 					accent.hoverBg,
@@ -91,7 +91,7 @@ function MobileSocialButton({
 				)}
 			>
 				<a href={href} target="_blank" rel="noopener noreferrer">
-					<Icon className="h-4 w-4" />
+					<Icon className="h-5 w-5" />
 				</a>
 			</Button>
 		</motion.div>
@@ -117,34 +117,10 @@ export default function ScrollHero() {
 		}
 	});
 
-	// ── Ribbon animation logic (desktop) ────────────────────────────────
-	const socialsRange = HERO_STAGES.socials.range;
-	const socialsStart = socialsRange[0];
-	const socialsSettled = entryEnd(socialsRange);
-
+	// ── Stage 4 flex layout (desktop) ───────────────────────────────────
 	const jumptoRange = HERO_STAGES.jumpto.range;
 	const jumptoStart = jumptoRange[0];
 	const jumptoSettled = entryEnd(jumptoRange);
-
-	const ribbonOpacity = useTransform(
-		progress,
-		[
-			socialsStart,
-			socialsStart + (socialsSettled - socialsStart) * 0.35,
-			socialsSettled,
-			jumptoStart,
-			1,
-		],
-		[0, 1, 1, 1, 1],
-	);
-	const ribbonY = useTransform(progress, [socialsStart, socialsSettled, 1], ["30px", "0px", "0px"]);
-	const ribbonX = useTransform(
-		progress,
-		[jumptoStart, jumptoSettled, 1],
-		["0vw", "-28vw", "-28vw"],
-	);
-
-	// ── Stage 4 flex layout (desktop) ───────────────────────────────────
 	const entrySpan = jumptoSettled - jumptoStart;
 	const stage4X = useTransform(progress, [jumptoStart, jumptoSettled, 1], ["60vw", "0vw", "0vw"]);
 	const stage4Opacity = useTransform(
@@ -161,121 +137,117 @@ export default function ScrollHero() {
 			<section
 				id="profile"
 				aria-label="Hero introduction"
-				className="relative w-full min-h-svh flex flex-col items-center justify-center gap-16 px-6 py-24 bg-[#030303] overflow-hidden lg:hidden"
+				className="relative z-0 w-full bg-[#030303] overflow-hidden lg:hidden"
 			>
-				{/* ── Stage 1: Badge + Tagline ─────────────────────────────── */}
-				<div className="flex flex-col items-center gap-6 text-center">
-					<AkshitBansalBadge active={true} />
-					<AnimatedText
-						text={TAGLINE}
-						stagger={150}
-						animateBy="words"
-						direction="top"
-						active={true}
-						wordClassName={() => TAGLINE_ACCENT_CLASS}
-						className={TAGLINE_CLASSNAME}
-					/>
+				{/* Decorative ambient backdrop for mobile/tablet section. */}
+				<HeroBackdrop />
+
+				{/* ── Stage 1: Badge + Tagline (Centered in Viewport) ── */}
+				<div className="w-full min-h-svh flex flex-col items-center justify-center px-6 py-12 text-center">
+					<div className="flex flex-col items-center gap-6">
+						<AkshitBansalBadge active={true} />
+						<AnimatedText
+							text={TAGLINE}
+							stagger={150}
+							animateBy="words"
+							direction="top"
+							active={true}
+							wordClassName={() => TAGLINE_ACCENT_CLASS}
+							className={TAGLINE_CLASSNAME}
+						/>
+					</div>
 				</div>
 
-				{/* ── Stage 2: Profile photo + name + role ─────────────────── */}
-				<motion.div
-					initial={{ opacity: 0, y: 24 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.7, ease: "easeOut", delay: 0.1 }}
-					className="flex flex-col items-center gap-6"
-				>
-					{/* Profile circle */}
-					<div className="relative h-40 w-40 sm:h-48 sm:w-48">
-						{/* Ambient halo */}
-						<div
-							aria-hidden
-							className="absolute -inset-3 rounded-full bg-linear-to-br from-indigo-500/40 via-rose-500/30 to-amber-400/40 blur-2xl pointer-events-none"
-						/>
-						{/* Rotating conic ring */}
-						<motion.div
-							aria-hidden
-							className="absolute inset-0 rounded-full pointer-events-none"
-							animate={{ rotate: 360 }}
-							transition={{ duration: 24, repeat: Infinity, ease: "linear" }}
-							style={{
-								background:
-									"conic-gradient(from 0deg, rgba(99,102,241,0.0), rgba(244,63,94,0.5), rgba(251,191,36,0.5), rgba(99,102,241,0.0))",
-								WebkitMask: "radial-gradient(circle, transparent 60%, black 62%, black 100%)",
-								mask: "radial-gradient(circle, transparent 60%, black 62%, black 100%)",
-							}}
-						/>
-						{/* Photo */}
-						<div className="absolute inset-0 rounded-full overflow-hidden bg-neutral-900 shadow-2xl ring-1 ring-white/10">
-							<Image
-								src={PROFILE_IMAGE_HOVER_URL}
-								alt={PROFILE_NAME}
-								fill
-								className="object-cover"
-								draggable={false}
-								priority
-							/>
+				{/* ── Stage 2: Profile photo + name + role + socials (Reveals on Scroll) ── */}
+				<div className="w-full min-h-svh flex flex-col items-center justify-center px-6 py-12 text-center">
+					<ScrollReveal direction="up" delay={50} className="w-full flex justify-center">
+						<div className="flex flex-col items-center gap-6 w-full">
+							{/* Profile circle */}
+							<div className="relative h-40 w-40 sm:h-48 sm:w-48">
+								{/* Ambient halo */}
+								<div
+									aria-hidden
+									className="absolute -inset-3 rounded-full bg-linear-to-br from-indigo-500/40 via-rose-500/30 to-amber-400/40 blur-2xl pointer-events-none"
+								/>
+								{/* Rotating conic ring */}
+								<motion.div
+									aria-hidden
+									className="absolute inset-0 rounded-full pointer-events-none"
+									animate={{ rotate: 360 }}
+									transition={{ duration: 24, repeat: Infinity, ease: "linear" }}
+									style={{
+										background:
+											"conic-gradient(from 0deg, rgba(99,102,241,0.0), rgba(244,63,94,0.5), rgba(251,191,36,0.5), rgba(99,102,241,0.0))",
+										WebkitMask: "radial-gradient(circle, transparent 60%, black 62%, black 100%)",
+										mask: "radial-gradient(circle, transparent 60%, black 62%, black 100%)",
+									}}
+								/>
+								{/* Photo */}
+								<div className="absolute inset-0 rounded-full overflow-hidden bg-neutral-900 shadow-2xl ring-1 ring-white/10">
+									<Image
+										src={PROFILE_IMAGE_HOVER_URL}
+										alt={PROFILE_NAME}
+										fill
+										className="object-cover"
+										draggable={false}
+										priority
+									/>
+								</div>
+							</div>
+
+							{/* Name + role */}
+							<div className="flex flex-col items-center gap-1 text-center">
+								<h1 className="font-clash font-bold tracking-tight whitespace-nowrap text-4xl sm:text-5xl leading-[0.95]">
+									<span className="text-white">{FIRST_NAME}</span>{" "}
+									<span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-300 via-white/90 to-rose-300">
+										{LAST_NAME}
+									</span>
+								</h1>
+								<p className="text-sm sm:text-base text-neutral-400 font-light whitespace-nowrap">
+									{PROFILE_ROLE}
+								</p>
+							</div>
+
+							{/* Resume download CTA */}
+							<div>
+								<Button
+									asChild
+									variant="outline"
+									size="sm"
+									className="h-8 gap-1.5 border-neutral-500 bg-neutral-900/60 text-neutral-200 hover:bg-neutral-800 hover:text-amber-400 hover:border-amber-400/50 transition-all duration-300 rounded-full px-3"
+								>
+									<a
+										href={RESUME_PATH}
+										download={RESUME_FILENAME}
+										target="_blank"
+										rel="noopener noreferrer"
+									>
+										<span className="text-xs font-medium">Download Resume</span>
+									</a>
+								</Button>
+							</div>
+
+							{/* Social icons */}
+							<div className="relative">
+								<div
+									aria-hidden
+									className="absolute -inset-3 rounded-xl bg-linear-to-r from-indigo-500/20 via-rose-500/20 to-amber-400/20 blur-xl"
+								/>
+								<div className="relative flex gap-2.5 px-3 py-2.5 rounded-xl bg-neutral-900/70 backdrop-blur-md border border-neutral-700/60 shadow-xl">
+									{heroSocialLinks.map(({ Icon, href, name }, index) => (
+										<MobileSocialButton
+											key={href}
+											href={href}
+											label={name}
+											Icon={Icon}
+											index={index}
+										/>
+									))}
+								</div>
+							</div>
 						</div>
-					</div>
-
-					{/* Name + role */}
-					<div className="flex flex-col items-center gap-1 text-center">
-						<h1 className="font-clash font-bold tracking-tight whitespace-nowrap text-4xl sm:text-5xl leading-[0.95]">
-							<span className="text-white">{FIRST_NAME}</span>{" "}
-							<span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-300 via-white/90 to-rose-300">
-								{LAST_NAME}
-							</span>
-						</h1>
-						<p className="text-sm sm:text-base text-neutral-400 font-light whitespace-nowrap">
-							{PROFILE_ROLE}
-						</p>
-					</div>
-
-					{/* Skills ribbon */}
-					<div className="w-64 sm:w-72">
-						<ScrollingRibbon />
-					</div>
-
-					{/* Resume download CTA */}
-					<motion.div
-						initial={{ opacity: 0, y: 12 }}
-						animate={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.6, ease: "easeOut", delay: 0.3 }}
-					>
-						<Button
-							asChild
-							variant="outline"
-							size="sm"
-							className="gap-2 border-neutral-500 bg-neutral-900/60 text-neutral-200 hover:bg-neutral-800 hover:text-amber-400 hover:border-amber-400/50 transition-all duration-300 rounded-full px-4"
-						>
-							<a
-								href={RESUME_PATH}
-								download={RESUME_FILENAME}
-								target="_blank"
-								rel="noopener noreferrer"
-							>
-								<span className="text-sm font-medium">Download Resume</span>
-							</a>
-						</Button>
-					</motion.div>
-
-					{/* Social icons */}
-					<motion.div
-						initial={{ opacity: 0, y: 12 }}
-						animate={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.6, ease: "easeOut", delay: 0.3 }}
-						className="relative"
-					>
-						<div
-							aria-hidden
-							className="absolute -inset-3 rounded-2xl bg-linear-to-r from-indigo-500/20 via-rose-500/20 to-amber-400/20 blur-xl"
-						/>
-						<div className="relative flex gap-2.5 px-4 py-3 rounded-2xl bg-neutral-900/70 backdrop-blur-md border border-neutral-700/60 shadow-xl">
-							{heroSocialLinks.map(({ Icon, href, name }, index) => (
-								<MobileSocialButton key={href} href={href} label={name} Icon={Icon} index={index} />
-							))}
-						</div>
-					</motion.div>
-				</motion.div>
+					</ScrollReveal>
+				</div>
 			</section>
 
 			{/* ── Desktop layout (hidden below lg) ─────────────────────────────
@@ -288,26 +260,13 @@ export default function ScrollHero() {
 				aria-label="Hero introduction"
 			>
 				{/* Pinned, viewport-sized inner canvas. */}
-				<div className="sticky top-0 h-screen w-full overflow-hidden bg-[#030303]">
+				<div className="sticky top-0 z-0 h-screen w-full overflow-hidden bg-[#030303]">
 					{/* Decorative ambient backdrop. */}
 					<HeroBackdrop />
 
 					{/* The four hero stages — each consumes the same scroll progress. */}
 					<TaglineStage progress={progress} active={isWelcomeComplete} />
 					<ProfileCluster progress={progress} />
-
-					{/* Scrolling Ribbon positioned between the profile cluster and the socials stage */}
-					<motion.div
-						style={{
-							opacity: ribbonOpacity,
-							y: ribbonY,
-							x: ribbonX,
-							top: "66%",
-						}}
-						className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 z-25 pointer-events-auto w-64 sm:w-72 md:w-80 lg:w-[360px]"
-					>
-						<ScrollingRibbon />
-					</motion.div>
 
 					<SocialsStage progress={progress} />
 

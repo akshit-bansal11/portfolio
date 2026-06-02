@@ -47,7 +47,7 @@ function SocialItem({ progress, itemStart, itemEnd, href, label, Icon }: SocialI
 				size="icon"
 				aria-label={label}
 				className={cn(
-					"h-11 w-11 md:h-12 md:w-12 rounded-xl border-neutral-700 bg-neutral-900/60",
+					"h-9 w-9 md:h-10 md:w-10 rounded-lg border-neutral-700 bg-neutral-900/60",
 					"text-neutral-300 ring-1 transition-all duration-300",
 					accent.ring,
 					accent.hoverBg,
@@ -110,9 +110,9 @@ export default function SocialsStage({ progress }: SocialsStageProps) {
 				{/* Soft colored glow behind the icon strip. */}
 				<div
 					aria-hidden
-					className="absolute -inset-3 rounded-2xl bg-linear-to-r from-indigo-500/20 via-rose-500/20 to-amber-400/20 blur-xl"
+					className="absolute -inset-3 rounded-xl bg-linear-to-r from-indigo-500/20 via-rose-500/20 to-amber-400/20 blur-xl"
 				/>
-				<div className="relative flex gap-3 md:gap-4 px-4 py-3 rounded-2xl bg-neutral-900/70 backdrop-blur-md border border-neutral-700/60 shadow-xl pointer-events-auto">
+				<div className="relative flex gap-2.5 md:gap-3 px-3 py-2.5 rounded-xl bg-neutral-900/70 backdrop-blur-md border border-neutral-700/60 shadow-xl pointer-events-auto">
 					{/* Each icon gets its own staggered reveal window. */}
 					{heroSocialLinks.map(({ Icon, href, name }, index) => {
 						const itemStart = start + entrySpan * (0.2 + index * 0.1);
