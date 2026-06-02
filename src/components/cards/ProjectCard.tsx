@@ -12,6 +12,7 @@ import { Figma, Github, Globe, Play, X } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import SkillPill from "@/components/pills/SkillPill";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,6 +23,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import { skillsData } from "@/data/skillsData";
 import { cn } from "@/lib/utils";
 import type { ProjectItem } from "@/types/project";
 
@@ -115,7 +117,7 @@ export default function ProjectCard({
 	githubLink,
 	siteLink,
 	techStack = [],
-	openSource,
+	isPublic,
 	size = "default",
 	className,
 }: ProjectCardProps) {
@@ -125,6 +127,17 @@ export default function ProjectCard({
 	// Small render flags — drives optional sections of the card.
 	const hasMedia = !!(imgUrl || iframe);
 	const hasFooter = !!(demoLink || designLink || githubLink || siteLink);
+
+	// Map the techStack strings to Skill objects using skillsData.
+	const projectSkills = techStack.map((tech) => {
+		const found = skillsData.find((s) => s.name.toLowerCase() === tech.toLowerCase());
+
+		return {
+			name: tech,
+			Icon: found?.Icon ?? "",
+			variant: "projectCard" as const,
+		};
+	});
 
 	return (
 		<>
@@ -180,12 +193,19 @@ export default function ProjectCard({
 					<CardHeader className="space-y-2 grow">
 						<div className="flex items-center gap-2 flex-wrap">
 							<CardTitle className="font-clash text-xl tracking-wide text-white">{title}</CardTitle>
-							{openSource && (
+							{isPublic ? (
 								<Badge
 									variant="outline"
-									className="border-emerald-500/40 bg-emerald-500/10 text-emerald-400 text-xs font-medium"
+									className="!border-sky-700 !text-sky-500 text-xs font-medium"
 								>
-									open source
+									Public
+								</Badge>
+							) : (
+								<Badge
+									variant="outline"
+									className="!border-neutral-700 !text-neutral-500 text-xs font-medium"
+								>
+									Private
 								</Badge>
 							)}
 						</div>
@@ -197,14 +217,8 @@ export default function ProjectCard({
 					{/* Tech stack tag list. */}
 					<CardContent className="pb-0">
 						<div className="flex flex-wrap gap-1.5">
-							{techStack.map((tech, index) => (
-								<Badge
-									key={index}
-									variant="outline"
-									className="border-neutral-700 text-neutral-400 hover:bg-neutral-800 hover:text-white bg-transparent text-[10px] px-2"
-								>
-									{tech}
-								</Badge>
+							{projectSkills.map((skill, index) => (
+								<SkillPill key={index} skill={skill} />
 							))}
 						</div>
 					</CardContent>

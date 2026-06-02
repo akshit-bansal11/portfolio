@@ -4,7 +4,6 @@
  */
 
 import type { StaticImageData } from "next/image";
-import type { Skill } from "./skill";
 
 export interface ExperienceLabeledPoint {
 	label: string;
@@ -22,5 +21,5 @@ export interface ExperienceItem {
 	generalPoint?: string;
 	certificate?: string;
 	logo?: string | StaticImageData;
-	skills?: Skill[];
+	skills?: string[];
 }

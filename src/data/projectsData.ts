@@ -15,9 +15,9 @@ export const projects: Record<string, ProjectItem[]> = {
 			description:
 				"Organize your entire media library; movies, series, anime, manga, and games; all in one place. Plotline shows you exactly where to stream, buy, or rent everything you want.",
 			imgUrl: "https://media-server.akshitbansal.me/api/images/portfolio/websites/plotline.png",
-			techStack: ["Next.js", "TypeScript", "Firebase", "Tailwind"],
+			techStack: ["Next.js", "TypeScript", "Firebase", "Tailwind CSS"],
 			siteLink: "https://plotline.akshitbansal.me/",
-			openSource: false,
+			isPublic: false,
 		},
 		{
 			title: "Canopy",
@@ -27,10 +27,10 @@ export const projects: Record<string, ProjectItem[]> = {
 			videoUrl:
 				"https://res.cloudinary.com/dugsystpq/video/upload/v1774064469/canopy-demo_o1tc7z.mp4",
 
-			techStack: ["Next.js", "TypeScript", "Tailwind", "Firebase"],
+			techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Firebase"],
 			demoLink: "https://use-canopy.vercel.app/",
 			githubLink: "https://github.com/akshit-bansal11/canopy",
-			openSource: true,
+			isPublic: true,
 		},
 		{
 			title: "Open Tools",
@@ -39,10 +39,10 @@ export const projects: Record<string, ProjectItem[]> = {
 			imgUrl: "https://media-server.akshitbansal.me/api/images/portfolio/websites/open-tools.png",
 			videoUrl:
 				"https://res.cloudinary.com/dugsystpq/video/upload/v1774098892/open-tools-demo_gm4mbv.mp4",
-			techStack: ["Next.js", "TypeScript", "Tailwind", "Shadcn/ui"],
+			techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Shadcn"],
 			demoLink: "https://use-open-tools.vercel.app/",
 			githubLink: "https://github.com/akshit-bansal11/open-tools",
-			openSource: true,
+			isPublic: true,
 		},
 		{
 			title: "Command Ref",
@@ -51,10 +51,10 @@ export const projects: Record<string, ProjectItem[]> = {
 			imgUrl: "https://media-server.akshitbansal.me/api/images/portfolio/websites/cmd-ref.png",
 			videoUrl:
 				"https://res.cloudinary.com/dugsystpq/video/upload/v1772932699/open-tools-demo-video_apmc8u.mp4https://res.cloudinary.com/dugsystpq/video/upload/v1774103321/cmd-ref-demo_q6uwee.mp4",
-			techStack: ["Next.js", "TypeScript", "Tailwind", "Shadcn/ui"],
+			techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Shadcn"],
 			demoLink: "https://cmd-ref.vercel.app/",
 			githubLink: "https://github.com/akshit-bansal11/.cmd-ref",
-			openSource: true,
+			isPublic: true,
 		},
 		{
 			title: "Color Space",
@@ -63,10 +63,10 @@ export const projects: Record<string, ProjectItem[]> = {
 			imgUrl: "https://media-server.akshitbansal.me/api/images/portfolio/websites/color-space.png",
 			videoUrl:
 				"https://res.cloudinary.com/dugsystpq/video/upload/v1774064471/color-space-demo_lzmzrr.mp4",
-			techStack: ["React", "Tailwind", "Gemini API"],
+			techStack: ["React", "Tailwind CSS", "Gemini"],
 			demoLink: "https://color-space11.vercel.app/",
 			githubLink: "https://github.com/akshit-bansal11/color-space",
-			openSource: true,
+			isPublic: true,
 		},
 		{
 			title: "Influera",
@@ -76,27 +76,27 @@ export const projects: Record<string, ProjectItem[]> = {
 			techStack: ["React", "Node.js", "MongoDB", "Tailwind CSS"],
 			demoLink: "https://influera.onrender.com/",
 			githubLink: "https://github.com/akshit-bansal11/influera",
-			openSource: true,
+			isPublic: true,
 		},
 		{
 			title: "Memory Game",
 			description:
 				"A fun and modern Memory Game built with React, Vite, Tailwind CSS, Framer Motion, and React Icons.",
 			imgUrl: "https://media-server.akshitbansal.me/api/images/portfolio/websites/memory.png",
-			techStack: ["React", "Tailwind"],
+			techStack: ["React", "Tailwind CSS"],
 			demoLink: "https://memory-game-akshit-bansal11.vercel.app/",
 			githubLink: "https://github.com/akshit-bansal11/memory-game",
-			openSource: true,
+			isPublic: true,
 		},
 		{
 			title: "Bar Clock",
 			description:
 				"A simple bar clock built with React & Tailwind. Displays the current time in a unique way.",
 			imgUrl: "https://media-server.akshitbansal.me/api/images/portfolio/websites/bar-clock.png",
-			techStack: ["React", "Tailwind"],
+			techStack: ["React", "Tailwind CSS"],
 			githubLink: "https://akshit-bansal11.github.io/bar-clock/",
 			demoLink: "https://bar-clock-akshit-bansal11.vercel.app/",
-			openSource: true,
+			isPublic: true,
 		},
 	],
 	Designs: [
@@ -125,14 +125,14 @@ export const projects: Record<string, ProjectItem[]> = {
 			description: "A python script to merge two or more folders.",
 			techStack: ["Python"],
 			githubLink: "https://github.com/akshit-bansal11/useful-scripts",
-			openSource: true,
+			isPublic: true,
 		},
 		{
 			title: "Audio Converter",
 			description: "A python script to convert audio files from one format to another.",
 			techStack: ["Python"],
 			githubLink: "https://github.com/akshit-bansal11/useful-scripts",
-			openSource: true,
+			isPublic: true,
 		},
 	],
 };

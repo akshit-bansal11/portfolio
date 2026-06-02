@@ -1,29 +1,11 @@
-/*
- * experienceData.ts
- * Source-of-truth for the Experience section.
- * Groups entries into categories (Internship, Training) and
- * resolves their tech-stack pills against shared skillsData
- * so icon URLs aren't duplicated.
- */
-
 import trupeerLogo from "@/assets/images/trupeer-dark.svg";
-import { skillsData } from "@/data/skillsData";
 import type { ExperienceItem } from "@/types/experience";
-import type { Skill } from "@/types/skill";
 
 // One named group of experience cards (e.g. "Internship", "Training").
 export interface ExperienceCategory {
 	title: string;
 	items: ExperienceItem[];
 }
-
-// Resolve a skill by name directly from the flat skillsData list.
-const skillByName = (name: string): Skill | undefined =>
-	skillsData.find((skill) => skill.name === name);
-
-// Pick a typed list of Skill objects from a free-form name list.
-const pickSkills = (...names: string[]): Skill[] =>
-	names.map(skillByName).filter((skill): skill is Skill => Boolean(skill));
 
 // All experience entries, grouped by category, in display order.
 export const experience: ExperienceCategory[] = [
@@ -56,7 +38,7 @@ export const experience: ExperienceCategory[] = [
 						body: "Sole intern on a full-stack Next.js 14 App Router rewrite (TypeScript, Tailwind CSS, shadcn/ui, Framer Motion); architected a typed REST client abstraction layer, Zod-based form validation, and webhook-driven optimistic UI for async event reconciliation across the Organization module.",
 					},
 				],
-				skills: pickSkills(
+				skills: [
 					"Next.js",
 					"TypeScript",
 					"React",
@@ -72,7 +54,7 @@ export const experience: ExperienceCategory[] = [
 					"Vitest",
 					"FFmpeg WASM",
 					"ElevenLabs",
-				),
+				],
 			},
 		],
 	},
@@ -89,15 +71,7 @@ export const experience: ExperienceCategory[] = [
 				points: [],
 				certificate:
 					"https://drive.google.com/file/d/1rY3FJ0Zfqx1hOdFl-vjG_Pl1Wp1BqcG8/view?usp=sharing",
-				skills: pickSkills(
-					"MongoDB",
-					"Express",
-					"React",
-					"Node.js",
-					"Redux",
-					"Tailwind CSS",
-					"Gemini",
-				),
+				skills: ["MongoDB", "Express", "React", "Node.js", "Redux", "Tailwind CSS", "Gemini"],
 			},
 			{
 				location: "Punjab, India",
@@ -109,7 +83,7 @@ export const experience: ExperienceCategory[] = [
 				points: [],
 				certificate:
 					"https://drive.google.com/file/d/1mfCPu-_HIxtpQ9BmfRtOwTAolsryGTap/view?usp=sharing",
-				skills: pickSkills("C++", "JavaScript", "Leetcode", "Hackerrank"),
+				skills: ["C++", "JavaScript", "Leetcode", "Hackerrank"],
 			},
 			{
 				location: "Punjab, India",
@@ -121,7 +95,7 @@ export const experience: ExperienceCategory[] = [
 				points: [],
 				certificate:
 					"https://drive.google.com/file/d/1B-axWT0ka9cSEM2wT0wOrLmXubBDln5a/view?usp=sharing",
-				skills: pickSkills(
+				skills: [
 					"HTML5",
 					"CSS3",
 					"JavaScript",
@@ -130,7 +104,7 @@ export const experience: ExperienceCategory[] = [
 					"Express",
 					"MySQL",
 					"Cloudinary",
-				),
+				],
 			},
 		],
 	},
