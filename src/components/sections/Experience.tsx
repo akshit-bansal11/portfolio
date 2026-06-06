@@ -22,7 +22,9 @@ export default function Experience() {
 			{/* Render each category group with its label and items. */}
 			{experience.map((category, index) => (
 				<div key={index} className="flex flex-col gap-2">
-					<h1 className="text-neutral-400 text-[8px] md:text-lg lg:text-2xl">{category.title}</h1>
+					<h1 className="text-neutral-400 text-xs sm:text-base md:text-lg lg:text-2xl">
+						{category.title}
+					</h1>
 					{category.items.map((item, i) => (
 						<ExpItem key={i} {...item} />
 					))}

@@ -27,7 +27,7 @@ export default function ExpSkillsList({ skills }: ExpSkillsListProps) {
 	});
 
 	return (
-		<div className="mt-5 flex flex-wrap gap-1.5">
+		<div className="mt-4 md:mt-5 flex flex-wrap gap-1.5">
 			{resolvedSkills.map((skill) => (
 				<SkillPill key={skill.name} skill={skill} />
 			))}

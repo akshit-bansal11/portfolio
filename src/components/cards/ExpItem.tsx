@@ -50,13 +50,15 @@ export default function ExpItem({
 				{/* Soft top-left highlight overlay. */}
 				<div className="absolute inset-0 bg-linear-to-br from-white/5 to-transparent pointer-events-none" />
 
-				<CardContent className={cn("relative z-10", hasLogo ? "p-6 md:p-7" : "p-7")}>
+				<CardContent
+					className={cn("relative z-10", hasLogo ? "p-4 sm:p-5 md:p-7" : "p-5 sm:p-6 md:p-7")}
+				>
 					{/* Top header row (logo + meta or text-only). */}
 					<ExpHeader company={company} role={role} location={location} date={date} logo={logo} />
 
 					{/* Optional intro paragraph. */}
 					{generalPoint && (
-						<p className="mt-6 text-[14px] md:text-[15px] text-neutral-400 leading-relaxed">
+						<p className="mt-4 md:mt-6 text-[13px] sm:text-[14px] md:text-[15px] text-neutral-400 leading-relaxed">
 							{generalPoint}
 						</p>
 					)}
@@ -71,7 +73,9 @@ export default function ExpItem({
 					{certificate && (
 						<CertificateLinkButton
 							href={certificate}
-							className={hasLogo ? "mt-5" : "mt-4 md:mt-0 md:absolute md:bottom-6 md:right-7"}
+							className={
+								hasLogo ? "mt-4 md:mt-5" : "mt-4 md:mt-0 md:absolute md:bottom-7 md:right-7"
+							}
 						/>
 					)}
 				</CardContent>
