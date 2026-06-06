@@ -25,7 +25,7 @@ export default function Skills() {
 			</div>
 
 			{/* Category blocks */}
-			<div className="flex flex-col gap-8 w-full">
+			<div className="flex flex-col gap-4 md:gap-6 lg:gap-8 w-full">
 				{SkillCategories.map((category, catIndex) => (
 					<motion.div
 						key={category.title}
@@ -41,7 +41,7 @@ export default function Skills() {
 						</span>
 
 						{/* Pill row */}
-						<div className="flex flex-wrap gap-2.5">
+						<div className="flex flex-wrap gap-1.5 lg:gap-2.5">
 							{category.skills.map((skill, skillIndex) => (
 								<motion.div
 									key={skill.name}

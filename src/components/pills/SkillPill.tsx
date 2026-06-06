@@ -106,10 +106,11 @@ const SkillPill = ({ skill }: SkillPillProps) => {
 
 	const showPopover = variant === "skillSection";
 
-	let paddingClass = "gap-3 px-5 py-2.5";
+	let paddingClass = "gap-1 px-2 py-0.5 md:gap-2 md:px-3 md:py-1.5 lg:gap-3 lg:px-5 lg:py-2.5";
 	let iconSize = 22;
-	let iconClassName = "h-[22px] w-[22px] object-contain";
-	let textClassName = "text-[15px] text-neutral-200";
+	let iconClassName =
+		"h-[14px] w-[14px] md:h-[18px] md:w-[18px] lg:h-[22px] lg:w-[22px] opacity-100 object-contain";
+	let textClassName = "text-[11px] text-neutral-200 md:text-[14px] lg:text-[15px]";
 
 	if (isExpItem || isProjectCard) {
 		paddingClass = "gap-1 px-2 py-0.5";
