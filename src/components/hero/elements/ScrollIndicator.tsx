@@ -21,10 +21,14 @@ import { cn } from "@/lib/utils";
 
 // Inner component — only rendered once progress is confirmed non-null.
 function Indicator({ progress }: { progress: MotionValue<number> }) {
-	const [isVertical, setIsVertical] = useState(false);
+	const [isVertical, setIsVertical] = useState(
+		() => typeof window !== "undefined" && window.innerWidth < 1024,
+	);
 
 	useMotionValueEvent(progress, "change", (latest: number) => {
-		setIsVertical(latest >= HERO_HORIZONTAL_END);
+		// On mobile/tablet (< 1024px) always indicate vertical scroll.
+		const isMobileOrTablet = typeof window !== "undefined" && window.innerWidth < 1024;
+		setIsVertical(isMobileOrTablet || latest >= HERO_HORIZONTAL_END);
 	});
 
 	return (

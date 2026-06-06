@@ -7,5 +7,5 @@
 
 // Empty buffer that adds scroll distance after the hero.
 export { default as HeroToContentSpacer } from "./HeroToContentSpacer";
-// The pinned, scroll-driven, four-stage hero canvas.
+// Single responsive hero — static mobile stack + pinned scroll-driven desktop canvas.
 export { default as ScrollHero } from "./ScrollHero";

@@ -23,11 +23,11 @@ export default function Projects() {
 				<ScrollSectionHeading heading="projects" />
 				<Button
 					variant="ghost"
-					className="text-neutral-400 hover:text-white hover:bg-neutral-800"
+					className="h-7 px-2 text-[10px] lg:h-10 lg:px-4 lg:py-2 lg:text-sm text-neutral-400 hover:text-white hover:bg-neutral-800"
 					asChild
 				>
 					<Link href="/projects">
-						See More <ArrowUpRight className="ml-2 h-4 w-4" />
+						See More <ArrowUpRight className="ml-1 h-3 w-3 lg:ml-2 lg:h-4 lg:w-4" />
 					</Link>
 				</Button>
 			</div>
