@@ -1,5 +1,5 @@
 /*
- * CertificateLinkButton.tsx
+ * CredentialLinkButton.tsx
  * Pill-style external link button used at the bottom of
  * experience cards. Animates open on hover to reveal the
  * "Credential" label next to the arrow icon.
@@ -9,13 +9,13 @@ import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // Public props for the button.
-interface CertificateLinkButtonProps {
+interface CredentialLinkButtonProps {
 	href: string;
 	className?: string;
 }
 
 // Renders the expanding pill anchor.
-export default function CertificateLinkButton({ href, className }: CertificateLinkButtonProps) {
+export default function CredentialLinkButton({ href, className }: CredentialLinkButtonProps) {
 	return (
 		<div className={className}>
 			{/* Anchor that grows on hover from a circle into a pill. */}

@@ -5,7 +5,7 @@
  * or from individual domain files when only one domain is needed.
  */
 
-export * from "./certification";
+export * from "./attainments";
 export * from "./education";
 export * from "./experience";
 export * from "./hero";

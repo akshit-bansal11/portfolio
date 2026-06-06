@@ -5,7 +5,7 @@
  * generative-AI badges, each linked to its public profile URL.
  */
 
-import type { GoogleBadgeItem } from "@/types/certification";
+import type { GoogleBadgeItem } from "@/types/attainments";
 
 // Google Cloud Skill Boost generative-AI badge entries.
 export const googleBadges: GoogleBadgeItem[] = [

@@ -8,7 +8,7 @@
 
 "use client";
 import { motion } from "framer-motion";
-import CertificateLinkButton from "@/components/cards/CertificateLinkButton";
+import CertificateLinkButton from "@/components/cards/CredentialLinkButton";
 import ExpHeader from "@/components/cards/ExpHeader";
 import ExpPointsList from "@/components/cards/ExpPointsList";
 import ExpSkillsList from "@/components/cards/ExpSkillsList";

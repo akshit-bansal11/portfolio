@@ -10,8 +10,8 @@
 // import Testimonials from "@/components/sections/Testimonials";
 import ScrollReveal from "@/components/effects/ScrollReveal";
 import { HeroToContentSpacer, ScrollHero } from "@/components/hero";
+import Attainments from "@/components/sections/Attainments";
 import ByTheNumbers from "@/components/sections/ByTheNumbers";
-import Certifications from "@/components/sections/Certifications";
 import Education from "@/components/sections/Education";
 import Experience from "@/components/sections/Experience";
 import Projects from "@/components/sections/Projects";
@@ -40,7 +40,7 @@ function Home() {
 					<Skills />
 				</ScrollReveal>
 				<ScrollReveal className="w-full" delay={350}>
-					<Certifications />
+					<Attainments />
 				</ScrollReveal>
 				<ScrollReveal className="w-full" delay={400}>
 					<Education />

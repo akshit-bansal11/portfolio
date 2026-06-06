@@ -1,5 +1,5 @@
 /*
- * certification.ts
+ * attainments.ts
  * Type definitions for badges and certifications shown
  * in the Attainments section.
  */

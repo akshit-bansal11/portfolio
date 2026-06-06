@@ -1,5 +1,5 @@
 /*
- * Certifications.tsx
+ * Attainments.tsx
  * "Attainments" section.
  * Renders the badges block (Google Cloud + HackerRank star
  * badges) followed by the certifications block grouped by
@@ -17,7 +17,7 @@ import {
 } from "@/data/certificationsData";
 
 // Top-level Attainments section component.
-export default function Certifications() {
+export default function Attainments() {
 	return (
 		<ScrollSection id="attainments">
 			<ScrollSectionHeading heading="attainments" />
