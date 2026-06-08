@@ -30,10 +30,13 @@ export default function ExpPointsList({ points, indented = false }: ExpPointsLis
 				const isLabeled = typeof point !== "string";
 
 				return (
-					<li key={idx} className="flex gap-2 md:gap-3 text-neutral-400 group/item leading-relaxed">
+					<li
+						key={idx}
+						className="flex gap-1.5 sm:gap-2 md:gap-3 text-neutral-400 group/item leading-relaxed"
+					>
 						{/* Amber accent bullet that brightens on hover. */}
-						<div className="mt-2 md:mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500/30 group-hover/item:bg-amber-500 group-hover/item:scale-125 transition-all duration-300 shadow-[0_0_8px_rgba(245,158,11,0.3)]" />
-						<span className="text-[13px] sm:text-[14px] md:text-[15px]">
+						<div className="mt-1.5 sm:mt-2 md:mt-2.5 h-1 w-1 sm:h-1.5 sm:w-1.5 shrink-0 rounded-full bg-amber-500/30 group-hover/item:bg-amber-500 group-hover/item:scale-125 transition-all duration-300 shadow-[0_0_8px_rgba(245,158,11,0.3)]" />
+						<span className="text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px]">
 							{isLabeled ? (
 								<>
 									<span className="font-semibold text-neutral-200">{point.label}: </span>

@@ -22,7 +22,7 @@ export default function GoogleBadgeCard({ gBadgeTitle, gBadgeLink }: GoogleBadge
 			className={cn(
 				"group relative flex flex-col gap-4 p-4 rounded-2xl",
 				"border border-neutral-800 bg-neutral-900/50 backdrop-blur-sm",
-				"hover:border-neutral-700 hover:shadow-xl hover:shadow-black/50 transition-colors duration-300",
+				"hover:border-neutral-700 transition-colors duration-300",
 			)}
 		>
 			{/* Top section: Google Logo + Cloud */}

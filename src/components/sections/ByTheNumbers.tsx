@@ -4,18 +4,25 @@
  * Fetches live GitHub stats via the api lib, combines them
  * with hardcoded years values, and animates each card's
  * value with a number counter on scroll-in.
+ *
+ * Includes GitHub contribution calendar and LeetCode embeds
+ * (solved tracker + submission calendar) below the stat cards.
  */
 
 "use client";
 
 import { animate, createScope } from "animejs";
 import { useEffect, useRef, useState } from "react";
+import GitHubContributionCalendar from "@/components/cards/GitHubContributionCalendar";
+import LeetCodeSolvedTracker from "@/components/cards/LeetCodeSolvedTracker";
+import LeetCodeSubmissionCalendar from "@/components/cards/LeetCodeSubmissionCalendar";
 import ScrollSectionHeading from "@/components/headings/ScrollSectionHeading";
 import ScrollSection from "@/components/layout/ScrollSection";
 import { fetchGitHubStats } from "@/lib/api/github";
+import { cn } from "@/lib/utils";
 
 // Shape of a single stat card displayed in the section.
-interface StatCard {
+interface StatCardData {
 	id: string;
 	value: number;
 	suffix: string;
@@ -66,26 +73,39 @@ function CounterValue({
 	}, [triggered, target]);
 
 	return (
-		<span className={`font-clash text-4xl md:text-5xl lg:text-6xl font-extrabold ${accentClass}`}>
+		<span
+			className={cn(
+				"font-clash font-extrabold",
+				/* Mobile: smaller pill text | Tablet: medium | Desktop: large */
+				"text-2xl sm:text-3xl md:text-4xl lg:text-5xl",
+				accentClass,
+			)}
+		>
 			<span ref={spanRef}>0</span>
 			{suffix}
 		</span>
 	);
 }
 
-// One stat card, including the counter and label rows.
-function StatCard({ card, triggered }: { card: StatCard; triggered: boolean }) {
+// One stat card with responsive pill (mobile) / card (tablet+) layout.
+function StatCard({ card, triggered }: { card: StatCardData; triggered: boolean }) {
 	return (
 		<div
-			className={[
-				"flex flex-col items-start gap-3 p-5 md:p-7 rounded-2xl",
-				"bg-neutral-900/60 backdrop-blur-sm",
-				"border border-neutral-800",
-				`hover:${card.glowClass}`,
+			className={cn(
+				/* Shared styles */
+				"bg-neutral-900/60 backdrop-blur-sm border border-neutral-800",
 				"transition-all duration-300 hover:bg-neutral-900/80 hover:border-neutral-600",
 				"shadow-lg shadow-black/30 hover:shadow-xl",
-				"flex-1 min-w-[160px]",
-			].join(" ")}
+
+				/* Mobile: horizontal pill layout */
+				"flex flex-row items-center gap-3 px-4 py-3 rounded-xl",
+
+				/* Tablet+: vertical card layout */
+				"sm:flex-col sm:items-start sm:gap-3 sm:p-4 sm:rounded-2xl",
+
+				/* Desktop: generous padding */
+				"lg:p-6",
+			)}
 		>
 			<CounterValue
 				target={card.value}
@@ -95,11 +115,13 @@ function StatCard({ card, triggered }: { card: StatCard; triggered: boolean }) {
 			/>
 
 			{/* Card label + descriptive sublabel. */}
-			<div className="flex flex-col gap-0.5">
-				<span className="text-white text-sm md:text-base font-semibold leading-tight">
+			<div className="flex flex-col gap-0.5 min-w-0">
+				<span className="text-white text-xs sm:text-sm md:text-base font-semibold leading-tight truncate">
 					{card.label}
 				</span>
-				<span className="text-neutral-500 text-xs md:text-sm leading-snug">{card.sublabel}</span>
+				<span className="text-neutral-500 text-[10px] sm:text-xs md:text-sm leading-snug truncate">
+					{card.sublabel}
+				</span>
 			</div>
 		</div>
 	);
@@ -110,7 +132,7 @@ const YEARS_PROFESSIONAL = 1.4; // Jan 2026 – present
 const YEARS_BUILDING = 5; // June 2024 – present
 
 // Card definitions sans the live `value` (filled in at runtime).
-const BASE_STATS: Omit<StatCard, "value">[] = [
+const BASE_STATS: Omit<StatCardData, "value">[] = [
 	{
 		id: "commits",
 		suffix: "+",
@@ -150,7 +172,7 @@ export default function ByTheNumbers() {
 	// Whether the counters should start animating.
 	const [triggered, setTriggered] = useState(false);
 	// Live stat list once values have been resolved.
-	const [stats, setStats] = useState<StatCard[]>([]);
+	const [stats, setStats] = useState<StatCardData[]>([]);
 	const sectionRef = useRef<HTMLElement>(null);
 
 	// Resolve initial stat values: GitHub data + static years.
@@ -203,16 +225,59 @@ export default function ByTheNumbers() {
 			</div>
 
 			{/* Card grid (or skeleton placeholders while stats are loading). */}
-			<section ref={sectionRef} className="w-full">
-				<div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+			<section ref={sectionRef} className="w-full space-y-4 md:space-y-6">
+				{/* Stat cards — responsive grid */}
+				<div
+					className={cn(
+						"grid gap-2",
+						/* Mobile: 2-col pill grid */
+						"grid-cols-2",
+						/* Tablet: 2-col compact cards */
+						"sm:gap-3",
+						/* Desktop: 4-col full cards */
+						"lg:grid-cols-4 lg:gap-4",
+					)}
+				>
 					{stats.length > 0
 						? stats.map((card) => <StatCard key={card.id} card={card} triggered={triggered} />)
 						: Array.from({ length: 4 }).map((_, i) => (
 								<div
 									key={i}
-									className="rounded-2xl bg-neutral-900/40 border border-neutral-800 h-36 animate-pulse flex-1 min-w-[160px]"
+									className={cn(
+										"rounded-xl sm:rounded-2xl bg-neutral-900/40 border border-neutral-800 animate-pulse",
+										"h-16 sm:h-28 lg:h-36",
+									)}
 								/>
 							))}
+				</div>
+
+				{/* Embeds:
+				  • sm  (< 768px):  3 separate rows
+				  • md  (768–1024): GitHub | LeetCode-solved+calendar (2 rows)
+				  • lg+ (≥ 1024px): all 3 on one row, equal height
+				*/}
+
+				{/* lg+: single row of 3 equal-height columns */}
+				<div className="hidden lg:grid lg:grid-cols-[1fr_200px_1fr] lg:gap-4 lg:items-stretch">
+					<GitHubContributionCalendar className="h-full" />
+					<LeetCodeSolvedTracker className="h-full" />
+					<LeetCodeSubmissionCalendar className="h-full" />
+				</div>
+
+				{/* md: GitHub full width, then solved + submission side by side */}
+				<div className="hidden md:flex lg:hidden flex-col gap-3">
+					<GitHubContributionCalendar />
+					<div className="grid grid-cols-[240px_1fr] gap-3 items-stretch">
+						<LeetCodeSolvedTracker className="h-full" />
+						<LeetCodeSubmissionCalendar className="h-full" />
+					</div>
+				</div>
+
+				{/* sm/mobile: all three stacked */}
+				<div className="flex md:hidden flex-col gap-3">
+					<GitHubContributionCalendar />
+					<LeetCodeSolvedTracker />
+					<LeetCodeSubmissionCalendar />
 				</div>
 			</section>
 		</ScrollSection>

@@ -4,8 +4,13 @@
  * count and total commit contributions across all years.
  * Uses GraphQL when a token is available; otherwise falls
  * back to the public search API. Cached for 1 hour.
+ *
+ * Modes:
+ *   Default         → { publicRepos, totalCommits }
+ *   ?contributions=true&year=2026 → contribution calendar data
  */
 
+import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 // GitHub login whose stats power the "By The Numbers" section.
@@ -25,11 +30,38 @@ const GQL_CONTRIBUTIONS = `
   }
 `;
 
+// GraphQL query: full contribution calendar with daily counts.
+const GQL_CONTRIBUTION_CALENDAR = `
+  query($login: String!, $from: DateTime!, $to: DateTime!) {
+    user(login: $login) {
+      contributionsCollection(from: $from, to: $to) {
+        contributionCalendar {
+          totalContributions
+          weeks {
+            contributionDays {
+              contributionCount
+              date
+              weekday
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 // Route handler: aggregate public repos + total commits and return JSON.
-export async function GET() {
+export async function GET(request: NextRequest) {
 	try {
 		// Optional GitHub token unlocks the GraphQL contributions API.
 		const token = process.env.GITHUB_TOKEN;
+
+		// Check if this is a contribution calendar request.
+		const wantsContributions = request.nextUrl.searchParams.get("contributions") === "true";
+
+		if (wantsContributions && token) {
+			return handleContributionCalendar(request, token);
+		}
 
 		// Headers used for plain REST calls (with optional auth).
 		const restHeaders: HeadersInit = {
@@ -108,4 +140,42 @@ export async function GET() {
 		console.error("[github-stats]", err);
 		return NextResponse.json({ publicRepos: 0, totalCommits: 0 });
 	}
+}
+
+// Handle contribution calendar requests — returns weekly/daily counts for heatmap.
+async function handleContributionCalendar(request: NextRequest, token: string) {
+	const yearParam = request.nextUrl.searchParams.get("year");
+	const year = yearParam ? Number.parseInt(yearParam, 10) : new Date().getFullYear();
+
+	const from = `${year}-01-01T00:00:00Z`;
+	const to =
+		year === new Date().getFullYear() ? new Date().toISOString() : `${year}-12-31T23:59:59Z`;
+
+	const gqlRes = await fetch("https://api.github.com/graphql", {
+		method: "POST",
+		headers: {
+			Authorization: `Bearer ${token}`,
+			"Content-Type": "application/json",
+			"User-Agent": "portfolio-app",
+		},
+		body: JSON.stringify({
+			query: GQL_CONTRIBUTION_CALENDAR,
+			variables: { login: GITHUB_USERNAME, from, to },
+		}),
+		next: { revalidate: 3600 },
+	});
+
+	if (!gqlRes.ok) {
+		console.error(`[github-stats] Contribution calendar GQL failed: ${gqlRes.status}`);
+		return NextResponse.json({ totalContributions: 0, weeks: [] });
+	}
+
+	const gqlData = await gqlRes.json();
+	const calendar = gqlData.data?.user?.contributionsCollection?.contributionCalendar;
+
+	if (!calendar) {
+		return NextResponse.json({ totalContributions: 0, weeks: [] });
+	}
+
+	return NextResponse.json(calendar);
 }

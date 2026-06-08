@@ -6,6 +6,7 @@
 export { default as CertificationCard } from "./CertificationCard";
 export { default as CredentialLinkButton } from "./CredentialLinkButton";
 export { default as EduItem } from "./EduItem";
+export { default as ExpAccordionItem } from "./ExpAccordionItem";
 export { default as ExpHeader } from "./ExpHeader";
 export { default as ExpItem } from "./ExpItem";
 export { default as ExpPointsList } from "./ExpPointsList";

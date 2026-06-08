@@ -4,4 +4,5 @@
  */
 
 export { default as CertificationsPill } from "./CertificationsPill";
+export { default as CredentialPill } from "./CredentialPill";
 export { default as SkillPill } from "./SkillPill";

@@ -112,8 +112,9 @@ const SkillPill = ({ skill }: SkillPillProps) => {
 		"h-[14px] w-[14px] md:h-[18px] md:w-[18px] lg:h-[22px] lg:w-[22px] opacity-100 object-contain";
 	let textClassName = "text-[11px] text-neutral-200 md:text-[14px] lg:text-[15px]";
 
-	if (isExpItem || isProjectCard) {
-		paddingClass = "gap-1 px-2 py-0.5";
+	const isCompact = isExpItem || isProjectCard;
+	if (isCompact) {
+		paddingClass = "p-1 sm:gap-1 sm:px-2 sm:py-0.5";
 		iconSize = 12;
 		iconClassName = "h-[14px] w-[14px] object-contain opacity-85";
 		textClassName = "text-[11px] text-neutral-400";
@@ -143,7 +144,15 @@ const SkillPill = ({ skill }: SkillPillProps) => {
 						className={iconClassName}
 					/>
 				)}
-				<span className={cn("whitespace-nowrap", textClassName)}>{skill.name}</span>
+				<span
+					className={cn(
+						"whitespace-nowrap",
+						textClassName,
+						isCompact && skill.Icon ? "hidden sm:inline" : "",
+					)}
+				>
+					{skill.name}
+				</span>
 			</motion.div>
 
 			{showPopover &&
