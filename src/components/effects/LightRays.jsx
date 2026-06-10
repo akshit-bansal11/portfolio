@@ -71,7 +71,8 @@ const LightRays = ({
 	const meshRef = useRef(null);
 	const cleanupFunctionRef = useRef(null);
 	// Tracks whether the effect is on-screen so we can pause when hidden.
-	const [isVisible, setIsVisible] = useState(false);
+	// Default to true to avoid hydration mismatch during initial render.
+	const [isVisible, setIsVisible] = useState(true);
 	const observerRef = useRef(null);
 
 	useEffect(() => {
