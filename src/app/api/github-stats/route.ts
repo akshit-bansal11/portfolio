@@ -70,8 +70,8 @@ export async function GET(request: NextRequest) {
 			...(token ? { Authorization: `Bearer ${token}` } : {}),
 		};
 
-		// ── Public repos count ──────────────────────────────────────────────
-		// Hit the user endpoint to read public_repos and account creation date.
+		// ── Account info (used for creation date) ───────────────────────────
+		// Hit the user endpoint to read the account creation date.
 		const userRes = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}`, {
 			headers: restHeaders,
 			next: { revalidate: 3600 },
@@ -80,7 +80,12 @@ export async function GET(request: NextRequest) {
 		if (!userRes.ok) throw new Error(`GitHub user fetch failed: ${userRes.status}`);
 
 		const user = await userRes.json();
-		const publicRepos: number = user.public_repos ?? 0;
+
+		// ── Public repos count ──────────────────────────────────────────────
+		// user.public_repos also counts forks, so it over-reports (e.g. 29 vs 11).
+		// Instead, page through the repos list and count only owned source repos
+		// (excluding forks). Archived repos are still counted as "shipped".
+		const publicRepos = await countPublicSourceRepos(restHeaders);
 
 		// ── Total commits across all years via GraphQL ──────────────────────
 		// GraphQL requires a token; fall back to search API if none is set.
@@ -140,6 +145,33 @@ export async function GET(request: NextRequest) {
 		console.error("[github-stats]", err);
 		return NextResponse.json({ publicRepos: 0, totalCommits: 0 });
 	}
+}
+
+// Count public, non-fork repos owned by the user by paging the list endpoint.
+// GitHub's user.public_repos field includes forks, which over-reports the
+// number of repos the user actually authored. We exclude forks here.
+async function countPublicSourceRepos(headers: HeadersInit): Promise<number> {
+	let count = 0;
+
+	// Page through up to a reasonable cap (100 per page × 10 pages = 1000 repos).
+	for (let page = 1; page <= 10; page++) {
+		const res = await fetch(
+			`https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100&page=${page}&type=owner`,
+			{ headers, next: { revalidate: 3600 } },
+		);
+
+		if (!res.ok) break;
+
+		const repos = (await res.json()) as Array<{ fork: boolean }>;
+		if (repos.length === 0) break;
+
+		count += repos.filter((repo) => !repo.fork).length;
+
+		// Last page reached when fewer than the page size is returned.
+		if (repos.length < 100) break;
+	}
+
+	return count;
 }
 
 // Handle contribution calendar requests — returns weekly/daily counts for heatmap.
