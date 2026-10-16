@@ -61,4 +61,4 @@ Working across the full product stack on high-impact features:
 
 ## 🌐 Portfolio
 
-**[akshitbansal.me](https://akshitbansal.me)** — Built with Next.js 15, TypeScript, Tailwind CSS, and Framer Motion.
+**[akshitbansal.dev](https://akshitbansal.dev)** — Built with Next.js 15, TypeScript, Tailwind CSS, and Framer Motion.
