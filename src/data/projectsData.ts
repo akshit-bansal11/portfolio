@@ -1,15 +1,87 @@
 /*
  * projectsData.ts
  * Source-of-truth for the Projects section and /projects page.
- * Grouped by category (Web, Designs, Scripts) so the page can
- * render each category as its own scroll-revealed grid.
+ * Grouped by category (Apps & Tools, Web, Designs, Scripts) so the
+ * page can render each category as its own scroll-revealed grid.
  */
 
 import type { ProjectItem } from "@/types/project";
 
 // Dictionary of category → ordered project entries.
 export const projects: Record<string, ProjectItem[]> = {
+  "Apps & Tools": [
+    {
+      title: "Edgepad",
+      description:
+        "Turns an Android phone into a Bluetooth trackpad, media remote and gamepad for a Windows laptop, over a wire protocol I designed. No account, no telemetry.",
+      techStack: ["Kotlin", "Android", "C#", ".NET"],
+      siteLink: "https://edgepad.akshitbansal.dev",
+      githubLink: "https://github.com/akshit-bansal11/edgepad",
+      isPublic: true,
+    },
+    {
+      title: "Deskbeat",
+      description:
+        "Desktop widgets for Spotify on Windows 11: a spectrum visualizer, word-synced lyrics, a clock and a player. A light, native alternative to Rainmeter.",
+      techStack: ["Rust", "Spotify"],
+      siteLink: "https://deskbeat.akshitbansal.dev",
+      githubLink: "https://github.com/akshit-bansal11/deskbeat",
+      isPublic: true,
+    },
+    {
+      title: "Saltcellar",
+      description:
+        "Local-only encrypted vault for passwords and env keys on Windows, as a CLI and desktop app. Argon2id, AES-256-GCM, zero network code.",
+      techStack: ["Rust", "Tauri", "TypeScript"],
+      siteLink: "https://saltcellar.akshitbansal.dev",
+      githubLink: "https://github.com/akshit-bansal11/saltcellar",
+      isPublic: true,
+    },
+    {
+      title: "Plimsoll",
+      description: "A usage, statistics and git HUD for Claude Code.",
+      techStack: ["TypeScript", "Claude"],
+      siteLink: "https://plimsoll.akshitbansal.me",
+      githubLink: "https://github.com/akshit-bansal11/plimsoll",
+      isPublic: true,
+    },
+    {
+      title: "Keyslate",
+      description:
+        "A fully local, keyboard-first notes app for Windows. Plain .md and .txt files, no network.",
+      techStack: ["TypeScript"],
+      githubLink: "https://github.com/akshit-bansal11/keyslate",
+      isPublic: true,
+    },
+  ],
   Web: [
+    {
+      title: "Lorestep",
+      description:
+        "Story-order tracker for connected franchises: what to play, watch and read, in in-universe chronological order.",
+      techStack: ["TypeScript"],
+      siteLink: "https://lorestep.akshitbansal.dev",
+      githubLink: "https://github.com/akshit-bansal11/lorestep",
+      isPublic: true,
+    },
+    {
+      title: "Open Interactive Maps",
+      description:
+        "Interactive administrative maps of every country, from the world down to sub-districts. Export any map as SVG, PNG or JSON.",
+      techStack: ["JavaScript"],
+      demoLink: "https://open-interactive-maps.vercel.app",
+      githubLink: "https://github.com/akshit-bansal11/open-interactive-maps",
+      isPublic: true,
+    },
+    {
+      title: "Mystic Falls Codex",
+      description:
+        "An interactive encyclopedia of the two-thousand-year in-universe history of The Vampire Diaries, The Originals and Legacies. Statically generated with Next.js.",
+      techStack: ["Next.js", "TypeScript"],
+      demoLink: "https://mystic-falls-codex.vercel.app",
+      githubLink: "https://github.com/akshit-bansal11/mystic-falls-codex",
+      isPublic: true,
+    },
     {
       title: "Plotline",
       description:
@@ -50,7 +122,7 @@ export const projects: Record<string, ProjectItem[]> = {
         "A growing collection of coprehensive command line reference guides for various tools and technologies. Each guide provides detailed information on commands, options, and usage examples.",
       imgUrl: "https://media-server.akshitbansal.me/api/images/portfolio/websites/cmd-ref.png",
       videoUrl:
-        "https://res.cloudinary.com/dugsystpq/video/upload/v1772932699/open-tools-demo-video_apmc8u.mp4https://res.cloudinary.com/dugsystpq/video/upload/v1774103321/cmd-ref-demo_q6uwee.mp4",
+        "https://res.cloudinary.com/dugsystpq/video/upload/v1774103321/cmd-ref-demo_q6uwee.mp4",
       techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Shadcn"],
       demoLink: "https://cmd-ref.vercel.app/",
       githubLink: "https://github.com/akshit-bansal11/.cmd-ref",
