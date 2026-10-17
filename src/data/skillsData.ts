@@ -10,211 +10,215 @@ import type { Skill, SkillCategory } from "@/types/skill";
 
 export const SkillCategories: SkillCategory[] = [
   {
-    title: "Core Web",
+    title: "Languages",
+    skills: [
+      {
+        name: "TypeScript",
+        Icon: "https://svgl.app/library/typescript.svg",
+        usedIn: [
+          "Strict mode across every production codebase",
+          "Typed REST client layers with Zod validation",
+        ],
+      },
+      {
+        name: "JavaScript",
+        Icon: "https://svgl.app/library/javascript.svg",
+        usedIn: ["Chrome extension recorder at Trupeer", "Open Interactive Maps"],
+      },
+      {
+        name: "SQL",
+        Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/sql.svg",
+        usedIn: ["Postgres (Neon) schemas & queries behind production forms"],
+      },
+      {
+        name: "Go",
+        Icon: "https://svgl.app/library/golang_dark.svg",
+      },
+      {
+        name: "Kotlin",
+        Icon: "/icons/kotlin.svg",
+        usedIn: ["Edgepad Android app — trackpad, gamepad & media remote"],
+      },
+      {
+        name: "Rust",
+        Icon: "/icons/rust.svg",
+        usedIn: [
+          "Deskbeat — native Spotify widgets for Windows 11",
+          "Saltcellar — encrypted local vault (Argon2id, AES-256-GCM)",
+        ],
+      },
+      {
+        name: "C#",
+        Icon: "https://svgl.app/library/csharp.svg",
+        usedIn: ["Edgepad Windows host — Bluetooth RFCOMM server on .NET 10"],
+      },
+    ],
+  },
+  {
+    title: "Frontend",
     skills: [
       {
         name: "Next.js",
         Icon: "https://svgl.app/library/nextjs_icon_dark.svg",
         usedIn: [
-          "App Router with nested layouts, dynamic segments & route groups",
-          "SSR, SSG, and ISR across production SaaS apps",
-          "Middleware for auth guards, redirects & session validation",
-        ],
-      },
-      {
-        name: "TypeScript",
-        Icon: "https://svgl.app/library/typescript.svg",
-        usedIn: [
-          "Strict mode across all production codebases",
-          "Typed API client abstraction layers with Zod validation",
-          "Schema-driven data modeling for complex UI state",
+          "Two production platforms on Next.js 16 at Elina Club",
+          "App Router rewrite at Trupeer; Kiteloom's canvas app",
         ],
       },
       {
         name: "React",
         Icon: "https://svgl.app/library/react_dark.svg",
         usedIn: [
-          "Complex stateful UIs — editors, modals, dashboards",
-          "Custom hooks for data fetching, optimistic updates & side effects",
-          "Component-driven architecture with reusable design systems",
+          "Complex stateful UIs — editors, canvases, dashboards",
+          "Webhook-driven optimistic UI & custom hooks",
         ],
       },
       {
         name: "Tailwind CSS",
         Icon: "https://svgl.app/library/tailwindcss.svg",
-        usedIn: [
-          "Responsive, utility-first styling across SaaS frontends",
-          "Dark/light theming with CSS variable integration",
-          "Rapid UI prototyping without leaving markup",
-        ],
-      },
-      {
-        name: "Node.js",
-        Icon: "https://svgl.app/library/nodejs.svg",
-        usedIn: [
-          "REST API development with auth & rate limiting",
-          "Background job processing and webhook handling",
-          "Server-side integration with third-party services",
-        ],
-      },
-      {
-        name: "Express",
-        Icon: "https://svgl.app/library/expressjs_dark.svg",
-        usedIn: [
-          "Custom middleware pipelines for auth & validation",
-          "RESTful API architecture for full-stack apps",
-        ],
+        usedIn: ["Responsive, utility-first styling across every frontend"],
       },
       {
         name: "Shadcn",
         Icon: "https://svgl.app/library/shadcn-ui_dark.svg",
-        usedIn: [
-          "Base component library extended with custom variants",
-          "Accessible dialogs, dropdowns & form primitives in production UIs",
-        ],
+        usedIn: ["Accessible dialogs, dropdowns & form primitives in production UIs"],
       },
       {
         name: "Motion",
         Icon: "https://svgl.app/library/motion_dark.svg",
-        usedIn: [
-          "Page transitions, scroll animations & entrance effects",
-          "Gesture-driven interactions and layout animations",
-        ],
+        usedIn: ["Page transitions, scroll animations & layout animations"],
+      },
+      {
+        name: "GSAP",
+        Icon: "/icons/gsap.svg",
       },
     ],
   },
   {
-    title: "Data & Media",
+    title: "Backend & Data",
     skills: [
       {
-        name: "MongoDB",
-        Icon: "https://svgl.app/library/mongodb-icon-dark.svg",
-        usedIn: [
-          "Document storage for SaaS entities — users, orgs, campaigns",
-          "Slug-based content lookup and visitor analytics tracking",
-        ],
+        name: "Node.js",
+        Icon: "https://svgl.app/library/nodejs.svg",
+        usedIn: ["REST APIs, webhooks & third-party integrations"],
+      },
+      {
+        name: "Express",
+        Icon: "https://svgl.app/library/expressjs_dark.svg",
+        usedIn: ["Middleware pipelines for auth & validation"],
+      },
+      {
+        name: "Convex",
+        Icon: "/icons/convex.svg",
+        usedIn: ["Kiteloom's backend, alongside Yjs CRDTs for real-time multiplayer"],
       },
       {
         name: "PostgreSQL",
         Icon: "https://svgl.app/library/postgresql.svg",
-        usedIn: [
-          "Relational data modeling for multi-tenant SaaS",
-          "Used with Supabase for RBAC and structured queries",
-        ],
+        usedIn: ["Neon-hosted schemas for leads, careers, feedback & newsletter data"],
       },
       {
-        name: "Firebase",
-        Icon: "https://svgl.app/library/firebase.svg",
-        usedIn: [
-          "Realtime Firestore for live data sync in media tracking",
-          "Firebase Auth for user identity and session management",
-        ],
-      },
-      {
-        name: "Cloudinary",
-        Icon: "https://svgl.app/library/cloudinary.svg",
-        usedIn: [
-          "Media upload, transformation & optimized CDN delivery",
-          "Image processing pipelines for user-generated content",
-        ],
-      },
-    ],
-  },
-  {
-    title: "Auth & Security",
-    skills: [
-      {
-        name: "Auth0",
-        Icon: "https://svgl.app/library/auth0.svg",
-        usedIn: [
-          "OAuth 2.0 / OIDC flows with role-based access control",
-          "Token validation in API middleware layers",
-        ],
-      },
-      {
-        name: "JWT",
-        Icon: "https://svgl.app/library/jwt.svg",
-        usedIn: [
-          "Stateless session management across API routes",
-          "Custom token validation in server middleware",
-        ],
-      },
-      {
-        name: "Upstash",
-        Icon: "https://svgl.app/library/upstash.svg",
-        usedIn: [
-          "Serverless Redis for rate limiting on API routes",
-          "reCAPTCHA v3 + OWASP-compliant request throttling",
-        ],
+        name: "MongoDB",
+        Icon: "https://svgl.app/library/mongodb-icon-dark.svg",
+        usedIn: ["Document storage for SaaS entities at Trupeer"],
       },
       {
         name: "Redis",
         Icon: "https://svgl.app/library/redis.svg",
-        usedIn: [
-          "Multi-layered API security with sliding window rate limits",
-          "Caching and deduplication for high-frequency endpoints",
-        ],
+        usedIn: ["Sliding-window rate limiting on auth & form endpoints"],
+      },
+      {
+        name: "Upstash",
+        Icon: "https://svgl.app/library/upstash.svg",
+        usedIn: ["Serverless Redis for rate limiting at Trupeer & Elina Club"],
+      },
+      {
+        name: "Firebase",
+        Icon: "https://svgl.app/library/firebase.svg",
+        usedIn: ["Firestore + Auth for Plotline and Canopy"],
       },
     ],
   },
   {
-    title: "Testing",
+    title: "Security & Testing",
     skills: [
+      {
+        name: "Better Auth",
+        Icon: "/icons/betterauth.svg",
+        usedIn: ["Email, Google & 2FA sign-in for Kiteloom"],
+      },
+      {
+        name: "Auth0",
+        Icon: "https://svgl.app/library/auth0.svg",
+        usedIn: ["OAuth / OIDC flows and token validation in API middleware"],
+      },
+      {
+        name: "JWT",
+        Icon: "https://svgl.app/library/jwt.svg",
+        usedIn: ["Short-lived tokens for a hardened password-reset flow"],
+      },
       {
         name: "Vitest",
         Icon: "https://svgl.app/library/vitest.svg",
-        usedIn: [
-          "Unit & integration test suites for middleware and API routes",
-          "Mocking complex modules — Upstash Redis, reCAPTCHA, Stripe",
-          "Coverage for auth flows, redirects & error boundary paths",
-        ],
+        usedIn: ["Set up from scratch at Trupeer across Auth0, Stripe, Intercom & Mixpanel code"],
       },
       {
-        name: "happy-dom",
-        Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/happy-dom.svg",
-        usedIn: ["Lightweight DOM environment for server-rendered component tests"],
+        name: "Playwright",
+        Icon: "",
+        usedIn: ["End-to-end tests for Kiteloom, run in GitHub Actions"],
+      },
+      {
+        name: "Testing Library",
+        Icon: "/icons/testinglibrary.svg",
+        usedIn: ["React component tests"],
       },
     ],
   },
   {
-    title: "AI Tools & APIs",
+    title: "Mobile, Desktop & Tools",
     skills: [
       {
-        name: "ElevenLabs",
-        Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/eleven-labs-dark.svg",
-        usedIn: ["AI voiceover generation integrated into automated video production"],
+        name: "Android",
+        Icon: "/icons/android.svg",
+        usedIn: ["Edgepad — Bluetooth trackpad & gamepad app in Kotlin"],
       },
       {
-        name: "Claude",
+        name: "Tauri",
+        Icon: "/icons/tauri.svg",
+        usedIn: ["Saltcellar's desktop app, with a Rust core"],
+      },
+      {
+        name: ".NET",
+        Icon: "https://svgl.app/library/dotnet.svg",
+        usedIn: ["Edgepad's Windows host on .NET 10"],
+      },
+      {
+        name: "Claude Code",
         Icon: "https://svgl.app/library/claude-ai-icon.svg",
         usedIn: [
-          "AI-assisted code generation, refactoring & architecture planning",
-          "Prompt engineering for structured agent workflows",
+          "Daily driver for shipping secure, well-tested code",
+          "Built Plimsoll, a HUD for it",
         ],
       },
       {
-        name: "MCP",
-        Icon: "https://svgl.app/library/model-context-protocol-dark.svg",
-        usedIn: [
-          "Tool-augmented AI workflows with context-aware agents",
-          "Connecting LLMs to local dev environment and external services",
-        ],
+        name: "GitHub Actions",
+        Icon: "/icons/githubactions.svg",
+        usedIn: ["CI for Kiteloom's unit and Playwright suites"],
       },
       {
-        name: "Ollama",
-        Icon: "https://svgl.app/library/ollama_dark.svg",
-        usedIn: [
-          "Running local LLMs for offline-capable AI features",
-          "Low-latency inference for personal AI assistant tooling",
-        ],
+        name: "Vercel",
+        Icon: "/icons/vercel.svg",
+        usedIn: ["Hosting and preview deployments for web projects"],
       },
       {
-        name: "OpenRouter",
-        Icon: "https://svgl.app/library/openrouter_dark.svg",
-        usedIn: [
-          "Unified API gateway for switching between LLM providers",
-          "Multi-model routing in AI-powered personal projects",
-        ],
+        name: "Sentry",
+        Icon: "/icons/sentry.svg",
+        usedIn: ["Error tracking for Kiteloom"],
+      },
+      {
+        name: "Figma",
+        Icon: "https://svgl.app/library/figma.svg",
+        usedIn: ["UI design before code — dashboards, templates & app screens"],
       },
     ],
   },
@@ -263,7 +267,6 @@ export const skillsData: Skill[] = [
   { name: "Firebase", Icon: "https://svgl.app/library/firebase.svg" },
   { name: "Upstash", Icon: "https://svgl.app/library/upstash.svg" },
   { name: "Redis", Icon: "https://svgl.app/library/redis.svg" },
-  { name: "JavaScript", Icon: "https://svgl.app/library/javascript.svg" },
   { name: "Python", Icon: "https://svgl.app/library/python.svg" },
   { name: "C", Icon: "https://svgl.app/library/c.svg" },
   { name: "C++", Icon: "https://svgl.app/library/c-plusplus.svg" },
@@ -327,7 +330,6 @@ export const skillsData: Skill[] = [
     name: "ElevenLabs",
     Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/eleven-labs-dark.svg",
   },
-  { name: "Firebase", Icon: "https://svgl.app/library/firebase.svg" },
   { name: "Auth0", Icon: "https://svgl.app/library/auth0.svg" },
   { name: "Authy", Icon: "https://svgl.app/library/authy.svg" },
   { name: "JWT", Icon: "https://svgl.app/library/jwt.svg" },
@@ -346,4 +348,20 @@ export const skillsData: Skill[] = [
     name: "jsdom",
     Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/jsdom.svg",
   },
+  { name: "Kotlin", Icon: "/icons/kotlin.svg" },
+  { name: "Rust", Icon: "/icons/rust.svg" },
+  { name: "Android", Icon: "/icons/android.svg" },
+  { name: "Tauri", Icon: "/icons/tauri.svg" },
+  { name: "Convex", Icon: "/icons/convex.svg" },
+  { name: "Neon", Icon: "/icons/neon.svg" },
+  { name: "Zod", Icon: "/icons/zod.svg" },
+  { name: "GSAP", Icon: "/icons/gsap.svg" },
+  { name: "Better Auth", Icon: "/icons/betterauth.svg" },
+  { name: "Playwright", Icon: "" },
+  { name: "Testing Library", Icon: "/icons/testinglibrary.svg" },
+  { name: "Sentry", Icon: "/icons/sentry.svg" },
+  { name: "Vercel", Icon: "/icons/vercel.svg" },
+  { name: "GitHub Actions", Icon: "/icons/githubactions.svg" },
+  { name: "Spotify", Icon: "/icons/spotify.svg" },
+  { name: "Claude Code", Icon: "https://svgl.app/library/claude-ai-icon.svg" },
 ];

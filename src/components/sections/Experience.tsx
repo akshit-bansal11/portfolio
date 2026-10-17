@@ -1,6 +1,6 @@
 /*
  * Experience.tsx
- * Experience section. Displays category tabs (e.g. Internship,
+ * Experience section. Displays category tabs (e.g. Work, Internship,
  * Training) above an accordion list of experience entries.
  * Clicking a tab switches the visible set of cards.
  */

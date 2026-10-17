@@ -1,7 +1,7 @@
 /*
  * Projects.tsx
  * Home-page Projects preview.
- * Shows the first three Web projects in a responsive
+ * Shows the first three Apps & Tools projects in a responsive
  * grid plus a "See More" link to the full /projects
  * page for the complete gallery.
  */
@@ -31,9 +31,9 @@ export default function Projects() {
           </Link>
         </Button>
       </div>
-      {/* Top three Web projects. */}
+      {/* Top three Apps & Tools projects. */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
-        {projects.Web.slice(0, 3).map((project, index) => (
+        {projects["Apps & Tools"].slice(0, 3).map((project, index) => (
           <ProjectCard key={index} {...project} />
         ))}
       </div>

@@ -3,7 +3,7 @@
  * /projects route — full-page projects gallery.
  * Renders a header with a back-home link and animated
  * title, then a ScrollReveal-staggered grid for each
- * project category (Web, Designs, Scripts, ...).
+ * project category (Apps & Tools, Web, Designs, Scripts, ...).
  */
 
 "use client";
@@ -63,8 +63,7 @@ function Projects() {
                   transition={{ delay: 0.1 }}
                   className="text-neutral-500 max-w-2xl text-lg"
                 >
-                  A collection of web applications, tools, and experiments built with modern
-                  technologies.
+                  Android and Windows apps, web applications, tools, and experiments.
                 </motion.p>
               </div>
             </div>
