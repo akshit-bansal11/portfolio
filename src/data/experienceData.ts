@@ -48,6 +48,7 @@ export const experience: ExperienceCategory[] = [
       {
         location: "Remote",
         company: "Kiteloom",
+        logo: asset("projects/kiteloom/logo.svg"),
         role: "Founder",
         date: "Jan 2026 - Present",
         generalPoint:
