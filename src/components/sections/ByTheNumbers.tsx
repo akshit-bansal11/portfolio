@@ -153,7 +153,7 @@ const BASE_STATS: Omit<StatCardData, "value">[] = [
     id: "professional",
     suffix: " y",
     label: "Professional Experience",
-    sublabel: "Years of internship & training",
+    sublabel: "Years of work, internship & training",
     accentClass: "bg-gradient-to-r from-rose-400 to-pink-400 bg-clip-text text-transparent",
     glowClass: "shadow-rose-500/20",
   },

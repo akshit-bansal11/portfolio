@@ -2,7 +2,7 @@ import trupeerLogo from "@/assets/images/trupeer-dark.svg";
 import { asset } from "@/config/assets";
 import type { ExperienceItem } from "@/types/experience";
 
-// One named group of experience cards (e.g. "Internship", "Training").
+// One named group of experience cards (e.g. "Work", "Internship", "Training").
 export interface ExperienceCategory {
   title: string;
   items: ExperienceItem[];
@@ -11,13 +11,81 @@ export interface ExperienceCategory {
 // All experience entries, grouped by category, in display order.
 export const experience: ExperienceCategory[] = [
   {
+    title: "Work",
+    items: [
+      {
+        location: "Bathinda (On-Site)",
+        company: "Elina Club Pvt. Ltd.",
+        role: "SDE-1 & Chief Advisor",
+        date: "Jul 2026 - Present",
+        generalPoint:
+          "Only engineer at the company — I own frontend, backend, database, automation and deployments, and advise leadership on product and tech decisions.",
+        points: [
+          {
+            label: "Production Platforms",
+            body: "Built and shipped two production web platforms on Next.js 16, React 19 and TypeScript, from first commit to live site; about 350 commits in under three months.",
+          },
+          {
+            label: "Data & APIs",
+            body: "Designed the Postgres (Neon) schema and APIs behind the lead, careers, feedback and newsletter forms, with server-side Zod validation and Upstash Redis rate limiting.",
+          },
+          {
+            label: "Admin Panel",
+            body: "Wrote the admin panel: filterable lead tables, Excel export and viewer/editor roles, on signed httpOnly sessions with scrypt-hashed passwords.",
+          },
+        ],
+        skills: ["Next.js", "React", "TypeScript", "PostgreSQL", "Neon", "Zod", "Upstash", "Redis"],
+      },
+      {
+        location: "Undisclosed",
+        company: "Stealth Startup",
+        role: "Co-Founder & CTO",
+        date: "Jul 2026 - Present",
+        generalPoint:
+          "Co-founded an early-stage company that is still in stealth; I own the technical direction, architecture and engineering.",
+        points: [],
+      },
+      {
+        location: "Remote",
+        company: "Kiteloom",
+        role: "Founder",
+        date: "Jan 2026 - Present",
+        generalPoint:
+          "My own product: an infinite canvas where sketches, wireframes and diagrams are the same object, with real-time multiplayer on Yjs CRDTs.",
+        points: [
+          {
+            label: "Auth & Billing",
+            body: "Better Auth (email, Google, 2FA), Paddle billing, per-user rate limits and Sentry error tracking.",
+          },
+          {
+            label: "Testing & CI",
+            body: "70+ unit test files and Playwright end-to-end tests run in GitHub Actions.",
+          },
+          {
+            label: "Localization",
+            body: "Ships in 11 languages.",
+          },
+        ],
+        skills: [
+          "Next.js",
+          "TypeScript",
+          "Convex",
+          "Better Auth",
+          "Sentry",
+          "Playwright",
+          "GitHub Actions",
+        ],
+      },
+    ],
+  },
+  {
     title: "Internship",
     items: [
       {
         location: "Bengaluru (On-Site)",
         company: "Trupeer",
-        role: "Full Stack Developer (Next.js & Typescript)",
-        date: "Jan 2026 - Ongoing",
+        role: "Full-Stack Intern",
+        date: "Jan 2026 - Jul 2026",
         logo: trupeerLogo,
         generalPoint:
           "Contributed across a distributed, microservices-oriented architecture spanning a Next.js web application, Chrome extension, and Node.js backend — interfacing with REST APIs, MongoDB, Redis, third-party webhooks, and containerized deployments throughout the feature lifecycle.",
