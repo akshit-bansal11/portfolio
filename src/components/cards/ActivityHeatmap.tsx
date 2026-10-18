@@ -1,7 +1,7 @@
 /*
  * ActivityHeatmap.tsx
- * Shared contribution-calendar heatmap component used by
- * both the GitHub and LeetCode calendar embeds.
+ * Contribution-calendar heatmap component used by the
+ * GitHub calendar embed.
  * Renders a pure CSS Grid of 53 columns × 7 rows with
  * month labels and day-of-week labels.
  */
@@ -90,6 +90,8 @@ function computeMonthPositions(
       if (!day.date) continue;
       const month = new Date(day.date).getMonth();
       if (month !== lastMonth) {
+        // Drop a partial earlier month whose label would overlap this one.
+        if (positions.length > 0 && w - positions[positions.length - 1].col < 3) positions.pop();
         positions.push({ label: MONTH_LABELS[month], col: w });
         lastMonth = month;
       }
@@ -140,55 +142,50 @@ export default function ActivityHeatmap({
 
   return (
     <div className={cn("relative", className)} data-heatmap-container>
-      {/* Month labels */}
-      <div
-        className="grid gap-[3px] mb-1 ml-8"
-        style={{
-          gridTemplateColumns: `repeat(${weeks.length}, 11px)`,
-        }}
-      >
-        {Array.from({ length: weeks.length }).map((_, i) => {
-          const monthEntry = monthPositions.find((m) => m.col === i);
-          return (
-            <span key={i} className="text-[10px] text-neutral-500 leading-none whitespace-nowrap">
-              {monthEntry?.label ?? ""}
-            </span>
-          );
-        })}
-      </div>
-
-      {/* Grid body: day labels + cells */}
-      <div className="flex gap-[3px]">
-        {/* Day-of-week labels */}
-        <div className="flex flex-col gap-[3px] shrink-0">
-          {DAY_LABELS.map((label, i) => (
-            <span key={i} className="text-[10px] text-neutral-500 h-[11px] w-5 leading-[11px]">
-              {label}
-            </span>
-          ))}
-        </div>
-
-        {/* Heatmap cells */}
+      {/* One grid: day-label column + week columns; cells are square so the
+          calendar scales with the card width (scrolls inside it when narrow). */}
+      <div className="overflow-x-auto">
         <div
           className="grid gap-[3px]"
           style={{
-            gridTemplateColumns: `repeat(${weeks.length}, 11px)`,
-            gridTemplateRows: "repeat(7, 11px)",
-            gridAutoFlow: "column",
+            gridTemplateColumns: `1.25rem repeat(${weeks.length}, minmax(11px, 1fr))`,
+            minWidth: `calc(1.25rem + ${weeks.length} * 14px)`,
           }}
         >
+          {monthPositions.map((m) => (
+            <span
+              key={`${m.label}-${m.col}`}
+              className="text-[10px] text-neutral-500 leading-none whitespace-nowrap mb-1"
+              style={{ gridRow: 1, gridColumn: m.col + 2 }}
+            >
+              {m.label}
+            </span>
+          ))}
+
+          {DAY_LABELS.map((label, i) => (
+            <span
+              key={i}
+              className="text-[10px] text-neutral-500 leading-none self-center"
+              style={{ gridRow: i + 2, gridColumn: 1 }}
+            >
+              {label}
+            </span>
+          ))}
+
           {weeks.map((week, wi) =>
             week.map((day) => {
-              if (!day.date) {
-                return <div key={`${wi}-empty-${day.dayOfWeek}`} className="w-[11px] h-[11px]" />;
-              }
+              if (!day.date) return null;
               const count = data[day.date] ?? 0;
               return (
                 <div
                   key={day.date}
                   aria-hidden="true"
-                  className="w-[11px] h-[11px] rounded-sm cursor-pointer transition-transform hover:scale-125"
-                  style={{ backgroundColor: getColor(count) }}
+                  className="aspect-square rounded-sm cursor-pointer transition-transform hover:scale-125"
+                  style={{
+                    backgroundColor: getColor(count),
+                    gridRow: day.dayOfWeek + 2,
+                    gridColumn: wi + 2,
+                  }}
                   onMouseEnter={(e) => handleMouseEnter(e, day.date, count)}
                   onMouseLeave={() => setTooltip(null)}
                 />

@@ -20,3 +20,10 @@ export interface CertificationItem {
   skills?: string[];
   link: string;
 }
+
+// A GitHub profile achievement badge (static: GitHub has no achievements API).
+export interface GitHubAchievement {
+  name: string;
+  imgUrl: string;
+  tier?: string;
+}

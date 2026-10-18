@@ -6,8 +6,10 @@
 
 "use client";
 
+import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import ActivityHeatmap from "@/components/cards/ActivityHeatmap";
+import { githubAchievements } from "@/data/badgesData";
 import { fetchGitHubContributions } from "@/lib/api/github";
 import { cn } from "@/lib/utils";
 import type { GitHubContributions } from "@/types/coding-stats";
@@ -20,6 +22,8 @@ const GITHUB_COLOR_SCALE: [string, string, string, string, string] = [
   "#26a641", // medium-high
   "#39d353", // high
 ];
+
+const ACHIEVEMENTS_URL = "https://github.com/akshit-bansal11?tab=achievements";
 
 interface GitHubContributionCalendarProps {
   className?: string;
@@ -111,6 +115,32 @@ export default function GitHubContributionCalendar({ className }: GitHubContribu
           </div>
         </div>
       )}
+
+      {/* Achievements row — one link to the profile's achievements tab. */}
+      <a
+        href={ACHIEVEMENTS_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="GitHub achievements"
+        className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-neutral-800 pt-3"
+      >
+        {githubAchievements.map((a) => (
+          <span key={a.name} title={a.name} className="relative shrink-0">
+            <Image
+              src={a.imgUrl}
+              alt={`${a.name} achievement`}
+              width={44}
+              height={44}
+              className="size-11"
+            />
+            {a.tier && (
+              <span className="absolute -bottom-1 -right-1 rounded-full border border-neutral-900 bg-amber-700 px-1 text-[10px] font-semibold leading-4 text-white">
+                {a.tier}
+              </span>
+            )}
+          </span>
+        ))}
+      </a>
     </div>
   );
 }

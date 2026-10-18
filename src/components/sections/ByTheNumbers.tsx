@@ -5,8 +5,8 @@
  * with hardcoded years values, and animates each card's
  * value with a number counter on scroll-in.
  *
- * Includes GitHub contribution calendar and LeetCode embeds
- * (solved tracker + submission calendar) below the stat cards.
+ * Includes the GitHub contribution calendar: left of the stat
+ * cards on lg+, below them on smaller screens.
  */
 
 "use client";
@@ -14,8 +14,6 @@
 import { animate, createScope } from "animejs";
 import { useEffect, useRef, useState } from "react";
 import GitHubContributionCalendar from "@/components/cards/GitHubContributionCalendar";
-import LeetCodeSolvedTracker from "@/components/cards/LeetCodeSolvedTracker";
-import LeetCodeSubmissionCalendar from "@/components/cards/LeetCodeSubmissionCalendar";
 import ScrollSectionHeading from "@/components/headings/ScrollSectionHeading";
 import ScrollSection from "@/components/layout/ScrollSection";
 import { fetchGitHubStats } from "@/lib/api/github";
@@ -53,6 +51,8 @@ function CounterValue({
     if (!triggered || !spanRef.current) return;
 
     const obj = { val: 0 };
+    // Keep the target's own decimal places (e.g. 1.4 stays "1.4").
+    const decimals = (String(target).split(".")[1] ?? "").length;
     scopeRef.current = createScope({ root: spanRef });
 
     // Animate val 0 → target and write each frame as a localized number.
@@ -62,7 +62,10 @@ function CounterValue({
       easing: "easeOutExpo",
       onUpdate: () => {
         if (spanRef.current) {
-          spanRef.current.textContent = Math.round(obj.val).toLocaleString();
+          spanRef.current.textContent = obj.val.toLocaleString(undefined, {
+            minimumFractionDigits: decimals,
+            maximumFractionDigits: decimals,
+          });
         }
       },
     });
@@ -75,9 +78,9 @@ function CounterValue({
   return (
     <span
       className={cn(
-        "font-clash font-extrabold",
-        /* Mobile: smaller pill text | Tablet: medium | Desktop: large */
-        "text-2xl sm:text-3xl md:text-4xl lg:text-5xl",
+        "font-clash font-extrabold whitespace-nowrap shrink-0",
+        /* Mobile: smaller pill text | Tablet: medium | Desktop: compact */
+        "text-2xl sm:text-3xl md:text-4xl lg:text-3xl",
         accentClass,
       )}
     >
@@ -104,7 +107,7 @@ function StatCard({ card, triggered }: { card: StatCardData; triggered: boolean 
         "sm:flex-col sm:items-start sm:gap-3 sm:p-4 sm:rounded-2xl",
 
         /* Desktop: generous padding */
-        "lg:p-6",
+        "lg:flex-row lg:items-center lg:gap-3 lg:px-4 lg:py-2",
       )}
     >
       <CounterValue
@@ -224,20 +227,15 @@ export default function ByTheNumbers() {
         <ScrollSectionHeading heading="by the numbers" />
       </div>
 
-      {/* Card grid (or skeleton placeholders while stats are loading). */}
-      <section ref={sectionRef} className="w-full space-y-4 md:space-y-6">
-        {/* Stat cards — responsive grid */}
-        <div
-          className={cn(
-            "grid gap-2",
-            /* Mobile: 2-col pill grid */
-            "grid-cols-2",
-            /* Tablet: 2-col compact cards */
-            "sm:gap-3",
-            /* Desktop: 4-col full cards */
-            "lg:grid-cols-4 lg:gap-4",
-          )}
-        >
+      {/* Mobile/tablet: stats above heatmap. lg+: heatmap left, stats right at heatmap height. */}
+      <section
+        ref={sectionRef}
+        className="flex w-full flex-col gap-4 md:gap-6 lg:grid lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-stretch lg:gap-4"
+      >
+        <GitHubContributionCalendar className="order-2 lg:order-1 lg:h-full" />
+
+        {/* Stat cards (or skeleton placeholders while stats are loading). */}
+        <div className="order-1 grid grid-cols-2 gap-2 sm:gap-3 lg:order-2 lg:h-full lg:min-h-0 lg:grid-cols-1 lg:grid-rows-4 lg:gap-3">
           {stats.length > 0
             ? stats.map((card) => <StatCard key={card.id} card={card} triggered={triggered} />)
             : Array.from({ length: 4 }).map((_, i) => (
@@ -245,39 +243,10 @@ export default function ByTheNumbers() {
                   key={i}
                   className={cn(
                     "rounded-xl sm:rounded-2xl bg-neutral-900/40 border border-neutral-800 animate-pulse",
-                    "h-16 sm:h-28 lg:h-36",
+                    "h-16 sm:h-28 lg:h-auto",
                   )}
                 />
               ))}
-        </div>
-
-        {/* Embeds:
-				  • sm  (< 768px):  3 separate rows
-				  • md  (768–1024): GitHub | LeetCode-solved+calendar (2 rows)
-				  • lg+ (≥ 1024px): all 3 on one row, equal height
-				*/}
-
-        {/* lg+: single row of 3 equal-height columns */}
-        <div className="hidden lg:grid lg:grid-cols-[1fr_200px_1fr] lg:gap-4 lg:items-stretch">
-          <GitHubContributionCalendar className="h-full" />
-          <LeetCodeSolvedTracker className="h-full" />
-          <LeetCodeSubmissionCalendar className="h-full" />
-        </div>
-
-        {/* md: GitHub full width, then solved + submission side by side */}
-        <div className="hidden md:flex lg:hidden flex-col gap-3">
-          <GitHubContributionCalendar />
-          <div className="grid grid-cols-[240px_1fr] gap-3 items-stretch">
-            <LeetCodeSolvedTracker className="h-full" />
-            <LeetCodeSubmissionCalendar className="h-full" />
-          </div>
-        </div>
-
-        {/* sm/mobile: all three stacked */}
-        <div className="flex md:hidden flex-col gap-3">
-          <GitHubContributionCalendar />
-          <LeetCodeSolvedTracker />
-          <LeetCodeSubmissionCalendar />
         </div>
       </section>
     </ScrollSection>
