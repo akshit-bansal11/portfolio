@@ -70,7 +70,7 @@ export const experience: ExperienceCategory[] = [
         generalPoint:
           "Hands-on training building production-style MERN applications with first-class AI integration, focused on shipping responsive, maintainable full-stack features end-to-end.",
         points: [],
-        certificate: asset("certificates/mern-ai-training.pdf"),
+        certificate: asset("experience/mern-ai-training.pdf"),
         skills: ["MongoDB", "Express", "React", "Node.js", "Redux", "Tailwind CSS", "Gemini"],
       },
       {
@@ -81,7 +81,7 @@ export const experience: ExperienceCategory[] = [
         generalPoint:
           "Structured DSA program centered on building strong problem-solving instincts — practicing time and space tradeoffs across competitive programming patterns.",
         points: [],
-        certificate: asset("certificates/dsa-training.pdf"),
+        certificate: asset("experience/dsa-training.pdf"),
         skills: ["C++", "JavaScript", "Leetcode", "Hackerrank"],
       },
       {
@@ -92,7 +92,7 @@ export const experience: ExperienceCategory[] = [
         generalPoint:
           "Foundational full-stack training built around the Node.js ecosystem — server-side fundamentals, RESTful API design, persistence, and core security and performance practices.",
         points: [],
-        certificate: asset("certificates/nodejs-fullstack-training.pdf"),
+        certificate: asset("experience/nodejs-fullstack-training.pdf"),
         skills: [
           "HTML5",
           "CSS3",

@@ -1,8 +1,8 @@
 /*
  * navConfig.ts
  * Per-page navigation menus.
- * The home page lists every section anchor; nested routes
- * (like /projects) get a simpler menu that just links home.
+ * The home page lists every section anchor; any other route
+ * (like the 404 page) gets a simpler menu that just links home.
  */
 
 import {

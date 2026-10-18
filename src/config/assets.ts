@@ -6,5 +6,5 @@
 
 export const ASSETS_HOST = "assets.akshitbansal.dev";
 
-// Object key (e.g. "logos/non-svgl/sql.svg") → absolute public URL.
+// Object key (e.g. "skills/sql.svg") → absolute public URL.
 export const asset = (key: string): string => `https://${ASSETS_HOST}/${key}`;

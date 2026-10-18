@@ -26,10 +26,10 @@ export const RESUME_FILENAME = "akshit_bansal.pdf";
 export const EMAIL_HREF = "mailto:artistbansal2004@gmail.com";
 
 // Default profile photo (front face of the flip card).
-export const PROFILE_IMAGE_URL = asset("credentials/pfp.webp");
+export const PROFILE_IMAGE_URL = asset("personal/pfp.webp");
 
 // Hover/back-face profile photo (revealed on flip).
-export const PROFILE_IMAGE_HOVER_URL = asset("credentials/pfp-hover.webp");
+export const PROFILE_IMAGE_HOVER_URL = asset("personal/pfp-hover.webp");
 
 // Display name used in the hero headline.
 export const PROFILE_NAME = "Akshit Bansal";

@@ -1,139 +1,87 @@
 /*
  * projectsData.ts
- * Source-of-truth for the Projects section and /projects page.
- * Grouped by category (Web, Designs, Scripts) so the page can
- * render each category as its own scroll-revealed grid.
+ * Source-of-truth for the home-page Projects section.
+ * A flat, ordered list: no categories and no separate
+ * /projects page; every entry renders in the section grid.
  */
 
 import { asset } from "@/config/assets";
 import type { ProjectItem } from "@/types/project";
 
-// Dictionary of category → ordered project entries.
-export const projects: Record<string, ProjectItem[]> = {
-  Web: [
-    {
-      title: "Plotline",
-      description:
-        "Organize your entire media library; movies, series, anime, manga, and games; all in one place. Plotline shows you exactly where to stream, buy, or rent everything you want.",
-      imgUrl: asset("portfolio/websites/plotline.png"),
-      techStack: ["Next.js", "TypeScript", "Firebase", "Tailwind CSS"],
-      siteLink: "https://plotline.akshitbansal.me/",
-      isPublic: false,
-    },
-    {
-      title: "Canopy",
-      description:
-        "Canopy is an open-source bookmarking tool built for the way the web actually feels—messy, fast, and full of ideas. Save links, organize them with flexible tags, and find anything instantly. No folders to fight, no lock-in, no noise. Your bookmarks live under one canopy: structured, searchable, and completely yours.",
-      imgUrl: asset("portfolio/websites/canopy.png"),
-      videoUrl:
-        "https://res.cloudinary.com/dugsystpq/video/upload/v1774064469/canopy-demo_o1tc7z.mp4",
-
-      techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Firebase"],
-      demoLink: "https://use-canopy.vercel.app/",
-      githubLink: "https://github.com/akshit-bansal11/canopy",
-      isPublic: true,
-    },
-    {
-      title: "Open Tools",
-      description:
-        "A growing collection of focused, local-first utilities for image, text, and design workflows. Each tool lives on its own route.",
-      imgUrl: asset("portfolio/websites/open-tools.png"),
-      videoUrl:
-        "https://res.cloudinary.com/dugsystpq/video/upload/v1774098892/open-tools-demo_gm4mbv.mp4",
-      techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Shadcn"],
-      demoLink: "https://use-open-tools.vercel.app/",
-      githubLink: "https://github.com/akshit-bansal11/open-tools",
-      isPublic: true,
-    },
-    {
-      title: "Command Ref",
-      description:
-        "A growing collection of coprehensive command line reference guides for various tools and technologies. Each guide provides detailed information on commands, options, and usage examples.",
-      imgUrl: asset("portfolio/websites/cmd-ref.png"),
-      videoUrl:
-        "https://res.cloudinary.com/dugsystpq/video/upload/v1772932699/open-tools-demo-video_apmc8u.mp4https://res.cloudinary.com/dugsystpq/video/upload/v1774103321/cmd-ref-demo_q6uwee.mp4",
-      techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Shadcn"],
-      demoLink: "https://cmd-ref.vercel.app/",
-      githubLink: "https://github.com/akshit-bansal11/.cmd-ref",
-      isPublic: true,
-    },
-    {
-      title: "Color Space",
-      description:
-        "Color Space is a comprehensive, all-in-one web application designed for designers and developers. It provides a full suite of tools to create, browse, extract, and convert colors and gradients, all in one centralized hub.",
-      imgUrl: asset("portfolio/websites/color-space.png"),
-      videoUrl:
-        "https://res.cloudinary.com/dugsystpq/video/upload/v1774064471/color-space-demo_lzmzrr.mp4",
-      techStack: ["React", "Tailwind CSS", "Gemini"],
-      demoLink: "https://color-space11.vercel.app/",
-      githubLink: "https://github.com/akshit-bansal11/color-space",
-      isPublic: true,
-    },
-    {
-      title: "Influera",
-      description:
-        "Influera is a platform that connects influencers with brands for collaborations.",
-      imgUrl: asset("portfolio/websites/influera.png"),
-      techStack: ["React", "Node.js", "MongoDB", "Tailwind CSS"],
-      demoLink: "https://influera.onrender.com/",
-      githubLink: "https://github.com/akshit-bansal11/influera",
-      isPublic: true,
-    },
-    {
-      title: "Memory Game",
-      description:
-        "A fun and modern Memory Game built with React, Vite, Tailwind CSS, Framer Motion, and React Icons.",
-      imgUrl: asset("portfolio/websites/memory.png"),
-      techStack: ["React", "Tailwind CSS"],
-      demoLink: "https://memory-game-akshit-bansal11.vercel.app/",
-      githubLink: "https://github.com/akshit-bansal11/memory-game",
-      isPublic: true,
-    },
-    {
-      title: "Bar Clock",
-      description:
-        "A simple bar clock built with React & Tailwind. Displays the current time in a unique way.",
-      imgUrl: asset("portfolio/websites/bar-clock.png"),
-      techStack: ["React", "Tailwind CSS"],
-      githubLink: "https://akshit-bansal11.github.io/bar-clock/",
-      demoLink: "https://bar-clock-akshit-bansal11.vercel.app/",
-      isPublic: true,
-    },
-  ],
-  Designs: [
-    {
-      title: "IPO Dashboard - Bluestock",
-      description:
-        "A dashboard design for Bluestock Fintech's IPO section, showcasing the latest IPOs, upcoming IPOs, and past IPOs.",
-      imgUrl: asset("portfolio/designs/ipo.webp"),
-      techStack: ["Figma"],
-      designLink:
-        "https://www.figma.com/design/IyF5MKCS7GP2ChFBOiWXAK/bluestock-fintech-ui-ux-team?node-id=0-1&p=f&t=uex6AqWahwZjsA3R-0",
-    },
-    {
-      title: "E-Commerce Website Template",
-      description:
-        "A modern e-commerce website template designed for a fictional clothing store, featuring a clean and user-friendly interface.",
-      imgUrl: asset("portfolio/designs/ecom.webp"),
-      techStack: ["Figma"],
-      designLink:
-        "https://www.figma.com/design/32zeVVPSZBHL9GFSEXUqHp/Ecom-base?node-id=1-3&p=f&t=JxJOvK2iMlsW3gJ2-0/",
-    },
-  ],
-  Scripts: [
-    {
-      title: "Merge Folders",
-      description: "A python script to merge two or more folders.",
-      techStack: ["Python"],
-      githubLink: "https://github.com/akshit-bansal11/useful-scripts",
-      isPublic: true,
-    },
-    {
-      title: "Audio Converter",
-      description: "A python script to convert audio files from one format to another.",
-      techStack: ["Python"],
-      githubLink: "https://github.com/akshit-bansal11/useful-scripts",
-      isPublic: true,
-    },
-  ],
-};
+// Ordered project entries, rendered top-to-bottom in the grid.
+export const projects: ProjectItem[] = [
+  {
+    title: "Kiteloom",
+    description:
+      "Real-time collaborative whiteboard in the browser. An infinite canvas with shapes, text and images, live cursors synced over WebSockets with Yjs CRDTs, and no account needed to join a room.",
+    techStack: ["Next.js", "TypeScript", "Yjs", "Zustand", "Convex"],
+    siteLink: "https://kiteloom.com",
+    isPublic: false,
+  },
+  {
+    title: "Edgepad",
+    description:
+      "Turns an Android phone into a Bluetooth trackpad, media remote and control panel for a Windows laptop or a Mac. Corner dials, multi-finger gestures, an on-screen keyboard and a gamepad. No account, no server, no telemetry.",
+    imgUrl: asset("projects/edgepad/preview.png"),
+    techStack: ["Kotlin", "C#", ".NET", "Swift"],
+    siteLink: "https://edgepad.akshitbansal.dev",
+    githubLink: "https://github.com/akshit-bansal11/edgepad",
+    isPublic: true,
+  },
+  {
+    title: "Offkit",
+    description:
+      "A Windows desktop app with 37 file tools for images, video, audio, PDFs, SVG, colors and text. Everything runs on your PC: nothing is uploaded, and there is no account and no telemetry.",
+    techStack: ["Next.js", "TypeScript", "Rust", "Slint", "FFmpeg WASM"],
+    githubLink: "https://github.com/akshit-bansal11/offkit",
+    isPublic: true,
+  },
+  {
+    title: "Inlay",
+    description:
+      "Live widgets set into the Windows 11 desktop: a clock, a Spotify spectrum visualizer, word-synced lyrics and a player, drawn behind the desktop icons by one small native app. A light alternative to Rainmeter.",
+    imgUrl: asset("projects/inlay/preview.png"),
+    techStack: ["Rust", "Direct2D"],
+    siteLink: "https://inlay.akshitbansal.dev",
+    githubLink: "https://github.com/akshit-bansal11/inlay",
+    isPublic: true,
+  },
+  {
+    title: "Saltcellar",
+    description:
+      "A local-only encrypted vault for passwords, environment keys and backup codes on Windows. AES-256-GCM under an Argon2id-derived key, a desktop app and a CLI, and no network code at all.",
+    imgUrl: asset("projects/saltcellar/preview.png"),
+    techStack: ["Rust", "Tauri", "TypeScript"],
+    siteLink: "https://saltcellar.akshitbansal.dev",
+    githubLink: "https://github.com/akshit-bansal11/saltcellar",
+    isPublic: true,
+  },
+  {
+    title: "Keyslate",
+    description:
+      "A fully local, keyboard-first notes app for Windows. Notes are plain .md and .txt files in a folder you choose, every action is a rebindable command, and there is no network code.",
+    techStack: ["Rust", "Tauri", "React", "TypeScript"],
+    githubLink: "https://github.com/akshit-bansal11/keyslate",
+    isPublic: true,
+  },
+  {
+    title: "Lorestep",
+    description:
+      "Story-order tracker for connected franchises: what to play, watch and read, in in-universe chronological order. 126 game franchises and 6 film and series chronologies, with progress kept in the browser and no account.",
+    imgUrl: asset("projects/lorestep/preview.png"),
+    techStack: ["Next.js", "TypeScript", "Drizzle ORM", "Neon"],
+    siteLink: "https://lorestep.akshitbansal.dev",
+    githubLink: "https://github.com/akshit-bansal11/lorestep",
+    isPublic: true,
+  },
+  {
+    title: "Plimsoll",
+    description:
+      "A heads-up display for Claude Code, drawn above the prompt: context-window fill, rate-limit windows, token cost, usage stats and git status, plus a small ASCII mascot.",
+    imgUrl: asset("projects/plimsoll/preview.png"),
+    techStack: ["TypeScript", "Node.js"],
+    siteLink: "https://plimsoll.akshitbansal.dev",
+    githubLink: "https://github.com/akshit-bansal11/plimsoll",
+    isPublic: true,
+  },
+];

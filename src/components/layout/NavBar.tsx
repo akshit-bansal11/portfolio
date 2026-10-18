@@ -4,7 +4,7 @@
  * Centered top bar with icons and hover tooltip labels.
  * Appears only once the user has scrolled past the full hero
  * and reached the first content section.
- * Hidden on /skills and /projects routes.
+ * Hidden on the /skills route.
  */
 
 "use client";
@@ -33,7 +33,7 @@ export default function NavBar({ page }: NavBarProps) {
   // and the first content section has come into view.
   const [isPastHero, setIsPastHero] = useState(false);
 
-  const isHidden = pathname === "/skills" || pathname === "/projects";
+  const isHidden = pathname === "/skills";
 
   // scrollY at which progress=1 for the hero wrapper: (vh - 1) * innerHeight
 
@@ -52,7 +52,7 @@ export default function NavBar({ page }: NavBarProps) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [configKey]);
 
-  // For non-home pages (e.g. /projects sub-route) always show the bar.
+  // For non-home pages (e.g. the 404 page) always show the bar.
   const shouldShow = isWelcomeComplete && !isHidden && (configKey !== "home" || isPastHero);
 
   // Click handler: scroll to an in-page section anchor.

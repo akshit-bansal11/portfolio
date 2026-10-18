@@ -33,12 +33,14 @@ Working across the full product stack on high-impact features:
 
 | Project | Description | Stack |
 |---|---|---|
-| [**Plotline**](https://plotline.akshitbansal.me/) | Organize your entire media library — movies, series, anime, manga, and games — with streaming availability info. | Next.js · TypeScript · Firebase |
-| [**Canopy**](https://use-canopy.vercel.app/) · [↗](https://github.com/akshit-bansal11/canopy) | Open-source bookmarking tool with flexible tags and instant search. No folders, no lock-in. | Next.js · TypeScript · Firebase |
-| [**Open Tools**](https://use-open-tools.vercel.app/) · [↗](https://github.com/akshit-bansal11/open-tools) | A growing collection of local-first utilities for image, text, and design workflows. | Next.js · TypeScript · shadcn |
-| [**Command Ref**](https://cmd-ref.vercel.app/) · [↗](https://github.com/akshit-bansal11/.cmd-ref) | Comprehensive CLI reference guides with commands, options, and usage examples. | Next.js · TypeScript · shadcn |
-| [**Color Space**](https://color-space11.vercel.app/) · [↗](https://github.com/akshit-bansal11/color-space) | All-in-one color tool for designers — create, browse, extract, and convert colors and gradients. | React · Tailwind CSS · Gemini |
-| [**Influera**](https://influera.onrender.com/) · [↗](https://github.com/akshit-bansal11/influera) | Platform connecting influencers with brands for collaborations. | React · Node.js · MongoDB |
+| [**Kiteloom**](https://kiteloom.com) | Real-time collaborative whiteboard in the browser, no account needed. | Next.js · TypeScript · Yjs · Convex |
+| [**Edgepad**](https://edgepad.akshitbansal.dev) · [↗](https://github.com/akshit-bansal11/edgepad) | An Android phone as a Bluetooth trackpad, media remote and control panel for a Windows laptop or a Mac. | Kotlin · C# · .NET · Swift |
+| [**Offkit**](https://github.com/akshit-bansal11/offkit) | A Windows desktop app with 37 local file tools; nothing is uploaded. | Next.js · TypeScript · Rust · Slint |
+| [**Inlay**](https://inlay.akshitbansal.dev) · [↗](https://github.com/akshit-bansal11/inlay) | Live Spotify widgets set into the Windows 11 desktop. A light alternative to Rainmeter. | Rust · Direct2D |
+| [**Saltcellar**](https://saltcellar.akshitbansal.dev) · [↗](https://github.com/akshit-bansal11/saltcellar) | A local-only encrypted vault for passwords, environment keys and backup codes on Windows. | Rust · Tauri · TypeScript |
+| [**Keyslate**](https://github.com/akshit-bansal11/keyslate) | A fully local, keyboard-first notes app for Windows, on plain .md and .txt files. | Rust · Tauri · React · TypeScript |
+| [**Lorestep**](https://lorestep.akshitbansal.dev) · [↗](https://github.com/akshit-bansal11/lorestep) | Story-order tracker for connected franchises: what to play, watch and read, in chronological order. | Next.js · TypeScript · Drizzle ORM · Neon |
+| [**Plimsoll**](https://plimsoll.akshitbansal.dev) · [↗](https://github.com/akshit-bansal11/plimsoll) | A usage, statistics and git HUD for Claude Code. | TypeScript · Node.js |
 
 ---
 

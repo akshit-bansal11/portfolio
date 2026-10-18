@@ -172,7 +172,7 @@ export const SkillCategories: SkillCategory[] = [
       },
       {
         name: "happy-dom",
-        Icon: asset("logos/non-svgl/happy-dom.svg"),
+        Icon: asset("skills/happy-dom.svg"),
         usedIn: ["Lightweight DOM environment for server-rendered component tests"],
       },
     ],
@@ -182,7 +182,7 @@ export const SkillCategories: SkillCategory[] = [
     skills: [
       {
         name: "ElevenLabs",
-        Icon: asset("logos/non-svgl/eleven-labs-dark.svg"),
+        Icon: asset("skills/eleven-labs-dark.svg"),
         usedIn: ["AI voiceover generation integrated into automated video production"],
       },
       {
@@ -247,21 +247,28 @@ export const skillsData: Skill[] = [
   },
   { name: "Bootstrap", Icon: "https://svgl.app/library/bootstrap.svg" },
   { name: "Material UI", Icon: "https://svgl.app/library/materialui.svg" },
+  { name: "Tauri", Icon: "https://svgl.app/library/tauri.svg" },
   { name: "Node.js", Icon: "https://svgl.app/library/nodejs.svg" },
   { name: "Express", Icon: "https://svgl.app/library/expressjs_dark.svg" },
   { name: "Go", Icon: "https://svgl.app/library/golang_dark.svg" },
   { name: "Bun", Icon: "https://svgl.app/library/bun.svg" },
   { name: "C#", Icon: "https://svgl.app/library/csharp.svg" },
   { name: ".NET", Icon: "https://svgl.app/library/dotnet.svg" },
+  { name: "Rust", Icon: "https://svgl.app/library/rust_dark.svg" },
+  { name: "Kotlin", Icon: "https://svgl.app/library/kotlin.svg" },
+  { name: "Swift", Icon: "https://svgl.app/library/swift.svg" },
   {
     name: "SQL",
-    Icon: asset("logos/non-svgl/sql.svg"),
+    Icon: asset("skills/sql.svg"),
   },
   { name: "MongoDB", Icon: "https://svgl.app/library/mongodb-icon-dark.svg" },
   { name: "MySQL", Icon: "https://svgl.app/library/mysql-icon-dark.svg" },
   { name: "PostgreSQL", Icon: "https://svgl.app/library/postgresql.svg" },
   { name: "Supabase", Icon: "https://svgl.app/library/supabase.svg" },
   { name: "Firebase", Icon: "https://svgl.app/library/firebase.svg" },
+  { name: "Convex", Icon: "https://svgl.app/library/convex.svg" },
+  { name: "Drizzle ORM", Icon: "https://svgl.app/library/drizzle-orm_dark.svg" },
+  { name: "Neon", Icon: "https://svgl.app/library/neon.svg" },
   { name: "Upstash", Icon: "https://svgl.app/library/upstash.svg" },
   { name: "Redis", Icon: "https://svgl.app/library/redis.svg" },
   { name: "JavaScript", Icon: "https://svgl.app/library/javascript.svg" },
@@ -270,11 +277,11 @@ export const skillsData: Skill[] = [
   { name: "C++", Icon: "https://svgl.app/library/c-plusplus.svg" },
   {
     name: "Leetcode",
-    Icon: asset("logos/non-svgl/leetcode-dark.svg"),
+    Icon: asset("skills/leetcode-dark.svg"),
   },
   {
     name: "Hackerrank",
-    Icon: asset("logos/non-svgl/hacker-rank-dark.svg"),
+    Icon: asset("skills/hacker-rank-dark.svg"),
   },
   { name: "Git", Icon: "https://svgl.app/library/git.svg" },
   { name: "GitHub", Icon: "https://svgl.app/library/github_dark.svg" },
@@ -289,34 +296,34 @@ export const skillsData: Skill[] = [
   { name: "webstorm", Icon: "https://svgl.app/library/webstorm.svg" },
   {
     name: "CLion",
-    Icon: asset("logos/non-svgl/c-lion.svg"),
+    Icon: asset("skills/c-lion.svg"),
   },
   { name: "Cloudinary", Icon: "https://svgl.app/library/cloudinary.svg" },
   {
     name: "Firestore",
-    Icon: asset("logos/non-svgl/firestore.svg"),
+    Icon: asset("skills/firestore.svg"),
   },
   { name: "SVG", Icon: "https://svgl.app/library/svg.svg" },
   {
     name: "Vercel Blob",
-    Icon: asset("logos/non-svgl/vercel-blob-dark.svg"),
+    Icon: asset("skills/vercel-blob-dark.svg"),
   },
   {
     name: "Azure Blob",
-    Icon: asset("logos/non-svgl/azure-blob-dark.svg"),
+    Icon: asset("skills/azure-blob-dark.svg"),
   },
   {
     name: "FFmpeg",
-    Icon: asset("logos/non-svgl/ffmpeg.svg"),
+    Icon: asset("skills/ffmpeg.svg"),
   },
   {
     name: "FFmpeg WASM",
-    Icon: asset("logos/non-svgl/ffmpeg-wasm.svg"),
+    Icon: asset("skills/ffmpeg-wasm.svg"),
   },
   { name: "Gemini", Icon: "https://svgl.app/library/gemini.svg" },
   {
     name: "ChatGPT",
-    Icon: asset("logos/non-svgl/chatgpt-dark.svg"),
+    Icon: asset("skills/chatgpt-dark.svg"),
   },
   { name: "Claude", Icon: "https://svgl.app/library/claude-ai-icon.svg" },
   { name: "Firebase Studio", Icon: "https://svgl.app/library/firebase-studio.svg" },
@@ -326,7 +333,7 @@ export const skillsData: Skill[] = [
   { name: "Ollama", Icon: "https://svgl.app/library/ollama_dark.svg" },
   {
     name: "ElevenLabs",
-    Icon: asset("logos/non-svgl/eleven-labs-dark.svg"),
+    Icon: asset("skills/eleven-labs-dark.svg"),
   },
   { name: "Firebase", Icon: "https://svgl.app/library/firebase.svg" },
   { name: "Auth0", Icon: "https://svgl.app/library/auth0.svg" },
@@ -335,16 +342,16 @@ export const skillsData: Skill[] = [
   { name: "Auth.js", Icon: "https://svgl.app/library/authjs.svg" },
   {
     name: "Passport.js",
-    Icon: asset("logos/non-svgl/passport-js-dark.svg"),
+    Icon: asset("skills/passport-js-dark.svg"),
   },
   { name: "Vitest", Icon: "https://svgl.app/library/vitest.svg" },
   { name: "Jest", Icon: "https://svgl.app/library/jest.svg" },
   {
     name: "happy-dom",
-    Icon: asset("logos/non-svgl/happy-dom.svg"),
+    Icon: asset("skills/happy-dom.svg"),
   },
   {
     name: "jsdom",
-    Icon: asset("logos/non-svgl/jsdom.svg"),
+    Icon: asset("skills/jsdom.svg"),
   },
 ];

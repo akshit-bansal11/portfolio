@@ -43,7 +43,7 @@ export const hackerRankCertificationsData: CertificationItem[] = [
     providers: [
       {
         name: "HackerRank",
-        logoUrl: asset("logos/non-svgl/hacker-rank-dark.svg"),
+        logoUrl: asset("skills/hacker-rank-dark.svg"),
       },
     ],
     link: "https://www.hackerrank.com/certificates/35384d086309",
@@ -53,7 +53,7 @@ export const hackerRankCertificationsData: CertificationItem[] = [
     providers: [
       {
         name: "HackerRank",
-        logoUrl: asset("logos/non-svgl/hacker-rank-dark.svg"),
+        logoUrl: asset("skills/hacker-rank-dark.svg"),
       },
     ],
     link: "https://www.hackerrank.com/certificates/7f1a01b7b859",
@@ -63,7 +63,7 @@ export const hackerRankCertificationsData: CertificationItem[] = [
     providers: [
       {
         name: "HackerRank",
-        logoUrl: asset("logos/non-svgl/hacker-rank-dark.svg"),
+        logoUrl: asset("skills/hacker-rank-dark.svg"),
       },
     ],
     link: "https://www.hackerrank.com/certificates/9eabe8ab61b1",
@@ -73,7 +73,7 @@ export const hackerRankCertificationsData: CertificationItem[] = [
     providers: [
       {
         name: "HackerRank",
-        logoUrl: asset("logos/non-svgl/hacker-rank-dark.svg"),
+        logoUrl: asset("skills/hacker-rank-dark.svg"),
       },
     ],
     link: "https://www.hackerrank.com/certificates/9eabe8ab61b1",
@@ -83,7 +83,7 @@ export const hackerRankCertificationsData: CertificationItem[] = [
     providers: [
       {
         name: "HackerRank",
-        logoUrl: asset("logos/non-svgl/hacker-rank-dark.svg"),
+        logoUrl: asset("skills/hacker-rank-dark.svg"),
       },
     ],
     link: "https://www.hackerrank.com/certificates/9eabe8ab61b1",
@@ -93,7 +93,7 @@ export const hackerRankCertificationsData: CertificationItem[] = [
     providers: [
       {
         name: "HackerRank",
-        logoUrl: asset("logos/non-svgl/hacker-rank-dark.svg"),
+        logoUrl: asset("skills/hacker-rank-dark.svg"),
       },
     ],
     link: "https://www.hackerrank.com/certificates/9eabe8ab61b1",
