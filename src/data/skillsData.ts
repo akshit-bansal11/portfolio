@@ -237,6 +237,7 @@ export const skillsData: Skill[] = [
   { name: "Motion", Icon: "https://svgl.app/library/motion_dark.svg" },
   { name: "Radix UI", Icon: "https://svgl.app/library/radix-ui_dark.svg" },
   { name: "Redux", Icon: "https://svgl.app/library/redux.svg" },
+  { name: "Zustand", Icon: asset("skills/zustand.svg") },
   {
     name: "React Router",
     Icon: "https://svgl.app/library/reactrouter.svg",
@@ -248,6 +249,7 @@ export const skillsData: Skill[] = [
   { name: "Bootstrap", Icon: "https://svgl.app/library/bootstrap.svg" },
   { name: "Material UI", Icon: "https://svgl.app/library/materialui.svg" },
   { name: "Tauri", Icon: "https://svgl.app/library/tauri.svg" },
+  { name: "Slint", Icon: asset("skills/slint.svg") },
   { name: "Node.js", Icon: "https://svgl.app/library/nodejs.svg" },
   { name: "Express", Icon: "https://svgl.app/library/expressjs_dark.svg" },
   { name: "Go", Icon: "https://svgl.app/library/golang_dark.svg" },
@@ -267,6 +269,7 @@ export const skillsData: Skill[] = [
   { name: "Supabase", Icon: "https://svgl.app/library/supabase.svg" },
   { name: "Firebase", Icon: "https://svgl.app/library/firebase.svg" },
   { name: "Convex", Icon: "https://svgl.app/library/convex.svg" },
+  { name: "Yjs", Icon: asset("skills/yjs.svg") },
   { name: "Drizzle ORM", Icon: "https://svgl.app/library/drizzle-orm_dark.svg" },
   { name: "Neon", Icon: "https://svgl.app/library/neon.svg" },
   { name: "Upstash", Icon: "https://svgl.app/library/upstash.svg" },

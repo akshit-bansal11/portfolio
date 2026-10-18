@@ -7,11 +7,10 @@
  */
 
 "use client";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { Figma, Github, Globe, Play, X } from "lucide-react";
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
-import { createPortal } from "react-dom";
+import { useEffect, useRef, useState } from "react";
 import SkillPill from "@/components/pills/SkillPill";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -34,7 +33,8 @@ interface ProjectCardProps extends ProjectItem {
   className?: string;
 }
 
-// Modal that plays the demo video; mounted into document.body via a portal.
+// Modal that plays the demo video, on a native <dialog> opened with showModal():
+// the browser supplies the top layer, background inertness, Escape and focus return.
 function VideoModal({
   videoUrl,
   title,
@@ -44,52 +44,52 @@ function VideoModal({
   title: string;
   onClose: () => void;
 }) {
-  // Esc key closes the modal.
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    },
-    [onClose],
-  );
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const downOnBackdrop = useRef(false);
 
   useEffect(() => {
-    // Lock body scroll, and bind the Esc listener.
-    document.addEventListener("keydown", handleKeyDown);
+    // Open as modal and lock body scroll (a native dialog does not lock it).
+    const dialog = dialogRef.current;
+    if (dialog && !dialog.open) dialog.showModal();
     document.body.style.overflow = "hidden";
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "";
     };
-  }, [handleKeyDown]);
+  }, []);
 
-  return createPortal(
-    <motion.div
-      className="fixed inset-0 z-9999 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      onClick={onClose}
+  // Every close path (Escape, Close button, backdrop) ends in the native close event.
+  return (
+    <dialog
+      ref={dialogRef}
+      aria-label={`${title} demo video`}
+      onClose={onClose}
+      onPointerDown={(e) => {
+        downOnBackdrop.current = e.target === e.currentTarget;
+      }}
+      onClick={(e) => {
+        // Close only when the press and the release both landed on the backdrop
+        // (a drag that starts in the video and ends outside must not close).
+        if (downOnBackdrop.current && e.target === e.currentTarget) e.currentTarget.close();
+      }}
+      className="m-auto w-[calc(100%-2rem)] max-w-4xl max-h-none overflow-visible bg-transparent p-0 backdrop:bg-black/80 backdrop:backdrop-blur-sm"
     >
-      {/* Inner panel; stops click-through from closing the modal. */}
       <motion.div
-        className="relative w-full max-w-4xl aspect-video rounded-xl overflow-hidden bg-black shadow-2xl"
+        className="flex flex-col items-end gap-2"
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        onClick={(e) => e.stopPropagation()}
       >
         <button
           type="button"
-          onClick={onClose}
-          className="absolute -top-10 right-0 z-10 text-white/70 hover:text-white transition-colors cursor-pointer"
-          aria-label="Close video modal"
+          onClick={() => dialogRef.current?.close()}
+          className="rounded-md p-2 text-white/70 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-white cursor-pointer"
+          aria-label="Close video"
         >
-          <X className="h-8 w-8" />
+          <X className="h-6 w-6" />
         </button>
         <video
           src={videoUrl}
-          className="h-full w-full"
+          className="aspect-video max-h-[calc(100dvh-6rem)] w-full rounded-xl bg-black shadow-2xl"
           controls
           autoPlay
           muted
@@ -100,8 +100,7 @@ function VideoModal({
           <track kind="captions" />
         </video>
       </motion.div>
-    </motion.div>,
-    document.body,
+    </dialog>
   );
 }
 
@@ -110,6 +109,7 @@ export default function ProjectCard({
   title,
   description,
   imgUrl,
+  logoUrl,
   videoUrl,
   iframe,
   demoLink,
@@ -192,6 +192,15 @@ export default function ProjectCard({
           {/* Title + description + optional open-source badge. */}
           <CardHeader className="space-y-2 grow">
             <div className="flex items-center gap-2 flex-wrap">
+              {logoUrl && (
+                <Image
+                  src={logoUrl}
+                  alt=""
+                  width={24}
+                  height={24}
+                  className="h-6 w-6 shrink-0 object-contain"
+                />
+              )}
               <CardTitle className="font-clash text-xl tracking-wide text-white">{title}</CardTitle>
               {isPublic ? (
                 <Badge
@@ -301,12 +310,10 @@ export default function ProjectCard({
         </Card>
       </motion.div>
 
-      {/* Demo video modal mounts to body via portal; AnimatePresence handles exit. */}
-      <AnimatePresence>
-        {showVideo && videoUrl && (
-          <VideoModal videoUrl={videoUrl} title={title} onClose={() => setShowVideo(false)} />
-        )}
-      </AnimatePresence>
+      {/* Demo video modal; mounted only while open. */}
+      {showVideo && videoUrl && (
+        <VideoModal videoUrl={videoUrl} title={title} onClose={() => setShowVideo(false)} />
+      )}
     </>
   );
 }

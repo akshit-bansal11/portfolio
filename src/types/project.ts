@@ -7,6 +7,7 @@ export interface ProjectItem {
   title: string;
   description: string;
   imgUrl?: string;
+  logoUrl?: string;
   videoUrl?: string;
   techStack: string[];
   demoLink?: string;
