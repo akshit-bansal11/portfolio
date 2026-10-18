@@ -5,6 +5,8 @@
  * touching the hero components themselves.
  */
 
+import { asset } from "@/config/assets";
+
 // Tagline shown word-by-word in the first hero stage.
 export const TAGLINE = "Crafting Production-Grade Next.js Applications";
 
@@ -24,12 +26,10 @@ export const RESUME_FILENAME = "akshit_bansal.pdf";
 export const EMAIL_HREF = "mailto:artistbansal2004@gmail.com";
 
 // Default profile photo (front face of the flip card).
-export const PROFILE_IMAGE_URL =
-  "https://media-server.akshitbansal.me/api/images/credentials/pfp.webp";
+export const PROFILE_IMAGE_URL = asset("credentials/pfp.webp");
 
 // Hover/back-face profile photo (revealed on flip).
-export const PROFILE_IMAGE_HOVER_URL =
-  "https://media-server.akshitbansal.me/api/images/credentials/pfp-hover.webp";
+export const PROFILE_IMAGE_HOVER_URL = asset("credentials/pfp-hover.webp");
 
 // Display name used in the hero headline.
 export const PROFILE_NAME = "Akshit Bansal";

@@ -1,4 +1,5 @@
 import trupeerLogo from "@/assets/images/trupeer-dark.svg";
+import { asset } from "@/config/assets";
 import type { ExperienceItem } from "@/types/experience";
 
 // One named group of experience cards (e.g. "Internship", "Training").
@@ -69,8 +70,7 @@ export const experience: ExperienceCategory[] = [
         generalPoint:
           "Hands-on training building production-style MERN applications with first-class AI integration, focused on shipping responsive, maintainable full-stack features end-to-end.",
         points: [],
-        certificate:
-          "https://drive.google.com/file/d/1rY3FJ0Zfqx1hOdFl-vjG_Pl1Wp1BqcG8/view?usp=sharing",
+        certificate: asset("certificates/mern-ai-training.pdf"),
         skills: ["MongoDB", "Express", "React", "Node.js", "Redux", "Tailwind CSS", "Gemini"],
       },
       {
@@ -81,8 +81,7 @@ export const experience: ExperienceCategory[] = [
         generalPoint:
           "Structured DSA program centered on building strong problem-solving instincts — practicing time and space tradeoffs across competitive programming patterns.",
         points: [],
-        certificate:
-          "https://drive.google.com/file/d/1mfCPu-_HIxtpQ9BmfRtOwTAolsryGTap/view?usp=sharing",
+        certificate: asset("certificates/dsa-training.pdf"),
         skills: ["C++", "JavaScript", "Leetcode", "Hackerrank"],
       },
       {
@@ -93,8 +92,7 @@ export const experience: ExperienceCategory[] = [
         generalPoint:
           "Foundational full-stack training built around the Node.js ecosystem — server-side fundamentals, RESTful API design, persistence, and core security and performance practices.",
         points: [],
-        certificate:
-          "https://drive.google.com/file/d/1B-axWT0ka9cSEM2wT0wOrLmXubBDln5a/view?usp=sharing",
+        certificate: asset("certificates/nodejs-fullstack-training.pdf"),
         skills: [
           "HTML5",
           "CSS3",

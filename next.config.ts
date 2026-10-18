@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { ASSETS_HOST } from "./src/config/assets";
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -17,22 +18,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "drive.google.com",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "drive.usercontent.google.com",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "lh3.googleusercontent.com",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "media-server.akshitbansal.me",
+        hostname: ASSETS_HOST,
         pathname: "/**",
       },
     ],

@@ -6,6 +6,7 @@
  * Types live in src/types/skill.ts.
  */
 
+import { asset } from "@/config/assets";
 import type { Skill, SkillCategory } from "@/types/skill";
 
 export const SkillCategories: SkillCategory[] = [
@@ -171,7 +172,7 @@ export const SkillCategories: SkillCategory[] = [
       },
       {
         name: "happy-dom",
-        Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/happy-dom.svg",
+        Icon: asset("logos/non-svgl/happy-dom.svg"),
         usedIn: ["Lightweight DOM environment for server-rendered component tests"],
       },
     ],
@@ -181,7 +182,7 @@ export const SkillCategories: SkillCategory[] = [
     skills: [
       {
         name: "ElevenLabs",
-        Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/eleven-labs-dark.svg",
+        Icon: asset("logos/non-svgl/eleven-labs-dark.svg"),
         usedIn: ["AI voiceover generation integrated into automated video production"],
       },
       {
@@ -238,11 +239,11 @@ export const skillsData: Skill[] = [
   { name: "Redux", Icon: "https://svgl.app/library/redux.svg" },
   {
     name: "React Router",
-    Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/reactrouter-dark.svg",
+    Icon: "https://svgl.app/library/reactrouter.svg",
   },
   {
     name: "jQuery",
-    Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/jquery.svg",
+    Icon: "https://svgl.app/library/jquery_dark.svg",
   },
   { name: "Bootstrap", Icon: "https://svgl.app/library/bootstrap.svg" },
   { name: "Material UI", Icon: "https://svgl.app/library/materialui.svg" },
@@ -254,7 +255,7 @@ export const skillsData: Skill[] = [
   { name: ".NET", Icon: "https://svgl.app/library/dotnet.svg" },
   {
     name: "SQL",
-    Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/sql.svg",
+    Icon: asset("logos/non-svgl/sql.svg"),
   },
   { name: "MongoDB", Icon: "https://svgl.app/library/mongodb-icon-dark.svg" },
   { name: "MySQL", Icon: "https://svgl.app/library/mysql-icon-dark.svg" },
@@ -269,11 +270,11 @@ export const skillsData: Skill[] = [
   { name: "C++", Icon: "https://svgl.app/library/c-plusplus.svg" },
   {
     name: "Leetcode",
-    Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/leetcode-dark.svg",
+    Icon: asset("logos/non-svgl/leetcode-dark.svg"),
   },
   {
     name: "Hackerrank",
-    Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/hacker-rank-dark.svg",
+    Icon: asset("logos/non-svgl/hacker-rank-dark.svg"),
   },
   { name: "Git", Icon: "https://svgl.app/library/git.svg" },
   { name: "GitHub", Icon: "https://svgl.app/library/github_dark.svg" },
@@ -288,34 +289,34 @@ export const skillsData: Skill[] = [
   { name: "webstorm", Icon: "https://svgl.app/library/webstorm.svg" },
   {
     name: "CLion",
-    Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/c-lion.svg",
+    Icon: asset("logos/non-svgl/c-lion.svg"),
   },
   { name: "Cloudinary", Icon: "https://svgl.app/library/cloudinary.svg" },
   {
     name: "Firestore",
-    Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/firestore.svg",
+    Icon: asset("logos/non-svgl/firestore.svg"),
   },
   { name: "SVG", Icon: "https://svgl.app/library/svg.svg" },
   {
     name: "Vercel Blob",
-    Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/vercel-blob-dark.svg",
+    Icon: asset("logos/non-svgl/vercel-blob-dark.svg"),
   },
   {
     name: "Azure Blob",
-    Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/azure-blob-dark.svg",
+    Icon: asset("logos/non-svgl/azure-blob-dark.svg"),
   },
   {
     name: "FFmpeg",
-    Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/ffmpeg.svg",
+    Icon: asset("logos/non-svgl/ffmpeg.svg"),
   },
   {
     name: "FFmpeg WASM",
-    Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/ffmpeg-wasm.svg",
+    Icon: asset("logos/non-svgl/ffmpeg-wasm.svg"),
   },
   { name: "Gemini", Icon: "https://svgl.app/library/gemini.svg" },
   {
     name: "ChatGPT",
-    Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/chatgpt-dark.svg",
+    Icon: asset("logos/non-svgl/chatgpt-dark.svg"),
   },
   { name: "Claude", Icon: "https://svgl.app/library/claude-ai-icon.svg" },
   { name: "Firebase Studio", Icon: "https://svgl.app/library/firebase-studio.svg" },
@@ -325,7 +326,7 @@ export const skillsData: Skill[] = [
   { name: "Ollama", Icon: "https://svgl.app/library/ollama_dark.svg" },
   {
     name: "ElevenLabs",
-    Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/eleven-labs-dark.svg",
+    Icon: asset("logos/non-svgl/eleven-labs-dark.svg"),
   },
   { name: "Firebase", Icon: "https://svgl.app/library/firebase.svg" },
   { name: "Auth0", Icon: "https://svgl.app/library/auth0.svg" },
@@ -334,16 +335,16 @@ export const skillsData: Skill[] = [
   { name: "Auth.js", Icon: "https://svgl.app/library/authjs.svg" },
   {
     name: "Passport.js",
-    Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/passport-js-dark.svg",
+    Icon: asset("logos/non-svgl/passport-js-dark.svg"),
   },
   { name: "Vitest", Icon: "https://svgl.app/library/vitest.svg" },
   { name: "Jest", Icon: "https://svgl.app/library/jest.svg" },
   {
     name: "happy-dom",
-    Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/happy-dom.svg",
+    Icon: asset("logos/non-svgl/happy-dom.svg"),
   },
   {
     name: "jsdom",
-    Icon: "https://media-server.akshitbansal.me/api/images/logos/non-svgl/jsdom.svg",
+    Icon: asset("logos/non-svgl/jsdom.svg"),
   },
 ];
