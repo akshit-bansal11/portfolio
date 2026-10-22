@@ -17,8 +17,6 @@ import type { BlogPost } from "@/types/blog";
 
 interface PostCardProps {
   post: BlogPost;
-  /** 1-based position, drawn as a big handwritten number. */
-  index: number;
   className?: string;
 }
 
@@ -27,7 +25,7 @@ const MotionLink = motion.create(Link);
 // Wobbly underline drawn under the title on hover (viewBox 0 0 300 12).
 const UNDERLINE = sketchLine(2, 7, 298, 5, { seed: 9, bow: 3 });
 
-export default function PostCard({ post, index, className }: PostCardProps) {
+export default function PostCard({ post, className }: PostCardProps) {
   return (
     <MotionLink
       href={`/blog/${post.slug}`}
@@ -50,7 +48,7 @@ export default function PostCard({ post, index, className }: PostCardProps) {
         aria-hidden
         className="absolute top-3 right-5 font-hand text-5xl leading-none text-ink-muted/40"
       >
-        {String(index).padStart(2, "0")}
+        {String(post.part).padStart(2, "0")}
       </span>
 
       <ul aria-label="Tags" className="mb-4 flex flex-wrap gap-2">

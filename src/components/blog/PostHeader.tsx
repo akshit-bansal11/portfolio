@@ -55,6 +55,8 @@ export default function PostHeader({ post, className }: PostHeaderProps) {
           <time dateTime={post.publishedAt}>{formatPostDate(post.publishedAt)}</time>
           <span aria-hidden> · </span>
           {formatReadingTime(post.readingMinutes)}
+          <span aria-hidden> · </span>
+          Part {post.part}
         </p>
         {post.headerNote && (
           <Annotation kind="arrow" direction="left" label={post.headerNote} className="-rotate-2" />

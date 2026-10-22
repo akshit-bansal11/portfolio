@@ -26,6 +26,8 @@ export interface TocHeading {
 
 // Registry entry plus values derived from the MDX source.
 export interface BlogPost extends BlogPostMeta {
+  /** 1-based position in the series (registry order). */
+  part: number;
   wordCount: number;
   readingMinutes: number;
   headings: TocHeading[];

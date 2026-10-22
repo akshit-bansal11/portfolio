@@ -3,7 +3,9 @@
  * Small, accessible controls shared by every interactive demo:
  *  - SegmentedControl: a radio group (arrow keys move the choice).
  *  - DemoButton: a chunky notebook-style button.
- * Both have 44px+ touch targets for phones.
+ *  - DemoSlider: a labelled range input with its current value.
+ *  - DemoToggle: a labelled on/off switch.
+ * All have 44px+ touch targets for phones.
  */
 
 "use client";
@@ -109,5 +111,90 @@ export function DemoButton({
       )}
       {...props}
     />
+  );
+}
+
+interface DemoSliderProps {
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  step?: number;
+  onChange: (value: number) => void;
+  /** Text shown next to the label, e.g. "4 cells". Also used as aria-valuetext. */
+  valueText: string;
+  className?: string;
+}
+
+export function DemoSlider({
+  label,
+  value,
+  min,
+  max,
+  step = 1,
+  onChange,
+  valueText,
+  className,
+}: DemoSliderProps) {
+  const id = useId();
+  return (
+    <div className={cn("flex min-w-0 flex-col gap-1.5", className)}>
+      <label htmlFor={id} className="flex items-baseline justify-between gap-3">
+        <span className="text-xs font-semibold tracking-[0.12em] text-ink-muted uppercase">
+          {label}
+        </span>
+        <span className="font-hand text-xl leading-none text-pen">{valueText}</span>
+      </label>
+      <input
+        id={id}
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        aria-valuetext={valueText}
+        onChange={(event) => onChange(Number(event.target.value))}
+        className="h-11 w-full cursor-pointer touch-manipulation accent-[var(--blog-pen)]"
+      />
+    </div>
+  );
+}
+
+interface DemoToggleProps {
+  label: string;
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  className?: string;
+}
+
+export function DemoToggle({ label, checked, onChange, className }: DemoToggleProps) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      onClick={() => onChange(!checked)}
+      className={cn(
+        "inline-flex min-h-11 items-center gap-3 rounded-xl px-1 text-left text-sm font-semibold text-ink",
+        "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pen",
+        className,
+      )}
+    >
+      <span
+        aria-hidden
+        className={cn(
+          "relative inline-flex h-6 w-11 shrink-0 items-center rounded-full border-2 border-ink transition-colors",
+          checked ? "bg-pen" : "bg-paper",
+        )}
+      >
+        <span
+          className={cn(
+            "absolute h-4 w-4 rounded-full bg-ink transition-transform",
+            checked ? "translate-x-[1.35rem]" : "translate-x-0.5",
+          )}
+        />
+      </span>
+      {label}
+    </button>
   );
 }

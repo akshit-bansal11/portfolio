@@ -52,25 +52,27 @@ export function countWords(source: string): number {
 
 // Returns a single enriched post, or null when the slug is unknown.
 export async function getPost(slug: string): Promise<BlogPost | null> {
-  const meta = blogPosts.find((post) => post.slug === slug);
-  if (!meta) return null;
+  const index = blogPosts.findIndex((post) => post.slug === slug);
+  if (index === -1) return null;
+  const meta = blogPosts[index];
 
   const source = await readPostSource(slug);
   const wordCount = countWords(source);
 
   return {
     ...meta,
+    part: index + 1,
     wordCount,
     readingMinutes: Math.max(1, Math.round(wordCount / WORDS_PER_MINUTE)),
     headings: extractHeadings(source),
   };
 }
 
-// Returns every published post, newest first.
+// Returns every published post, newest first (later parts first on the same day).
 export async function getAllPosts(): Promise<BlogPost[]> {
   const posts = await Promise.all(blogPosts.map((post) => getPost(post.slug)));
 
   return posts
     .filter((post): post is BlogPost => post !== null)
-    .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+    .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt) || b.part - a.part);
 }

@@ -72,7 +72,7 @@ export default async function BlogIndexPage() {
       <section aria-label="Posts" className="space-y-10">
         {posts.map((post, index) => (
           <ScrollReveal key={post.slug} delay={index * 80}>
-            <PostCard post={post} index={posts.length - index} />
+            <PostCard post={post} />
           </ScrollReveal>
         ))}
       </section>
