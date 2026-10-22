@@ -3,6 +3,7 @@
  * Wrapper that fades + slides its children into view
  * the first time they intersect the viewport. Direction
  * (up/left/right) and per-element delay are configurable.
+ * Under prefers-reduced-motion the content is shown as-is.
  */
 
 "use client";
@@ -33,6 +34,12 @@ export default function ScrollReveal({
   useEffect(() => {
     const element = ref.current;
     if (!element) return;
+
+    // Reduced motion: reveal immediately, no slide.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      element.style.opacity = "1";
+      return;
+    }
 
     // Resolve from-state offsets based on the configured direction.
     const initialY = direction === "up" ? 50 : 0;

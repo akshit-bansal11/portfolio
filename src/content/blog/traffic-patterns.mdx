@@ -1,0 +1,292 @@
+import CompassDiagram from "@/components/blog/posts/traffic-patterns/CompassDiagram";
+import NetworkShapeDiagram from "@/components/blog/posts/traffic-patterns/NetworkShapeDiagram";
+import SidecarDiagram from "@/components/blog/posts/traffic-patterns/SidecarDiagram";
+import { TrafficFlowDemo } from "@/components/blog/posts/traffic-patterns/lazy";
+
+## A locked front door and open offices
+
+Picture an office building with excellent front-door security. There's a guard, a badge reader and a visitor log. But once you're past the lobby, every office door is unlocked, and nobody asks who you are as you walk from floor to floor.
+
+In late 2013, attackers got into the US retailer Target's network using login credentials stolen from a refrigeration and HVAC contractor that had access for its work. That first foothold wasn't anywhere near the payment systems. From there, the attackers moved through the internal network until they reached the checkout terminals in Target's stores. Data from about 40 million credit and debit cards was stolen. A US Senate committee later criticised Target for giving network access to a vendor whose security practices didn't meet common standards.
+
+The lesson people took from breaches like this one: watching who comes in through the front door isn't enough. You also have to care about who talks to whom **inside** the building.
+
+<MarginNote label="two directions">
+  in through the front door = north-south. walking between offices = east-west.
+</MarginNote>
+
+Engineers describe these two kinds of movement with compass directions: **north-south** traffic and **east-west** traffic. This post covers what they mean, why east-west traffic exploded in the last fifteen years, the tools for each (load balancers, API gateways, service meshes and sidecars) and why "zero trust" between services became the norm. Along the way we'll look at how Lyft, Netflix, Google, Target and Razorpay handled it. There's a demo where you can let an intruder in and watch what they can reach.
+
+## What are north-south and east-west traffic?
+
+When engineers draw a data centre, they usually put the internet at the top of the page and the servers below. So:
+
+- **North-south traffic** crosses the boundary of your system. A user's phone asks your app for their feed (southbound), and the answer goes back out (northbound). Traffic between your data centre and the outside world (users, partner APIs, payment networks) is north-south.
+- **East-west traffic** stays inside. Your web service asks the orders service for a user's orders, which asks the payments service for a payment status, which reads the payments database. All of that is east-west: servers talking to servers, sideways across the page.
+
+<Figure caption="Draw the internet at the top and your servers below: anything crossing the wall is north-south; anything moving between services inside is east-west.">
+  <CompassDiagram />
+</Figure>
+
+A few more terms we'll need:
+
+- A **load balancer** spreads incoming requests across several copies of a service, so no single server is overwhelmed. Some work at the network level (**Layer 4**: they only see addresses and ports), others understand HTTP (**Layer 7**: they can route based on the URL or headers).
+- An **API gateway** is a smarter front door. It checks who you are (authentication), applies rate limits, and routes each request to the right internal service.
+- A **sidecar** is a small helper program that runs right next to each service, like a sidecar attached to a motorbike, and handles the service's network traffic for it.
+- A **service mesh** is what you get when every service has a sidecar, plus a central brain that configures them all.
+
+<Analogy
+  title="A shopping mall"
+  mapping={[
+    ["the mall's main entrance", "the load balancer / API gateway"],
+    ["shoppers walking in and out", "north-south traffic"],
+    ["shops trading stock through the back corridors", "east-west traffic"],
+    ["a staff member at every shop's back door", "a sidecar proxy"],
+    ["mall management issuing staff badges", "the mesh's control plane"],
+  ]}
+>
+  At a mall, everyone notices the main entrance: the crowds, the security guard, the opening hours. But behind the scenes, there's a second network of service corridors. Shops pass stock to each other, deliveries go from the loading dock to each store, and staff move between back rooms all day.
+
+  On a busy day, there's far more movement in the back corridors than through the front doors. And if a thief gets into the corridors, the front-door guard can't see them. That's why big malls put locks and staff on the back doors too.
+</Analogy>
+
+## Where this came from
+
+In the early web era, most applications were built in three layers: a web server, an application server and a database, often called a **three-tier architecture**. Most of the interesting traffic was north-south: a request came in, went down through the layers, and the answer went back out. Networks were built to match. The classic data centre network was a tree: servers plugged into **access** switches, which fed **aggregation** switches, which fed a big **core** switch at the top that connected to the outside world.
+
+Then three things changed.
+
+First, big internet companies started splitting work across many machines. A single search or feed request might fan out to hundreds of servers, each holding a slice of the data, and their answers would be combined. Second, **virtualisation** and later **containers** packed many small workloads onto shared hardware, with workloads moving around constantly. Third, **microservices** split applications into dozens or hundreds of small services that call each other over the network. One click from a user can now trigger a whole chain of internal calls.
+
+The result: most traffic stopped crossing the edge at all. Cisco's Global Cloud Index forecast that more than 70% of data-centre traffic would stay *inside* the data centre. The old tree networks struggled with this, because two servers in different branches had to talk all the way up through the core and back down. So data centres moved to **leaf-spine** networks, where every "leaf" switch connects to every "spine" switch, making any two servers the same short distance apart.
+
+<Figure caption="The same two servers talking. In a three-tier tree, the conversation climbs to a single core and back down. In a leaf-spine network, every path is equally short, and there are many of them to share the load.">
+  <NetworkShapeDiagram />
+</Figure>
+
+<MarginNote>
+  the network literally changed shape because traffic changed direction.
+</MarginNote>
+
+Security had to change too. The old model was **perimeter security**, sometimes called castle-and-moat: a strong wall at the edge (firewalls, VPNs) and a trusted network inside. Anything inside the wall was assumed to be friendly. After Google was hit by a sophisticated attack in 2009 (Operation Aurora), it began a project called **BeyondCorp**, described publicly in 2014. Its idea: stop trusting the network. Access should depend on *who* the user is and *what device* they're on, not on whether they happen to be on the office network. That idea, now called **zero trust**, soon spread to service-to-service traffic too.
+
+## How traffic is handled in each direction
+
+### North-south: the front door
+
+A typical request from a user's phone passes through a few layers before it reaches your code:
+
+1. **DNS** turns `api.example.com` into an address.
+2. A **CDN** or edge network (a set of servers spread around the world) may answer directly from a cache, or absorb attacks.
+3. A **load balancer** picks a healthy server.
+4. An **API gateway** checks authentication, applies rate limits, and routes the request to the right internal service.
+
+North-south traffic is the part you *don't* control. It comes from strangers, over the public internet, sometimes with bad intentions. So the front door is where you put the heavy checks: TLS encryption, authentication, rate limiting and protection against attacks.
+
+### East-west: the corridors
+
+East-west traffic has different problems. It's internal, so in the past teams assumed it was safe, but there's *a lot* of it, and every call can fail. Every service that calls another needs answers to the same questions:
+
+- **Discovery:** where are the healthy copies of the payments service right now?
+- **Load balancing:** which copy should I call?
+- **Resilience:** what timeout? How many retries? (See the blast radius post for why this matters.)
+- **Security:** is this really the payments service? Is the orders service *allowed* to call it?
+- **Observability:** how long did the call take, and where in the chain did it fail?
+
+The first generation of answers lived **inside each service**, as libraries. Netflix famously built a set of Java libraries for discovery, load balancing and resilience. That works well if every service is written in the same language. But when your services are written in Go, Python, Java and Node, you need to rebuild and maintain those libraries in every language, and keep them all in sync.
+
+### The sidecar: take the network out of the app
+
+The **sidecar** idea moves all of that into a separate proxy process that runs next to every service. The service makes a plain, simple call to `localhost`. Its sidecar handles discovery, load balancing, retries, timeouts, encryption and metrics, then forwards the call to the other service's sidecar, which hands it to the destination.
+
+Lyft built a proxy called **Envoy** for exactly this and open-sourced it in 2016 (case file #1). Envoy became the building block of most service meshes. In 2017, Google, IBM and Lyft announced **Istio**, a **control plane** for Envoy proxies: the central brain that tells every sidecar the routing rules, security policies and certificates to use.
+
+<Figure caption="A service mesh: services only talk to their own sidecar; sidecars talk to each other (the data plane); the control plane configures every sidecar.">
+  <SidecarDiagram />
+</Figure>
+
+### Zero trust between services
+
+With a sidecar on every service, you can encrypt and authenticate every east-west call using **mutual TLS (mTLS)**. In normal HTTPS, only the server proves who it is. In mTLS, *both sides* show a certificate, so the payments service knows the caller really is the orders service, and vice versa. On top of that identity, you write rules:
+
+```yaml
+# Only the payments service may talk to the payments database.
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: payments-db-access
+spec:
+  selector:
+    matchLabels: { app: payments-db }
+  rules:
+    - from:
+        - source: { principals: ["cluster.local/ns/prod/sa/payments"] }
+```
+
+Now the corridors have locks, and every lock checks the badge. If an attacker compromises the recommendations service, they can't just walk over to the payments database. The proxy in front of it refuses any caller that isn't Payments.
+
+Try it below. Watch how much more east-west traffic there is than north-south, switch on the mesh, then put an intruder inside.
+
+<DemoFrame
+  title="Traffic in a data centre"
+  hint="let an intruder in"
+  caption="Orange packets cross the edge (north-south); blue packets move between services (east-west). The intruder starts in the recommendations service and tries to reach the payments database."
+>
+  <TrafficFlowDemo />
+</DemoFrame>
+
+That's the mall again: the guard at the main entrance can't see the back corridors. Put staff with badge readers at every back door, and a thief in the corridor gets stopped wherever they try to go.
+
+## Other ways to manage east-west traffic
+
+### Perimeter only
+
+<Analogy title="A castle with a moat">
+  Build huge walls and a moat. Inside the castle, everyone wanders freely and trusts each other completely.
+</Analogy>
+
+Protect the edge with firewalls and VPNs, and treat the internal network as trusted. Simple, cheap, and how most companies ran for decades.
+
+### Smart libraries in every service
+
+<Analogy title="Every employee carries their own map and keys">
+  Instead of hiring staff for every back door, you train every employee to navigate the building, check badges and handle problems themselves.
+</Analogy>
+
+Put discovery, retries, timeouts and security into a shared library that every service imports. No extra processes, no extra network hop.
+
+### Send internal traffic through a central gateway
+
+<Analogy title="Every memo goes through the front desk">
+  Any time one office wants to send another a note, it walks it down to reception, which logs it and walks it back up.
+</Analogy>
+
+Route service-to-service calls through the same kind of central gateway you use for north-south traffic, and enforce rules there.
+
+### Network segmentation by address
+
+<Analogy title="Colour-coded floors">
+  Your keycard only opens the floors you're allowed on. Within a floor, everything's open.
+</Analogy>
+
+Use firewall rules and separate network segments (VLANs, security groups) so that only certain IP address ranges can reach certain others.
+
+### Sidecar-less meshes
+
+<Analogy title="One concierge per floor instead of one per office">
+  Instead of a staff member at every office door, each floor gets a shared concierge who handles everyone's visitors.
+</Analogy>
+
+Newer designs move the proxy out of each service and into a shared per-machine component (or into the operating system's kernel, using a technology called eBPF). Istio's **ambient mode**, announced in 2022, works like this.
+
+## Why we usually pick the mesh (and when we don't)
+
+**Perimeter-only security fails the first time the wall is breached.** And with vendors, laptops, CI systems and cloud consoles, the wall gets breached eventually. Target's attackers came in through a contractor's account. Once inside a flat, trusted network, nothing stopped them from moving sideways. Zero trust assumes the breach and limits what it can reach.
+
+**Libraries don't scale across languages and teams.** Every language needs its own version, every bug fix needs to be shipped by every team, and a service that forgets to upgrade becomes the weak link. Lyft's motivation for Envoy was exactly this: an out-of-process proxy works the same way for any language.
+
+**A central gateway for internal traffic becomes a bottleneck and a single point of failure.** Every internal call takes an extra trip through one shared box, adding latency, and if that box has a bad day, *everything* has a bad day. Gateways are great at the edge, where traffic genuinely crosses a boundary.
+
+**IP-based segmentation struggles in a world of containers.** Addresses change every time a container restarts or moves. Rules based on "which IP can talk to which IP" become impossible to keep correct. Identity-based rules ("the payments service can talk to the payments database") don't care where things run.
+
+<MarginNote tone="blue">
+  meshes aren't free: every call gets an extra hop through two proxies, and every service gets a roommate eating CPU and memory.
+</MarginNote>
+
+**But a mesh has real costs.** Each call passes through two extra proxies, adding a little latency. Each sidecar uses CPU and memory, which adds up across thousands of services. And a mesh is a complex system to run: if the control plane misbehaves, it can affect everything. That's exactly why sidecar-less designs like Istio's ambient mode appeared.
+
+### When the "alternative" is the better choice
+
+For a handful of services in one language, a good library (or just sensible timeouts and TLS) is plenty. Netflix ran one of the world's largest microservice systems for years on in-process Java libraries rather than sidecars, because most of its services were written in Java. When it later adopted Envoy, it published how it made the move with almost no per-service configuration (case file #2). The right tool depended on its language mix and scale at the time.
+
+And for north-south traffic, a gateway is still the right answer, as Razorpay's story shows (case file #5).
+
+## In the wild: case files
+
+<CaseFile
+  number={1}
+  company="Lyft"
+  kind="Startup turned big tech"
+  period="2015–2017"
+  note="the network, out of the app"
+  problem="As Lyft moved from a monolith to a service-oriented architecture, networking and observability became the hard part. Services were written in different languages, and debugging failures across many hops, with inconsistent retries, timeouts and metrics, was painful."
+  fix="Lyft built Envoy, a high-performance C++ proxy designed to run next to every service on every host. It handles load balancing, circuit breaking, retries and rich statistics in one place, for any language. Lyft announced it as open source in 2016, describing it as a proxy and 'communication bus' for large service-oriented architectures."
+  lesson="Envoy joined the Cloud Native Computing Foundation in 2017 and became the data plane underneath many service meshes, including Istio. Moving networking out of the application made consistent behaviour possible across a polyglot fleet."
+  sourceLabel="Lyft Engineering: Announcing Envoy"
+  sourceHref="https://eng.lyft.com/announcing-envoy-c-l7-proxy-and-communication-bus-92520b6c8191"
+/>
+
+<CaseFile
+  number={2}
+  company="Netflix"
+  kind="Big tech"
+  period="2013–2023"
+  note="front door first, then the corridors"
+  problem="Netflix needed a single front door for traffic from every Netflix device worldwide: routing, authentication, resilience and insight into every request. Inside, its services used Java libraries (Eureka for discovery, Ribbon for load balancing) for east-west calls."
+  fix="Netflix built Zuul as its edge gateway, then rebuilt it as Zuul 2 on an asynchronous, non-blocking framework (Netty) and open-sourced it in 2018. Netflix said its Cloud Gateway team ran more than 80 clusters of Zuul 2, handling over a million requests per second. For east-west traffic, it later moved to an Envoy-based service mesh and in 2023 described an 'on-demand cluster discovery' feature, built with the Envoy community, that removed most per-service mesh configuration."
+  lesson="North-south and east-west need different tools. A strong gateway at the edge and a mesh inside solve different problems, and you can adopt them at different times."
+  sourceLabel="InfoQ: Zero-configuration service mesh at Netflix"
+  sourceHref="https://www.infoq.com/news/2023/09/zero-config-service-mesh-netflix/"
+/>
+
+<CaseFile
+  number={3}
+  company="Google"
+  kind="Big tech"
+  period="2009–2017"
+  note="the network is not a badge"
+  problem="After the 2009 Operation Aurora attacks, Google concluded that a privileged internal network was dangerous: once the perimeter is breached, an attacker has relatively easy access to everything inside."
+  fix="BeyondCorp, described in a 2014 USENIX ;login: article, moved Google's corporate apps off the privileged network: access depends only on device and user credentials, regardless of network location. For service-to-service traffic, Google's 2017 whitepaper describes ALTS, which mutually authenticates production services by identity rather than by host, and protects RPCs by default."
+  lesson="Zero trust applies in both directions: people reaching services, and services reaching each other. Identity replaces location as the thing you check."
+  sourceLabel="USENIX ;login: BeyondCorp (2014)"
+  sourceHref="https://www.usenix.org/publications/login/dec14/ward"
+/>
+
+<CaseFile
+  number={4}
+  company="Target"
+  kind="Big tech (retail)"
+  period="November–December 2013"
+  note="locked front door, open corridors"
+  problem="Attackers entered Target's network using credentials stolen from Fazio Mechanical Services, a refrigeration and HVAC contractor. From that foothold, far from any payment system, they moved through the internal network to the point-of-sale terminals in Target's stores."
+  fix="Malware on those terminals captured data from about 40 million credit and debit card accounts between late November and mid-December 2013. A US Senate committee review criticised Target for giving network access to a vendor that didn't follow broadly accepted security practices."
+  lesson="East-west movement is how small breaches become huge ones. Segmenting internal networks and authenticating internal access limits what a stolen login can reach."
+  sourceLabel="MPR News: how Target's hackers got in"
+  sourceHref="https://www.mprnews.org/story/2014/02/05/business/target-data-security-breach"
+/>
+
+<CaseFile
+  number={5}
+  company="Razorpay"
+  kind="Indian fintech"
+  period="2020s"
+  note="a gateway that helps you migrate"
+  problem="Razorpay's API traffic used to pass through its monolith, which acted as a proxy for newer services. That extra hop added significant latency to busy APIs such as order creation, and as one of India's large payment platforms it also needed protection from DDoS and abusive traffic at the edge."
+  fix="Razorpay built Edge, its own API gateway. Because not all of its roughly 400 APIs were ready to bypass the monolith, Edge supported selective traffic diversion, moving APIs one at a time, starting with order creation. Its PlatformCon 2023 talk describes Edge as the gateway for scalability, availability and protection against DDoS and abusive traffic."
+  lesson="A gateway isn't only a security guard. It's also a migration tool: the front door can quietly redirect traffic to new services one route at a time."
+  sourceLabel="Razorpay Engineering: Authentication Revamp"
+  sourceHref="https://engineering.razorpay.com/razorpays-authentication-revamp-turbocharging-performance-b8bb9d750fe8"
+/>
+
+## TL;DR
+
+<TLDR>
+  <Takeaway>North-south = crossing your edge. East-west = services talking to each other inside.</Takeaway>
+  <Takeaway>Microservices made east-west traffic the majority, and changed both network design and security.</Takeaway>
+  <Takeaway>Gateways guard the front door. Meshes (a sidecar per service + a control plane) guard the corridors.</Takeaway>
+  <Takeaway>Zero trust: check identity on every call, not where it came from. Assume someone is already inside.</Takeaway>
+  <Takeaway>Meshes cost latency, memory and complexity. A few services in one language may not need one.</Takeaway>
+</TLDR>
+
+## Sources
+
+1. MPR News, ["Report: Target hackers breached account security via Penn. heating contractor"](https://www.mprnews.org/story/2014/02/05/business/target-data-security-breach), 2014, and [Dark Reading](https://www.darkreading.com/attacks-breaches/target-breach-hvac-contractor-systems-investigated), 2014.
+2. [Senate hearing coverage](https://www.govinfosecurity.com/target-cfo-grilled-in-senate-hearing-a-6683), GovInfoSecurity, 2014.
+3. Cisco, ["Global Cloud Index projects cloud traffic to represent 95 percent of total data center traffic by 2021"](https://newsroom.cisco.com/c/r/newsroom/en/us/a/y2018/m02/global-cloud-index-projects-cloud-traffic-to-represent-95-percent-of-total-data-center-traffic-by-2021.html), 2018, and [eWeek coverage](https://www.eweek.com/cloud/cloud-to-be-dominant-form-of-data-center-traffic-by-2021-cisco-reports/).
+4. Rory Ward and Betsy Beyer, ["BeyondCorp: A New Approach to Enterprise Security"](https://www.usenix.org/publications/login/dec14/ward), ;login: 39(6), 2014.
+5. Google Security Blog, ["Securing communications between Google services with ALTS"](https://security.googleblog.com/2017/12/securing-communications-between-google.html), 2017.
+6. Matt Klein, ["Announcing Envoy: C++ L7 proxy and communication bus"](https://eng.lyft.com/announcing-envoy-c-l7-proxy-and-communication-bus-92520b6c8191), Lyft Engineering, 2016, and [CNCF hosts Envoy](https://www.cncf.io/blog/2017/09/13/cncf-hosts-envoy/), 2017.
+7. Istio, ["Happy 7th Birthday, Istio!"](https://istio.io/latest/blog/2024/happy-7th-birthday/), 2024, and ["Istio's ambient mode reaches General Availability"](https://istio.io/latest/blog/2024/ambient-reaches-ga/), 2024.
+8. InfoQ, ["Netflix's Zuul 2: asynchronous, non-blocking"](https://www.infoq.com/news/2016/10/netflix-zuul-asynch-nonblocking/), 2016, and [Packt: Netflix open sources Zuul 2](https://hub.packtpub.com/netflix-open-sources-zuul-2-cloud-gateway/), 2018.
+9. InfoQ, ["Netflix builds a zero-configuration service mesh"](https://www.infoq.com/news/2023/09/zero-config-service-mesh-netflix/), 2023.
+10. Razorpay Engineering, ["Razorpay's Authentication Revamp: Turbocharging Performance"](https://engineering.razorpay.com/razorpays-authentication-revamp-turbocharging-performance-b8bb9d750fe8), and PlatformCon 2023, ["Edge at Razorpay"](https://2023.platformcon.com/talks/edge-at-razorpay-the-api-gateway-for-ddos-protected-high-scale-environments).
