@@ -1,0 +1,300 @@
+import CounterMergeDiagram from "@/components/blog/posts/crdts-yjs/CounterMergeDiagram";
+import LostUpdateDiagram from "@/components/blog/posts/crdts-yjs/LostUpdateDiagram";
+import OtVsCrdtDiagram from "@/components/blog/posts/crdts-yjs/OtVsCrdtDiagram";
+import YjsItemsDiagram from "@/components/blog/posts/crdts-yjs/YjsItemsDiagram";
+import { GroceryListDemo } from "@/components/blog/posts/crdts-yjs/lazy";
+
+## The grocery list in the basement
+
+Meera and Kabir share a grocery list app. On Saturday, they split up at a big supermarket whose basement floor has no mobile signal. Meera remembers they're out of eggs and adds "eggs" to the list. Two aisles away, Kabir adds "chai". Neither phone can reach the internet, so each phone saves its own version.
+
+Back upstairs, both phones reconnect and sync. A simple sync system compares the two lists, sees that Kabir saved his a minute later, and keeps Kabir's version. The eggs are gone. No error, no warning. Meera's edit just quietly disappears.
+
+<Figure caption="Two offline edits, one 'last write wins' sync, one lost update. Nobody did anything wrong; the sync strategy simply threw away a perfectly good edit.">
+  <LostUpdateDiagram />
+</Figure>
+
+This is the core problem of collaboration software: **several people (or devices) changing the same data at the same time**, sometimes while disconnected, and everyone expecting to end up with the same, sensible result. Google Docs, Figma, Notion, multiplayer code editors and collaborative canvases all have to solve it.
+
+<MarginNote label="the goal">
+  everyone edits freely, offline or online, and every copy ends up identical, with nothing lost.
+</MarginNote>
+
+This post covers the simple approaches and why they fail, the classic fix that Google Docs uses (Operational Transformation), the newer one that powers many modern collaborative apps (CRDTs), how the popular library **Yjs** works under the hood, and the trade-offs nobody puts on the landing page. There's a demo with two real Yjs documents you can take offline, and the case files cover Google Docs, Figma, Zed, Redis and JupyterLab.
+
+## What's the problem, exactly?
+
+Some terms first:
+
+- A **replica** is one copy of the shared data. Each phone, browser tab or server holding the grocery list has a replica.
+- **Concurrent edits** are changes made at the same time, or more precisely, made without either side having seen the other's change yet. Two edits made offline an hour apart are still concurrent, because neither knew about the other.
+- **Convergence** means that once all replicas have seen the same set of edits, they hold exactly the same data.
+- A **conflict** is when concurrent edits touch the same thing and it's not obvious what the combined result should be.
+
+The naive approach is called **last-write-wins (LWW)**: when two versions disagree, keep the one with the later timestamp. It converges, since everyone agrees on the winner, but it does so by **throwing data away**. That's the **lost update** problem from the hook.
+
+Another approach is **locking**: only one person may edit at a time. Whoever opens the list first gets the lock, and everyone else sees "Meera is editing…". That prevents conflicts, but it means you can't edit offline, and you spend a lot of time waiting.
+
+What we want is a way to **merge** concurrent edits so that nothing is lost and every replica ends up the same, without anyone waiting and without needing to be online.
+
+<Analogy
+  title="One shared notebook vs everyone keeping a copy"
+  mapping={[
+    ["the single notebook passed around", "locking (one editor at a time)"],
+    ["everyone's own copy", "a replica"],
+    ["photocopying the newest page over the old one", "last-write-wins"],
+    ["a shared set of rules for combining notes", "a CRDT's merge function"],
+  ]}
+>
+  A family plans a holiday in one physical notebook. Only the person holding it can write, so everyone else waits. Safe, but slow, and if it's left in someone's bag at work, nobody can plan anything.
+
+  So everyone gets their own copy instead. Now people write whenever they like. But when you compare notebooks, how do you combine them? Photocopying the most recent page over everyone else's loses ideas. What you really want is a set of rules everyone agrees on, so that "combining my notes with yours" always produces the same result no matter whose notebook you start with.
+</Analogy>
+
+## How it came to be
+
+### Round 1: Operational Transformation
+
+The first serious answer came from research on "groupware" (software for groups). In 1989, Clarence Ellis and Simon Gibbs published a paper introducing **Operational Transformation (OT)**.
+
+The idea: describe every edit as an **operation**, like "insert 'x' at position 5" or "delete the character at position 2". When two operations happen concurrently, **transform** one against the other before applying it. If Meera inserts at position 5 while Kabir deletes position 2, then by the time Meera's insert reaches Kabir's copy, the text has shifted left by one, so it should be applied at position 4 instead. Transformation is the art of adjusting operations so they still mean what their author intended.
+
+OT turned out to be very hard to get right for complex documents, especially with many users and no central coordinator. A practical fix came in 1995 with Xerox PARC's **Jupiter** system, which routed every edit through a **central server**. The server decides the order of operations and transforms everything against that one order, which makes the problem much more manageable. Google Wave was built on ideas from Jupiter, and **Google Docs** was built on OT with a central server (case file #1).
+
+The catch: OT needs that central server to referee. If you're offline for an hour, your edits can't be properly merged until the server sees them, and long offline sessions or peer-to-peer syncing are hard to support.
+
+### Round 2: CRDTs
+
+Researchers wanted a structure where merging didn't need a referee at all. In 2011, Marc Shapiro, Nuno Preguiça, Carlos Baquero and Marek Zawirski formalised **Conflict-free Replicated Data Types (CRDTs)**: data structures designed so that replicas can be updated independently, in any order, and **always converge**, mathematically guaranteed, without coordination.
+
+The trick is to design the data type so that merging is:
+
+- **Commutative:** merging A then B gives the same result as B then A.
+- **Associative:** it doesn't matter how you group merges.
+- **Idempotent:** merging the same thing twice is harmless.
+
+If merges have those three properties, it doesn't matter what order updates arrive in, whether they're delayed, or whether some arrive twice: everyone ends up in the same place.
+
+The simplest example is a **grow-only counter**, like counting "likes" across phones. Instead of one number, each replica keeps one slot per replica and only increments its own slot. To merge, take the **maximum** of each slot. The total is the sum of the slots.
+
+<Figure caption="A grow-only counter, one of the simplest CRDTs. Each replica only bumps its own slot; merging takes the max per slot. Merge in any order, any number of times, and you get the same answer.">
+  <CounterMergeDiagram />
+</Figure>
+
+There are two families of CRDTs:
+
+- **State-based CRDTs** send their whole state (like the counter above) and merge with a function like "max per slot". Simple and robust, but the state can be big.
+- **Operation-based CRDTs** send just the operations ("Meera inserted 'eggs' after 'bread'"), which is much smaller, but the network has to deliver every operation (exactly once, or the operations must be safe to replay).
+
+Real systems, Yjs included, mix the two: they send small operations during normal editing, and when two replicas reconnect after a long time, they exchange a compact summary of what each has seen and send just the missing pieces.
+
+<Figure caption="OT relies on a central server to order and transform edits. CRDTs let any replica sync with any other, directly or through a server, and still converge.">
+  <OtVsCrdtDiagram />
+</Figure>
+
+## How Yjs works
+
+**Yjs** is an open-source CRDT library for JavaScript, created by Kevin Jahns. It's based on an algorithm called **YATA**, described in a 2016 paper by Nicolaescu, Jahns, Derntl and Klamma. Yjs gives you shared types that look like normal data structures (`Y.Text`, `Y.Array`, `Y.Map`), and it handles the merging for you.
+
+### Step 1: Every insert gets a permanent, unique ID
+
+Text editing is the hard case: "insert at position 5" breaks as soon as someone else edits before position 5. So Yjs doesn't use positions at all. Every inserted character (or list item) becomes an **item** with:
+
+- a unique ID made of **who** created it (a random client ID) and **their counter** (0, 1, 2…),
+- a reference to the item it was inserted **after** (and before), at the moment it was typed.
+
+"Insert 'i' after the item `A:2`" means the same thing on every replica, no matter what else has changed.
+
+<Figure caption="How Yjs sees the word 'chai': a chain of items, each with a unique (client, counter) ID and a link to its neighbour. The deleted 'y' from client B stays in the chain as a tombstone.">
+  <YjsItemsDiagram />
+</Figure>
+
+### Step 2: Concurrent inserts at the same spot get a deterministic order
+
+If Meera and Kabir both insert something right after "bread" at the same time, both new items point to the same neighbour. Yjs breaks the tie with rules that every replica applies the same way (based on the items' IDs and origins), so everyone puts "eggs" and "chai" in the **same** order. Neither is lost; the order is just consistent everywhere.
+
+### Step 3: Deletes leave tombstones
+
+When you delete an item, Yjs doesn't throw it away immediately. It marks it as deleted, a **tombstone**. That's important: an edit from an offline phone might still say "insert after item `B:0`". If `B:0` were gone, nobody would know where to put the new text. Yjs keeps just enough of deleted items for this, and it does a lot of work to keep tombstones small, such as merging runs of consecutive items into one.
+
+### Step 4: Sync by asking "what haven't you seen?"
+
+Every Yjs document keeps a **state vector**: for each client, the highest counter it has seen ("I have everything from client A up to 12, and from B up to 7"). To sync, a replica sends its state vector, and the other side replies with exactly the missing items. That's how a phone that's been offline for a day catches up quickly, and it works the same through a server, over WebRTC directly between browsers, or even by passing a file around.
+
+```ts
+import * as Y from "yjs";
+
+const meera = new Y.Doc();
+const kabir = new Y.Doc();
+
+meera.getArray("groceries").push(["eggs"]); // offline
+kabir.getArray("groceries").push(["chai"]); // offline, at the same time
+
+// Reconnect: each side sends exactly what the other is missing.
+Y.applyUpdate(kabir, Y.encodeStateAsUpdate(meera, Y.encodeStateVector(kabir)));
+Y.applyUpdate(meera, Y.encodeStateAsUpdate(kabir, Y.encodeStateVector(meera)));
+
+meera.getArray("groceries").toArray(); // both items, in the same order on both phones
+```
+
+That's genuinely all it takes to merge two documents. Below, both phones run *real* Yjs documents, wired together on this page with no server. Each phone also runs a naive last-write-wins copy, so you can watch them disagree.
+
+<DemoFrame
+  title="Two phones, one list"
+  hint="go offline, edit both!"
+  caption="Each phone holds a real Y.Doc. While both are online, updates flow instantly. Offline edits are kept locally; on reconnect, the docs swap exactly what the other is missing. The last-write-wins lists below use the same edits but keep only the newest snapshot."
+>
+  <GroceryListDemo />
+</DemoFrame>
+
+Try deleting an item on one phone while the other ticks it off, both offline. Yjs keeps both intentions consistent everywhere. Last-write-wins either loses an edit or brings a deleted item back from the dead. Also keep an eye on the document size: it grows a little even when you delete things, because the history needed for merging is part of the data.
+
+### Offline-first, for free
+
+Because a CRDT doesn't need a referee, **offline** stops being a special case. Your app writes to its local replica immediately (so it feels instant), saves it to local storage, and syncs whenever a connection appears. This is the heart of what researchers at Ink & Switch called **local-first software** in a 2019 essay: apps where your data lives on your device first, and the cloud is a helpful sync partner rather than the owner of your data.
+
+It's also why collaborative canvases are a natural fit for CRDTs. My own product, **Kiteloom**, is an infinite canvas where sketches, wireframes and diagrams are the same object, and its real-time multiplayer runs on Yjs. Every shape on the board is shared state that several people (and several offline laptops) can edit at once.
+
+## Other ways to handle concurrent edits
+
+### Last-write-wins
+
+<Analogy title="Photocopying the newest page over the old one">
+  Whoever saved last has their version copied over everyone else's. Simple, and always consistent, but anything the others wrote is simply gone.
+</Analogy>
+
+Keep the version with the latest timestamp. Used everywhere, often by accident.
+
+### Locking
+
+<Analogy title="The talking stick">
+  Only the person holding the stick may speak. Everyone else waits their turn.
+</Analogy>
+
+Allow one editor at a time, or lock individual sections or cells.
+
+### Operational Transformation
+
+<Analogy title="A referee who rewrites every move">
+  Every player sends their move to the referee, who adjusts it to account for everything that has happened since, then announces the official result.
+</Analogy>
+
+A central server orders all operations and transforms concurrent ones against each other.
+
+### Server-authoritative with simple rules
+
+<Analogy title="A teacher's attendance register">
+  Students can call out changes from anywhere, but only the register at the front of the class is official, and it records the last thing said about each student.
+</Analogy>
+
+Keep a central server as the source of truth and resolve conflicts with simple per-field rules, like "last write wins, but per property, not per document". This is roughly what Figma does (case file #2).
+
+## Why we don't always use CRDTs (and when the alternative wins)
+
+**LWW loses data.** It's fine for things where only the latest value matters (a user's profile photo, a "last seen" time), but not for anything people collaborate on. Notice, though, that LWW *per field* is itself a valid CRDT. The demo's naive version is bad because it applies LWW to the *whole list*.
+
+**Locking kills offline editing and feels slow.** Fine for a shared spreadsheet cell or a booking system, painful for writing together.
+
+**OT needs a central server, and it's hard to implement.** If you're Google and you run the server anyway, that's acceptable, and OT has had decades of production hardening. But it rules out true peer-to-peer and long offline sessions.
+
+<MarginNote tone="blue">
+  CRDTs move complexity from "who's in charge?" to "how big is our history?".
+</MarginNote>
+
+**CRDTs have their own costs.** The biggest is **metadata overhead**: every item carries its ID and links, and deleted items leave tombstones, so a document can be larger than the visible content. Libraries like Yjs work hard to compress this, and for typical documents the overhead is modest, but it never goes to zero. Second, CRDTs guarantee that replicas **converge**, not that the result is what humans wanted: if two people concurrently rename a file to two different names, the CRDT will pick one consistently, but someone still has to notice. Third, some application rules (like "the account balance must never go negative") can't be enforced by merging alone and still need coordination.
+
+### When the "alternative" is the better choice
+
+**Figma** is the famous example. Its 2019 engineering post explains that the team looked at both OT and CRDTs, and built a system *inspired* by CRDTs but simpler, because Figma always has a central server. Each property on each object (a rectangle's colour, say) uses last-write-wins, and the server is the authority on the order of changes. Since a design file is a tree of objects with properties rather than one long string of text, per-property LWW gives the right behaviour almost everywhere, and the central server avoids much of the metadata a fully decentralised CRDT needs. **Google Docs** sticks with OT, which suits a world where every edit goes through Google's servers anyway.
+
+The lesson: CRDTs shine when you want **offline-first, peer-to-peer, or no single referee**. If you always have a server in the middle, a simpler server-authoritative design can be the better trade.
+
+## In the wild: case files
+
+<CaseFile
+  number={1}
+  company="Google Docs"
+  kind="Big tech"
+  period="2010"
+  note="OT + one referee"
+  problem="Google rebuilt Docs so many people could type in the same document at once and see each other's changes character by character. Concurrent edits to the same region had to merge sensibly for everyone."
+  fix="Google's 2010 blog series describes storing a document as a log of changes (inserts, deletes, style changes) and using operational transformation, with a collaboration protocol through Google's servers, to merge simultaneous edits. The series noted support for up to 50 simultaneous editors at the time."
+  lesson="With a central server always in the loop, OT is a proven, efficient choice. The server becomes the referee that makes transformation tractable."
+  sourceLabel="Google Drive Blog: Conflict resolution (2010)"
+  sourceHref="https://drive.googleblog.com/2010/09/whats-different-about-new-google-docs_22.html"
+/>
+
+<CaseFile
+  number={2}
+  company="Figma"
+  kind="Startup turned big tech"
+  period="2019"
+  note="CRDT-inspired, server-decided"
+  problem="Figma wanted real-time multiplayer for design files: many people moving, recolouring and editing objects on the same canvas simultaneously."
+  fix="Figma's engineering post describes a system inspired by CRDTs but simplified because Figma has a central server. Two simultaneous changes are independent unless they affect the same property of the same object, in which case the latest change wins, with the server deciding the order. The team prototyped it in a test harness that simulated several clients and a server."
+  lesson="You don't need a 'pure' CRDT to benefit from CRDT ideas. Matching the conflict model to your data (objects with properties) and your architecture (a central server) can give a simpler system."
+  sourceLabel="Figma: How Figma's multiplayer technology works"
+  sourceHref="https://www.figma.com/blog/how-figmas-multiplayer-technology-works/"
+/>
+
+<CaseFile
+  number={3}
+  company="Zed"
+  kind="Startup"
+  period="2022"
+  note="collaboration in the editor's DNA"
+  problem="Zed set out to build a code editor where multiplayer editing is a core feature, not a plugin: several programmers in the same buffer, with no lag and no lost keystrokes."
+  fix="In the first post on its blog, Zed explains that its buffers are built on CRDTs, so each collaborator edits a local replica that converges with the others over time, and it walks through the history of collaborative editing that led there."
+  lesson="Designing the core data structure as a CRDT from day one makes collaboration a property of the editor rather than an add-on."
+  sourceLabel="Zed: How CRDTs make multiplayer text editing part of Zed's DNA"
+  sourceHref="https://zed.dev/blog/crdts"
+/>
+
+<CaseFile
+  number={4}
+  company="Redis"
+  kind="Database company"
+  period="ongoing"
+  note="CRDTs in a database"
+  problem="Companies running in several regions want users in each region to write to a nearby copy of the database with very low latency, even though writes in different regions can conflict."
+  fix="Redis's Active-Active geo-distribution is built on CRDTs: every participating cluster accepts writes, the databases use only CRDT data types so conflicts resolve predictably without application logic, and replicas converge to a consistent state (strong eventual consistency)."
+  lesson="CRDTs aren't just for documents. Any data that's written in many places and synced later (counters, sets, sessions) can use them."
+  sourceLabel="Redis docs: Active-Active geo-distributed Redis"
+  sourceHref="https://redis.io/docs/latest/operate/rs/databases/active-active/"
+/>
+
+<CaseFile
+  number={5}
+  company="JupyterLab"
+  kind="Open source"
+  period="2021 onward"
+  note="notebooks, together"
+  problem="Data scientists wanted to work in the same Jupyter notebook together, Google Docs-style, including editing and running cells."
+  fix="JupyterLab 3.1 added real-time collaboration for documents and notebooks built on Yjs, enabled with a flag. From JupyterLab 4, collaboration is provided by the jupyter_collaboration extension, still on the Yjs shared editing framework."
+  lesson="A general-purpose CRDT library lets a project add collaboration to complex, structured documents without inventing its own merge algorithm."
+  sourceLabel="JupyterLab docs: Real Time Collaboration"
+  sourceHref="https://jupyterlab.readthedocs.io/en/3.6.x/user/rtc.html"
+/>
+
+## TL;DR
+
+<TLDR>
+  <Takeaway>Concurrent edits + "last write wins" = silently lost work. Locking fixes that but kills offline.</Takeaway>
+  <Takeaway>OT transforms edits through a central referee (Google Docs). CRDTs merge in any order, with no referee.</Takeaway>
+  <Takeaway>Yjs: every insert gets a unique ID, deletes leave tombstones, and sync sends "only what you're missing".</Takeaway>
+  <Takeaway>CRDTs make offline-first easy, but cost metadata, and "converged" doesn't always mean "what humans meant".</Takeaway>
+  <Takeaway>Always have a server in the middle? A simpler server-authoritative design (like Figma's) might be enough.</Takeaway>
+</TLDR>
+
+## Sources
+
+1. C. A. Ellis and S. J. Gibbs, ["Concurrency control in groupware systems"](https://doi.org/10.1145/66926.66963), ACM SIGMOD, 1989.
+2. D. A. Nichols, P. Curtis, M. Dixon and J. Lamping, ["High-latency, low-bandwidth windowing in the Jupiter collaboration system"](https://doi.org/10.1145/215585.215706), ACM UIST, 1995.
+3. M. Shapiro, N. Preguiça, C. Baquero and M. Zawirski, ["Conflict-free Replicated Data Types"](https://doi.org/10.1007/978-3-642-24550-3_29), SSS 2011, and ["A comprehensive study of Convergent and Commutative Replicated Data Types"](https://inria.hal.science/inria-00555588), INRIA, 2011.
+4. P. Nicolaescu, K. Jahns, M. Derntl and R. Klamma, ["Near Real-Time Peer-to-Peer Shared Editing on Extensible Data Types"](https://doi.org/10.1145/2957276.2957310), ACM GROUP, 2016 (YATA, the algorithm behind Yjs), and the [Yjs documentation](https://docs.yjs.dev/).
+5. M. Kleppmann, A. Wiggins, P. van Hardenberg and M. McGranaghan, ["Local-first software"](https://www.inkandswitch.com/local-first/), Ink & Switch, 2019.
+6. Google Drive Blog, ["What's different about the new Google Docs: Conflict resolution"](https://drive.googleblog.com/2010/09/whats-different-about-new-google-docs_22.html) and ["Making collaboration fast"](https://drive.googleblog.com/2010/09/whats-different-about-new-google-docs.html), 2010.
+7. Evan Wallace, ["How Figma's multiplayer technology works"](https://www.figma.com/blog/how-figmas-multiplayer-technology-works/), Figma, 2019.
+8. Nathan Sobo, ["How CRDTs make multiplayer text editing part of Zed's DNA"](https://zed.dev/blog/crdts), Zed, 2022.
+9. Redis, ["Active-Active geo-distributed Redis"](https://redis.io/docs/latest/operate/rs/databases/active-active/).
+10. JupyterLab, ["Real Time Collaboration" (3.x)](https://jupyterlab.readthedocs.io/en/3.6.x/user/rtc.html) and the [JupyterLab 3.1 announcement](https://discourse.jupyter.org/t/ann-jupyterlab-3-1/10129).

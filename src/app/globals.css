@@ -44,6 +44,7 @@
   --font-logote: logote, "logote";
   --animate-marquee: marquee var(--marquee-duration, 25s) linear infinite;
   --animate-marquee-reverse: marquee-reverse var(--marquee-duration, 25s) linear infinite;
+  --animate-dash-flow: dash-flow 0.9s linear infinite;
 
   @keyframes marquee {
     from {
@@ -64,6 +65,13 @@
       transform: translateX(0%);
     }
   }
+
+  /* Marching-ants stroke used by blog diagrams to show "signal flowing". */
+  @keyframes dash-flow {
+    to {
+      stroke-dashoffset: -12;
+    }
+  }
 }
 
 /* Hide the native scrollbar everywhere for a cleaner look. */
@@ -77,6 +85,21 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-hand: var(--font-caveat), "Comic Sans MS", cursive;
+  --color-paper: var(--blog-paper);
+  --color-paper-raised: var(--blog-paper-raised);
+  --color-ink: var(--blog-ink);
+  --color-ink-muted: var(--blog-ink-muted);
+  --color-rule: var(--blog-rule);
+  --color-pen: var(--blog-pen);
+  --color-pen-blue: var(--blog-pen-blue);
+  --color-marker: var(--blog-marker);
+  --color-danger: var(--blog-danger);
+  --color-warn: var(--blog-warn);
+  --color-ok: var(--blog-ok);
+  --color-folder: var(--blog-folder);
+  --color-sticky: var(--blog-sticky);
+  --color-sticky-ink: var(--blog-sticky-ink);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -199,4 +222,83 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/*
+ * Blog "notebook" palette. Light by default, dark when the OS asks for it,
+ * and either one when the reader picks it with the blog's theme toggle
+ * (which sets data-blog-theme on <html>). Every ink/paper pair meets WCAG AA.
+ */
+html {
+  --blog-scheme: light;
+  --blog-paper: #fbf8f1;
+  --blog-paper-raised: #fff;
+  --blog-ink: #1c1917;
+  --blog-ink-muted: #57534e;
+  --blog-rule: #e4dccb;
+  --blog-pen: #c2410c;
+  --blog-pen-blue: #1d4ed8;
+  --blog-marker: #fde04780;
+  --blog-danger: #b91c1c;
+  --blog-warn: #a16207;
+  --blog-ok: #15803d;
+  --blog-folder: #f3e6c8;
+  --blog-sticky: #fef08a;
+  --blog-sticky-ink: #1c1917;
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-blog-theme="light"]) {
+    --blog-scheme: dark;
+    --blog-paper: #0b0b0c;
+    --blog-paper-raised: #151517;
+    --blog-ink: #ececec;
+    --blog-ink-muted: #a8a29e;
+    --blog-rule: #2c2b29;
+    --blog-pen: #fbbf24;
+    --blog-pen-blue: #93c5fd;
+    --blog-marker: #facc1540;
+    --blog-danger: #f87171;
+    --blog-warn: #facc15;
+    --blog-ok: #4ade80;
+    --blog-folder: #1d1912;
+    --blog-sticky: #3b3413;
+    --blog-sticky-ink: #fef3c7;
+  }
+}
+
+html[data-blog-theme="dark"] {
+  --blog-scheme: dark;
+  --blog-paper: #0b0b0c;
+  --blog-paper-raised: #151517;
+  --blog-ink: #ececec;
+  --blog-ink-muted: #a8a29e;
+  --blog-rule: #2c2b29;
+  --blog-pen: #fbbf24;
+  --blog-pen-blue: #93c5fd;
+  --blog-marker: #facc1540;
+  --blog-danger: #f87171;
+  --blog-warn: #facc15;
+  --blog-ok: #4ade80;
+  --blog-folder: #1d1912;
+  --blog-sticky: #3b3413;
+  --blog-sticky-ink: #fef3c7;
+}
+
+/* Root wrapper of every /blog page. */
+.blog-theme {
+  color-scheme: var(--blog-scheme);
+  background-color: var(--blog-paper);
+  color: var(--blog-ink);
+}
+
+/* Faint notebook rules behind the blog index header and case files. */
+.blog-ruled {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 31px,
+    var(--blog-rule) 31px,
+    var(--blog-rule) 32px
+  );
 }

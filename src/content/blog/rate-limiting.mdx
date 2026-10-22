@@ -1,0 +1,347 @@
+import BouncerDiagram from "@/components/blog/posts/rate-limiting/BouncerDiagram";
+import TokenBucketDiagram from "@/components/blog/posts/rate-limiting/TokenBucketDiagram";
+import WindowBoundaryDiagram from "@/components/blog/posts/rate-limiting/WindowBoundaryDiagram";
+import { RateLimiterDemo } from "@/components/blog/posts/rate-limiting/lazy";
+
+## The turnstiles at rush hour
+
+Think of a big metro interchange at 9 a.m. Thousands of people pour down the stairs. Between them and the platforms stands a row of turnstiles. Each one lets one person through at a time, at a steady pace. When the crowd is too big, a queue forms at the gates instead of a crush on the platform edge.
+
+The turnstiles aren't there to annoy anyone. They protect the platform, the trains and everyone on them. The station can only safely hold so many people, so the gates control the *rate* at which people get in.
+
+Now picture an API, the interface your app or another company's code uses to talk to your servers. One customer ships a script with a bug in a `while` loop. It starts calling your API a few thousand times a second. Your servers slow down, then fall over, and every other customer goes down with them. That one runaway script is the 9 a.m. crowd, and you have no turnstiles.
+
+<MarginNote label="the point">
+  a rate limiter isn't a punishment. it's a turnstile that keeps the platform safe for everyone.
+</MarginNote>
+
+This post covers what rate limiting is and why every serious API has it, the five classic algorithms (with a live simulator where you can spam a button and compare them), where limits should live (client, server or gateway), how to do it across many servers with Redis, and how to say "slow down" politely with `429` and `Retry-After`. Then we'll look at how Stripe, GitHub, Cloudflare, Shopify and Zerodha do it.
+
+## What is rate limiting?
+
+**Rate limiting** means controlling how many requests a client can make in a period of time, like "100 requests per minute per API key". Requests within the limit go through. Requests over the limit are rejected (or delayed) until the client is back under it.
+
+<Figure caption="A rate limiter stands at the door: a steady number of requests get in, the extras are turned away with a 429, and the server stays healthy for everyone.">
+  <BouncerDiagram />
+</Figure>
+
+Why do it? Four reasons, and most APIs care about all of them:
+
+- **Protection.** Your servers have a maximum safe load. A limit stops any single client (buggy or malicious) from pushing you past it.
+- **Fairness.** Without limits, the noisiest customer gets the most capacity. With limits, everyone gets a fair share. Engineers call the noisy one a **noisy neighbour**.
+- **Abuse prevention.** Limits slow down password guessing on login pages, scraping, spam and fake sign-ups.
+- **Cost.** Some requests cost you real money: sending an SMS with a one-time password, calling a paid AI model, running a heavy report. A limit caps the bill.
+
+A few words we'll use a lot:
+
+- A **limit** (or **quota**) is the number allowed, like 100.
+- A **window** is the time period it applies to, like one minute.
+- A **burst** is a quick cluster of requests. Most systems want to allow small bursts (a page loading 10 things at once) without allowing a sustained flood.
+- The **key** is *who* is being limited: a user ID, an API key, an IP address, or a combination.
+- **HTTP 429 Too Many Requests** is the standard response for "you're over the limit". It's usually paired with a **Retry-After** header saying how many seconds to wait.
+
+<Analogy
+  title="The nightclub bouncer"
+  mapping={[
+    ["the bouncer", "the rate limiter"],
+    ["the club's capacity", "the limit"],
+    ["the guest list / wristbands", "the key (who is being counted)"],
+    ["'come back in ten minutes'", "429 + Retry-After"],
+    ["a VIP with a bigger allowance", "a higher plan or tier"],
+  ]}
+>
+  A club can safely hold 200 people. The bouncer at the door counts who goes in and who comes out. When the club is full, the next person in line hears "not right now, come back in ten minutes". Nobody inside notices, because the dance floor never gets dangerously packed.
+
+  A good bouncer is also fair. One group can't bring in a hundred friends and fill the club by themselves. And a bouncer who says *when* to come back keeps the line calmer than one who just shakes their head.
+</Analogy>
+
+## Where it came from
+
+The core ideas are older than the web. In the 1980s, telecom engineers designing high-speed networks needed to stop any single sender from flooding a shared link. The **leaky bucket** idea is usually credited to Jonathan Turner's 1986 work on fast packet switching: picture a bucket with a small hole in the bottom. Water (traffic) can pour in at any speed, but it only leaks out at a steady rate, and if the bucket overflows, the extra is thrown away. The closely related **token bucket** became a standard way to describe allowed traffic in network equipment.
+
+When public web APIs took off in the 2000s, these ideas moved up the stack. Twitter, Facebook, GitHub and others opened their platforms to outside developers, and suddenly anyone could write code that hammered their servers. Rate limits became a standard part of every public API.
+
+The web also got a proper status code for it. **429 Too Many Requests** was standardised in RFC 6585 in 2012. Before that, APIs used a mix of codes (some used 403 Forbidden, others 503 Service Unavailable), which made it hard for client code to know whether to retry. The `Retry-After` header comes from HTTP itself, and the IETF has more recently worked on standard **RateLimit** headers so servers can tell clients their remaining quota *before* they hit the wall.
+
+## How rate limiting works
+
+Every rate limiter answers one question, many thousands of times a second: *a request from this key just arrived; let it in or not?* The five classic algorithms answer it differently.
+
+### 1. Fixed window counter
+
+Count requests per key in fixed time blocks: 10:00–10:01, 10:01–10:02, and so on. If the count for the current block is under the limit, allow the request and add one. When a new block starts, reset to zero.
+
+```ts
+const windowStart = Math.floor(now / 60_000);        // which minute is it?
+const count = (counters.get(key + windowStart) ?? 0) + 1;
+counters.set(key + windowStart, count);
+return count <= LIMIT;                                // allow or reject
+```
+
+It's tiny, fast and easy to understand. But it has a famous flaw: the boundaries.
+
+<Figure caption="The fixed-window flaw. Each minute only sees 5 requests, so all 10 are allowed, even though they arrive within a few seconds of each other: twice the limit, in a burst.">
+  <WindowBoundaryDiagram />
+</Figure>
+
+### 2. Sliding window log
+
+Instead of counting per block, remember the **timestamp** of every accepted request. When a new request arrives, throw away timestamps older than one window, and count what's left. This is exact: there's no boundary trick, because the window slides with time.
+
+The cost is memory. If the limit is 10,000 requests per hour, you might store 10,000 timestamps for *each* key. Across millions of users, that adds up.
+
+### 3. Sliding window counter
+
+A clever compromise. Keep just two counters: this window and the previous one. Then *estimate* how many requests fall in the last full window by weighting the previous window by how much it still overlaps:
+
+```ts
+// 15 s into the current minute, the previous minute still overlaps by 45 s (75%).
+const estimate = previousCount * 0.75 + currentCount;
+return estimate < LIMIT;
+```
+
+It assumes the previous window's requests were spread evenly, which is rarely exactly true but close enough at scale. Cloudflare uses this approach, and reported that the approximation was wrong for a tiny fraction of requests (case file #3).
+
+### 4. Token bucket
+
+<Figure caption="A token bucket: tokens drip in at a steady rate up to a maximum, and every request has to take one. The capacity sets how big a burst can be; the refill rate sets the long-run average.">
+  <TokenBucketDiagram />
+</Figure>
+
+Imagine a tank that a tap refills with tokens at a steady rate, say 2 per second, up to a maximum of 5. Every request must take one token. If there's a token, the request goes through. If the tank is empty, it's rejected until the tap drips in another.
+
+This one has two knobs, and that's its superpower. The **refill rate** controls the sustained average (2 per second), and the **capacity** controls how big a burst you tolerate (5 at once). A page that fires 5 requests on load sails through, but a script trying to do 50 per second gets cut down to 2.
+
+<Analogy
+  title="A water tank that refills at a fixed rate"
+  mapping={[
+    ["the tap's flow", "the refill rate"],
+    ["the tank's size", "the burst capacity"],
+    ["a bucketful taken out", "one request"],
+    ["an empty tank", "429 until it refills"],
+  ]}
+>
+  Your building has a rooftop tank that refills from the mains at a steady trickle. In the morning, five flats shower at once and it's fine, because the tank was full. But if everyone runs taps all day, the tank empties and stays nearly empty: you only get as much as the trickle provides.
+</Analogy>
+
+### 5. Leaky bucket
+
+The leaky bucket flips the picture. Requests pour *into* a bucket (a queue), and they're processed *out* of the bottom at a fixed rate. If the bucket is full, new requests are rejected. Unlike the token bucket, a burst isn't served instantly. It's **smoothed out** into a steady stream, which is exactly what you want if the thing behind the limiter (a database, a payment network, an SMS provider) can only handle a constant pace.
+
+### Try them all
+
+Both limiters below allow 2 requests per second on average with bursts of up to 5. Spam the button, try a burst of 10, turn on steady traffic, and switch the comparison to see each algorithm's personality.
+
+<DemoFrame
+  title="Rate limiter simulator"
+  hint="spam the button!"
+  caption="Each request goes to both limiters at the same moment. Watch the fixed window let a double burst through at a boundary, the sliding log stay exact, the sliding counter approximate it, and the leaky bucket queue requests instead of rejecting them."
+>
+  <RateLimiterDemo />
+</DemoFrame>
+
+### Where should the limit live?
+
+You can limit in three places, and real systems usually use all of them:
+
+- **Client-side.** Well-behaved clients slow themselves down: they respect `Retry-After`, and they retry with **exponential backoff and jitter** (wait 1 s, then 2 s, then 4 s, plus a random wobble so a thousand clients don't all retry at the same instant). This doesn't protect you from bad clients, but it makes good ones much easier to live with.
+- **At the gateway or edge.** An API gateway or CDN can reject excess traffic before it ever reaches your servers. This is the cheapest place to stop a flood (see the traffic patterns post).
+- **Server-side, in the service.** Only the service knows the *meaning* of a request: that "send OTP" is expensive, or that this user is on the free plan. Fine-grained, business-aware limits live here.
+
+```ts
+// Polite client: respect Retry-After, otherwise back off exponentially with jitter.
+async function callWithRetry(request: () => Promise<Response>, attempt = 0): Promise<Response> {
+  const response = await request();
+  if (response.status !== 429 || attempt >= 5) return response;
+  const retryAfter = Number(response.headers.get("Retry-After"));
+  const backoff = Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter * 1000 : 2 ** attempt * 500;
+  await new Promise((resolve) => setTimeout(resolve, backoff + Math.random() * 250));
+  return callWithRetry(request, attempt + 1);
+}
+```
+
+### Rate limiting across many servers (Redis)
+
+One wrinkle: your API runs on 20 servers behind a load balancer. If each server counts in its own memory, a client can get 20 times the limit by spreading requests around. So the counters need to live somewhere shared, and **Redis**, a very fast in-memory data store, is the usual choice.
+
+The simplest version is a fixed window with two Redis commands: `INCR` the key's counter and set it to expire at the end of the window. For a token bucket, you need to read the bucket, refill it, take a token and write it back. If two servers do that at the same moment, they can both see "1 token left" and both say yes. The fix is to do the whole thing **atomically** inside Redis, with a small Lua script that runs as one indivisible step:
+
+```lua
+-- KEYS[1] = bucket key; ARGV = capacity, refill per second, now (seconds)
+local bucket = redis.call("HMGET", KEYS[1], "tokens", "ts")
+local capacity, rate, now = tonumber(ARGV[1]), tonumber(ARGV[2]), tonumber(ARGV[3])
+local tokens = tonumber(bucket[1]) or capacity
+local last = tonumber(bucket[2]) or now
+tokens = math.min(capacity, tokens + (now - last) * rate)
+local allowed = tokens >= 1
+if allowed then tokens = tokens - 1 end
+redis.call("HSET", KEYS[1], "tokens", tokens, "ts", now)
+redis.call("EXPIRE", KEYS[1], math.ceil(capacity / rate) * 2)
+return allowed and 1 or 0
+```
+
+Two more decisions come with a shared limiter. **What if Redis is down?** You either *fail open* (allow everything, keeping your API up but unprotected) or *fail closed* (reject everything, staying protected but down). Most teams fail open for general traffic and closed for expensive or security-sensitive actions like login. And **latency**: every request now makes a trip to Redis, so keep it close and keep the scripts small.
+
+### Saying "slow down" politely
+
+A good rejection is specific and useful:
+
+```http
+HTTP/1.1 429 Too Many Requests
+Retry-After: 2
+Content-Type: application/json
+
+{ "error": "rate_limited", "message": "Too many requests. Try again in 2 seconds." }
+```
+
+Many APIs also send headers on *every* response, like how many requests are left and when the quota resets, so clients can slow down before they hit the wall. That's the metro display that says "next train in 2 min": people wait calmly when they know how long.
+
+## Other ways to handle too much traffic
+
+### Just scale up
+
+<Analogy title="Build more turnstiles">
+  The station is crowded? Add more gates, more platforms, more trains.
+</Analogy>
+
+**Autoscaling** adds servers automatically when load rises. Wonderful for genuine growth.
+
+### Queue everything
+
+<Analogy title="A line outside the club">
+  Nobody is ever turned away; they just wait in line until there's room.
+</Analogy>
+
+Put every request into a queue and process them as fast as you can. No rejections, only waiting.
+
+### Load shedding
+
+<Analogy title="Triage in an emergency room">
+  When the ER is overwhelmed, the most urgent patients are seen first and minor cases are asked to come back later.
+</Analogy>
+
+**Load shedding** watches *your* health, not each client's usage. When servers are overloaded, it drops the least important traffic first, so the critical requests survive.
+
+### Prove you're human (or pay with work)
+
+<Analogy title="A quiz at the door">
+  Before you get in, answer a question that's easy for a person but tedious for a robot.
+</Analogy>
+
+**CAPTCHAs** and proof-of-work challenges make abuse expensive instead of counting requests.
+
+### Charge by cost, not by count
+
+<Analogy title="Pay by weight at the post office">
+  A postcard and a heavy parcel aren't charged the same. You pay for the load you put on the system.
+</Analogy>
+
+Instead of "100 requests per minute", give each request a **cost** based on how much work it does, and limit the total cost.
+
+## Why plain rate limits stay (and when the alternatives win)
+
+**Scaling up doesn't stop abuse; it just bills you for it.** A runaway script or an attacker grows with your capacity, and autoscaling takes minutes while a flood takes seconds. Scaling handles real demand; limits handle unfair or abusive demand.
+
+**Queues without limits just move the pain.** If requests arrive faster than you can process them, the queue grows without end, everyone's wait time grows, and requests time out anyway, after using up memory. That's why the leaky bucket has a *maximum* size.
+
+**CAPTCHAs don't fit APIs.** Machine-to-machine traffic can't solve puzzles, and humans hate them. They're a tool for sign-up and login pages, not a general limiter.
+
+<MarginNote tone="blue">
+  rate limits protect you from *clients*. load shedding protects you from *yourself* (or the whole internet at once).
+</MarginNote>
+
+**Load shedding and rate limiting are partners, not rivals.** A per-client limit can't help when *all* clients are behaving but there are simply too many of them, and load shedding can't tell a fair client from a greedy one. Stripe runs both (case file #1).
+
+### When the "alternative" is the better choice
+
+Counting requests treats a tiny lookup and a giant query the same. For **GraphQL** APIs, where a single request can ask for one field or ten thousand, that's a poor fit. **Shopify** limits its GraphQL Admin API by **calculated query cost**: every field has a cost, the query's cost is checked before it runs, and a bucket of points refills over time. GitHub's GraphQL API also uses a points-based limit instead of a simple request count. Cost-based limits are more work to build and to explain, but when request sizes vary wildly, they're fairer and better at protecting the servers.
+
+## In the wild: case files
+
+<CaseFile
+  number={1}
+  company="Stripe"
+  kind="Startup turned big tech"
+  period="2017"
+  note="four layers of no"
+  problem="Stripe's API handles payments, so availability is everything. Traffic spikes, misbehaving scripts, and floods of low-priority requests could crowd out critical ones like creating charges."
+  fix="Stripe's engineering post describes four limiters working together: a request-rate limiter (token bucket per user), a concurrent-requests limiter that caps in-flight requests to protect expensive endpoints, a fleet-usage load shedder that reserves capacity for critical requests, and a worker-utilisation load shedder that drops low-priority traffic as a last line of defence. They're backed by Redis."
+  lesson="Limits are layered. Per-user rate limits handle unfair clients; load shedders protect the fleet when everyone at once is too much. And critical traffic should have capacity reserved for it."
+  sourceLabel="Stripe: Scaling your API with rate limiters"
+  sourceHref="https://stripe.com/blog/rate-limiters"
+/>
+
+<CaseFile
+  number={2}
+  company="GitHub"
+  kind="Big tech"
+  period="ongoing"
+  note="tell people their quota"
+  problem="GitHub's API is used by millions of scripts, CI systems and apps. Unauthenticated scrapers and buggy integrations could easily overwhelm it."
+  fix="GitHub's REST API documents a primary limit of 60 requests per hour for unauthenticated requests and 5,000 per hour for authenticated users, with higher limits for some apps. On top of that, it enforces secondary limits to prevent abuse, such as a cap on concurrent requests, and reports usage in response headers."
+  lesson="Make the anonymous path tight and the identified path generous: it nudges people to authenticate, which makes abuse traceable. And publish the limits and remaining quota so clients can behave."
+  sourceLabel="GitHub Docs: Rate limits for the REST API"
+  sourceHref="https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api"
+/>
+
+<CaseFile
+  number={3}
+  company="Cloudflare"
+  kind="Big tech (network)"
+  period="2017"
+  note="approximate, but at planet scale"
+  problem="Cloudflare wanted to offer rate limiting to every customer, enforced at its edge data centres around the world. A client's requests can be spread across many servers, so per-server counters in memory don't see the full picture, and storing a timestamp for every request is too expensive at that scale."
+  fix="Cloudflare described sharing counters between servers within each data centre and using the sliding-window-counter approximation: two counters per key, with the previous window weighted by its overlap. It reported that in an analysis of 400 million requests, only 0.003% were wrongly allowed or rate limited compared with an exact sliding window."
+  lesson="Exactness is expensive. A cheap approximation that's almost always right can beat a perfect algorithm you can't afford to run."
+  sourceLabel="Cloudflare: Counting things, a lot of different things"
+  sourceHref="https://blog.cloudflare.com/counting-things-a-lot-of-different-things/"
+/>
+
+<CaseFile
+  number={4}
+  company="Shopify"
+  kind="Big tech (e-commerce)"
+  period="ongoing"
+  note="a real leaky bucket"
+  problem="Thousands of third-party apps call Shopify's Admin API for millions of stores. Apps naturally make bursts of requests (syncing a catalogue, say), but the platform needs a steady, fair load."
+  fix="Shopify's REST Admin API uses a leaky bucket: on standard plans, each app gets a bucket of 40 requests per store that drains at 2 requests per second (higher on Shopify Plus). For its GraphQL Admin API, Shopify moved to calculated query costs, limiting points instead of request counts."
+  lesson="The bucket size allows natural bursts; the leak rate guarantees a sustainable average. And when requests vary hugely in cost, count cost, not requests."
+  sourceLabel="Shopify Engineering: Rate limiting GraphQL APIs"
+  sourceHref="https://shopify.engineering/rate-limiting-graphql-apis-calculating-query-complexity"
+/>
+
+<CaseFile
+  number={5}
+  company="Zerodha (Kite Connect)"
+  kind="Indian fintech"
+  period="ongoing"
+  note="different limits for different doors"
+  problem="Zerodha's Kite Connect API lets traders and developers build their own trading tools, including automated strategies. Market data and order endpoints are hit by bots that could easily flood the system during market hours."
+  fix="Kite Connect sets limits per endpoint: about 1 request per second for live quotes, 3 per second for historical candle data, and 10 per second for most other endpoints, with additional caps on order placement. Requests over the limit get HTTP 429."
+  lesson="Limits should match the cost and risk of each endpoint. Heavy data endpoints and order placement need tighter controls than cheap lookups."
+  sourceLabel="Kite Connect docs: exceptions and rate limits"
+  sourceHref="https://kite.trade/docs/connect/v3/exceptions/"
+/>
+
+## TL;DR
+
+<TLDR>
+  <Takeaway>Rate limits protect the platform, keep things fair, block abuse and cap costs. They're turnstiles, not punishments.</Takeaway>
+  <Takeaway>Token bucket = steady average + allowed bursts. Leaky bucket = smooth, constant output. Fixed windows leak at the edges.</Takeaway>
+  <Takeaway>Many servers? Share counters in Redis, update them atomically, and decide whether to fail open or closed.</Takeaway>
+  <Takeaway>Say no politely: 429, a Retry-After, and remaining-quota headers. Clients should back off with jitter.</Takeaway>
+  <Takeaway>Limit clients AND shed load. When requests vary in size, limit by cost, not count.</Takeaway>
+</TLDR>
+
+## Sources
+
+1. Wikipedia, ["Leaky bucket"](https://en.wikipedia.org/wiki/Leaky_bucket) (history, including Turner's 1986 description).
+2. M. Nottingham and R. Fielding, ["RFC 6585: Additional HTTP Status Codes"](https://www.rfc-editor.org/rfc/rfc6585), IETF, 2012 (429 Too Many Requests).
+3. IETF HTTPAPI working group, ["RateLimit header fields for HTTP"](https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/) (Internet-Draft).
+4. Paul Tarjan, ["Scaling your API with rate limiters"](https://stripe.com/blog/rate-limiters), Stripe, 2017.
+5. GitHub Docs, ["Rate limits for the REST API"](https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api).
+6. Julien Desgats, ["Counting things, a lot of different things…"](https://blog.cloudflare.com/counting-things-a-lot-of-different-things/), Cloudflare, 2017.
+7. Shopify, ["REST Admin API rate limits"](https://shopify.dev/docs/api/admin-rest/usage/rate-limits), and the [Shopify Partners blog on rate limits](https://www.shopify.com/partners/blog/rate-limits).
+8. Shopify Engineering, ["Rate limiting GraphQL APIs by calculating query complexity"](https://shopify.engineering/rate-limiting-graphql-apis-calculating-query-complexity).
+9. GitHub Docs, ["Rate limits and node limits for the GraphQL API"](https://docs.github.com/en/graphql/overview/rate-limits-and-node-limits-for-the-graphql-api).
+10. Zerodha, ["Kite Connect API: exceptions and rate limits"](https://kite.trade/docs/connect/v3/exceptions/).

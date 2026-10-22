@@ -1,0 +1,345 @@
+import CouplingCohesionDiagram from "@/components/blog/posts/tight-coupling/CouplingCohesionDiagram";
+import CouplingLadder from "@/components/blog/posts/tight-coupling/CouplingLadder";
+import DecouplingDiagram from "@/components/blog/posts/tight-coupling/DecouplingDiagram";
+import { ChristmasLightsDemo, DependencyGraphDemo } from "@/components/blog/posts/tight-coupling/lazy";
+
+## The night the whole tree went dark
+
+If you grew up with old-school Christmas or Diwali fairy lights, you know this ritual. You plug in the string, and nothing happens. Not one bulb. So you sit on the floor and test every bulb, one at a time, looking for the single dead one that took all the others down with it.
+
+That happened because many older light strings were wired in **series**. Electricity had exactly one path. It went in one end, through bulb one, then bulb two, then bulb three, all the way to the end and back to the wall. When one filament burned out, the path broke and the whole string went dark. Modern strings work around this. Many mini-lights have a tiny shunt inside each bulb that lets current skip a dead filament, and better strings wire bulbs in **parallel**, so each one gets its own path to power.
+
+Try it. Blow a bulb in each wiring style.
+
+<DemoFrame
+  title="Fairy lights: series vs parallel"
+  hint="tap a bulb!"
+  caption="In series, every bulb sits on the only path the current can take, so one failure stops everything. In parallel, each bulb hangs between two rails and fails alone."
+>
+  <ChristmasLightsDemo />
+</DemoFrame>
+
+Software does this too. A small, boring part of a system fails, or changes, and somehow the checkout page, the mobile app and the nightly report all break with it. Engineers have a name for "these parts are wired in series": **tight coupling**.
+
+<MarginNote label="spoiler:">
+  the fix isn't "never connect things". It's "connect them through the right kind of socket".
+</MarginNote>
+
+This post covers what coupling actually is, where the idea came from (it's older than most of us), how teams loosen it, the alternatives people try, and what real companies like Amazon, Segment, Shopify, Uber and Zerodha did about it. There are two demos, and you're meant to break things in both.
+
+## So what is coupling?
+
+A **module** is any chunk of a system with a boundary around it: a function, a class, a file, a package, a microservice, even a team. Every module needs some others to do its job. Checkout needs payments, payments needs a bank. That's fine. Software is made of parts that work together.
+
+**Coupling** is how much one module has to *know* or *assume* about another in order to work. A quick test for it:
+
+> If I change or break module A, how many other modules have to change or break with it?
+
+If the answer is "none, as long as A keeps its promises", the modules are **loosely coupled**. If the answer is "uh, let me grep the whole codebase", they're **tightly coupled**.
+
+Coupling has a sibling called **cohesion**. Cohesion is about what's *inside* one module: does everything in there belong together? A `PaymentService` that handles payments has high cohesion. A `utils.ts` that formats dates, sends emails and also calculates GST has low cohesion. It's a junk drawer.
+
+The two are linked. When related code is scattered across modules (low cohesion), those modules have to keep talking to each other (high coupling). When related code lives together, most conversations happen *inside* a module, and only a few cross a boundary. That's why the old slogan is <Mark kind="circle">low coupling, high cohesion</Mark>.
+
+<Figure caption="The same nine pieces of code, arranged two ways. Shapes are kinds of responsibility; lines are code that needs to talk. On the left, every change crosses module walls. On the right, related code lives together and modules talk through one small door each.">
+  <CouplingCohesionDiagram />
+</Figure>
+
+Coupling also comes in two flavours that are easy to mix up:
+
+- **Change-time coupling.** You can't *edit* A without editing B. Example: three modules read the same database table, so renaming a column means three pull requests and a coordinated deploy.
+- **Run-time coupling.** A can't *run* when B is down or slow. Example: checkout calls the recommendations service synchronously, so when recommendations hangs, so does checkout.
+
+The fairy lights were run-time coupling. Both kinds hurt, and the fixes are a little different, so keep them separate in your head.
+
+<Analogy
+  title="LEGO bricks vs a glued model"
+  mapping={[
+    ["a single brick", "a module"],
+    ["the studs on top", "the interface (the contract)"],
+    ["any brick fits any stud", "anything that honours the contract can plug in"],
+    ["glue between parts", "reaching into another module's internals"],
+    ["prying a glued wing off", "a refactor that breaks things you didn't touch"],
+  ]}
+>
+  Picture two model aeroplanes. One is built from LEGO, the other is a glued plastic kit. Both look like aeroplanes. Now try to swap the wings for longer ones.
+
+  On the LEGO plane, you pull the wing off and click a new one on. It works because every brick agrees on one tiny standard: the studs. A brick doesn't care what's on the other side of the stud, only that the stud is the right size. On the glued kit, the wing is fused to the body. Getting it off cracks the fuselage, and the new wing doesn't fit the old glue marks anyway.
+</Analogy>
+
+## Where the idea came from
+
+In the 1960s, software was getting big faster than anyone knew how to build it. At a 1968 NATO conference on software engineering, people were openly talking about a "software crisis": projects ran late, ran over budget and were painfully hard to change.
+
+One person trying to work out *why* some programs were cheap to change and others weren't was **Larry Constantine**. He studied real programs and noticed a pattern. The expensive ones had pieces that were deeply entangled with each other. The cheap ones had pieces that were focused on one job and connected to others through narrow, simple links. He gave those two properties names that stuck: coupling and cohesion. The ideas reached a wide audience through a 1974 paper in the *IBM Systems Journal* called "Structured Design", by Wayne Stevens, Glenford Myers and Constantine, and later through Constantine's book with Ed Yourdon, also called *Structured Design*.
+
+<MarginNote tone="blue">
+  1974. Before the PC, before the web. Same problem we argue about in code review today.
+</MarginNote>
+
+Around the same time, **David Parnas** published a short paper with a long title: "On the Criteria To Be Used in Decomposing Systems into Modules" (1972). He took one small program, a keyword index generator, and split it into modules two different ways. The first way followed the steps of the flowchart: read input, shift words around, sort, print. The second way gave each module a *secret*: a design decision that was likely to change, like how lines are stored in memory. Each module hid its secret behind a small set of functions.
+
+Both versions worked. But when Parnas walked through likely changes, the first design needed edits across many modules, while the second usually needed one. His conclusion became a cornerstone of software design: split systems by **what is likely to change**, and hide each of those decisions behind an interface. We call this **information hiding**, and it's the idea underneath almost every "loose coupling" technique you'll meet.
+
+The structured design folks also ranked the *kinds* of coupling, from worst to best. The exact list varies a little between textbooks, but this is how it's usually taught today:
+
+<Figure caption="The coupling ladder. Each rung down means a module needs to know less about its neighbour. You can't always reach the bottom, but you can usually climb down a rung or two.">
+  <CouplingLadder />
+</Figure>
+
+The ideas kept evolving with the tools. Object-oriented languages turned "hide your secrets" into private fields and interfaces. In the 2000s, companies applied the same thinking to whole teams and systems under the name service-oriented architecture. In 2014, James Lewis and Martin Fowler's article "Microservices" put a name on small services that are deployed independently, each owning its own data. Same principle every time, just at a bigger scale: **draw boundaries around things that change together, and keep the conversations across those boundaries small and explicit.**
+
+## How loose coupling works
+
+Let's make this concrete with a tiny online store. Checkout needs to reserve stock in Inventory. Here are three ways to wire that, from tightest to loosest.
+
+<Figure caption="Three ways for Checkout to talk to Inventory. Each step down, Checkout needs to know less about Inventory and depends less on it being healthy right now.">
+  <DecouplingDiagram />
+</Figure>
+
+### Step 1: Spot the secret
+
+Ask Parnas's question: what about Inventory is likely to change? How stock is stored (a table today, maybe a separate warehouse system tomorrow), how reservations expire, and which warehouse fulfils which pin code. Those are Inventory's secrets. Nobody else should depend on them.
+
+Here's the tightly coupled version. Checkout knows Inventory's table names and column meanings:
+
+```ts
+// checkout.ts: tightly coupled
+const row = await db.query(
+  "SELECT qty FROM inventory_stock WHERE sku = $1 AND warehouse_id = 3",
+  [sku],
+);
+if (row.qty < quantity) throw new Error("Out of stock");
+await db.query("UPDATE inventory_stock SET qty = qty - $1 WHERE sku = $2", [quantity, sku]);
+```
+
+If Inventory renames `qty`, adds a second warehouse, or moves to another database, Checkout breaks. So do the three other modules that copied this snippet.
+
+### Step 2: Put the secret behind an interface
+
+An **interface** is a promise: "ask me these questions, in this shape, and I'll answer in this shape." How the answer is produced stays private.
+
+```ts
+// inventory/index.ts: the only thing other modules may import
+export interface Inventory {
+  reserve(sku: string, quantity: number): Promise<{ ok: boolean; reservationId?: string }>;
+}
+
+// checkout.ts: loosely coupled
+const result = await inventory.reserve(sku, quantity);
+if (!result.ok) return showOutOfStock(sku);
+```
+
+Checkout now knows one function and two fields. Inventory can rewrite everything behind `reserve()` and Checkout never notices. That's the LEGO stud.
+
+<MarginNote label="aha!">
+  the interface is the *only* thing you promise not to break. Everything else is yours to change.
+</MarginNote>
+
+Notice it's also climbing down the ladder: Checkout passes just a `sku` and a `quantity` (data coupling), instead of a whole `Order` object (stamp coupling) or a `mode` flag (control coupling).
+
+### Step 3: Don't wait when you don't have to
+
+Interfaces fix change-time coupling. Run-time coupling needs one more idea. When an order is placed, *a lot* of things should happen: ship the parcel, email a receipt, update analytics, adjust stock. Does checkout need to *wait* for all of that before telling the customer "order confirmed"? No. It only needs payment to succeed.
+
+So instead of calling five services, checkout publishes one **event**, a small message that says "this happened":
+
+```ts
+// checkout.ts
+await payments.charge(order.total); // the one thing we must wait for
+await bus.publish({ type: "OrderPlaced", orderId: order.id, items: order.items });
+return confirm(order);
+
+// email/worker.ts: a separate module that listens
+bus.subscribe("OrderPlaced", async (event) => {
+  await sendReceipt(event.orderId);
+});
+```
+
+An **event bus** (or **message queue**) sits in the middle and holds those messages. Popular ones include Kafka, RabbitMQ and Amazon SQS, but the idea is simple: a noticeboard. Checkout pins a note and walks away. Email, shipping and analytics read the board whenever they're ready. If the email service is down for ten minutes, its notes just wait on the board, and it catches up when it comes back.
+
+That's the parallel wiring from the fairy lights. Each consumer has its own path. One dead bulb doesn't kill the string.
+
+### Step 4: For calls you must make, plan for failure
+
+Some calls really are synchronous. You can't confirm an order without charging the card. For those, loose coupling means **not trusting the other side to always be there**: set a timeout, have a fallback ("payments are slow, please try again in a minute"), and make sure a failure in payments doesn't freeze the product page that has nothing to do with paying.
+
+Now put it all together. Below is the same eight-module store wired both ways. Break things and watch what happens.
+
+<DemoFrame
+  title="Break a module"
+  hint="tap a box!"
+  caption="Arrows point from a module to the module it needs. Solid arrows are direct calls; dashed blue arrows are messages through the event bus. The tightly coupled store has no timeouts or fallbacks, which is exactly what tight coupling tends to look like in the wild."
+>
+  <DependencyGraphDemo />
+</DemoFrame>
+
+A few things to try:
+
+- In the **tight** store, break **Analytics**. Then think about how often anyone checks the analytics dashboard on a Sunday.
+- Switch to **Change it** and change **Inventory** in both wirings. Count the modules marked "must edit".
+- In the **loose** store, break the **Event bus**. Loose coupling doesn't delete risk; it *moves* it. The bus becomes the one box that must be boring, well-monitored and highly available.
+
+## Other ways to untangle things
+
+Interfaces plus events is the default toolkit, but it's not the only way people try to manage coupling. Here are the main alternatives, each with its own everyday picture.
+
+### Keep it glued, on purpose
+
+<Analogy title="A sandwich">
+  Nobody builds a modular sandwich with a standard bread-to-filling interface. It's small, you eat it in five minutes, and you'll never swap the cheese out mid-bite. Gluing it together is the right call.
+</Analogy>
+
+A 200-line script, a prototype, or a function that does one job doesn't need interfaces between its parts. Tight coupling inside a small, cohesive unit is fine. It's *between* units that it hurts.
+
+### Share one database
+
+<Analogy title="The office fridge">
+  Everyone keeps lunch in one shared fridge. It's convenient: no deliveries, no asking, just open the door. Until someone reorganises the shelves "to make it tidier", and three people's lunches go missing, and nobody knows whose fault it is.
+</Analogy>
+
+Many systems integrate by letting several apps read and write the same database. It's fast to build, and it works fine while you're small. But the schema quietly becomes a public interface that nobody designed.
+
+### Split everything into microservices
+
+<Analogy title="Everyone moves into their own house">
+  Housemates who keep fighting decide to each buy a separate house. Now nobody touches your stuff. But borrowing a cup of sugar means a car trip, and planning dinner takes a group call.
+</Analogy>
+
+**Microservices** are small services that each own their data and are deployed separately, talking over the network. They enforce boundaries *physically*: you can't reach into another service's memory, because it's on another machine.
+
+### A modular monolith
+
+<Analogy title="One apartment building, locked doors">
+  Everyone lives in the same building, with one address, one lift and one maintenance team. But each flat has a locked door, and if you want something from your neighbour, you knock.
+</Analogy>
+
+A **modular monolith** is one deployable application, internally split into modules with enforced boundaries. Modules may only use each other's public APIs, and a tool in CI (continuous integration, the checks that run on every commit) fails the build when someone sneaks around them.
+
+### Abstract everything, just in case
+
+<Analogy title="A house where every wall is on wheels">
+  Every wall rolls, so you can redesign any room any time. Sounds flexible. In practice nothing feels solid, and you spend your weekends rolling walls around instead of living in the house.
+</Analogy>
+
+This is the "interface for everything" style: plugin systems, factories, adapters and config flags for changes that might never come.
+
+## Why we don't always reach for those
+
+Each alternative is a real tool with a real cost. Here's the honest version.
+
+**Shared databases** hide coupling instead of removing it. Any team can come to depend on any column, and you find out who depends on what when you rename one and something breaks in production. This is exactly the back door Amazon banned in the early 2000s (case file #1 below). Use a shared database deliberately, with clear ownership, or not at all.
+
+**Microservices** turn function calls into network calls. Network calls can be slow, can fail halfway, and can arrive twice. You suddenly need service discovery, retries, tracing and on-call rotations for every service. Worse, if the boundaries are wrong, you get a **distributed monolith**: services that still must change and deploy together, except now they're also separated by a network. Splitting code into services does not, by itself, decouple anything. Segment and Uber both learned versions of this lesson (case files #2 and #4).
+
+<MarginNote>
+  microservices fix *organisational* coupling (teams blocking each other) more than *code* coupling.
+</MarginNote>
+
+**Over-abstraction** is the trap smart people fall into. Every interface is a guess about the future. Guess wrong, and you have the worst of both worlds: the code is still coupled (now through a badly shaped interface), and it's harder to read. Sandi Metz put it memorably in her 2016 post "The Wrong Abstraction": duplication is far cheaper than the wrong abstraction. A practical rule many teams use is to wait until you've written something three times before abstracting it, because by then you know what actually varies.
+
+**Keeping it glued** is fine until the thing grows. The cost of tight coupling scales with size, number of people, and rate of change. A two-person startup can live happily in a tangled codebase for a long time; a 500-person company cannot.
+
+### When the "alternative" is the better choice
+
+Sometimes the less fashionable option wins, and good teams say so out loud:
+
+- **Segment** moved *back* from well over a hundred microservices to a single service, because the boundaries were costing them more than they protected.
+- **Shopify** chose a modular monolith over microservices for its core app, and built tooling to enforce boundaries inside one codebase.
+- **Zerodha**, one of India's largest stockbrokers, publicly argues for keeping systems simple and avoiding complexity for its own sake.
+
+Martin Fowler's "MonolithFirst" makes a related point: most successful microservice systems he's seen started as monoliths that were split once the right boundaries became clear. The goal was never "more boxes". The goal is that **a change in one place stays in one place**, with the fewest boxes that achieve it.
+
+## In the wild: case files
+
+Real companies, real problems, all publicly documented. Sources are linked on each card and listed at the end.
+
+<CaseFile
+  number={1}
+  company="Amazon"
+  kind="Big tech"
+  period="early 2000s"
+  note="no back doors. ever."
+  problem="By Werner Vogels's account, Amazon.com started as a two-tier monolith: a web application on top of a shared database. As the company grew, teams were entangled through shared code and shared data, and changing one part safely meant coordinating with many others."
+  fix="According to engineer Steve Yegge's widely read 2011 recollection, Jeff Bezos issued a mandate around 2002: every team must expose its data and functionality through service interfaces, and teams must talk to each other only through those interfaces. No direct linking, no reading another team's data store, no shared memory, no back doors. Interfaces had to be designed as if outside developers would use them."
+  lesson="In a 2006 ACM Queue interview, Vogels described the result as a decentralised services platform where each service owns its data, and teams own their services end to end ('you build it, you run it'). Yegge argues this habit of building everything as a platform later helped Amazon offer its infrastructure to the world. Note that the mandate's exact wording comes from Yegge's memory, not an official Amazon document."
+  sourceLabel="Yegge's platforms rant (2011)"
+  sourceHref="https://courses.cs.washington.edu/courses/cse452/22wi/papers/yegge-platform-rant.html"
+/>
+
+<CaseFile
+  number={2}
+  company="Segment"
+  kind="Startup (now part of Twilio)"
+  period="2015–2018"
+  note="split ≠ decoupled"
+  problem="Segment sends customer data to hundreds of third-party tools it calls destinations. To stop one slow destination from blocking the rest, each destination got its own service and queue. As destinations multiplied, the shared libraries they all used drifted to different versions across repos. Changing shared code meant updating and redeploying many services, and the operational load kept growing."
+  fix="In 2017 they consolidated the destinations into a single service and a single repository, with one version of each shared library, and invested in a reliable test suite for it."
+  lesson="Their 2018 write-up reports 46 improvements to shared libraries in the year after the move, compared with 32 in 2016. They were also candid that they gave up some fault isolation. The services had been separate, but the shared code meant they were never really decoupled."
+  sourceLabel="Segment: Goodbye Microservices"
+  sourceHref="https://www.twilio.com/en-us/blog/developers/best-practices/goodbye-microservices"
+/>
+
+<CaseFile
+  number={3}
+  company="Shopify"
+  kind="Big tech (e-commerce)"
+  period="2017–2020"
+  note="one deploy, many locked doors"
+  problem="Shopify's core Rails application grew for years with no internal boundaries. Code for calculating shipping rates sat right next to checkout code, and anything could call anything. Coupling made changes slower and riskier as the team grew."
+  fix="Instead of splitting into microservices, they reorganised the monolith into components by business domain, each with a public API. They built an internal tool, Wedge, to track how isolated each component was, and in 2020 open-sourced Packwerk, which checks boundary violations in CI."
+  lesson="You can get most of the benefits of boundaries without paying for a network hop. Enforcement matters: boundaries that a tool doesn't check tend to erode."
+  sourceLabel="Shopify Engineering: Deconstructing the Monolith"
+  sourceHref="https://shopify.engineering/deconstructing-monolith-designing-software-maximizes-developer-productivity"
+/>
+
+<CaseFile
+  number={4}
+  company="Uber"
+  kind="Big tech"
+  period="2018–2020"
+  note="microservices need modules too"
+  problem="Uber grew to around 2,200 critical microservices. Their engineering blog describes how this made the system hard to reason about: understanding a dependency chain could mean digging through many services owned by many teams, and even small features could require changes across lots of them."
+  fix="They introduced Domain-Oriented Microservice Architecture (DOMA). Related services are grouped into domains, each domain is reached through a single gateway, domains are arranged in layers that limit what can depend on what, and teams extend another domain through defined extension points instead of changing its code."
+  lesson="Coupling comes back at every scale. Once you have enough services, you need the same tools as inside a codebase: cohesive groups, narrow interfaces and rules about dependency direction."
+  sourceLabel="Uber Engineering: Introducing DOMA"
+  sourceHref="https://www.uber.com/blog/microservice-architecture/"
+/>
+
+<CaseFile
+  number={5}
+  company="Zerodha"
+  kind="Indian fintech"
+  period="2020"
+  note="simple scales"
+  problem="As one of India's largest stockbrokers, Zerodha serves heavy market-hours traffic. The industry default for that kind of scale is often lots of distributed components."
+  fix="CTO Kailash Nadh's post 'Scaling with common sense' warns against reaching for a service mesh of microservices where a couple of simpler components would do, and its TL;DR is 'Simple scales'. Zerodha's tech blog also says the team aims to avoid both 'microservice hells and monolith monsters'."
+  lesson="Loose coupling is a means, not a goal. The right number of boxes is the smallest number that keeps changes local and failures contained."
+  sourceLabel="Zerodha Tech: Scaling with common sense"
+  sourceHref="https://zerodha.tech/blog/scaling-with-common-sense/"
+/>
+
+## TL;DR
+
+<TLDR>
+  <Takeaway>Coupling = how much A must know about B. If changing A breaks B, they're tightly coupled.</Takeaway>
+  <Takeaway>Low coupling, high cohesion: keep things that change together *together*, and hide them behind a small interface.</Takeaway>
+  <Takeaway>Interfaces fix change-time coupling. Events + queues fix run-time coupling. Timeouts + fallbacks cover the calls you must make.</Takeaway>
+  <Takeaway>Splitting into services ≠ decoupling. Wrong boundaries give you a distributed monolith.</Takeaway>
+  <Takeaway>Don't abstract on a guess. Duplication is cheaper than the wrong abstraction.</Takeaway>
+</TLDR>
+
+## Sources
+
+1. W. P. Stevens, G. J. Myers, L. L. Constantine, ["Structured Design"](https://doi.org/10.1147/sj.132.0115), *IBM Systems Journal* 13(2), 1974.
+2. D. L. Parnas, ["On the Criteria To Be Used in Decomposing Systems into Modules"](https://doi.org/10.1145/361598.361623), *Communications of the ACM* 15(12), 1972.
+3. Steve Yegge, ["Stevey's Google Platforms Rant"](https://courses.cs.washington.edu/courses/cse452/22wi/papers/yegge-platform-rant.html), 2011 (archived copy).
+4. Jim Gray and Werner Vogels, ["A Conversation with Werner Vogels"](https://queue.acm.org/detail.cfm?id=1142065), *ACM Queue* 4(4), 2006. Summary with excerpts: [InfoQ](https://www.infoq.com/news/Amazon-CTO-Werner-Vogels-on-SOA).
+5. Alexandra Noonan, ["Goodbye Microservices: From 100s of problem children to 1 superstar"](https://www.twilio.com/en-us/blog/developers/best-practices/goodbye-microservices), Segment, 2018. Follow-up talk: [InfoQ, "To Microservices and Back Again"](https://www.infoq.com/news/2020/04/microservices-back-again/).
+6. Kirsten Westeinde, ["Deconstructing the Monolith"](https://shopify.engineering/deconstructing-monolith-designing-software-maximizes-developer-productivity), Shopify Engineering, 2019.
+7. Shopify Engineering, ["Enforcing Modularity in Rails Apps with Packwerk"](https://shopify.engineering/enforcing-modularity-rails-apps-packwerk), 2020.
+8. Adam Gluck, ["Introducing Domain-Oriented Microservice Architecture"](https://www.uber.com/blog/microservice-architecture/), Uber Engineering, 2020.
+9. Kailash Nadh, ["Scaling with common sense"](https://zerodha.tech/blog/scaling-with-common-sense/), Zerodha Tech, 2020, and ["Hello, World!"](https://zerodha.tech/blog/hello-world/), Zerodha Tech.
+10. Sandi Metz, ["The Wrong Abstraction"](https://sandimetz.com/blog/2016/1/20/the-wrong-abstraction), 2016.
+11. Martin Fowler, ["MonolithFirst"](https://martinfowler.com/bliki/MonolithFirst.html), 2015.
+12. James Lewis and Martin Fowler, ["Microservices"](https://martinfowler.com/articles/microservices.html), 2014.
