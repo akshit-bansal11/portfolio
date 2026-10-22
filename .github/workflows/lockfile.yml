@@ -1,0 +1,52 @@
+name: lockfile
+
+# Regenerates package-lock.json after a package.json change (npm cannot run on the
+# owner's machine) and opens a pull request so the resolved versions are reviewed
+# before they reach any branch. Run manually: gh workflow run lockfile.yml -f branch=<branch>
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: Branch whose package.json changed
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  lockfile:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Regenerate lockfile without running install scripts
+        run: npm install --package-lock-only --ignore-scripts
+      - name: Open a pull request
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BASE: ${{ inputs.branch }}
+        run: |
+          if git diff --quiet -- package-lock.json; then
+            echo "Lockfile already in sync."
+            exit 0
+          fi
+          head="chore/lockfile-${GITHUB_RUN_ID}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$head"
+          git add package-lock.json
+          git commit -m "chore(deps): regenerate package-lock.json"
+          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$head"
+          gh pr create --base "$BASE" --head "$head" \
+            --title "chore(deps): regenerate package-lock.json" \
+            --body "Regenerated with \`npm install --package-lock-only --ignore-scripts\` after a package.json change on \`$BASE\`. Review the resolved versions before merging."
