@@ -103,7 +103,7 @@ export default function TaglineDisplay({ active = true }: TaglineDisplayProps) {
             direction="up"
             label={TAGLINE_ASIDE}
             seed={11}
-            className="mt-12 -rotate-2 max-w-full self-end text-left text-xl font-semibold sm:mr-8 sm:text-3xl"
+            className="mt-16 -rotate-2 max-w-full self-end text-left text-xl font-semibold sm:mr-8 sm:text-3xl"
           />
         </>
       )}

@@ -16,9 +16,10 @@ import { DrawnPath } from "@/components/blog/Annotation";
 import { useElementSize } from "@/hooks/use-element-size";
 import { sketchRect } from "@/lib/blog/sketch";
 
-// Space (px) the box keeps around the words.
-const PAD_X = 12;
-const PAD_Y = 8;
+// Space the box keeps around the words, as a fraction of the phrase height (about 1em, since the
+// tagline line-height is ~1): 0.35em left/right, 0.15em top/bottom.
+const PAD_X_RATIO = 0.35;
+const PAD_Y_RATIO = 0.15;
 // Side of a corner handle (px).
 const HANDLE = 9;
 // Timeline (seconds): the cursor travels for CURSOR_TOTAL; the box is drawn while it drags.
@@ -41,11 +42,13 @@ export default function PhraseSelection({ children, active }: PhraseSelectionPro
   const [ref, { width, height }] = useElementSize<HTMLSpanElement>();
   const reduceMotion = useReducedMotion();
   const ready = active && width > 0;
+  const padX = height * PAD_X_RATIO;
+  const padY = height * PAD_Y_RATIO;
 
-  const left = -PAD_X;
-  const top = -PAD_Y;
-  const right = width + PAD_X;
-  const bottom = height + PAD_Y;
+  const left = -padX;
+  const top = -padY;
+  const right = width + padX;
+  const bottom = height + padY;
   const corners = [
     [left, top],
     [right, top],
@@ -53,7 +56,7 @@ export default function PhraseSelection({ children, active }: PhraseSelectionPro
     [left, bottom],
   ] as const;
   // Parked just outside the bottom-right handle, below the text line.
-  const rest = { x: right + 14, y: bottom + 10 };
+  const rest = { x: right + 8, y: bottom + 8 };
 
   return (
     <span ref={ref} className="relative inline-block">
@@ -88,7 +91,7 @@ export default function PhraseSelection({ children, active }: PhraseSelectionPro
           </svg>
           <motion.span
             aria-hidden
-            className="pointer-events-none absolute left-0 top-0 max-sm:hidden"
+            className="pointer-events-none absolute left-0 top-0 z-20 max-sm:hidden"
             initial={false}
             animate={
               reduceMotion

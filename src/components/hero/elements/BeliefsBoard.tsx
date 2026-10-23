@@ -77,7 +77,7 @@ interface BeliefsBoardProps {
 export default function BeliefsBoard({ progress }: BeliefsBoardProps) {
   return (
     <div className="flex flex-col gap-6">
-      <h3 className="font-display text-2xl font-bold tracking-[-0.02em] text-hero-ink md:text-3xl">
+      <h3 className="font-display text-2xl font-medium tracking-[-0.01em] text-hero-ink md:text-3xl">
         {BELIEFS_HEADING}
       </h3>
       <ul className="grid grid-cols-1 justify-items-center gap-6 sm:grid-cols-2">
@@ -116,7 +116,7 @@ export default function BeliefsBoard({ progress }: BeliefsBoardProps) {
                   <DrawnPath d={TICK_PATHS[index]} delay={index * 0.25} duration={0.5} />
                 )}
               </svg>
-              <span className="font-display text-[1.35rem] font-semibold leading-tight tracking-[-0.01em]">
+              <span className="font-display text-[1.35rem] font-medium leading-tight tracking-[-0.01em]">
                 {word}
               </span>
             </div>

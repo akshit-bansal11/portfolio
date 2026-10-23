@@ -373,3 +373,22 @@ html[data-theme="light"] {
 .hero-scope {
   --blog-pen: var(--hero-pen);
 }
+
+/*
+ * Hand-drawn outline: an irregular border-radius makes any bordered box read as drawn with a
+ * marker, and the outline always fits its content. Interactive boxes morph to the second
+ * shape on hover and focus.
+ */
+@layer components {
+  .hand-border {
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+    transition:
+      border-radius 0.3s ease,
+      transform 0.2s ease;
+  }
+
+  .hand-border-morph:hover,
+  .hand-border-morph:focus-visible {
+    border-radius: 15px 225px 15px 255px / 255px 15px 225px 15px;
+  }
+}
