@@ -25,11 +25,8 @@ export const TAGLINE_ACCENT_CLASS =
 export const NAME_ACCENT_CLASS =
   "text-transparent bg-clip-text bg-linear-to-r from-indigo-300 via-white/90 to-rose-300 in-data-[theme=light]:from-indigo-700 in-data-[theme=light]:via-stone-900 in-data-[theme=light]:to-rose-700";
 
-// Public path to the downloadable resume.
-export const RESUME_PATH = "/akshit_bansal.pdf";
-
-// Filename suggested when the resume is downloaded.
-export const RESUME_FILENAME = "akshit_bansal.pdf";
+// Route of the printable resume page.
+export const RESUME_PATH = "/resume";
 
 // mailto: target for the Gmail social icon.
 export const EMAIL_HREF = "mailto:artistbansal2004@gmail.com";

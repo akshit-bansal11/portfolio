@@ -17,6 +17,7 @@
 
 import { motion, useMotionValueEvent, useTransform } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect } from "react";
 import type { IconType } from "react-icons";
 import { Annotation } from "@/components/blog/Annotation";
@@ -36,7 +37,6 @@ import {
   PROFILE_NAME,
   PROFILE_NOTE,
   PROFILE_ROLE,
-  RESUME_FILENAME,
   RESUME_PATH,
 } from "@/data/heroContent";
 import { heroSocialLinks } from "@/data/heroSocialLinks";
@@ -219,14 +219,9 @@ export default function ScrollHero() {
                   size="sm"
                   className="h-8 gap-1.5 dark:border-hero-ink/40 dark:bg-hero-surface/60 text-hero-ink/90 dark:hover:bg-hero-surface hover:text-hero-pen hover:border-hero-pen/50 transition-all duration-300 rounded-full px-3"
                 >
-                  <a
-                    href={RESUME_PATH}
-                    download={RESUME_FILENAME}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                  <Link href={RESUME_PATH}>
                     <span className="text-xs font-medium">Download Resume</span>
-                  </a>
+                  </Link>
                 </Button>
               </div>
 

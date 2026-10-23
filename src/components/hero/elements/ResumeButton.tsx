@@ -9,8 +9,9 @@
 
 import { motion } from "framer-motion";
 import { ArrowDown } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { RESUME_FILENAME, RESUME_PATH } from "@/data/heroContent";
+import { RESUME_PATH } from "@/data/heroContent";
 
 // Renders the resume download button.
 export default function ResumeButton() {
@@ -20,7 +21,7 @@ export default function ResumeButton() {
       variant="outline"
       className="group gap-2 dark:border-hero-ink/40 dark:bg-hero-surface/60 text-hero-ink/90 dark:hover:bg-hero-surface hover:text-hero-pen hover:border-hero-pen/50 transition-all duration-300 px-5 py-2 rounded-full"
     >
-      <a href={RESUME_PATH} download={RESUME_FILENAME} target="_blank" rel="noopener noreferrer">
+      <Link href={RESUME_PATH}>
         <span className="text-sm md:text-base font-medium">Download Resume</span>
         {/* Subtly bouncing down-arrow indicator. */}
         <motion.span
@@ -30,7 +31,7 @@ export default function ResumeButton() {
         >
           <ArrowDown className="h-3.5 w-3.5" />
         </motion.span>
-      </a>
+      </Link>
     </Button>
   );
 }

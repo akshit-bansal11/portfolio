@@ -10,6 +10,7 @@
 
 import { createTimeline } from "animejs";
 import { createDrawable } from "animejs/svg";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useAnimation } from "@/context/AnimationContext";
 
@@ -25,10 +26,13 @@ const WelcomeAnimation = ({ disabled = false }: WelcomeAnimationProps) => {
   // Ref to the outer overlay used by the closing zoom-out animation.
   const containerRef = useRef<HTMLDivElement>(null);
   const { setWelcomeComplete } = useAnimation();
+  // The printable resume page never plays the intro.
+  const pathname = usePathname();
+  const isSkipped = disabled || pathname === "/resume";
 
   useEffect(() => {
-    // Skip animation entirely if disabled by env flag.
-    if (disabled) {
+    // Skip animation entirely if disabled by env flag or on /resume.
+    if (isSkipped) {
       setWelcomeComplete(true);
       return;
     }
@@ -37,7 +41,7 @@ const WelcomeAnimation = ({ disabled = false }: WelcomeAnimationProps) => {
     setTimeout(() => {
       setShowAnimation(true);
     }, 50);
-  }, [disabled, setWelcomeComplete]);
+  }, [isSkipped, setWelcomeComplete]);
 
   useEffect(() => {
     if (!showAnimation || !containerRef.current) return;

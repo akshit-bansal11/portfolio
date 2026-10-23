@@ -73,7 +73,7 @@ export default function RootLayout({
       >
         <AnimationProvider>
           {/* Fixed background canvas hosting the WebGL light rays effect. */}
-          <div className="fixed inset-0 -z-10 bg-black">
+          <div className="fixed inset-0 -z-10 bg-black print:hidden">
             <div className="hero-rays h-full w-full">
               <LightRays
                 raysOrigin="top-center"
@@ -93,7 +93,7 @@ export default function RootLayout({
           {/* Persistent navigation bar. */}
           <NavBar />
           {/* Always-visible light/dark switch, clear of the centred NavBar. */}
-          <div className="fixed right-3 top-[max(0.75rem,env(safe-area-inset-top))] z-[10000] rounded-xl border border-hero-ink/15 bg-hero-surface/80 backdrop-blur-md md:right-5">
+          <div className="fixed right-3 top-[max(0.75rem,env(safe-area-inset-top))] z-[10000] rounded-xl border border-hero-ink/15 bg-hero-surface/80 backdrop-blur-md md:right-5 print:hidden">
             <ThemeToggle />
           </div>
           {/* Fixed scroll affordance — stays on screen even after the hero scrolls away. */}
