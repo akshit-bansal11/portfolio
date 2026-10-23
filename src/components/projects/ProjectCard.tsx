@@ -105,7 +105,7 @@ export default function ProjectCard({ project, index, featured = false }: Projec
       {/* Screenshot print, taped to the board. */}
       <div className="relative">
         <div
-          className="bg-paper-card p-[0.39rem] sm:p-[0.585rem]"
+          className="bg-paper-card p-[0.195rem] sm:p-[0.29rem]"
           style={{ boxShadow: "var(--note-shadow)" }}
         >
           <div className="relative aspect-video overflow-hidden bg-hero-surface">
