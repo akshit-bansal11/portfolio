@@ -150,6 +150,66 @@ const ICONS: Record<string, ReactNode> = {
   Authy: lock,
   GSAP: <path d="M3 18c4-14 14 0 18-12 M16 6h5v5" />,
   Motion: <path d="M3 18c4-14 14 0 18-12 M16 6h5v5" />,
+  Go: (
+    <>
+      <circle cx="15" cy="12" r="6" />
+      <path d="M2 9.5h6 M3.5 14.5h4.5 M15 10v4" />
+    </>
+  ),
+  Python: (
+    <path d="M9 3h4a3 3 0 0 1 3 3v4H8a3 3 0 0 0-3 3v1 M15 21h-4a3 3 0 0 1-3-3v-4h8a3 3 0 0 0 3-3v-1 M9.5 6h.01 M14.5 18h.01" />
+  ),
+  C: <path d="M17 7.5a6.5 6.5 0 1 0 0 9" />,
+  "C++": <path d="M12 8a5 5 0 1 0 0 8 M16 12h4 M18 10v4 M21.5 12h.01" />,
+  Bun: (
+    <path d="M12 4c5 0 9 3 9 8s-4 8-9 8-9-3-9-8 4-8 9-8z M9 12h.01 M15 12h.01 M10.5 15.5c1 .8 2 .8 3 0" />
+  ),
+  npm: <path d="M3 7h18v10H3z M7 17v-7h4v7 M15 17v-7h2v7" />,
+  pnpm: (
+    <path d="M3 4h5v5H3z M9.5 4h5v5h-5z M16 4h5v5h-5z M3 11h5v5H3z M9.5 11h5v5h-5z M16 18h5v-5" />
+  ),
+  Express: <path d="M3 8l6 8 M9 8l-6 8 M14 8v8 M14 8h7 M14 12h5 M14 16h7" />,
+  Figma: (
+    <>
+      <path d="M9 3a3 3 0 0 0 0 6h3V3z M12 3h3a3 3 0 0 1 0 6h-3z M9 9a3 3 0 0 0 0 6h3V9z" />
+      <circle cx="15" cy="12" r="3" />
+      <path d="M9 15a3 3 0 1 0 3 3v-3z" />
+    </>
+  ),
+  Sentry: <path d="M12 4l8 14h-5c0-4-2-7-5-8 M3 18h4c0-2-1-3-2.5-3.5" />,
+  "GitHub Actions": (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M10 8.5l5 3.5-5 3.5z" />
+    </>
+  ),
+  Shadcn: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M16 7.5L7.5 16 M17 12l-5 5" />
+    </>
+  ),
+  "Radix UI": (
+    <>
+      <circle cx="15" cy="7.5" r="3.5" />
+      <path d="M7 4v16 M10.5 20h8l-4-6.5z" />
+    </>
+  ),
+  HTML5: <path d="M4 3h16l-1.5 16.5L12 21.5l-6.5-2z M8 8h8l-.5 5-3.5 1-3.5-1" />,
+  CSS3: <path d="M4 3h16l-1.5 16.5L12 21.5l-6.5-2z M16 8H8.5l.4 4h6.2l-.4 3.5-2.7.8-2.7-.8" />,
+  SVG: (
+    <>
+      <path d="M3 15h3v3H3z M18 15h3v3h-3z M10.5 4.5h3v3h-3z" />
+      <path d="M5 15c1-6 4-7.5 7-7.5 M19 15c-1-6-4-7.5-7-7.5" />
+    </>
+  ),
+  MCP: <path d="M9 3v5 M15 3v5 M6 8h12v4a6 6 0 0 1-12 0z M12 18v3" />,
+  Spotify: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M7 9.5c3.5-1 7-.7 10 1 M7.5 12.8c3-.8 6-.5 8.5 1 M8 16c2.5-.6 5-.3 7 .8" />
+    </>
+  ),
 };
 
 /** Every name with a dedicated icon. */
