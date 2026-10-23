@@ -152,7 +152,7 @@ export default function Heatmap({ data, year, total }: HeatmapProps) {
             title={describe(day, countAt(i))}
             onClick={() => setActive(i)}
             className={cn(
-              "flex aspect-square items-center justify-center rounded-[3px] font-grotesk font-semibold leading-none tabular-nums [container-type:size]",
+              "flex aspect-square items-center justify-center rounded-[3px] font-grotesk font-semibold leading-none tabular-nums [container-type:inline-size]",
               focused && i === active && "outline-[1.5px] outline-hero-ink",
             )}
             style={{
@@ -160,10 +160,13 @@ export default function Heatmap({ data, year, total }: HeatmapProps) {
               gridColumn: day.col + 1,
               backgroundColor: `var(--heat-${level(countAt(i), max)})`,
               color: `var(--heat-ink-${level(countAt(i), max)})`,
-              fontSize: countAt(i) > 99 ? "30cqw" : "42cqw",
             }}
           >
-            {countAt(i) > 0 ? countAt(i) : null}
+            {/* cqw resolves against the nearest ancestor container (the cell), never the
+                element that declares it, so the size lives on this inner span. */}
+            {countAt(i) > 0 && (
+              <span style={{ fontSize: countAt(i) > 99 ? "30cqw" : "42cqw" }}>{countAt(i)}</span>
+            )}
           </div>
         ))}
       </div>
