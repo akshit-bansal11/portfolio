@@ -117,6 +117,11 @@
   --color-note-4: var(--note-4);
   --color-note-ink: var(--note-ink);
   --color-paper-card: var(--paper-card);
+  --color-page-bg: var(--page-bg);
+  --color-page-ink: var(--page-ink);
+  --color-page-muted: var(--page-muted);
+  --color-page-border: var(--page-border);
+  --color-print-frame: var(--print-frame);
   --color-sticky: var(--blog-sticky);
   --color-sticky-ink: var(--blog-sticky-ink);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -174,8 +179,13 @@
   --doodle-3: rgb(251 191 36 / 60%);
   --tape: rgb(255 248 220 / 22%);
   --paper-card: #fffdf8;
-  --card-rule: rgb(147 197 253 / 45%);
-  --card-margin: rgb(239 68 68 / 55%);
+  --page-bg: #141414;
+  --page-ink: #ededed;
+  --page-muted: #a3a3a3;
+  --page-border: rgb(255 255 255 / 10%);
+  --print-frame: #fffdf8;
+  --card-rule: rgb(148 163 184 / 14%);
+  --card-margin: rgb(248 113 113 / 45%);
   --note-1: #fde68a;
   --note-2: #fbcfe8;
   --note-3: #bfdbfe;
@@ -370,6 +380,13 @@ html[data-theme="light"] {
   --doodle-2: rgb(190 18 60 / 50%);
   --doodle-3: rgb(180 83 9 / 55%);
   --tape: rgb(214 200 160 / 55%);
+  --page-bg: #fffdf8;
+  --page-ink: #1c1917;
+  --page-muted: #57534e;
+  --page-border: transparent;
+  --print-frame: #1c1917;
+  --card-rule: rgb(147 197 253 / 45%);
+  --card-margin: rgb(239 68 68 / 55%);
   --hero-accent-ink-mix: 70%;
 }
 

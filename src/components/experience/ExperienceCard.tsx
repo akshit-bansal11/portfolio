@@ -64,7 +64,7 @@ function Point({ point }: { point: ExperiencePoint }) {
       <svg
         aria-hidden
         viewBox="0 0 22 22"
-        className="mt-1 h-4 w-4 shrink-0 overflow-visible text-note-ink/70"
+        className="mt-1 h-4 w-4 shrink-0 overflow-visible text-page-ink/70"
       >
         <path
           d={TICK}
@@ -104,12 +104,12 @@ export default function ExperienceCard({ item, index }: ExperienceCardProps) {
   return (
     <div
       className={cn(
-        "relative text-note-ink transition-[rotate,translate] duration-300 hover:-translate-y-1 hover:rotate-0 focus-within:-translate-y-1 focus-within:rotate-0 motion-reduce:transition-none",
+        "relative text-page-ink transition-[rotate,translate] duration-300 hover:-translate-y-1 hover:rotate-0 focus-within:-translate-y-1 focus-within:rotate-0 motion-reduce:transition-none",
         TILTS[index % TILTS.length],
       )}
     >
       <div
-        className="bg-paper-card py-5 pl-9 pr-4 sm:pr-6"
+        className="border border-page-border bg-page-bg py-5 pl-9 pr-4 sm:pr-6"
         style={{ backgroundImage: PAPER_LINES, boxShadow: "var(--note-shadow)" }}
       >
         <div className="flex items-center gap-3">
@@ -124,7 +124,7 @@ export default function ExperienceCard({ item, index }: ExperienceCardProps) {
           ) : (
             <span
               aria-hidden
-              className="hand-border flex h-9 w-9 shrink-0 items-center justify-center border-2 border-note-ink font-display text-sm font-medium"
+              className="hand-border flex h-9 w-9 shrink-0 items-center justify-center border-2 border-page-ink font-display text-sm font-medium"
             >
               {initials(company)}
             </span>
@@ -134,7 +134,7 @@ export default function ExperienceCard({ item, index }: ExperienceCardProps) {
               {company}
             </h3>
             <p className="font-grotesk text-sm font-semibold leading-snug">{role}</p>
-            <p className="font-grotesk text-xs text-note-ink/65">{location}</p>
+            <p className="font-grotesk text-xs text-page-muted">{location}</p>
           </div>
         </div>
 
@@ -170,7 +170,7 @@ export default function ExperienceCard({ item, index }: ExperienceCardProps) {
                   aria-expanded={expanded}
                   aria-controls={restId}
                   onClick={() => setExpanded((value) => !value)}
-                  className="hand-border hand-border-morph mt-3 inline-flex min-h-11 cursor-pointer items-center border-2 border-note-ink px-4 py-2 font-grotesk text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-note-ink motion-reduce:transition-none"
+                  className="hand-border hand-border-morph mt-3 inline-flex min-h-11 cursor-pointer items-center border-2 border-page-ink px-4 py-2 font-grotesk text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-page-ink motion-reduce:transition-none"
                 >
                   {expanded ? "show less" : `show all ${points.length}`}
                 </button>
