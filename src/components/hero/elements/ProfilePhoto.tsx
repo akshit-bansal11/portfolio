@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 import Tape from "./Tape";
 
 // Handwritten caption on the bottom strip.
-const CAPTION = "akshit · punjab";
+const CAPTION = "always building something";
 
 interface ProfilePhotoProps {
   /** Width classes; the frame keeps its 5:6 aspect. */
