@@ -29,7 +29,9 @@ function rangeStart(range: string): number | null {
   const [month = "", year = ""] = range.split("-")[0].trim().split(/\s+/);
   const monthIndex = MONTHS.indexOf(month.slice(0, 3).toLowerCase());
   const yearNumber = Number(year);
-  return monthIndex < 0 || !Number.isInteger(yearNumber) ? null : Date.UTC(yearNumber, monthIndex, 1);
+  return monthIndex < 0 || !Number.isInteger(yearNumber)
+    ? null
+    : Date.UTC(yearNumber, monthIndex, 1);
 }
 
 // Years since a timestamp, to one decimal, rounded down.
