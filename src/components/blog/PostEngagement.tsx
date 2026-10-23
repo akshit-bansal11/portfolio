@@ -8,7 +8,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { type FormEvent, useEffect, useId, useState } from "react";
+import { type FormEvent, useEffect, useId, useRef, useState } from "react";
 import {
   type EngagementComment,
   getEngagement,
@@ -150,6 +150,7 @@ export default function PostEngagement({ slug }: { slug: string }) {
   const [likes, setLikes] = useState(0);
   const [liked, setLiked] = useState(false);
   const [burst, setBurst] = useState(false);
+  const likeInFlight = useRef(false);
   const [comments, setComments] = useState<EngagementComment[]>([]);
 
   const [anonymous, setAnonymous] = useState(false);
@@ -181,12 +182,15 @@ export default function PostEngagement({ slug }: { slug: string }) {
   if (!ready || unavailable) return null;
 
   async function handleLike() {
+    if (likeInFlight.current) return;
+    likeInFlight.current = true;
     const previous = { likes, liked };
     const next = !liked;
     setLiked(next);
     setLikes(Math.max(0, likes + (next ? 1 : -1)));
     setBurst(next);
     const result = await toggleLike(slug);
+    likeInFlight.current = false;
     if (result.status === "ok") {
       setLikes(result.likes);
       setLiked(result.liked);
@@ -206,8 +210,9 @@ export default function PostEngagement({ slug }: { slug: string }) {
     setPending(false);
 
     if (result.status === "ok") {
-      // A filled honeypot is answered with an empty comment; show nothing for it.
-      if (result.comment.body !== "") setComments((current) => [...current, result.comment]);
+      // A filled honeypot is accepted without a comment; there is nothing to show.
+      const added = result.comment;
+      if (added) setComments((current) => [...current, added]);
       setName("");
       setEmail("");
       setBody("");
@@ -215,7 +220,11 @@ export default function PostEngagement({ slug }: { slug: string }) {
       setStatus({ kind: "ok", text: "Thanks, your comment is up." });
       return;
     }
-    if (result.status === "invalid") setErrors(result.fields);
+    if (result.status === "invalid") {
+      setErrors(result.fields);
+      const first = (["name", "email", "body"] as const).find((key) => result.fields[key]);
+      if (first) document.getElementById(ids[first])?.focus();
+    }
     setStatus({ kind: "error", text: result.error });
   }
 

@@ -4,9 +4,12 @@
  */
 
 import {
+  NO_VISITOR_MESSAGE,
+  type SlugContext,
+  checkOrigin,
+  errorResponse,
   guard,
   jsonResponse,
-  type SlugContext,
   serverError,
   visitorId,
 } from "@/lib/engagement/request";
@@ -16,12 +19,16 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request, { params }: SlugContext) {
+  const forbidden = checkOrigin(request);
+  if (forbidden) return forbidden;
   const { slug } = await params;
   const blocked = guard(slug);
   if (blocked) return blocked;
+  const visitor = visitorId(request);
+  if (!visitor) return errorResponse(400, NO_VISITOR_MESSAGE);
 
   try {
-    return jsonResponse(await toggleLike(slug, visitorId(request)));
+    return jsonResponse(await toggleLike(slug, visitor));
   } catch (error) {
     return serverError(error);
   }

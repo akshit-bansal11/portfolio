@@ -27,15 +27,14 @@ export function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
 
-// Drops ASCII control characters except tab and newline, then trims.
-export function cleanText(value: string): string {
-  let out = "";
-  for (const ch of value) {
-    const code = ch.charCodeAt(0);
-    const control = code < 32 ? code !== 9 && code !== 10 : code === 127;
-    if (!control) out += ch;
-  }
-  return out.trim();
+// NFC-normalises, strips control and format characters, then trims. Single-line
+// text also has its whitespace runs collapsed; multiline text keeps "\n" (\r\n becomes \n).
+export function cleanText(value: string, multiline = false): string {
+  const text = value.normalize("NFC").replace(/\r\n?/g, "\n");
+  const spaced = multiline ? text : text.replace(/\s+/g, " ");
+  return spaced
+    .replace(/[\p{Cc}\p{Cf}]/gu, (ch) => (multiline && ch === "\n" ? ch : ""))
+    .trim();
 }
 
 function asString(value: unknown): string {
@@ -48,7 +47,7 @@ export function validateComment(input: unknown): CommentResult {
 
   const fields: Record<string, string> = {};
   const anonymous = input.anonymous === true;
-  const body = cleanText(asString(input.body));
+  const body = cleanText(asString(input.body), true);
   if (body.length < BODY_MIN || body.length > BODY_MAX) {
     fields.body = `Comment must be ${BODY_MIN}-${BODY_MAX} characters.`;
   }
