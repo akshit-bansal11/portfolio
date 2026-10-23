@@ -13,7 +13,7 @@ import ElegantShape from "./ElegantShape";
 // Renders the full hero backdrop layer stack.
 export default function HeroBackdrop() {
   return (
-    <div className="pointer-events-none absolute inset-0 z-[-1]">
+    <div className="pointer-events-none absolute inset-0 z-[-1] in-data-[theme=light]:opacity-60">
       {/* Ambient brand gradient. */}
       <div className="absolute inset-0 bg-linear-to-br from-indigo-500/5 via-transparent to-rose-500/5 blur-3xl" />
 
@@ -313,7 +313,7 @@ export default function HeroBackdrop() {
       </div>
 
       {/* Soft vignette so transitions to the next section blend. */}
-      <div className="absolute inset-0 bg-linear-to-t from-[#030303] via-transparent to-[#030303]/80" />
+      <div className="absolute inset-0 bg-linear-to-t from-hero-bg via-transparent to-hero-bg/80" />
     </div>
   );
 }

@@ -38,6 +38,7 @@ export default function AnimatedText({
   onComplete,
   active = true,
   wordClassName,
+  renderWord,
   delayOffset = 0,
 }: AnimatedTextProps) {
   // Split target text into words or letters depending on the mode.
@@ -93,7 +94,7 @@ export default function AnimatedText({
             transition={transition}
             onAnimationComplete={index === elements.length - 1 ? onComplete : undefined}
           >
-            {segment === " " ? "\u00A0" : segment}
+            {segment === " " ? "\u00A0" : (renderWord?.(segment, index) ?? segment)}
             {animateBy === "words" && index < elements.length - 1 && "\u00A0"}
           </motion.span>
         );

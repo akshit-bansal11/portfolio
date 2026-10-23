@@ -1,5 +1,5 @@
 /*
- * QuoteCard.tsx — improved
+ * QuoteCard.tsx — "What I believe in" card, improved
  * - Removed ambient back gradient
  * - 3D tilt range cranked up (±18° X / ±24° Y vs old ±7/10)
  * - Tighter spring (stiffer, less damping = snappier follow)
@@ -13,6 +13,8 @@
 import { type MotionValue, motion, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
 import { entryEnd, HERO_STAGES } from "@/config/heroStages";
+import { BELIEFS_HEADING } from "@/data/heroContent";
+import BeliefsList from "./BeliefsList";
 
 interface QuoteCardProps {
   progress: MotionValue<number>;
@@ -91,7 +93,7 @@ export default function QuoteCard({ progress }: QuoteCardProps) {
         {/* Glass background */}
         <div
           aria-hidden
-          className="absolute inset-0 rounded-2xl bg-[rgba(6,6,12,0.58)] backdrop-blur-xl"
+          className="absolute inset-0 rounded-2xl bg-hero-surface/60 border border-hero-ink/10 backdrop-blur-xl"
         />
 
         {/* Dynamic specular highlight — follows mouse like a light source */}
@@ -117,52 +119,15 @@ export default function QuoteCard({ progress }: QuoteCardProps) {
           transition={{ duration: 0.22 }}
         />
 
-        {/* ── Quote content ─────────────────────────────────────── */}
+        {/* ── Beliefs content ───────────────────────────────────── */}
         <div
-          className="relative z-10 px-8 py-10 md:px-10 md:py-14"
-          style={{ width: "clamp(280px, 22vw, 340px)" }}
+          className="relative z-10 flex flex-col gap-5 px-7 py-8 md:px-9 md:py-10"
+          style={{ width: "clamp(300px, 24vw, 380px)" }}
         >
-          <div className="flex items-start gap-4">
-            <QuoteMark open className="shrink-0 mt-1.5 w-7 h-7 text-indigo-300 opacity-55" />
-
-            <div className="flex flex-col gap-3">
-              <p className="text-lg md:text-xl font-semibold text-white/90 leading-snug">
-                I don&apos;t just make applications.
-              </p>
-
-              <span className="block text-lg md:text-xl font-bold leading-snug text-indigo-300">
-                I deliver solutions.
-              </span>
-
-              <p className="text-sm md:text-base text-white/40 leading-relaxed mt-1">
-                From appealing frontends to reliable backends
-                <br />
-                to secure environments.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex justify-end mt-5">
-            <QuoteMark open={false} className="w-6 h-6 text-rose-300 opacity-35" />
-          </div>
+          <h3 className="text-lg font-semibold text-hero-ink/90 md:text-xl">{BELIEFS_HEADING}</h3>
+          <BeliefsList progress={progress} />
         </div>
       </motion.div>
     </motion.div>
-  );
-}
-
-// ─── SVG quotation mark ───────────────────────────────────────────────────────
-function QuoteMark({ open, className }: { open: boolean; className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className={className}
-      aria-hidden
-      role="presentation"
-      style={{ transform: open ? "none" : "rotate(180deg) scaleX(-1)" }}
-    >
-      <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-    </svg>
   );
 }

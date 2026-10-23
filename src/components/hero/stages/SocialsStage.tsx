@@ -7,11 +7,14 @@
 
 "use client";
 
-import { type MotionValue, motion, useTransform } from "framer-motion";
+import { type MotionValue, motion, useMotionValueEvent, useTransform } from "framer-motion";
 import type { LucideIcon } from "lucide-react";
+import { useState } from "react";
 import type { IconType } from "react-icons";
+import { Annotation } from "@/components/blog/Annotation";
 import { Button } from "@/components/ui/button";
 import { entryEnd, HERO_STAGES } from "@/config/heroStages";
+import { SOCIALS_NOTE } from "@/data/heroContent";
 import { heroSocialLinks } from "@/data/heroSocialLinks";
 import { getSocialAccent } from "@/data/socialAccents";
 import { cn } from "@/lib/utils";
@@ -48,8 +51,8 @@ function SocialItem({ progress, itemStart, itemEnd, href, label, Icon }: SocialI
         size="icon"
         aria-label={label}
         className={cn(
-          "h-9 w-9 md:h-10 md:w-10 rounded-lg border-neutral-700 bg-neutral-900/60",
-          "text-neutral-300 ring-1 transition-all duration-300",
+          "h-9 w-9 md:h-10 md:w-10 rounded-lg dark:border-hero-ink/20 dark:bg-hero-surface/60",
+          "text-hero-ink/80 ring-1 transition-all duration-300",
           accent.ring,
           accent.hoverBg,
           accent.hoverBorder,
@@ -96,6 +99,19 @@ export default function SocialsStage({ progress }: SocialsStageProps) {
   const resumeOpacity = useTransform(progress, [start, resumeEnd], [0, 1]);
   const resumeY = useTransform(progress, [start, resumeEnd], [28, 0]);
 
+  // The "say hello" note leaves before the quote card slides in beside the icons.
+  const noteOpacity = useTransform(
+    progress,
+    [jumptoStart, jumptoStart + (jumptoSettled - jumptoStart) * 0.4],
+    [1, 0],
+  );
+
+  // The note's strokes only start drawing once the icons have arrived.
+  const [isNoteDrawn, setIsNoteDrawn] = useState(false);
+  useMotionValueEvent(progress, "change", (latest) => {
+    if (latest >= settled) setIsNoteDrawn(true);
+  });
+
   return (
     <motion.div
       style={{ opacity: containerOpacity, y: containerY, x: containerX }}
@@ -108,12 +124,22 @@ export default function SocialsStage({ progress }: SocialsStageProps) {
 
       {/* Social icons row */}
       <div className="relative">
+        {/* Handwritten "say hello" note, arrow pointing back at the icons. */}
+        {isNoteDrawn && (
+          <motion.div
+            aria-hidden
+            style={{ opacity: noteOpacity }}
+            className="pointer-events-none absolute left-full top-1/2 ml-3 -translate-y-1/2 -rotate-2 whitespace-nowrap"
+          >
+            <Annotation kind="arrow" direction="left" label={SOCIALS_NOTE} seed={9} />
+          </motion.div>
+        )}
         {/* Soft colored glow behind the icon strip. */}
         <div
           aria-hidden
           className="absolute -inset-3 rounded-xl bg-linear-to-r from-indigo-500/20 via-rose-500/20 to-amber-400/20 blur-xl"
         />
-        <div className="relative flex gap-2.5 md:gap-3 px-3 py-2.5 rounded-xl bg-neutral-900/70 backdrop-blur-md border border-neutral-700/60 shadow-xl pointer-events-auto">
+        <div className="relative flex gap-2.5 md:gap-3 px-3 py-2.5 rounded-xl bg-hero-surface/70 backdrop-blur-md border border-hero-ink/15 shadow-xl pointer-events-auto">
           {/* Each icon gets its own staggered reveal window. */}
           {heroSocialLinks.map(({ Icon, href, name }, index) => {
             const itemStart = start + entrySpan * (0.2 + index * 0.1);

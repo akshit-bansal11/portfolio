@@ -4,6 +4,8 @@
  * animated text component props.
  */
 
+import type { ReactNode } from "react";
+
 export type HeroStageId = "tagline" | "profile" | "socials" | "jumpto";
 
 export interface HeroStage {
@@ -20,6 +22,8 @@ export interface AnimatedTextProps {
   onComplete?: () => void;
   active?: boolean;
   wordClassName?: (segment: string, index: number) => string | undefined;
+  /** Swaps the rendered content of a segment (e.g. to wrap it in a hand-drawn mark). */
+  renderWord?: (segment: string, index: number) => ReactNode;
   delayOffset?: number;
 }
 

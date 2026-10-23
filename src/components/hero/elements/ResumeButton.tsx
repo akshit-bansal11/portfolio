@@ -18,7 +18,7 @@ export default function ResumeButton() {
     <Button
       asChild
       variant="outline"
-      className="group gap-2 border-neutral-500 bg-neutral-900/60 text-neutral-200 hover:bg-neutral-800 hover:text-amber-400 hover:border-amber-400/50 transition-all duration-300 px-5 py-2 rounded-full"
+      className="group gap-2 dark:border-hero-ink/40 dark:bg-hero-surface/60 text-hero-ink/90 dark:hover:bg-hero-surface hover:text-hero-pen hover:border-hero-pen/50 transition-all duration-300 px-5 py-2 rounded-full"
     >
       <a href={RESUME_PATH} download={RESUME_FILENAME} target="_blank" rel="noopener noreferrer">
         <span className="text-sm md:text-base font-medium">Download Resume</span>

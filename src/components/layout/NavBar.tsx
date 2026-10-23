@@ -4,7 +4,7 @@
  * Centered top bar with icons and hover tooltip labels.
  * Appears only once the user has scrolled past the full hero
  * and reached the first content section.
- * Hidden on the /skills route.
+ * Hidden on the /skills route. Ends with the light/dark toggle.
  */
 
 "use client";
@@ -17,6 +17,7 @@ import { HERO_HORIZONTAL_END, HERO_SCROLL_LENGTH_VH } from "@/config/heroStages"
 import { navConfigs } from "@/config/navConfig";
 import { useAnimation } from "@/context/AnimationContext";
 import { cn } from "@/lib/utils";
+import ThemeToggle from "./ThemeToggle";
 
 interface NavBarProps {
   page?: string;
@@ -87,7 +88,7 @@ export default function NavBar({ page }: NavBarProps) {
           transition={{ duration: 0.4, ease: "easeInOut" }}
           className="hidden md:flex justify-center pt-3 fixed top-0 left-0 right-0 z-50 pointer-events-none"
         >
-          <div className="bg-neutral-900/80 backdrop-blur-md rounded-2xl border border-neutral-700/50 px-1.5 py-1.5 shadow-2xl pointer-events-auto">
+          <div className="bg-hero-surface/80 backdrop-blur-md rounded-2xl border border-hero-ink/15 px-1.5 py-1.5 shadow-2xl pointer-events-auto">
             <div className="flex flex-row items-center gap-0">
               {navItems.map((item, index) => {
                 const Icon = item.icon;
@@ -99,8 +100,8 @@ export default function NavBar({ page }: NavBarProps) {
                 ) : null;
 
                 const baseClass = cn(
-                  "flex items-center justify-center px-3 py-1.5 rounded-xl transition-all duration-200 text-neutral-400 cursor-pointer focus:outline-none",
-                  isHovered ? "text-white bg-neutral-700/50" : "hover:text-neutral-200",
+                  "flex items-center justify-center px-3 py-1.5 rounded-xl transition-all duration-200 text-hero-muted cursor-pointer focus:outline-none",
+                  isHovered ? "text-hero-ink bg-hero-ink/10" : "hover:text-hero-ink",
                 );
 
                 return (
@@ -138,10 +139,10 @@ export default function NavBar({ page }: NavBarProps) {
                         >
                           {/* Arrow pointing up */}
                           <div className="flex justify-center -mb-px">
-                            <div className="w-2 h-2 bg-neutral-800 border-l border-t border-neutral-700/60 rotate-45 translate-y-px" />
+                            <div className="w-2 h-2 bg-hero-surface border-l border-t border-hero-ink/15 rotate-45 translate-y-px" />
                           </div>
                           {/* Label */}
-                          <div className="px-2.5 py-1 bg-neutral-800 rounded-md text-xs font-medium text-white whitespace-nowrap border border-neutral-700/60 shadow-lg">
+                          <div className="px-2.5 py-1 bg-hero-surface rounded-md text-xs font-medium text-hero-ink whitespace-nowrap border border-hero-ink/15 shadow-lg">
                             {item.text}
                           </div>
                         </motion.div>
@@ -150,6 +151,10 @@ export default function NavBar({ page }: NavBarProps) {
                   </div>
                 );
               })}
+              {/* Light/dark switch, set apart from the section links. */}
+              <div className="ml-1 border-l border-hero-ink/15 pl-1">
+                <ThemeToggle />
+              </div>
             </div>
           </div>
         </motion.div>

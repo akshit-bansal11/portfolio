@@ -11,8 +11,15 @@
 import { type MotionValue, motion, useMotionValueEvent, useTransform } from "framer-motion";
 import Image from "next/image";
 import { useState } from "react";
+import { Annotation } from "@/components/blog/Annotation";
 import { entryEnd, HERO_STAGES } from "@/config/heroStages";
-import { PROFILE_IMAGE_HOVER_URL, PROFILE_NAME, PROFILE_ROLE } from "@/data/heroContent";
+import {
+  NAME_ACCENT_CLASS,
+  PROFILE_IMAGE_HOVER_URL,
+  PROFILE_NAME,
+  PROFILE_NOTE,
+  PROFILE_ROLE,
+} from "@/data/heroContent";
 import HoverCallout from "./HoverCallout";
 import LogoMark from "./LogoMark";
 
@@ -67,6 +74,8 @@ export default function ProfileCluster({ progress }: ProfileClusterProps) {
     [profile[0], profile[1], socialsSettled, 1],
     ["0vh", "0vh", "-15vh", "-15vh"],
   );
+  // The handwritten note leaves as the socials stage begins.
+  const noteOpacity = useTransform(progress, [socials[0], socials[0] + 0.03], [1, 0]);
   // Fade in at profile entry.
   const opacity = useTransform(progress, [profile[0], profileSettled], [0, 1]);
   // Subtle scale: grow during entry, shrink during socials.
@@ -86,6 +95,15 @@ export default function ProfileCluster({ progress }: ProfileClusterProps) {
         style={{ x, y, opacity, scale }}
         className="absolute inset-0 flex flex-col items-center justify-center gap-4 pointer-events-none will-change-transform"
       >
+        {/* Handwritten "that's me" note, arrow pointing down at the photo. */}
+        <motion.div
+          aria-hidden
+          style={{ opacity: noteOpacity }}
+          className="pointer-events-none absolute left-[calc(50%-15rem)] top-[calc(50%-15.5rem)] -rotate-3"
+        >
+          <Annotation kind="arrow" direction="down-right" label={PROFILE_NOTE} seed={7} />
+        </motion.div>
+
         {/* ── Circle ─────────────────────────────────────────── */}
         <button
           type="button"
@@ -150,12 +168,12 @@ export default function ProfileCluster({ progress }: ProfileClusterProps) {
         {/* ── Name + role ─────────────────────────────────────── */}
         <div className="flex flex-col items-center gap-1 text-center">
           <h1 className="font-clash font-bold tracking-tight whitespace-nowrap text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl leading-[0.95]">
-            <span className="text-white">{FIRST_NAME}</span>{" "}
-            <span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-300 via-white/90 to-rose-300">
+            <span className="text-hero-ink">{FIRST_NAME}</span>{" "}
+            <span className={NAME_ACCENT_CLASS}>
               {LAST_NAME}
             </span>
           </h1>
-          <h2 className="text-sm sm:text-base md:text-xl lg:text-2xl text-neutral-400 font-light whitespace-nowrap">
+          <h2 className="text-sm sm:text-base md:text-xl lg:text-2xl text-hero-muted font-light whitespace-nowrap">
             {PROFILE_ROLE}
           </h2>
         </div>

@@ -24,10 +24,10 @@ export default function AkshitBansalBadge({ active = true }: AkshitBansalBadgePr
       initial={{ opacity: 0, y: 12 }}
       animate={active ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/3 border border-white/10"
+      className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-hero-ink/3 border border-hero-ink/10"
     >
       <Circle className="h-2 w-2 fill-green-500 text-green-500" />
-      <span className="text-xs md:text-sm text-white/70 tracking-[0.3em] uppercase">
+      <span className="text-xs md:text-sm text-hero-ink/70 tracking-[0.3em] uppercase">
         Akshit Bansal
       </span>
     </motion.div>

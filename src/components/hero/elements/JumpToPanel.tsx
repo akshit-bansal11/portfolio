@@ -181,7 +181,7 @@ export default function JumpToPanel() {
         style={{ width: "clamp(200px, 28vw, 320px)" }}
       >
         {/* ── Label ──────────────────────────────────────────── */}
-        <p className="text-[10px] md:text-xs uppercase tracking-[0.35em] text-neutral-500 select-none">
+        <p className="text-[10px] md:text-xs uppercase tracking-[0.35em] text-hero-muted select-none">
           Jump to
         </p>
 
@@ -209,12 +209,12 @@ export default function JumpToPanel() {
                 pointerEvents: "none",
                 background: [
                   "linear-gradient(to bottom,",
-                  "  rgba(3,3,3,0.95) 0%,",
-                  "  rgba(3,3,3,0.4) 22%,",
+                  "  color-mix(in srgb, var(--hero-bg) 95%, transparent) 0%,",
+                  "  color-mix(in srgb, var(--hero-bg) 40%, transparent) 22%,",
                   "  transparent 38%,",
                   "  transparent 62%,",
-                  "  rgba(3,3,3,0.4) 78%,",
-                  "  rgba(3,3,3,0.95) 100%",
+                  "  color-mix(in srgb, var(--hero-bg) 40%, transparent) 78%,",
+                  "  color-mix(in srgb, var(--hero-bg) 95%, transparent) 100%",
                   ")",
                 ].join(" "),
               }}
@@ -289,7 +289,9 @@ export default function JumpToPanel() {
                           fontSize: 14,
                           fontWeight: 600,
                           letterSpacing: "0.01em",
-                          color: isCenter ? color.text : "rgba(255,255,255,0.8)",
+                          color: isCenter
+                            ? `color-mix(in srgb, ${color.text}, var(--hero-ink) var(--hero-accent-ink-mix))`
+                            : "color-mix(in srgb, var(--hero-ink) 80%, transparent)",
                           lineHeight: 1.2,
                           transition: "color 0.28s ease",
                         }}
@@ -299,7 +301,7 @@ export default function JumpToPanel() {
                       <div
                         style={{
                           fontSize: 11,
-                          color: isCenter ? "rgba(255,255,255,0.52)" : "rgba(255,255,255,0.28)",
+                          color: `color-mix(in srgb, var(--hero-muted) ${isCenter ? 100 : 70}%, transparent)`,
                           lineHeight: 1.35,
                           marginTop: 3,
                           transition: "color 0.28s ease",
@@ -338,7 +340,9 @@ export default function JumpToPanel() {
                     width: 5,
                     height: isActive ? 16 : 5,
                     borderRadius: 99,
-                    background: isActive ? color.border : "rgba(255,255,255,0.13)",
+                    background: isActive
+                      ? color.border
+                      : "color-mix(in srgb, var(--hero-ink) 13%, transparent)",
                     transition: "height 0.28s cubic-bezier(.4,0,.2,1), background 0.28s ease",
                     border: "none",
                     cursor: "pointer",

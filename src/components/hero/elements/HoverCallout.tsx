@@ -49,8 +49,8 @@ export default function HoverCallout({ side, progress, hovered = false }: HoverC
               transition={{ duration: 0.3, ease: "easeOut" }}
             >
               {/* Bubble body. */}
-              <div className="relative px-3 py-2 rounded-xl bg-neutral-900/85 backdrop-blur-md border border-neutral-700/60 shadow-xl">
-                <span className="text-sm md:text-base font-light text-white tracking-wide">
+              <div className="relative px-3 py-2 rounded-xl bg-hero-surface/85 backdrop-blur-md border border-hero-ink/15 shadow-xl">
+                <span className="text-sm md:text-base font-light text-hero-ink tracking-wide">
                   Hi! 👋
                 </span>
                 {/* Right-pointing tail toward the image */}
@@ -77,12 +77,12 @@ export default function HoverCallout({ side, progress, hovered = false }: HoverC
       style={{ opacity: sharedOpacity }}
       className="pointer-events-none absolute right-[calc(50%-17rem)] top-1/2 -translate-y-[80%] flex flex-col items-start gap-1"
     >
-      <span className="text-xs md:text-sm text-neutral-300 font-light tracking-wide whitespace-nowrap">
+      <span className="text-xs md:text-sm text-hero-ink/80 font-light tracking-wide whitespace-nowrap">
         Click me
       </span>
       {/* Short curved dashed arrow pointing left toward the image */}
       <svg
-        className="w-12 md:w-16 h-5 text-amber-400/80 overflow-visible self-start"
+        className="w-12 md:w-16 h-5 text-hero-pen/80 overflow-visible self-start"
         viewBox="0 0 64 20"
         fill="none"
         role="img"
