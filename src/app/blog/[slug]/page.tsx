@@ -8,6 +8,7 @@
 
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import PostEngagement from "@/components/blog/PostEngagement";
 import PostHeader from "@/components/blog/PostHeader";
 import PostNav from "@/components/blog/PostNav";
 import ReadingProgress from "@/components/blog/ReadingProgress";
@@ -82,6 +83,7 @@ export default async function PostPage({ params }: PostPageProps) {
               <TableOfContents headings={post.headings} variant="inline" className="lg:hidden" />
               <PostContent />
             </article>
+            <PostEngagement slug={post.slug} />
             <PostNav previous={blogPosts[post.part - 2]} next={blogPosts[post.part]} />
           </ReadingProgress>
         </div>
