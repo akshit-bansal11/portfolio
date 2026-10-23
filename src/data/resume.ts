@@ -73,7 +73,7 @@ export const RESUME_ONE_PAGE: ResumeDocument = {
         {
           title: "Elina Club Pvt. Ltd",
           dates: "Jul 2026 – Present",
-          subtitle: "SDE-1 & Chief Advisor",
+          subtitle: "SDE-3 & Chief Advisor",
           location: "Bathinda, India (On-site)",
           bullets: [
             "Sole engineer owning frontend, backend, database, CI/CD and deployments; advise leadership on product and tech strategy.",
@@ -230,7 +230,7 @@ export const RESUME_FULL: ResumeDocument = {
     {
       kind: "text",
       heading: "Profile",
-      text: "Full-stack software engineer who has shipped production software for the web, Android, Windows and macOS. I run engineering end to end as SDE-1 at Elina Club, co-founded a stealth startup as its CTO, and built my own product, Kiteloom. I use Claude Code every day and know how to get secure, well-tested code out of it. Looking for an SDE-1 / SDE-2 role where I can keep building reliable products with a strong team.",
+      text: "Full-stack software engineer who has shipped production software for the web, Android, Windows and macOS. I run engineering end to end as SDE-3 at Elina Club, co-founded a stealth startup as its CTO, and built my own product, Kiteloom. I use Claude Code every day and know how to get secure, well-tested code out of it. Looking for an SDE-1 / SDE-2 role where I can keep building reliable products with a strong team.",
     },
     {
       kind: "entries",
@@ -239,7 +239,7 @@ export const RESUME_FULL: ResumeDocument = {
         {
           title: "Elina Club Pvt. Ltd",
           dates: "Jul 2026 – Present",
-          subtitle: "SDE-1 & Chief Advisor",
+          subtitle: "SDE-3 & Chief Advisor",
           location: "Bathinda, India (On-site)",
           intro:
             "I'm the only engineer here, so everything technical is mine: frontend, backend, database, automation and deployments. As Chief Advisor I also advise leadership on product and technical decisions.",
