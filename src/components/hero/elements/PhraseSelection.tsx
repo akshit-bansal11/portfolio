@@ -52,7 +52,8 @@ export default function PhraseSelection({ children, active }: PhraseSelectionPro
     [right, bottom],
     [left, bottom],
   ] as const;
-  const rest = { x: right + 44, y: bottom + 18 };
+  // Parked just outside the bottom-right handle, below the text line.
+  const rest = { x: right + 14, y: bottom + 10 };
 
   return (
     <span ref={ref} className="relative inline-block">
@@ -117,7 +118,7 @@ export default function PhraseSelection({ children, active }: PhraseSelectionPro
                   strokeLinejoin="round"
                 />
               </svg>
-              <span className="absolute left-4 top-5 whitespace-nowrap rounded bg-hero-pen px-2 py-0.5 font-sans text-xs font-medium leading-none text-hero-bg">
+              <span className="absolute left-4 top-5 whitespace-nowrap rounded-[4px] bg-hero-pen px-1.5 py-[2px] font-grotesk text-xs font-semibold normal-case leading-none tracking-normal text-hero-bg">
                 {CURSOR_NAME}
               </span>
             </motion.span>

@@ -8,7 +8,8 @@
  */
 
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque, Caveat, Geist, Geist_Mono } from "next/font/google";
+import { Caveat, Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import WelcomeAnimation from "@/components/effects/WelcomeAnimation";
 import NavBar from "@/components/layout/NavBar";
@@ -35,9 +36,19 @@ const caveat = Caveat({
   weight: ["500", "600", "700"],
 });
 
-// Typed display face (variable, 200-800) for the hero tagline, name and headings.
-const bricolage = Bricolage_Grotesque({
-  variable: "--font-bricolage",
+// Display face for the hero tagline, name and headings (self-hosted).
+const clashDisplay = localFont({
+  variable: "--font-clash-display",
+  src: [
+    { path: "../assets/fonts/ClashDisplay-Medium.woff2", weight: "500", style: "normal" },
+    { path: "../assets/fonts/ClashDisplay-Semibold.woff2", weight: "600", style: "normal" },
+    { path: "../assets/fonts/ClashDisplay-Bold.woff2", weight: "700", style: "normal" },
+  ],
+});
+
+// Secondary typed face: role line, buttons, labels.
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
   subsets: ["latin"],
 });
 
@@ -73,7 +84,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${caveat.variable} ${bricolage.variable} antialiased selection:bg-white selection:text-black`}
+        className={`${geistSans.variable} ${geistMono.variable} ${caveat.variable} ${clashDisplay.variable} ${spaceGrotesk.variable} antialiased selection:bg-white selection:text-black`}
       >
         <AnimationProvider>
           {/* SVG draw-on welcome animation that plays once on first load. */}

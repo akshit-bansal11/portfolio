@@ -7,16 +7,28 @@
 
 import { asset } from "@/config/assets";
 
-// Tagline shown word-by-word in the first hero stage. The non-breaking space keeps
-// the selected phrase as one word so the whiteboard selection box can wrap it.
-export const TAGLINE_MARKED = "make things";
-export const TAGLINE = `I ${TAGLINE_MARKED} and solve problems.`;
+// Tagline shown word-by-word in the first hero stage, one array entry per line (desktop keeps
+// these breaks). The non-breaking spaces keep the selected phrase as one word so the
+// whiteboard selection box can wrap it.
+export const TAGLINE_MARKED = "end to end";
+export const TAGLINE_LINES = [
+  "I design, build and ship",
+  "production software,",
+  `${TAGLINE_MARKED}.`,
+] as const;
+
+// Handwritten facts pointing at tagline words (a compact list where there is no room for arrows).
+export const TAGLINE_FACTS = [
+  { word: "production", text: "1,900+ automated tests", side: "left" },
+  { word: "ship", text: "2 live platforms in under 3 months", side: "top" },
+  { word: "software", text: "7 open-source apps, 650+ commits", side: "right" },
+] as const;
 
 // Handwritten aside under the tagline, with an arrow pointing back up at it.
-export const TAGLINE_ASIDE = "…and help others do the same, tech or not";
+export const TAGLINE_ASIDE = "…and I help others ship theirs, tech or not";
 
 export const TAGLINE_CLASSNAME =
-  "w-fit mx-auto font-display font-[650] tracking-[-0.03em] xl:text-8xl lg:text-7xl md:text-5xl sm:text-4xl text-4xl items-center justify-center text-center max-w-5xl leading-[0.95] flex-wrap";
+  "font-display font-semibold tracking-[-0.02em] text-[clamp(2.5rem,1.2rem+4.2vw,5.25rem)] justify-center text-center leading-[1.02] flex-wrap";
 
 export const TAGLINE_ACCENT_CLASS =
   "bg-clip-text text-transparent bg-linear-to-r from-hero-grad-1 via-hero-grad-2 to-hero-grad-3";
@@ -41,7 +53,7 @@ export const PROFILE_IMAGE_HOVER_URL = asset("personal/pfp-hover.webp");
 export const PROFILE_NAME = "Akshit Bansal";
 
 // Sub-headline role string under the name.
-export const PROFILE_ROLE = "Next.js Full-Stack Developer";
+export const PROFILE_ROLE = "Full-Stack Software Engineer · Punjab, India";
 
 // Handwritten notes drawn beside the profile photo and the social icons.
 export const PROFILE_NOTE = "hi, that's me!";
@@ -55,3 +67,11 @@ export const BELIEFS = [
   { word: "Asking for help", gloss: "no shame in it, ever" },
   { word: "Humbleness", gloss: "I listen, whoever's talking" },
 ] as const;
+
+// Profile stage: what I am doing now, and the domains I have worked across.
+export const CURRENTLY = [
+  "SDE-1 & Chief Advisor @ Elina Club",
+  "Co-founder & CTO @ a stealth startup",
+  "building Kiteloom",
+] as const;
+export const WORKED_ACROSS = ["FOSS", "Real Estate", "SaaS", "PR", "Design / UI/UX"] as const;

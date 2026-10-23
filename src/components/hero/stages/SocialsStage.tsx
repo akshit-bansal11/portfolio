@@ -1,8 +1,8 @@
 /*
  * SocialsStage.tsx
- * Hero stage 3 — resume link + social icons rise from
- * the bottom while the profile shrinks upward, then
- * the whole group slides left during stage 4 (jumpto).
+ * Hero stage 3 — the resume link and the social stickers, laid out as part of
+ * the profile group (directly under the role line). They rise and fade in as the
+ * stage begins; the parent cluster handles all horizontal movement.
  */
 
 "use client";
@@ -21,58 +21,43 @@ interface SocialsStageProps {
   progress: MotionValue<number>;
 }
 
-// Per-icon props for one social button.
+// Per-icon props for one social sticker.
 interface SocialItemProps extends HeroSocialLink {
   progress: MotionValue<number>;
+  index: number;
   itemStart: number;
   itemEnd: number;
 }
 
-// Renders one staggered social icon.
-function SocialItem({ progress, itemStart, itemEnd, href, name, Icon }: SocialItemProps) {
+// Renders one staggered social sticker.
+function SocialItem({ progress, itemStart, itemEnd, ...link }: SocialItemProps) {
   // Per-icon rise + fade tied to its slice of the entry span.
-  const y = useTransform(progress, [itemStart, itemEnd], [36, 0]);
+  const y = useTransform(progress, [itemStart, itemEnd], [24, 0]);
   const opacity = useTransform(progress, [itemStart, itemEnd], [0, 1]);
 
   return (
     <motion.div style={{ y, opacity }}>
-      <SocialIcon href={href} label={name} Icon={Icon} />
+      <SocialIcon {...link} />
     </motion.div>
   );
 }
 
-// Renders the full socials stage layout (resume + icon row).
+// Renders the socials stage layout (resume + sticker row).
 export default function SocialsStage({ progress }: SocialsStageProps) {
   // Stage 3 progress range / span.
   const [start] = HERO_STAGES.socials.range;
   const settled = entryEnd(HERO_STAGES.socials.range);
   const entrySpan = settled - start;
 
-  // Stage 4 thresholds drive the left-slide of this whole group.
+  // Stage 4 start: the "say hello" note leaves before the board slides in.
   const jumptoStart = HERO_STAGES.jumpto.range[0];
   const jumptoSettled = entryEnd(HERO_STAGES.jumpto.range);
-
-  // ── Rise from bottom during socials entry ─────────────────────────
-  const containerOpacity = useTransform(
-    progress,
-    [start, start + entrySpan * 0.3, settled, 1],
-    [0, 1, 1, 1],
-  );
-  const containerY = useTransform(progress, [start, settled, 1], ["80px", "0px", "0px"]);
-
-  // ── Slide left during jumpto entry ────────────────────────────────
-  const containerX = useTransform(
-    progress,
-    [jumptoStart, jumptoSettled, 1],
-    ["0vw", "-28vw", "-28vw"],
-  );
 
   // Resume button leads the reveal during the first 35% of the entry span.
   const resumeEnd = start + entrySpan * 0.35;
   const resumeOpacity = useTransform(progress, [start, resumeEnd], [0, 1]);
-  const resumeY = useTransform(progress, [start, resumeEnd], [28, 0]);
+  const resumeY = useTransform(progress, [start, resumeEnd], [20, 0]);
 
-  // The "say hello" note leaves before the board slides in beside the icons.
   const noteOpacity = useTransform(
     progress,
     [jumptoStart, jumptoStart + (jumptoSettled - jumptoStart) * 0.4],
@@ -86,18 +71,13 @@ export default function SocialsStage({ progress }: SocialsStageProps) {
   });
 
   return (
-    <motion.div
-      style={{ opacity: containerOpacity, y: containerY, x: containerX }}
-      className="pointer-events-none absolute inset-x-0 bottom-16 md:bottom-20 flex flex-col items-center gap-3 md:gap-4"
-    >
-      {/* Resume link */}
+    <div className="flex flex-col items-center gap-2">
       <motion.div style={{ opacity: resumeOpacity, y: resumeY }} className="pointer-events-auto">
         <ResumeButton />
       </motion.div>
 
-      {/* Social icons row */}
       <div className="relative">
-        {/* Handwritten "say hello" note, arrow pointing back at the icons. */}
+        {/* Handwritten "say hello" note, arrow pointing back at the stickers. */}
         {isNoteDrawn && (
           <motion.div
             aria-hidden
@@ -113,25 +93,24 @@ export default function SocialsStage({ progress }: SocialsStageProps) {
             />
           </motion.div>
         )}
-        <div className="flex gap-1 pointer-events-auto">
-          {/* Each icon gets its own staggered reveal window. */}
-          {heroSocialLinks.map(({ Icon, href, name }, index) => {
+        <div className="pointer-events-auto flex gap-2 pb-6">
+          {/* Each sticker gets its own staggered reveal window. */}
+          {heroSocialLinks.map((link, index) => {
             const itemStart = start + entrySpan * (0.2 + index * 0.1);
             const itemEnd = Math.min(settled, itemStart + entrySpan * 0.22);
             return (
               <SocialItem
-                key={href}
+                key={link.href}
+                {...link}
+                index={index}
                 progress={progress}
                 itemStart={itemStart}
                 itemEnd={itemEnd}
-                href={href}
-                name={name}
-                Icon={Icon}
               />
             );
           })}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

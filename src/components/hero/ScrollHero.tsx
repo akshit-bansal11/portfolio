@@ -33,12 +33,12 @@ import AkshitBansalBadge from "./elements/AkshitBansalBadge";
 import BeliefsBoard, { ScrollBeliefsBoard } from "./elements/BeliefsBoard";
 import JumpToPanel from "./elements/JumpToPanel";
 import ProfileCluster from "./elements/ProfileCluster";
+import ProfileExtras from "./elements/ProfileExtras";
 import ProfilePhoto from "./elements/ProfilePhoto";
 import ResumeButton from "./elements/ResumeButton";
 import ScrollIndicator, { ScrollCue } from "./elements/ScrollIndicator";
 import SocialIcon from "./elements/SocialIcon";
 import TaglineDisplay from "./elements/TaglineDisplay";
-import SocialsStage from "./stages/SocialsStage";
 import TaglineStage from "./stages/TaglineStage";
 
 // Pre-compute name halves for the gradient styling on the surname.
@@ -109,11 +109,11 @@ export default function ScrollHero() {
 
               {/* Name + role */}
               <div className="flex flex-col items-center gap-1 text-center">
-                <h1 className="font-display font-bold tracking-[-0.03em] whitespace-nowrap text-4xl sm:text-5xl leading-[0.95]">
+                <h1 className="font-display font-bold tracking-[-0.02em] whitespace-nowrap text-4xl sm:text-5xl leading-[0.95]">
                   <span className="text-hero-ink">{FIRST_NAME}</span>{" "}
                   <span className={NAME_ACCENT_CLASS}>{LAST_NAME}</span>
                 </h1>
-                <p className="text-sm sm:text-base text-hero-muted font-light whitespace-nowrap">
+                <p className="font-grotesk text-sm sm:text-base text-hero-muted whitespace-normal text-balance max-w-xs">
                   {PROFILE_ROLE}
                 </p>
               </div>
@@ -121,11 +121,13 @@ export default function ScrollHero() {
               <ResumeButton />
 
               {/* Social icons */}
-              <div className="flex gap-1">
-                {heroSocialLinks.map(({ Icon, href, name }) => (
-                  <SocialIcon key={href} href={href} label={name} Icon={Icon} />
+              <div className="flex gap-2 pb-6">
+                {heroSocialLinks.map((link, index) => (
+                  <SocialIcon key={link.href} {...link} index={index} />
                 ))}
               </div>
+
+              <ProfileExtras className="w-full max-w-xs" />
             </div>
           </ScrollReveal>
         </div>
@@ -155,8 +157,6 @@ export default function ScrollHero() {
           {/* The four hero stages — each consumes the same scroll progress. */}
           <TaglineStage progress={progress} active={isWelcomeComplete} />
           <ProfileCluster progress={progress} />
-
-          <SocialsStage progress={progress} />
 
           {/* ── Stage 4: Three-column flex layout ────────────────────────
 					     Uses justify-between so the beliefs board naturally centres

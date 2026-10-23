@@ -27,7 +27,7 @@ export default function AkshitBansalBadge({ active = true }: AkshitBansalBadgePr
       className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-hero-ink/3 border border-hero-ink/10"
     >
       <Circle className="h-2 w-2 fill-green-500 text-green-500" />
-      <span className="text-xs md:text-sm text-hero-ink/70 tracking-[0.3em] uppercase">
+      <span className="font-grotesk text-xs md:text-sm text-hero-ink/70 tracking-[0.3em] uppercase">
         Akshit Bansal
       </span>
     </motion.div>

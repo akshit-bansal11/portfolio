@@ -3,7 +3,7 @@
  * Hero stage-4 "jump to" index, written on the board: a handwritten label over
  * a list of typed section names. The active entry (last hovered or focused) is
  * ink-coloured and gets a hand-drawn underline that draws in; the rest stay
- * muted. A handwritten gloss under the list describes the active entry.
+ * muted. A handwritten gloss sits right under the active entry.
  * Clicking an entry smooth-scrolls the page to that section.
  */
 
@@ -35,21 +35,21 @@ export default function JumpToPanel() {
       className="pointer-events-auto flex flex-col gap-3"
       style={{ width: "clamp(200px, 22vw, 280px)" }}
     >
-      <p className="-rotate-2 font-hand text-3xl font-semibold leading-none text-hero-muted">
+      <p className="-rotate-2 font-hand text-4xl font-bold leading-none text-hero-muted">
         jump to
       </p>
-      <ul className="flex flex-col items-start gap-2">
-        {JUMP_TO_CARDS.map(({ label, sectionId }, index) => {
+      <ul className="flex flex-col items-start gap-8">
+        {JUMP_TO_CARDS.map(({ label, sectionId, description }, index) => {
           const isActive = index === active;
           return (
-            <li key={sectionId}>
+            <li key={sectionId} className="relative">
               <button
                 type="button"
                 onMouseEnter={() => setActive(index)}
                 onFocus={() => setActive(index)}
                 onClick={() => scrollToSection(sectionId)}
                 className={cn(
-                  "relative cursor-pointer py-1 text-left font-display text-xl font-semibold tracking-[-0.02em] outline-none transition-colors duration-200",
+                  "relative cursor-pointer py-1 text-left font-grotesk text-lg font-semibold outline-none transition-colors duration-200",
                   isActive ? "text-hero-ink" : "text-hero-muted",
                 )}
               >
@@ -65,13 +65,15 @@ export default function JumpToPanel() {
                   </svg>
                 )}
               </button>
+              {isActive && (
+                <span className="pointer-events-none absolute left-1 top-full mt-1.5 -rotate-1 whitespace-nowrap font-hand text-2xl font-semibold leading-none text-hero-pen">
+                  {description}
+                </span>
+              )}
             </li>
           );
         })}
       </ul>
-      <p className="min-h-8 -rotate-1 font-hand text-2xl font-semibold leading-tight text-hero-pen">
-        {JUMP_TO_CARDS[active].description}
-      </p>
     </div>
   );
 }
