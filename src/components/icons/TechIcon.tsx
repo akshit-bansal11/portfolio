@@ -108,9 +108,7 @@ const ICONS: Record<string, ReactNode> = {
   ),
   WebAssembly: wasm,
   "FFmpeg WASM": wasm,
-  FFmpeg: (
-    <path d="M3 4h18v16H3z M8 4v16 M16 4v16 M3 9h5 M3 15h5 M16 9h5 M16 15h5" />
-  ),
+  FFmpeg: <path d="M3 4h18v16H3z M8 4v16 M16 4v16 M3 9h5 M3 15h5 M16 9h5 M16 15h5" />,
   SQL: database,
   PostgreSQL: database,
   MySQL: database,
@@ -127,12 +125,8 @@ const ICONS: Record<string, ReactNode> = {
   Direct2D: <path d="M3 4h18v16H3z M3 12h18 M12 4v16" />,
   Win32: <path d="M3 4h18v16H3z M3 9h18 M6 6.5h.01 M9 6.5h.01" />,
   "Claude Code": <path d="M4 6l5 5-5 5 M11 18h5 M18 3v4 M16 5h4" />,
-  "Tailwind CSS": (
-    <path d="M3 10c2-4 5-4 7-2s5 2 7-2 M3 17c2-4 5-4 7-2s5 2 7-2" />
-  ),
-  Android: (
-    <path d="M6 16v-6a6 6 0 0 1 12 0v6z M9 6L8 3 M15 6l1-3 M9.5 11h.01 M14.5 11h.01" />
-  ),
+  "Tailwind CSS": <path d="M3 10c2-4 5-4 7-2s5 2 7-2 M3 17c2-4 5-4 7-2s5 2 7-2" />,
+  Android: <path d="M6 16v-6a6 6 0 0 1 12 0v6z M9 6L8 3 M15 6l1-3 M9.5 11h.01 M14.5 11h.01" />,
   Git: (
     <>
       <circle cx="6" cy="5" r="2" />
