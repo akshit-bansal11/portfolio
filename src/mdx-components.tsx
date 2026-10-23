@@ -15,6 +15,7 @@ import CaseFile from "@/components/blog/CaseFile";
 import DemoFrame from "@/components/blog/DemoFrame";
 import Figure from "@/components/blog/Figure";
 import MarginNote from "@/components/blog/MarginNote";
+import SettingsTable from "@/components/blog/SettingsTable";
 import { Takeaway, TLDR } from "@/components/blog/TLDR";
 import ScrollReveal from "@/components/effects/ScrollReveal";
 import { sketchLine } from "@/lib/blog/sketch";
@@ -157,6 +158,7 @@ const components: MDXComponents = {
   MarginNote,
   Mark,
   ScrollReveal,
+  SettingsTable,
   Takeaway,
   TLDR,
 };

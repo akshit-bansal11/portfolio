@@ -53,4 +53,13 @@ export const blogPosts: BlogPostMeta[] = [
     tags: ["collaboration", "crdt", "offline-first"],
     headerNote: "take a phone offline",
   },
+  {
+    slug: "windows-network-speed",
+    title: "That Windows Network Speed Boost Reel Is Wrong. Here's What Actually Works",
+    description:
+      "No Windows setting can push you past your plan, but plenty can waste it. What actually helps (the Wi-Fi and Ethernet adapter settings worth changing, parallel downloads, DNS), how to find your real adapter in Device Manager, and the viral tweaks to skip.",
+    publishedAt: "2026-10-24",
+    tags: ["windows", "networking", "how-to"],
+    headerNote: "measure first, tweak second",
+  },
 ];

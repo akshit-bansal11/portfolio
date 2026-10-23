@@ -1,0 +1,198 @@
+Your internet speed is capped by three things: your ISP plan, your router, and the link between the router and your PC. No Windows setting can push you past your plan. What you can do is make sure nothing in between is wasting it, and make downloads use all of it.
+
+This guide covers what actually works, how to find the right adapter in Device Manager, and the popular tweaks you should skip.
+
+## The short version
+
+What actually helps (Wi-Fi adapter → **Properties** → **Advanced**):
+
+- **Preferred Band** → Prefer 5GHz
+- **Leisure Power Save** → Disabled
+- **Roaming Aggressiveness** → Lowest or Disable (if you use a single router and your device stays in one place)
+
+Leave everything else on default.
+
+**The real fix:** sit closer to the router or use a cable. The rest of this guide explains why, and covers everything else you can do.
+
+## Step 0: Measure first
+
+Before changing anything, find out how far off you actually are.
+
+1. Close anything that's downloading or streaming.
+2. Run a test at [speedtest.net](https://www.speedtest.net) or [fast.com](https://fast.com).
+3. Compare the result with the speed your ISP plan promises.
+4. Run it once on Wi-Fi and once with a cable, if you can.
+
+If the cable result matches your plan but Wi-Fi doesn't, your problem is Wi-Fi. If both are slow, it is your router or your ISP, and no PC tweak will fix that.
+
+## Quick wins that matter most
+
+These are boring, but they beat every software trick in this post.
+
+- **Use an Ethernet cable.** It is the biggest upgrade for both speed and ping, especially for gaming. Use a Cat 5e or Cat 6 cable for gigabit speeds.
+- **Connect to 5 GHz, not 2.4 GHz.** Most routers broadcast both. 5 GHz is much faster at close range, while 2.4 GHz reaches further but is slower and more crowded.
+- **Move the router.** Put it somewhere open, high, and central. Not inside a cabinet, behind a TV, or next to a microwave.
+- **Restart the router** every now and then. It clears memory leaks and stuck connections.
+- **Update the router's firmware** from its admin page. Updates often fix speed and stability bugs.
+
+## Find your Wi-Fi and LAN adapter
+
+Open Device Manager (**Win + X** → **Device Manager**) and expand **Network adapters**. You will probably see a dozen entries, but only two of them are real hardware: your Wi-Fi card and your Ethernet port. Everything else is virtual.
+
+<SettingsTable
+  columns={["If the name contains", "It is", "Change it?"]}
+  rows={[
+    ["Wi-Fi, Wireless, WLAN, 802.11, AX (e.g. Realtek RTL8852BE WiFi 6 802.11ax PCIe Adapter, Intel Wi-Fi 6 AX201)", <>Your <strong>Wi-Fi adapter</strong></>, "Yes"],
+    ["Ethernet, GbE, Gigabit, 2.5GbE, Family Controller (e.g. Realtek PCIe GbE Family Controller, Intel Ethernet Connection I219-V)", <>Your <strong>LAN (Ethernet) adapter</strong></>, "Yes"],
+    ["Bluetooth Device (Personal Area Network)", "Internet sharing over Bluetooth", "No"],
+    ["WAN Miniport (IKEv2, L2TP, PPTP, SSTP, etc.)", "Windows' built-in VPN and dial-up drivers", "No"],
+    ["TAP-Windows Adapter, Wintun, WireGuard", "Virtual adapters installed by VPN apps", "No"],
+    ["Microsoft Wi-Fi Direct Virtual Adapter", "Mobile hotspot and wireless casting", "No"],
+    ["Hyper-V, vEthernet, VirtualBox, VMware", "Virtual machines and WSL", "No"],
+  ]}
+/>
+
+**Still not sure?** Confirm it with a command:
+
+1. Press **Win + X** and open **Terminal**.
+2. Run `ipconfig /all`.
+3. Find the section called **Wireless LAN adapter Wi-Fi** (your Wi-Fi) or **Ethernet adapter Ethernet** (your LAN port).
+4. Its **Description** line is the exact name you'll see in Device Manager.
+
+In PowerShell, `Get-NetAdapter` shows the same thing in a cleaner table, along with whether each adapter is connected and its current link speed.
+
+Once you've found the right one, right-click it → **Properties** → **Advanced** tab. That's where the settings below live.
+
+## Wi-Fi adapter settings worth changing
+
+These won't raise your speed test number much, but they cut random ping spikes and keep the connection steady, which matters most for gaming and calls.
+
+<SettingsTable
+  columns={["Setting", "Set it to", "Why"]}
+  rows={[
+    ["Preferred Band", "Prefer 5GHz", "Makes the adapter pick 5 GHz over 2.4 GHz when both are available."],
+    ["Leisure Power Save (Intel: MIMO Power Save Mode)", "Disabled", "The adapter's power saving. Turning it off reduces lag spikes, at the cost of slightly worse battery life."],
+    ["Roaming Aggressiveness", "Disable (one router) or Lowest", "Stops the adapter from scanning for other access points in the background. Using mesh Wi-Fi or extenders? Keep it on Medium so it can switch to the stronger one."],
+    ["Wake on Magic Packet / Wake on Pattern Match", "Disabled", "Not a speed setting. It stops your laptop from waking up from sleep randomly. Keep it on if you use Wake-on-LAN."],
+  ]}
+/>
+
+Also open the **Power Management** tab and uncheck **Allow the computer to turn off this device to save power**. This stops Windows from putting the adapter to sleep, which can cause drops after idle.
+
+Click **OK** when you're done. The Wi-Fi will disconnect for a few seconds and come back.
+
+## Ethernet (LAN) adapter settings worth changing
+
+On a wired connection, most of the gains come from turning off power-saving features that throttle or drop the link.
+
+<SettingsTable
+  columns={["Setting", "Set it to", "Why"]}
+  rows={[
+    ["Speed & Duplex", <><strong>Auto Negotiation</strong> (leave it)</>, "Auto already picks the fastest mode your router supports, usually 1 Gbps Full Duplex. See the myths section for why forcing it is a bad idea."],
+    ["Energy-Efficient Ethernet / Advanced EEE", "Disabled", "Lets the link go into low-power mode during quiet moments, which can cause small lag spikes and drops."],
+    ["Green Ethernet", "Disabled", "Another power-saving feature. Turning it off has no downside on a desktop or a plugged-in laptop."],
+    ["Gigabit Lite", "Disabled", "If you see this, it caps your gigabit port at around 500 Mbps to save power."],
+    ["Power Saving Mode", "Disabled", "Same idea: no throttling when the link is idle."],
+  ]}
+/>
+
+The same **Power Management** tab tip applies here too. Uncheck **Allow the computer to turn off this device to save power**.
+
+If `Get-NetAdapter` shows your Ethernet link speed as 100 Mbps instead of 1 Gbps, the culprit is usually a damaged cable or an old Cat 5 cable, not a setting.
+
+## Adapter settings to leave on default
+
+Everything not mentioned above should stay as it is. A few of these look tempting but either do nothing or make things worse.
+
+<SettingsTable
+  columns={["Setting", "Keep it at", "What happens if you change it"]}
+  rows={[
+    ["Bandwidth (Wi-Fi)", "Auto", "\"20MHz Only\" blocks the wider 40/80 MHz channels and badly cuts your 5 GHz speed."],
+    ["2.4G / 5G Wireless Mode", "The option that includes \"ax\"", "Removing \"ax\" or \"ac\" drops you to older, slower Wi-Fi standards."],
+    ["Beacon Interval", "100", "Your router controls this anyway. No speed effect."],
+    ["802.11d", "Enabled", "Handles country-specific channel rules. No speed effect."],
+    ["MAC Randomization", "Enabled", "A privacy feature. No speed effect."],
+    ["Multi-Channel Concurrent", "Enabled", "Used for mobile hotspot and wireless display. No effect on normal browsing."],
+    ["Preamble Mode", "Short & long", "A compatibility setting. No real-world gain."],
+  ]}
+/>
+
+Setting names vary by brand. The ones in this guide are from Realtek drivers, and Intel and Killer adapters use similar names.
+
+## Make downloads use your full speed
+
+A lot of servers limit how fast a single connection can go. So even on a fast plan, one download can crawl. The fix is to split the file into chunks and download them over several connections at once.
+
+### Chrome: turn on parallel downloading
+
+Chrome has a hidden setting (a "flag") for this.
+
+1. Open a new tab and go to `chrome://flags/#enable-parallel-downloading`.
+2. Set **Parallel downloading** to **Enabled**.
+3. Click **Relaunch**.
+
+Chrome then splits large downloads into multiple streams and joins them back together when they finish. It only kicks in when the server supports split downloads, and you'll notice it mostly on big files. Microsoft Edge has the same flag at `edge://flags/#enable-parallel-downloading`.
+
+Flags are experimental, so the option can move or disappear in future versions. If you can't find it, it may already be on by default in your version.
+
+### Ghost Downloader: a free download manager
+
+For big downloads, a dedicated download manager does the same thing, but better. [Ghost Downloader](https://github.com/XiaoYouChR/Ghost-Downloader-3) is a free, open-source option on GitHub:
+
+- It splits files into many chunks and downloads them in parallel, like IDM.
+- It supports HTTP, torrents and magnet links, FTP, and video streams (M3U8, DASH).
+- It can pause and resume downloads, so a dropped connection doesn't mean starting over.
+- It runs on Windows, macOS, Linux, and Android.
+
+To install it, open the repo, go to **Releases** on the right side, and download the Windows installer from the latest version.
+
+Neither of these can push you past your plan. They just make sure a slow server isn't the bottleneck.
+
+## Other Windows tweaks that help
+
+- **Find bandwidth hogs.** Open Task Manager (**Ctrl + Shift + Esc**), go to **Processes**, and sort by the **Network** column. Cloud sync apps, game launchers, and updaters often eat bandwidth in the background.
+- **Stop Windows Update from uploading to other PCs.** Go to **Settings** → **Windows Update** → **Advanced options** → **Delivery Optimization** and turn off **Allow downloads from other devices**.
+- **Switch to a faster DNS.** Go to **Settings** → **Network & internet** → your Wi-Fi or Ethernet → **Hardware properties** → **DNS server assignment** → **Edit**. Choose **Manual** and set IPv4 to `1.1.1.1` and `1.0.0.1` (Cloudflare), or `8.8.8.8` and `8.8.4.4` (Google). This makes websites start loading faster, but it doesn't change your download speed.
+- **Update your network drivers.** Get the latest Wi-Fi and LAN drivers from your laptop or motherboard maker's support page. They often fix speed and disconnect bugs that Windows Update's generic drivers don't.
+
+## How not to: tweaks that make things worse
+
+These show up in videos and forum posts all the time. Skip them.
+
+- **Forcing Speed & Duplex.** Setting your Ethernet adapter to a fixed value like "1.0 Gbps Full Duplex" doesn't unlock anything, because Auto already gives you the maximum. Worse, if your router stays on auto, the two sides can end up in a duplex mismatch, where one side talks over the other. That means packet loss, lag spikes, and sometimes no connection at all. Pick 100 Mbps by mistake and you have capped your port at a tenth of its speed. On Wi-Fi, this setting does nothing.
+- **"Remove the 20% reserved bandwidth" in Group Policy.** Windows does not reserve 20% of your bandwidth. That limit only applies when an app specifically asks for QoS, and almost none do. Changing it does nothing.
+- **Disabling TCP auto-tuning** (`netsh int tcp set global autotuninglevel=disabled`). This caps how much data Windows can receive at once, which can make fast connections noticeably slower. Leave it on Normal.
+- **"Internet booster" apps and registry packs.** At best they change the same harmless settings covered here. At worst they are adware. Skip them.
+- **Setting Wi-Fi Bandwidth to "20MHz Only"** because it sounds more stable. It cuts your 5 GHz speed dramatically.
+
+## Changed something and it got worse? Undo it
+
+None of these adapter changes are permanent. To reset everything at once:
+
+1. Open **Device Manager** and expand **Network adapters**.
+2. Right-click the adapter you changed and choose **Uninstall device**.
+3. Leave **Attempt to remove the driver for this device** unchecked.
+4. Restart your PC.
+
+Windows reinstalls the adapter on boot with every setting back to its default. To undo a single setting, just open the **Advanced** tab and pick the original value again.
+
+To undo the Chrome flag, go back to `chrome://flags` and click **Reset all**.
+
+## TL;DR
+
+<TLDR>
+  <Takeaway>Run a speed test and compare it with your plan.</Takeaway>
+  <Takeaway>Use a cable, or at least connect to 5 GHz.</Takeaway>
+  <Takeaway>Find your real Wi-Fi and LAN adapters with `ipconfig /all`. Ignore WAN Miniport, TAP, and Bluetooth entries.</Takeaway>
+  <Takeaway>Wi-Fi: Prefer 5GHz, disable Leisure Power Save, set Roaming Aggressiveness to Lowest or Disable.</Takeaway>
+  <Takeaway>Ethernet: leave Speed & Duplex on Auto, and disable Energy-Efficient Ethernet and Green Ethernet.</Takeaway>
+  <Takeaway>Turn on Chrome's parallel downloading flag, or use Ghost Downloader for big files.</Takeaway>
+  <Takeaway>Turn off Delivery Optimization and check Task Manager for bandwidth hogs.</Takeaway>
+  <Takeaway>Skip forced duplex, the "20% reserved bandwidth" myth, and booster apps.</Takeaway>
+</TLDR>
+
+## Sources
+
+- [Ghost Downloader 3 on GitHub](https://github.com/XiaoYouChR/Ghost-Downloader-3)
+- [How to enable parallel downloading in Chrome (Winaero)](https://winaero.com/chrome-parallel-download)
+- [Enable parallel downloading on Chrome (Chrome Story)](https://chromestory.com/2023/09/enable-parallel-downloading/)
