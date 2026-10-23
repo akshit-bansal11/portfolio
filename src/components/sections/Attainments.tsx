@@ -13,7 +13,10 @@ import CertificateCard from "@/components/attainments/CertificateCard";
 import ScrollSection from "@/components/layout/ScrollSection";
 import SectionTitle from "@/components/layout/SectionTitle";
 import { googleBadges } from "@/data/badgesData";
-import { hackerRankCertificationsData, linkedInCertificationsData } from "@/data/certificationsData";
+import {
+  hackerRankCertificationsData,
+  linkedInCertificationsData,
+} from "@/data/certificationsData";
 
 const CERTIFICATIONS = [...linkedInCertificationsData, ...hackerRankCertificationsData];
 
