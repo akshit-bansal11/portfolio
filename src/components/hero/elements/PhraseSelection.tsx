@@ -55,8 +55,8 @@ export default function PhraseSelection({ children, active }: PhraseSelectionPro
     [right, bottom],
     [left, bottom],
   ] as const;
-  // Parked just outside the bottom-right handle, below the text line.
-  const rest = { x: right + 8, y: bottom + 8 };
+  // Parked at the bottom-right handle, so the tip and its name tag stay inside the line box.
+  const rest = { x: right - 6, y: bottom - 10 };
 
   return (
     <span ref={ref} className="relative inline-block">

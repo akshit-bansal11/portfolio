@@ -1,21 +1,22 @@
 /*
  * JumpToPanel.tsx
  * Hero stage-4 "jump to" index, written on the board: a handwritten label over
- * a list of typed section names. The active entry (last hovered or focused) is
- * ink-coloured and gets a hand-drawn underline that draws in; the rest stay
- * muted. A handwritten gloss sits right under the active entry.
+ * a compact list of typed section names. Every entry has a short hand-drawn underline;
+ * only the current one (last hovered or focused) turns ink-coloured, stretches its
+ * underline past the word and writes its description in to the right. The description
+ * is positioned out of flow, so no other entry ever moves.
  * Clicking an entry smooth-scrolls the page to that section.
  */
 
 "use client";
 
+import { motion, useReducedMotion } from "framer-motion";
 import { useState } from "react";
-import { DrawnPath } from "@/components/blog/Annotation";
 import { JUMP_TO_CARDS } from "@/data/jumpToCards";
 import { sketchLine } from "@/lib/blog/sketch";
 import { cn } from "@/lib/utils";
 
-// Two loose strokes under the active entry, stretched to the entry's width.
+// Two loose strokes, stretched to the underline's width.
 const UNDERLINE = `${sketchLine(2, 3, 98, 4, { seed: 5 })} ${sketchLine(10, 6.5, 80, 6, {
   seed: 12,
   bow: 1,
@@ -29,14 +30,15 @@ function scrollToSection(id: string) {
 // Renders the index.
 export default function JumpToPanel() {
   const [active, setActive] = useState(0);
+  const reduceMotion = useReducedMotion();
 
   return (
     <div
       className="pointer-events-auto flex flex-col gap-3"
-      style={{ width: "clamp(200px, 22vw, 280px)" }}
+      style={{ width: "clamp(220px, 24vw, 320px)" }}
     >
       <p className="-rotate-2 font-hand text-4xl font-bold leading-none text-hero-muted">jump to</p>
-      <ul className="flex flex-col items-start gap-8">
+      <ul className="flex flex-col items-start gap-2.5">
         {JUMP_TO_CARDS.map(({ label, sectionId, description }, index) => {
           const isActive = index === active;
           return (
@@ -52,21 +54,34 @@ export default function JumpToPanel() {
                 )}
               >
                 {label}
-                {isActive && (
-                  <svg
-                    aria-hidden
-                    viewBox="0 0 100 8"
-                    preserveAspectRatio="none"
-                    className="pointer-events-none absolute inset-x-0 -bottom-1 h-2 w-full overflow-visible text-hero-pen"
-                  >
-                    <DrawnPath d={UNDERLINE} duration={0.45} />
-                  </svg>
-                )}
+                <svg
+                  aria-hidden
+                  viewBox="0 0 100 8"
+                  preserveAspectRatio="none"
+                  className={cn(
+                    "pointer-events-none absolute -bottom-0.5 left-0 h-2 overflow-visible transition-[width] duration-300 motion-reduce:transition-none",
+                    isActive ? "w-[calc(100%+1.5rem)] text-hero-pen" : "w-7 text-hero-muted",
+                  )}
+                >
+                  <path
+                    d={UNDERLINE}
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    vectorEffect="non-scaling-stroke"
+                  />
+                </svg>
               </button>
               {isActive && (
-                <span className="pointer-events-none absolute left-1 top-full mt-1.5 -rotate-1 whitespace-nowrap font-hand text-2xl font-semibold leading-none text-hero-pen">
+                <motion.span
+                  className="pointer-events-none absolute left-full top-1/2 ml-6 -translate-y-1/2 whitespace-nowrap font-hand text-xl font-semibold leading-none text-hero-pen"
+                  initial={reduceMotion ? false : { opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.25, ease: "easeOut" }}
+                >
                   {description}
-                </span>
+                </motion.span>
               )}
             </li>
           );

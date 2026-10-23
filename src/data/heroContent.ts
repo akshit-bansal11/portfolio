@@ -55,9 +55,8 @@ export const PROFILE_NAME = "Akshit Bansal";
 // Sub-headline role string under the name.
 export const PROFILE_ROLE = "Full-Stack Software Engineer · Punjab, India";
 
-// Handwritten notes drawn beside the profile photo and the social icons.
+// Handwritten note drawn beside the profile photo.
 export const PROFILE_NOTE = "hi, that's me!";
-export const SOCIALS_NOTE = "say hello";
 
 // Stage 4: typed heading plus four beliefs. Each note shows a typed word with a handwritten
 // gloss on the front and three short points on the back (drafts, to be edited).

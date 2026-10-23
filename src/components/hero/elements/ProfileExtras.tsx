@@ -1,60 +1,25 @@
 /*
  * ProfileExtras.tsx
  * Handwritten context beside (desktop) or under (mobile) the profile photo:
- * a "currently:" list with small drawn bullets, and "worked across" with a row
- * of hand-drawn stamp labels, each tilted a little differently.
+ * a "currently:" list with small drawn bullets (an item may carry a link), and
+ * "worked across" with a row of CSS hand-drawn stamp labels, each tilted a little
+ * differently and drawn in its own doodle colour.
  */
 
-"use client";
-
 import { CURRENTLY, WORKED_ACROSS } from "@/data/heroContent";
-import { useElementSize } from "@/hooks/use-element-size";
-import { sketchEllipse, sketchRect } from "@/lib/blog/sketch";
+import { sketchEllipse } from "@/lib/blog/sketch";
 import { cn } from "@/lib/utils";
 
 const BULLET = sketchEllipse(6, 6, 3.5, 3.5, { seed: 81, jitter: 0.1 });
 
-// Tilt and outline colour per stamp (full class names so Tailwind can see them).
+// Tilt (within -2..2deg) and outline colour per stamp (full class names so Tailwind can see them).
 const STAMP_STYLES = [
   "-rotate-2 text-doodle-1",
   "rotate-1 text-doodle-2",
   "-rotate-1 text-doodle-3",
   "rotate-2 text-doodle-1",
-  "-rotate-3 text-doodle-2",
+  "rotate-0 text-doodle-2",
 ] as const;
-
-// One stamp label: uppercase text inside a sketchy outline sized to the text.
-function Stamp({ label, index }: { label: string; index: number }) {
-  const [ref, { width, height }] = useElementSize<HTMLLIElement>();
-
-  return (
-    <li
-      ref={ref}
-      className={cn(
-        "relative px-3 py-1.5 font-grotesk text-[11px] font-medium uppercase leading-none tracking-[0.12em] text-hero-ink",
-        STAMP_STYLES[index % STAMP_STYLES.length],
-      )}
-    >
-      {width > 0 && (
-        <svg
-          aria-hidden
-          width={width}
-          height={height}
-          className="pointer-events-none absolute left-0 top-0 overflow-visible"
-        >
-          <path
-            d={sketchRect(1, 1, width - 2, height - 2, { seed: 90 + index, bow: 1 })}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            strokeLinecap="round"
-          />
-        </svg>
-      )}
-      <span className="text-hero-ink">{label}</span>
-    </li>
-  );
-}
 
 interface ProfileExtrasProps {
   className?: string;
@@ -63,15 +28,15 @@ interface ProfileExtrasProps {
 // Renders the two handwritten blocks.
 export default function ProfileExtras({ className }: ProfileExtrasProps) {
   return (
-    <div className={cn("flex flex-col gap-6 text-left", className)}>
+    <div className={cn("flex flex-col gap-5 text-left", className)}>
       <section>
         <h3 className="-rotate-2 font-hand text-3xl font-bold leading-none text-hero-pen">
           currently:
         </h3>
         <ul className="mt-2 flex flex-col gap-1">
-          {CURRENTLY.map((item) => (
+          {CURRENTLY.map(({ text, link }) => (
             <li
-              key={item}
+              key={text + (link?.label ?? "")}
               className="flex items-start gap-2 font-hand text-2xl font-semibold leading-tight text-hero-ink"
             >
               <svg
@@ -87,7 +52,19 @@ export default function ProfileExtras({ className }: ProfileExtrasProps) {
                   strokeLinecap="round"
                 />
               </svg>
-              {item}
+              <span>
+                {text}
+                {link && (
+                  <a
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline decoration-transparent decoration-2 underline-offset-4 outline-none transition-colors hover:decoration-hero-pen focus-visible:decoration-hero-pen"
+                  >
+                    {link.label}
+                  </a>
+                )}
+              </span>
             </li>
           ))}
         </ul>
@@ -96,9 +73,17 @@ export default function ProfileExtras({ className }: ProfileExtrasProps) {
         <h3 className="font-hand text-2xl font-semibold leading-none text-hero-muted">
           worked across
         </h3>
-        <ul className="mt-3 flex flex-wrap gap-x-3 gap-y-3">
+        <ul className="mt-3 flex flex-wrap gap-2">
           {WORKED_ACROSS.map((label, index) => (
-            <Stamp key={label} label={label} index={index} />
+            <li
+              key={label}
+              className={cn(
+                "hand-border border-[1.5px] border-current px-2.5 py-0.5 font-grotesk text-[0.72rem] font-medium uppercase leading-snug tracking-[0.06em]",
+                STAMP_STYLES[index % STAMP_STYLES.length],
+              )}
+            >
+              <span className="text-hero-ink">{label}</span>
+            </li>
           ))}
         </ul>
       </section>

@@ -180,6 +180,8 @@
   --note-4: #bbf7d0;
   --note-ink: #1c1917;
   --note-shadow: 0 10px 18px -12px rgb(0 0 0 / 45%);
+  --polaroid-tint-1: #c7d2fe;
+  --polaroid-tint-2: #fecdd3;
   --hero-accent-ink-mix: 0%;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
@@ -385,6 +387,10 @@ html[data-theme="light"] {
     transition:
       border-radius 0.3s ease,
       transform 0.2s ease;
+  }
+
+  .hand-border-alt {
+    border-radius: 225px 20px 255px 15px / 18px 255px 15px 225px;
   }
 
   .hand-border-morph:hover,
