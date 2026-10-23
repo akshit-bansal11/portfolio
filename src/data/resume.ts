@@ -358,8 +358,7 @@ export const RESUME_FULL: ResumeDocument = {
         },
         {
           label: "Auth & Security",
-          value:
-            "Better Auth, Auth0, JWT, OAuth, 2FA, rate limiting, reCAPTCHA, AES-GCM, Argon2",
+          value: "Better Auth, Auth0, JWT, OAuth, 2FA, rate limiting, reCAPTCHA, AES-GCM, Argon2",
         },
         { label: "Testing", value: "Vitest, Playwright, React Testing Library" },
         { label: "Mobile & Desktop", value: "Android (Kotlin), Tauri (Rust), Slint, .NET (C#)" },

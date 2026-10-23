@@ -202,9 +202,7 @@ export default function ScrollHero() {
               <div className="flex flex-col items-center gap-1 text-center">
                 <h1 className="font-clash font-bold tracking-tight whitespace-nowrap text-4xl sm:text-5xl leading-[0.95]">
                   <span className="text-hero-ink">{FIRST_NAME}</span>{" "}
-                  <span className={NAME_ACCENT_CLASS}>
-                    {LAST_NAME}
-                  </span>
+                  <span className={NAME_ACCENT_CLASS}>{LAST_NAME}</span>
                 </h1>
                 <p className="text-sm sm:text-base text-hero-muted font-light whitespace-nowrap">
                   {PROFILE_ROLE}

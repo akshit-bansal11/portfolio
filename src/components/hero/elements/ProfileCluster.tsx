@@ -169,9 +169,7 @@ export default function ProfileCluster({ progress }: ProfileClusterProps) {
         <div className="flex flex-col items-center gap-1 text-center">
           <h1 className="font-clash font-bold tracking-tight whitespace-nowrap text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl leading-[0.95]">
             <span className="text-hero-ink">{FIRST_NAME}</span>{" "}
-            <span className={NAME_ACCENT_CLASS}>
-              {LAST_NAME}
-            </span>
+            <span className={NAME_ACCENT_CLASS}>{LAST_NAME}</span>
           </h1>
           <h2 className="text-sm sm:text-base md:text-xl lg:text-2xl text-hero-muted font-light whitespace-nowrap">
             {PROFILE_ROLE}

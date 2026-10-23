@@ -61,7 +61,11 @@ export default function ResumeViewer({ onePage, full }: ResumeViewerProps) {
   return (
     <>
       <div className="resume-toolbar mx-auto mb-5 flex max-w-[210mm] flex-wrap items-center justify-between gap-x-4 gap-y-3 px-4 sm:px-0 print:hidden">
-        <div role="tablist" aria-label="Resume version" className="flex gap-1 rounded-full border border-hero-ink/15 bg-hero-surface/80 p-1">
+        <div
+          role="tablist"
+          aria-label="Resume version"
+          className="flex gap-1 rounded-full border border-hero-ink/15 bg-hero-surface/80 p-1"
+        >
           {TABS.map(({ id, label }) => (
             <button
               key={id}
@@ -75,9 +79,7 @@ export default function ResumeViewer({ onePage, full }: ResumeViewerProps) {
               onKeyDown={onKeyDown}
               className={cn(
                 "cursor-pointer rounded-full px-4 py-1.5 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hero-pen",
-                tab === id
-                  ? "bg-hero-ink text-hero-bg"
-                  : "text-hero-muted hover:text-hero-ink",
+                tab === id ? "bg-hero-ink text-hero-bg" : "text-hero-muted hover:text-hero-ink",
               )}
             >
               {label}
@@ -85,7 +87,10 @@ export default function ResumeViewer({ onePage, full }: ResumeViewerProps) {
           ))}
         </div>
         <div className="flex items-center gap-2">
-          <span aria-hidden className="flex -rotate-3 items-center gap-1 font-hand text-xl leading-none text-hero-pen">
+          <span
+            aria-hidden
+            className="flex -rotate-3 items-center gap-1 font-hand text-xl leading-none text-hero-pen"
+          >
             pick one, print it
             <svg viewBox="0 0 64 40" className="h-7 w-12 overflow-visible">
               <DrawnPath d={NOTE_ARROW.shaft} delay={0.3} duration={0.6} />
@@ -101,10 +106,20 @@ export default function ResumeViewer({ onePage, full }: ResumeViewerProps) {
           </button>
         </div>
       </div>
-      <div role="tabpanel" id="resume-panel-one" aria-labelledby="resume-tab-one" hidden={tab !== "one"}>
+      <div
+        role="tabpanel"
+        id="resume-panel-one"
+        aria-labelledby="resume-tab-one"
+        hidden={tab !== "one"}
+      >
         {onePage}
       </div>
-      <div role="tabpanel" id="resume-panel-full" aria-labelledby="resume-tab-full" hidden={tab !== "full"}>
+      <div
+        role="tabpanel"
+        id="resume-panel-full"
+        aria-labelledby="resume-tab-full"
+        hidden={tab !== "full"}
+      >
         {full}
       </div>
     </>

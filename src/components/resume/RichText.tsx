@@ -14,10 +14,7 @@ const LINK = /^\[([^\]]+)\]\(([^)]+)\)$/;
 export function RichLink({ href, children }: { href: string; children: ReactNode }) {
   const isExternal = href.startsWith("http");
   return (
-    <a
-      href={href}
-      {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-    >
+    <a href={href} {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
       {children}
     </a>
   );
