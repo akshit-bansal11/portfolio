@@ -19,16 +19,15 @@ import { fetchGitHubStats, type GitHubStats } from "@/lib/api/github";
 
 const ACHIEVEMENTS_URL = "https://github.com/akshit-bansal11?tab=achievements";
 
-// Professional years, bumped manually as time passes.
-const YEARS_PROFESSIONAL = 1.4; // Jan 2026 to present
-
 interface ByTheNumbersProps {
   /** Years since the owner started building (March 2021), computed on the server. */
   yearsBuilding: number;
+  /** Years since the earliest Work or Internship start, computed on the server. */
+  yearsProfessional: number;
 }
 
 // Top-level section component.
-export default function ByTheNumbers({ yearsBuilding }: ByTheNumbersProps) {
+export default function ByTheNumbers({ yearsBuilding, yearsProfessional }: ByTheNumbersProps) {
   const reduceMotion = useReducedMotion();
   const [stats, setStats] = useState<GitHubStats | null>(null);
 
@@ -58,7 +57,7 @@ export default function ByTheNumbers({ yearsBuilding }: ByTheNumbersProps) {
           <Stat index={1} value={repos} suffix="+" label="public repos" doodle="circle" />
           <Stat
             index={2}
-            value={YEARS_PROFESSIONAL}
+            value={yearsProfessional}
             suffix=" y"
             label="professional experience"
             doodle="underline"

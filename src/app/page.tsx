@@ -17,14 +17,35 @@ import Education from "@/components/sections/Education";
 import Experience from "@/components/sections/Experience";
 import Projects from "@/components/sections/Projects";
 import Skills from "@/components/sections/Skills";
+import { experience } from "@/data/experienceData";
 
 // Started building in March 2021.
 const BUILDING_SINCE = Date.UTC(2021, 2, 1);
 const MS_PER_YEAR = 365.25 * 24 * 60 * 60 * 1000;
+const MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
 
-// The page is static, so this runs at build time and is fresh on every deploy
-// (one decimal, rounded down).
-const YEARS_BUILDING = Math.floor(((Date.now() - BUILDING_SINCE) / MS_PER_YEAR) * 10) / 10;
+// Start of an experience date range like "Jan 2026 - Present", or null if unreadable.
+function rangeStart(range: string): number | null {
+  const [month = "", year = ""] = range.split("-")[0].trim().split(/\s+/);
+  const monthIndex = MONTHS.indexOf(month.slice(0, 3).toLowerCase());
+  const yearNumber = Number(year);
+  return monthIndex < 0 || !Number.isInteger(yearNumber) ? null : Date.UTC(yearNumber, monthIndex, 1);
+}
+
+// Years since a timestamp, to one decimal, rounded down.
+const yearsSince = (since: number) => Math.floor(((Date.now() - since) / MS_PER_YEAR) * 10) / 10;
+
+// Professional experience counts from the earliest Work or Internship start.
+const PROFESSIONAL_SINCE = Math.min(
+  ...experience
+    .filter((category) => category.title === "Work" || category.title === "Internship")
+    .flatMap((category) => category.items.map((item) => rangeStart(item.date)))
+    .filter((start): start is number => start !== null),
+);
+
+// The page is static, so these run at build time and are fresh on every deploy.
+const YEARS_BUILDING = yearsSince(BUILDING_SINCE);
+const YEARS_PROFESSIONAL = Number.isFinite(PROFESSIONAL_SINCE) ? yearsSince(PROFESSIONAL_SINCE) : 0;
 
 // Top-level home page component.
 function Home() {
@@ -58,7 +79,7 @@ function Home() {
           <Education />
         </ScrollReveal>
         <ScrollReveal className="w-full" delay={500}>
-          <ByTheNumbers yearsBuilding={YEARS_BUILDING} />
+          <ByTheNumbers yearsBuilding={YEARS_BUILDING} yearsProfessional={YEARS_PROFESSIONAL} />
         </ScrollReveal>
         {/* <ScrollReveal className="w-full" delay={550}> */}
         {/* <Testimonials /> */}
