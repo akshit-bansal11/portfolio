@@ -5,6 +5,7 @@
  * project's tech stack.
  */
 
+import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 // Tilt (within -2..2deg) and outline colour per stamp (full class names so Tailwind can see them).
@@ -19,17 +20,20 @@ const STAMP_STYLES = [
 interface StampProps {
   label: string;
   index: number;
+  /** Optional icon drawn before the label, in the stamp colour. */
+  icon?: ReactNode;
 }
 
 // Renders one stamp; its position in the row picks the tilt and colour.
-export default function Stamp({ label, index }: StampProps) {
+export default function Stamp({ label, index, icon }: StampProps) {
   return (
     <li
       className={cn(
-        "hand-border border-[1.5px] border-current px-2.5 py-0.5 font-grotesk text-[0.72rem] font-medium uppercase leading-snug tracking-[0.06em]",
+        "hand-border inline-flex items-center gap-1.5 whitespace-nowrap border-[1.5px] border-current px-2.5 py-0.5 font-grotesk text-[0.72rem] font-medium uppercase leading-snug tracking-[0.06em]",
         STAMP_STYLES[index % STAMP_STYLES.length],
       )}
     >
+      {icon}
       <span className="text-hero-ink">{label}</span>
     </li>
   );

@@ -17,6 +17,7 @@ import { type FocusEvent, type PointerEvent, useRef, useState } from "react";
 import { DrawnPath } from "@/components/blog/Annotation";
 import Stamp from "@/components/hero/elements/Stamp";
 import Tape from "@/components/hero/elements/Tape";
+import TechIcon from "@/components/icons/TechIcon";
 import { sketchArrow } from "@/lib/blog/sketch";
 import { cn } from "@/lib/utils";
 import type { ProjectItem } from "@/types/project";
@@ -103,7 +104,10 @@ export default function ProjectCard({ project, index, featured = false }: Projec
     >
       {/* Screenshot print, taped to the board. */}
       <div className="relative">
-        <div className="bg-paper-card p-2 sm:p-3" style={{ boxShadow: "var(--note-shadow)" }}>
+        <div
+          className="bg-paper-card p-[0.39rem] sm:p-[0.585rem]"
+          style={{ boxShadow: "var(--note-shadow)" }}
+        >
           <div className="relative aspect-video overflow-hidden bg-hero-surface">
             {imgUrl && (
               <Image
@@ -177,7 +181,12 @@ export default function ProjectCard({ project, index, featured = false }: Projec
         </p>
         <ul className="flex flex-wrap gap-2">
           {techStack.map((tech, i) => (
-            <Stamp key={tech} label={tech} index={i} />
+            <Stamp
+              key={tech}
+              label={tech}
+              index={i}
+              icon={<TechIcon name={tech} className="h-3.5 w-3.5" />}
+            />
           ))}
         </ul>
         {notes && (
