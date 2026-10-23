@@ -1,7 +1,8 @@
 /*
  * ExperienceCard.tsx
- * One experience entry as an index card taped to the board: cream ruled paper with a red
- * margin line and dark ink in both themes, a slight tilt, and a soft paper shadow. Shows the
+ * One experience entry as an index card taped to the board: a ruled page
+ * (dark or light with the theme) with a red
+ * margin line, a slight tilt, and a soft paper shadow. Shows the
  * logo (or the company's initials), company, role, location, a summary, the first two points
  * (a hand-drawn button reveals the rest) and the skills as icon stamps. Straightens and
  * lifts on hover and focus.
