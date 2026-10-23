@@ -48,15 +48,15 @@ export default function AchievementSticker({ achievement, index }: AchievementSt
           aria-hidden
           viewBox="0 0 100 100"
           className={cn(
-            "pointer-events-none absolute -inset-1 h-[calc(100%+0.5rem)] w-[calc(100%+0.5rem)] overflow-visible",
+            "pointer-events-none absolute -inset-2 h-[calc(100%+1rem)] w-[calc(100%+1rem)] overflow-visible",
             RING_COLOURS[index % RING_COLOURS.length],
           )}
         >
           <path
-            d={sketchEllipse(50, 50, 48, 48, { seed: 41 + index, jitter: 0.8 })}
+            d={sketchEllipse(50, 50, 48, 48, { seed: 41 + index, jitter: 0.03 })}
             fill="none"
             stroke="currentColor"
-            strokeWidth={3}
+            strokeWidth={1.75}
             strokeLinecap="round"
           />
         </svg>

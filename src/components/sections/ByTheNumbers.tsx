@@ -37,7 +37,7 @@ export default function ByTheNumbers() {
   const repos = stats && stats.publicRepos > 0 ? stats.publicRepos : null;
 
   return (
-    <ScrollSection id="by-the-numbers" className="gap-10 md:gap-12 lg:gap-14">
+    <ScrollSection id="by-the-numbers" className="gap-10 pb-12 md:gap-12 md:pb-16 lg:gap-14">
       <SectionTitle title="By the numbers" aside="the receipts" />
 
       <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-stretch lg:gap-8">

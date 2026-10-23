@@ -50,9 +50,9 @@ export default function ContributionCard({ className }: ContributionCardProps) {
       transition={{ duration: 0.35 }}
       className={className}
     >
-      <div className="relative h-full -rotate-[0.6deg] text-page-ink transition-[rotate,translate] duration-300 hover:-translate-y-1 hover:rotate-0 focus-within:-translate-y-1 focus-within:rotate-0 motion-reduce:transition-none">
+      <div className="relative -rotate-[0.6deg] text-page-ink transition-[rotate,translate] duration-300 hover:-translate-y-1 hover:rotate-0 focus-within:-translate-y-1 focus-within:rotate-0 motion-reduce:transition-none">
         <div
-          className="flex h-full flex-col gap-4 border border-page-border bg-page-bg p-5 pt-7"
+          className="flex flex-col gap-4 border border-page-border bg-page-bg p-5 pt-7"
           style={{ boxShadow: "var(--note-shadow)" }}
         >
           <div className="flex flex-wrap items-baseline justify-between gap-x-4">
@@ -65,7 +65,7 @@ export default function ContributionCard({ className }: ContributionCardProps) {
               </p>
             )}
           </div>
-          <div className="flex flex-1 items-center overflow-x-auto pb-2">
+          <div className="overflow-x-auto pb-1">
             {contributions === null ? (
               <p className="font-hand text-2xl font-bold text-page-muted">
                 loading the calendar...

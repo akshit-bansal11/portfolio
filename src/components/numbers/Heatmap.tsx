@@ -70,12 +70,15 @@ export default function Heatmap({ data, year, total }: HeatmapProps) {
   }, [weeks]);
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex w-full flex-col gap-3">
       <div
         role="img"
         aria-label={`Contribution calendar for ${year}: ${total.toLocaleString("en-US")} contributions`}
-        className="grid w-max gap-px"
-        style={{ gridTemplateColumns: `repeat(${weeks.length}, 0.75rem)` }}
+        className="grid w-full gap-[3px]"
+        style={{
+          gridTemplateColumns: `repeat(${weeks.length}, minmax(0, 1fr))`,
+          minWidth: `${weeks.length * 13}px`,
+        }}
       >
         {months.map((m) => (
           <span
@@ -91,7 +94,7 @@ export default function Heatmap({ data, year, total }: HeatmapProps) {
             <div
               key={day.date}
               title={`${data[day.date] ?? 0} on ${day.date}`}
-              className={CELL}
+              className="aspect-square rounded-[3px]"
               style={{
                 gridRow: day.row + 2,
                 gridColumn: col + 1,
