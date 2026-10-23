@@ -38,6 +38,16 @@ const NODE = sketchEllipse(10, 10, 7, 7, { seed: 41, jitter: 0.5 });
 // Distance between wiggles of the timeline.
 const WAVE_STEP = 48;
 
+// Every entry in display order, with its running index and the label of the group it starts.
+const ENTRIES = experience.flatMap((category) =>
+  category.items.map((item, i) => ({
+    category,
+    item,
+    groupLabel:
+      i === 0 ? (CATEGORY_LABELS[category.title] ?? category.title.toLowerCase()) : undefined,
+  })),
+);
+
 // A vertical wavy line of the given height, centred on x = 10.
 function wavePath(height: number): string {
   let d = "M10 0";
@@ -124,8 +134,6 @@ export default function Experience() {
     offset: ["start 80%", "end 60%"],
   });
 
-  let index = 0;
-
   return (
     <ScrollSection id="experience" className="gap-10 md:gap-12 lg:gap-14">
       <div className="flex flex-wrap items-end gap-x-4 gap-y-1">
@@ -169,22 +177,14 @@ export default function Experience() {
           </svg>
         )}
         <ol className="flex flex-col gap-14">
-          {experience.flatMap((category) =>
-            category.items.map((item, i) => {
-              const entryIndex = index;
-              index += 1;
-              return (
-                <Entry
-                  key={`${category.title}-${item.company}-${item.date}`}
-                  item={item}
-                  index={entryIndex}
-                  groupLabel={
-                    i === 0 ? (CATEGORY_LABELS[category.title] ?? category.title.toLowerCase()) : undefined
-                  }
-                />
-              );
-            }),
-          )}
+          {ENTRIES.map(({ category, item, groupLabel }, index) => (
+            <Entry
+              key={`${category.title}-${item.company}-${item.date}`}
+              item={item}
+              index={index}
+              groupLabel={groupLabel}
+            />
+          ))}
         </ol>
       </div>
     </ScrollSection>
