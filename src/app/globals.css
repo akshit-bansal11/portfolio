@@ -383,7 +383,7 @@ html[data-theme="light"] {
  */
 @layer components {
   .hand-border {
-    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+    border-radius: 255px 15px 225px / 15px 225px 15px 255px;
     transition:
       border-radius 0.3s ease,
       transform 0.2s ease;
@@ -395,6 +395,6 @@ html[data-theme="light"] {
 
   .hand-border-morph:hover,
   .hand-border-morph:focus-visible {
-    border-radius: 15px 225px 15px 255px / 255px 15px 225px 15px;
+    border-radius: 15px 225px 15px 255px / 255px 15px 225px;
   }
 }
