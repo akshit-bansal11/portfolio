@@ -1,0 +1,55 @@
+name: quality
+
+on:
+  push:
+    branches: [redesign/v4]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    # Read-only on purpose: this job runs dependency code (npm ci, build). Formatter
+    # fixes leave as a patch artifact that a developer applies with `git apply`.
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      # A lockfile out of sync with package.json fails here on purpose; regenerate
+      # it through the reviewed "lockfile" workflow, never silently in CI.
+      - name: Install
+        run: npm ci
+      - name: Gate (format, imports, eslint, stylelint, tsc)
+        run: npm run check
+      - name: Capture formatter changes as a patch
+        id: format
+        if: ${{ !cancelled() }}
+        shell: bash
+        run: |
+          git diff -- . ':(exclude)package-lock.json' > format.patch
+          if [ -s format.patch ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "::error::Formatter changed files. Download the format-patch artifact and run: git apply format.patch"
+          fi
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() && steps.format.outputs.changed == 'true' }}
+        with:
+          name: format-patch
+          path: format.patch
+      - name: Build
+        run: npm run build
+      - name: Fail if the formatter changed files
+        if: ${{ !cancelled() }}
+        run: test ! -s format.patch
