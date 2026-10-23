@@ -28,7 +28,6 @@ const YEARS_BUILDING = Math.floor(((Date.now() - BUILDING_SINCE) / MS_PER_YEAR) 
 
 // Top-level home page component.
 function Home() {
-
   return (
     <div className="flex flex-col items-center w-full">
       {/* Single responsive hero — mobile static stack + desktop scroll canvas. */}
