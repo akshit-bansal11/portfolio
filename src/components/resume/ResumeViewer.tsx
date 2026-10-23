@@ -7,7 +7,7 @@
 
 "use client";
 
-import { type KeyboardEvent, type ReactNode, useEffect, useState } from "react";
+import { type KeyboardEvent, type ReactNode, useSyncExternalStore } from "react";
 import { DrawnPath } from "@/components/blog/Annotation";
 import { sketchArrow } from "@/lib/blog/sketch";
 import { cn } from "@/lib/utils";
@@ -27,17 +27,21 @@ interface ResumeViewerProps {
   full: ReactNode;
 }
 
+// The URL hash is the source of truth: /resume#full opens the full CV.
+const subscribe = (onChange: () => void) => {
+  window.addEventListener("hashchange", onChange);
+  return () => window.removeEventListener("hashchange", onChange);
+};
+const readTab = (): Tab => (window.location.hash === "#full" ? "full" : "one");
+const serverTab = (): Tab => "one";
+
 export default function ResumeViewer({ onePage, full }: ResumeViewerProps) {
-  const [tab, setTab] = useState<Tab>("one");
+  const tab = useSyncExternalStore(subscribe, readTab, serverTab);
 
-  // Deep link: /resume#full opens the full CV.
-  useEffect(() => {
-    if (window.location.hash === "#full") setTab("full");
-  }, []);
-
+  // replaceState keeps the switch out of history; it fires no hashchange, so announce it.
   const select = (next: Tab) => {
-    setTab(next);
     window.history.replaceState(null, "", next === "full" ? "#full" : window.location.pathname);
+    window.dispatchEvent(new HashChangeEvent("hashchange"));
   };
 
   // Arrow keys / Home / End move between tabs and focus the new one.
