@@ -5,6 +5,10 @@ import { ASSETS_HOST } from "./src/config/assets";
 const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
+  // The blog index now lives on the home page; every post keeps /blog/<slug>.
+  async redirects() {
+    return [{ source: "/blog", destination: "/#blog", permanent: true }];
+  },
   images: {
     remotePatterns: [
       {

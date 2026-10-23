@@ -11,6 +11,7 @@
 import ScrollReveal from "@/components/effects/ScrollReveal";
 import { HeroToContentSpacer, ScrollHero } from "@/components/hero";
 import Attainments from "@/components/sections/Attainments";
+import Blog from "@/components/sections/Blog";
 import ByTheNumbers from "@/components/sections/ByTheNumbers";
 import Education from "@/components/sections/Education";
 import Experience from "@/components/sections/Experience";
@@ -37,18 +38,21 @@ function Home() {
           <Experience />
         </ScrollReveal>
         <ScrollReveal className="w-full" delay={300}>
-          <Skills />
+          <Blog />
         </ScrollReveal>
         <ScrollReveal className="w-full" delay={350}>
-          <Attainments />
+          <Skills />
         </ScrollReveal>
         <ScrollReveal className="w-full" delay={400}>
-          <Education />
+          <Attainments />
         </ScrollReveal>
         <ScrollReveal className="w-full" delay={450}>
+          <Education />
+        </ScrollReveal>
+        <ScrollReveal className="w-full" delay={500}>
           <ByTheNumbers />
         </ScrollReveal>
-        {/* <ScrollReveal className="w-full" delay={500}> */}
+        {/* <ScrollReveal className="w-full" delay={550}> */}
         {/* <Testimonials /> */}
         {/* </ScrollReveal> */}
       </div>

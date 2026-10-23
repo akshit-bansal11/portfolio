@@ -22,7 +22,7 @@ export default function PostHeader({ post, className }: PostHeaderProps) {
   return (
     <header className={cn("mb-10", className)}>
       <Link
-        href="/blog"
+        href="/#blog"
         className="group mb-8 inline-flex items-center gap-2 text-sm text-ink-muted transition-colors hover:text-ink"
       >
         <ArrowLeft
