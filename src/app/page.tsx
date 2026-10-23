@@ -18,8 +18,17 @@ import Experience from "@/components/sections/Experience";
 import Projects from "@/components/sections/Projects";
 import Skills from "@/components/sections/Skills";
 
+// Started building in March 2021.
+const BUILDING_SINCE = Date.UTC(2021, 2, 1);
+const MS_PER_YEAR = 365.25 * 24 * 60 * 60 * 1000;
+
+// The page is static, so this runs at build time and is fresh on every deploy
+// (one decimal, rounded down).
+const YEARS_BUILDING = Math.floor(((Date.now() - BUILDING_SINCE) / MS_PER_YEAR) * 10) / 10;
+
 // Top-level home page component.
 function Home() {
+
   return (
     <div className="flex flex-col items-center w-full">
       {/* Single responsive hero — mobile static stack + desktop scroll canvas. */}
@@ -50,7 +59,7 @@ function Home() {
           <Education />
         </ScrollReveal>
         <ScrollReveal className="w-full" delay={500}>
-          <ByTheNumbers />
+          <ByTheNumbers yearsBuilding={YEARS_BUILDING} />
         </ScrollReveal>
         {/* <ScrollReveal className="w-full" delay={550}> */}
         {/* <Testimonials /> */}
