@@ -1,27 +1,17 @@
 /*
  * ProfileCluster.tsx
  * Profile cluster handling the full hero lifecycle.
- * Slides in, flips logo→photo on click, fades the
- * hover callouts as socials begin, shrinks upward,
- * and slides left to make room for the JumpTo panel.
+ * Slides in, shrinks upward as the socials arrive,
+ * and slides left to make room for the board on the right.
  */
 
 "use client";
 
-import { type MotionValue, motion, useMotionValueEvent, useTransform } from "framer-motion";
-import Image from "next/image";
-import { useState } from "react";
+import { type MotionValue, motion, useTransform } from "framer-motion";
 import { Annotation } from "@/components/blog/Annotation";
 import { entryEnd, HERO_STAGES } from "@/config/heroStages";
-import {
-  NAME_ACCENT_CLASS,
-  PROFILE_IMAGE_HOVER_URL,
-  PROFILE_NAME,
-  PROFILE_NOTE,
-  PROFILE_ROLE,
-} from "@/data/heroContent";
-import HoverCallout from "./HoverCallout";
-import LogoMark from "./LogoMark";
+import { NAME_ACCENT_CLASS, PROFILE_NAME, PROFILE_NOTE, PROFILE_ROLE } from "@/data/heroContent";
+import ProfilePhoto from "./ProfilePhoto";
 
 // Public props for the cluster.
 interface ProfileClusterProps {
@@ -42,25 +32,6 @@ export default function ProfileCluster({ progress }: ProfileClusterProps) {
   const profileSettled = entryEnd(profile);
   const socialsSettled = entryEnd(socials);
   const jumptoSettled = entryEnd(jumpto);
-
-  // Tracks whether the photo side of the flip card is showing.
-  const [flipped, setFlipped] = useState(false);
-
-  // Auto-flip when socials stage begins; reset if scrolled back before socials.
-  useMotionValueEvent(progress, "change", (latest) => {
-    const prev = progress.getPrevious();
-    if (prev !== undefined) {
-      if (prev < socials[0] && latest >= socials[0] && !flipped) {
-        setFlipped(true);
-      }
-      if (prev >= socials[0] && latest < socials[0] && flipped) {
-        setFlipped(false);
-      }
-    } else {
-      if (latest >= socials[0] && !flipped) setFlipped(true);
-      if (latest < socials[0] && flipped) setFlipped(false);
-    }
-  });
 
   // Horizontal motion: enter from right, hold center, slide left for jumpto.
   const x = useTransform(
@@ -86,96 +57,37 @@ export default function ProfileCluster({ progress }: ProfileClusterProps) {
   );
 
   return (
-    <>
-      {/* Floating callouts around the profile circle. */}
-      <HoverCallout side="left" progress={progress} hovered={flipped} />
-      <HoverCallout side="right" progress={progress} />
-
+    <motion.div
+      style={{ x, y, opacity, scale }}
+      className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-5 will-change-transform"
+    >
+      {/* Handwritten "that's me" note, arrow pointing down at the photo. */}
       <motion.div
-        style={{ x, y, opacity, scale }}
-        className="absolute inset-0 flex flex-col items-center justify-center gap-4 pointer-events-none will-change-transform"
+        aria-hidden
+        style={{ opacity: noteOpacity }}
+        className="pointer-events-none absolute left-[calc(50%-14rem)] top-[calc(50%-16rem)] -rotate-3"
       >
-        {/* Handwritten "that's me" note, arrow pointing down at the photo. */}
-        <motion.div
-          aria-hidden
-          style={{ opacity: noteOpacity }}
-          className="pointer-events-none absolute left-[calc(50%-15rem)] top-[calc(50%-15.5rem)] -rotate-3"
-        >
-          <Annotation kind="arrow" direction="down-right" label={PROFILE_NOTE} seed={7} />
-        </motion.div>
-
-        {/* ── Circle ─────────────────────────────────────────── */}
-        <button
-          type="button"
-          className="relative h-52 w-52 sm:h-60 sm:w-60 md:h-72 md:w-72 lg:h-80 lg:w-80 pointer-events-auto cursor-pointer bg-transparent border-0 p-0 outline-none"
-          style={{ perspective: "900px" }}
-          aria-label="Profile image — click to reveal colour photo"
-          onClick={() => setFlipped((f) => !f)}
-        >
-          {/* ── 3-D flip sandwich ─────────────────────────────── */}
-          <motion.div
-            className="relative h-full w-full"
-            animate={{ rotateY: flipped ? 180 : 0 }}
-            transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
-            style={{ transformStyle: "preserve-3d" }}
-          >
-            {/* Coloured halo — part of the sandwich */}
-            <motion.div
-              aria-hidden
-              className="absolute -inset-3 rounded-full bg-linear-to-br from-indigo-500/40 via-rose-500/30 to-amber-400/40 blur-2xl pointer-events-none"
-              animate={{ opacity: [0.5, 0.9, 0.5] }}
-              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-            />
-            {/* Rotating conic ring — part of the sandwich */}
-            <motion.div
-              aria-hidden
-              className="absolute inset-0 rounded-full pointer-events-none"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 24, repeat: Infinity, ease: "linear" }}
-              style={{
-                background:
-                  "conic-gradient(from 0deg, rgba(99,102,241,0.0), rgba(244,63,94,0.5), rgba(251,191,36,0.5), rgba(99,102,241,0.0))",
-                WebkitMask: "radial-gradient(circle, transparent 60%, black 62%, black 100%)",
-                mask: "radial-gradient(circle, transparent 60%, black 62%, black 100%)",
-              }}
-            />
-
-            {/* FRONT — logo on near-black bg */}
-            <div
-              className="absolute inset-0 rounded-full overflow-hidden bg-[#070707] shadow-2xl ring-1 ring-white/10 flex items-center justify-center"
-              style={{ backfaceVisibility: "hidden" }}
-            >
-              <LogoMark className="w-[52%] h-[52%] opacity-90" />
-            </div>
-
-            {/* BACK — colored profile photo only (shown on hover reveal) */}
-            <div
-              className="absolute inset-0 rounded-full overflow-hidden bg-neutral-900 shadow-2xl ring-1 ring-white/10"
-              style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
-            >
-              <Image
-                src={PROFILE_IMAGE_HOVER_URL}
-                alt={PROFILE_NAME}
-                fill
-                className="object-cover"
-                draggable={false}
-                priority
-              />
-            </div>
-          </motion.div>
-        </button>
-
-        {/* ── Name + role ─────────────────────────────────────── */}
-        <div className="flex flex-col items-center gap-1 text-center">
-          <h1 className="font-clash font-bold tracking-tight whitespace-nowrap text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl leading-[0.95]">
-            <span className="text-hero-ink">{FIRST_NAME}</span>{" "}
-            <span className={NAME_ACCENT_CLASS}>{LAST_NAME}</span>
-          </h1>
-          <h2 className="text-sm sm:text-base md:text-xl lg:text-2xl text-hero-muted font-light whitespace-nowrap">
-            {PROFILE_ROLE}
-          </h2>
-        </div>
+        <Annotation
+          kind="arrow"
+          direction="down-right"
+          label={PROFILE_NOTE}
+          seed={7}
+          className="text-3xl font-semibold"
+        />
       </motion.div>
-    </>
+
+      <ProfilePhoto className="w-52 md:w-56 xl:w-64" />
+
+      {/* ── Name + role ─────────────────────────────────────── */}
+      <div className="flex flex-col items-center gap-1 text-center">
+        <h1 className="font-display font-bold tracking-[-0.03em] whitespace-nowrap text-3xl sm:text-5xl md:text-6xl lg:text-7xl leading-[0.95]">
+          <span className="text-hero-ink">{FIRST_NAME}</span>{" "}
+          <span className={NAME_ACCENT_CLASS}>{LAST_NAME}</span>
+        </h1>
+        <h2 className="text-sm sm:text-base md:text-xl lg:text-2xl text-hero-muted font-light whitespace-nowrap">
+          {PROFILE_ROLE}
+        </h2>
+      </div>
+    </motion.div>
   );
 }

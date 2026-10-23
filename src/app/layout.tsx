@@ -2,17 +2,15 @@
  * layout.tsx
  * Root Next.js layout for the entire portfolio.
  * Loads global fonts, declares site metadata,
- * mounts persistent UI (light-rays backdrop,
- * welcome animation, NavBar) and the animation
+ * mounts persistent UI (welcome animation,
+ * NavBar, theme toggle) and the animation
  * provider that gates inner content.
  */
 
 import type { Metadata, Viewport } from "next";
-import { Caveat, Geist, Geist_Mono } from "next/font/google";
+import { Bricolage_Grotesque, Caveat, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import LightRays from "@/components/effects/LightRays";
 import WelcomeAnimation from "@/components/effects/WelcomeAnimation";
-import ScrollIndicator from "@/components/hero/elements/ScrollIndicator";
 import NavBar from "@/components/layout/NavBar";
 import ThemeToggle from "@/components/layout/ThemeToggle";
 import { AnimationProvider } from "@/context/AnimationContext";
@@ -34,7 +32,13 @@ const geistMono = Geist_Mono({
 const caveat = Caveat({
   variable: "--font-caveat",
   subsets: ["latin"],
-  weight: ["400", "600", "700"],
+  weight: ["500", "600", "700"],
+});
+
+// Typed display face (variable, 200-800) for the hero tagline, name and headings.
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
+  subsets: ["latin"],
 });
 
 // Site-wide <head> metadata (title, description, favicon).
@@ -69,25 +73,9 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${caveat.variable} antialiased selection:bg-white selection:text-black`}
+        className={`${geistSans.variable} ${geistMono.variable} ${caveat.variable} ${bricolage.variable} antialiased selection:bg-white selection:text-black`}
       >
         <AnimationProvider>
-          {/* Fixed background canvas hosting the WebGL light rays effect. */}
-          <div className="fixed inset-0 -z-10 bg-black print:hidden">
-            <div className="hero-rays h-full w-full">
-              <LightRays
-                raysOrigin="top-center"
-                raysColor="#ffffff"
-                raysSpeed={1}
-                lightSpread={1}
-                rayLength={2}
-                pulsating={false}
-                fadeDistance={1}
-                saturation={1}
-                followMouse={false}
-              />
-            </div>
-          </div>
           {/* SVG draw-on welcome animation that plays once on first load. */}
           <WelcomeAnimation disabled={isWelcomeAnimationDisabled} />
           {/* Persistent navigation bar. */}
@@ -96,8 +84,6 @@ export default function RootLayout({
           <div className="fixed right-3 top-[max(0.75rem,env(safe-area-inset-top))] z-[10000] rounded-xl border border-hero-ink/15 bg-hero-surface/80 backdrop-blur-md md:right-5 print:hidden">
             <ThemeToggle />
           </div>
-          {/* Fixed scroll affordance — stays on screen even after the hero scrolls away. */}
-          <ScrollIndicator />
           {children}
         </AnimationProvider>
       </body>

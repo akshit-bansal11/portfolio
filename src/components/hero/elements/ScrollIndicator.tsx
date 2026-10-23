@@ -1,103 +1,60 @@
 /*
  * ScrollIndicator.tsx
- * Fixed, always-on-top scroll affordance.
- * Reads the hero progress MotionValue from a ref in AnimationContext
- * so it can live outside the hero DOM tree as a true fixed overlay.
- * Switches orientation (horizontal ↔ vertical) as the hero
- * crosses the horizontal-end threshold.
- *
- * Split into an outer shell (gates on readiness) and an inner
- * component (safe to call useMotionValueEvent with a non-null value).
+ * Whiteboard-style scroll cue: a handwritten "scroll" over a short sketchy
+ * down arrow that draws itself once, then bobs slowly. No box, no background.
+ * `ScrollIndicator` (desktop) fades out for good once the hero progress passes
+ * CUE_GONE_AT; `ScrollCue` is the plain cue the mobile stack drops into its
+ * first screen, where it simply scrolls away with the content.
  */
 
 "use client";
 
-import { type MotionValue, motion, useMotionValueEvent } from "framer-motion";
-import { ArrowDown } from "lucide-react";
+import { type MotionValue, motion, useMotionValueEvent, useReducedMotion } from "framer-motion";
 import { useState } from "react";
-import { HERO_HORIZONTAL_END } from "@/config/heroStages";
+import { DrawnPath } from "@/components/blog/Annotation";
 import { useAnimation } from "@/context/AnimationContext";
-import { cn } from "@/lib/utils";
+import { sketchArrow } from "@/lib/blog/sketch";
 
-// Inner component — only rendered once progress is confirmed non-null.
-function Indicator({ progress }: { progress: MotionValue<number> }) {
-  const [isVertical, setIsVertical] = useState(
-    () => typeof window !== "undefined" && window.innerWidth < 1024,
-  );
+// Hero progress past which the cue disappears and never returns.
+const CUE_GONE_AT = 0.04;
 
-  useMotionValueEvent(progress, "change", (latest: number) => {
-    // On mobile/tablet (< 1024px) always indicate vertical scroll.
-    const isMobileOrTablet = typeof window !== "undefined" && window.innerWidth < 1024;
-    setIsVertical(isMobileOrTablet || latest >= HERO_HORIZONTAL_END);
-  });
+const ARROW = sketchArrow(14, 3, 15, 38, { seed: 4, curve: 0.12, headSize: 9 });
+
+// The cue itself; `gone` fades it out.
+export function ScrollCue({ gone = false }: { gone?: boolean }) {
+  const { isWelcomeComplete } = useAnimation();
+  const reduceMotion = useReducedMotion();
+  if (!isWelcomeComplete) return null;
 
   return (
     <motion.div
-      layout
-      initial={{ y: 8, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
-      className={cn(
-        "pointer-events-none fixed bottom-4 right-4 md:bottom-7 md:right-7 z-9999 flex items-center justify-center",
-        "bg-neutral-950/65 backdrop-blur-md border border-neutral-800/80 shadow-[0_8px_28px_-8px_rgba(0,0,0,0.7)] rounded-xl transition-all duration-500",
-        isVertical ? "flex-col px-2.5 py-3 gap-2" : "flex-row px-3 py-2.5 gap-2",
-      )}
       aria-hidden
+      className="pointer-events-none flex flex-col items-center"
+      initial={false}
+      animate={{ opacity: gone ? 0 : 1 }}
+      transition={{ duration: 0.4 }}
     >
-      {/* Mouse-shape outline that morphs between portrait and landscape. */}
-      <motion.div
-        layout
-        className={cn(
-          "rounded-full border border-neutral-600/70 relative transition-all duration-500 overflow-hidden",
-          isVertical ? "h-7 w-[18px]" : "w-7 h-[18px]",
-        )}
+      <span className="font-hand text-2xl font-semibold leading-none text-hero-muted">scroll</span>
+      <motion.svg
+        viewBox="0 0 30 44"
+        className="mt-1 h-11 w-[30px] overflow-visible text-hero-pen"
+        animate={reduceMotion ? undefined : { y: [0, 4, 0] }}
+        transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut", delay: 1.4 }}
       >
-        {/* Vertical dot — bounces along Y when in vertical scroll phase. */}
-        <motion.span
-          animate={isVertical ? { opacity: 1, y: [0, 4, 0] } : { opacity: 0, y: 0 }}
-          transition={{
-            opacity: { duration: 0.3 },
-            y: { duration: 1.6, repeat: Infinity, ease: "easeInOut" },
-          }}
-          className="absolute top-1 left-1/2 -translate-x-1/2 block h-1 w-1 rounded-full bg-amber-400 shadow-[0_0_6px_#fbbf24]"
-        />
-
-        {/* Horizontal dot — bounces along X when in horizontal scroll phase. */}
-        <motion.span
-          animate={!isVertical ? { opacity: 1, x: [0, 4, 0] } : { opacity: 0, x: 0 }}
-          transition={{
-            opacity: { duration: 0.3 },
-            x: { duration: 1.6, repeat: Infinity, ease: "easeInOut" },
-          }}
-          className="absolute left-1 top-1/2 -translate-y-1/2 block h-1 w-1 rounded-full bg-amber-400 shadow-[0_0_6px_#fbbf24]"
-        />
-      </motion.div>
-
-      {/* Arrow — rotates 90° between horizontal and vertical orientations. */}
-      <motion.div
-        layout
-        animate={{ rotate: isVertical ? 0 : -90 }}
-        transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }}
-        className="text-amber-400 flex items-center justify-center"
-      >
-        {/* Bouncing nudge along the arrow's local Y axis. */}
-        <motion.div
-          animate={{ y: [0, 2, 0] }}
-          transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-          className="flex"
-        >
-          <ArrowDown className="h-2.5 w-2.5 md:h-3 md:w-3" />
-        </motion.div>
-      </motion.div>
+        <DrawnPath d={ARROW.shaft} delay={0.3} duration={0.6} />
+        <DrawnPath d={ARROW.head} delay={0.85} duration={0.25} />
+      </motion.svg>
     </motion.div>
   );
 }
 
-// Outer shell — gates rendering until the welcome overlay and hero progress are ready.
-export default function ScrollIndicator() {
-  const { isWelcomeComplete, heroProgress, isHeroProgressReady } = useAnimation();
+// Desktop cue: tied to the hero scroll progress.
+export default function ScrollIndicator({ progress }: { progress: MotionValue<number> }) {
+  const [gone, setGone] = useState(false);
 
-  if (!isWelcomeComplete || !isHeroProgressReady || !heroProgress) return null;
+  useMotionValueEvent(progress, "change", (latest) => {
+    if (latest > CUE_GONE_AT) setGone(true);
+  });
 
-  return <Indicator progress={heroProgress} />;
+  return <ScrollCue gone={gone} />;
 }

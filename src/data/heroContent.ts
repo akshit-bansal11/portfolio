@@ -8,7 +8,7 @@
 import { asset } from "@/config/assets";
 
 // Tagline shown word-by-word in the first hero stage. The non-breaking space keeps
-// the circled phrase as one word so the hand-drawn mark can wrap it.
+// the selected phrase as one word so the whiteboard selection box can wrap it.
 export const TAGLINE_MARKED = "make things";
 export const TAGLINE = `I ${TAGLINE_MARKED} and solve problems.`;
 
@@ -16,14 +16,14 @@ export const TAGLINE = `I ${TAGLINE_MARKED} and solve problems.`;
 export const TAGLINE_ASIDE = "…and help others do the same, tech or not";
 
 export const TAGLINE_CLASSNAME =
-  "w-fit mx-auto xl:text-8xl lg:text-7xl md:text-5xl sm:text-4xl text-4xl font-light tracking-tight items-center justify-center text-center max-w-5xl leading-[1.2] flex-wrap";
+  "w-fit mx-auto font-display font-[650] tracking-[-0.03em] xl:text-8xl lg:text-7xl md:text-5xl sm:text-4xl text-4xl items-center justify-center text-center max-w-5xl leading-[0.95] flex-wrap";
 
 export const TAGLINE_ACCENT_CLASS =
-  "bg-clip-text text-transparent bg-linear-to-r from-indigo-300 via-violet-200 to-rose-300 in-data-[theme=light]:from-indigo-700 in-data-[theme=light]:via-violet-700 in-data-[theme=light]:to-rose-700";
+  "bg-clip-text text-transparent bg-linear-to-r from-hero-grad-1 via-hero-grad-2 to-hero-grad-3";
 
-// Gradient on the surname, with a darker pair on paper for contrast.
+// Gradient on the surname; the stops are theme tokens, stronger on paper.
 export const NAME_ACCENT_CLASS =
-  "text-transparent bg-clip-text bg-linear-to-r from-indigo-300 via-white/90 to-rose-300 in-data-[theme=light]:from-indigo-700 in-data-[theme=light]:via-stone-900 in-data-[theme=light]:to-rose-700";
+  "text-transparent bg-clip-text bg-linear-to-r from-hero-grad-1 via-hero-grad-2 to-hero-grad-3";
 
 // Route of the printable resume page.
 export const RESUME_PATH = "/resume";

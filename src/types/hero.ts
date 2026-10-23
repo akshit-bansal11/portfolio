@@ -31,6 +31,4 @@ export interface JumpToCardData {
   label: string;
   sectionId: string;
   description: string;
-  detail: string;
-  colorClass: string;
 }

@@ -41,7 +41,7 @@ export default function TaglineStage({ progress, active }: TaglineStageProps) {
   return (
     <motion.div
       style={{ opacity, y, filter }}
-      className="absolute inset-0 flex flex-col items-center justify-center px-6 gap-6 md:gap-10"
+      className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-6 gap-6 md:gap-10"
     >
       {/* Top "online status" pill above the tagline. */}
       <AkshitBansalBadge active={active} />

@@ -84,6 +84,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
   --font-hand: var(--font-caveat), "Comic Sans MS", cursive;
   --color-paper: var(--blog-paper);
@@ -103,6 +104,16 @@
   --color-hero-muted: var(--hero-muted);
   --color-hero-pen: var(--hero-pen);
   --color-hero-surface: var(--hero-surface);
+  --color-hero-grad-1: var(--hero-grad-1);
+  --color-hero-grad-2: var(--hero-grad-2);
+  --color-hero-grad-3: var(--hero-grad-3);
+  --color-doodle-1: var(--doodle-1);
+  --color-doodle-2: var(--doodle-2);
+  --color-doodle-3: var(--doodle-3);
+  --color-note-1: var(--note-1);
+  --color-note-2: var(--note-2);
+  --color-note-3: var(--note-3);
+  --color-note-4: var(--note-4);
   --color-sticky: var(--blog-sticky);
   --color-sticky-ink: var(--blog-sticky-ink);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -143,10 +154,6 @@
   --radius-4xl: calc(var(--radius) + 16px);
 }
 
-body {
-  /* font-family: var(--font-clash); */
-}
-
 /* Light theme palette tokens (default). */
 :root {
   /* Hero palette, dark defaults (see the hero palette note further down). */
@@ -155,6 +162,17 @@ body {
   --hero-muted: #a3a3a3;
   --hero-pen: #fbbf24;
   --hero-surface: #171717;
+  --hero-grad-1: #a5b4fc;
+  --hero-grad-2: #ddd6fe;
+  --hero-grad-3: #fda4af;
+  --grid: rgb(255 255 255 / 7%);
+  --doodle-1: rgb(165 180 252 / 65%);
+  --doodle-2: rgb(253 164 175 / 65%);
+  --doodle-3: rgb(251 191 36 / 60%);
+  --note-1: #2a2414;
+  --note-2: #2a1620;
+  --note-3: #1a1d33;
+  --note-4: #12261f;
   --hero-accent-ink-mix: 0%;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
@@ -231,8 +249,13 @@ body {
     @apply border-border outline-ring/50;
   }
 
+  /* Whiteboard: hero ground with a static dot grid behind every section. */
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
+
+    background-color: var(--hero-bg);
+    background-image: radial-gradient(circle, var(--grid) 1.25px, transparent 1.75px);
+    background-size: 24px 24px;
   }
 }
 
@@ -328,15 +351,21 @@ html[data-theme="light"] {
   --hero-muted: #57534e;
   --hero-pen: #c2410c;
   --hero-surface: #fffdf8;
+  --hero-grad-1: #4338ca;
+  --hero-grad-2: #6d28d9;
+  --hero-grad-3: #be123c;
+  --grid: rgb(28 25 23 / 10%);
+  --doodle-1: rgb(67 56 202 / 55%);
+  --doodle-2: rgb(190 18 60 / 50%);
+  --doodle-3: rgb(180 83 9 / 55%);
+  --note-1: #fef3c7;
+  --note-2: #fce7f3;
+  --note-3: #e0e7ff;
+  --note-4: #d1fae5;
   --hero-accent-ink-mix: 70%;
 }
 
 /* Hero scope: points the blog's pen utilities (Mark, Annotation) at the hero pen colour. */
 .hero-scope {
   --blog-pen: var(--hero-pen);
-}
-
-/* The WebGL rays are a dark-theme effect only. */
-html[data-theme="light"] .hero-rays {
-  display: none;
 }

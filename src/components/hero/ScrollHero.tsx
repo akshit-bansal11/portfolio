@@ -4,25 +4,20 @@
  *
  * Mobile / tablet (< lg):
  *   A plain stacked section — badge, tagline, profile photo,
- *   name, role, ribbon, resume button, socials, beliefs. No scroll magic.
+ *   name, role, resume link, socials, beliefs. No scroll magic.
  *
  * Desktop (≥ lg):
  *   Pinned, four-stage scroll-driven hero canvas. Owns the
  *   scroll-progress source, mounts each stage (tagline, profile,
- *   socials, jumpto) plus the backdrop, pen line and indicator, and reports
+ *   socials, jumpto) plus the doodle layer and scroll cue, and reports
  *   completion to the context.
  */
 
 "use client";
 
 import { motion, useMotionValueEvent, useTransform } from "framer-motion";
-import Image from "next/image";
-import Link from "next/link";
-import { useEffect } from "react";
-import type { IconType } from "react-icons";
 import { Annotation } from "@/components/blog/Annotation";
 import ScrollReveal from "@/components/effects/ScrollReveal";
-import { Button } from "@/components/ui/button";
 import {
   entryEnd,
   HERO_HORIZONTAL_END,
@@ -30,26 +25,18 @@ import {
   HERO_STAGES,
 } from "@/config/heroStages";
 import { useAnimation } from "@/context/AnimationContext";
-import {
-  BELIEFS_HEADING,
-  NAME_ACCENT_CLASS,
-  PROFILE_IMAGE_HOVER_URL,
-  PROFILE_NAME,
-  PROFILE_NOTE,
-  PROFILE_ROLE,
-  RESUME_PATH,
-} from "@/data/heroContent";
+import { NAME_ACCENT_CLASS, PROFILE_NAME, PROFILE_NOTE, PROFILE_ROLE } from "@/data/heroContent";
 import { heroSocialLinks } from "@/data/heroSocialLinks";
-import { getSocialAccent } from "@/data/socialAccents";
 import { useHeroScrollProgress } from "@/hooks/use-hero-scroll-progress";
-import { cn } from "@/lib/utils";
-import HeroBackdrop from "./backdrop/HeroBackdrop";
+import WhiteboardDoodles from "./backdrop/WhiteboardDoodles";
 import AkshitBansalBadge from "./elements/AkshitBansalBadge";
-import BeliefsList from "./elements/BeliefsList";
+import BeliefsBoard, { ScrollBeliefsBoard } from "./elements/BeliefsBoard";
 import JumpToPanel from "./elements/JumpToPanel";
-import PenLine from "./elements/PenLine";
 import ProfileCluster from "./elements/ProfileCluster";
-import QuoteCard from "./elements/QuoteCard";
+import ProfilePhoto from "./elements/ProfilePhoto";
+import ResumeButton from "./elements/ResumeButton";
+import ScrollIndicator, { ScrollCue } from "./elements/ScrollIndicator";
+import SocialIcon from "./elements/SocialIcon";
 import TaglineDisplay from "./elements/TaglineDisplay";
 import SocialsStage from "./stages/SocialsStage";
 import TaglineStage from "./stages/TaglineStage";
@@ -58,59 +45,11 @@ import TaglineStage from "./stages/TaglineStage";
 const FIRST_NAME = PROFILE_NAME.split(" ")[0];
 const LAST_NAME = PROFILE_NAME.split(" ").slice(1).join(" ");
 
-// One social icon button — used in the mobile layout's static icon row.
-function MobileSocialButton({
-  href,
-  label,
-  Icon,
-  index,
-}: {
-  href: string;
-  label: string;
-  Icon: IconType;
-  index: number;
-}) {
-  const accent = getSocialAccent(label);
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut", delay: 0.35 + index * 0.07 }}
-      className="relative group"
-    >
-      <Button
-        asChild
-        variant="outline"
-        size="icon"
-        aria-label={label}
-        className={cn(
-          "h-9 w-9 rounded-lg dark:border-hero-ink/20 dark:bg-hero-surface/60",
-          "text-hero-ink/80 ring-1 transition-all duration-300",
-          accent.ring,
-          accent.hoverBg,
-          accent.hoverBorder,
-          accent.hoverText,
-          "hover:scale-110",
-        )}
-      >
-        <a href={href} target="_blank" rel="noopener noreferrer">
-          <Icon className="h-5 w-5" />
-        </a>
-      </Button>
-    </motion.div>
-  );
-}
-
 // Renders the full pinned scroll hero (desktop) plus a static mobile layout.
 export default function ScrollHero() {
   // Tall wrapper ref + 0..1 progress driving every desktop stage.
   const { wrapperRef, progress } = useHeroScrollProgress();
-  const { isWelcomeComplete, isHeroComplete, setHeroComplete, setHeroProgress } = useAnimation();
-
-  // Register the progress MotionValue globally so the fixed ScrollIndicator can read it.
-  useEffect(() => {
-    setHeroProgress(progress);
-  }, [progress, setHeroProgress]);
+  const { isWelcomeComplete, isHeroComplete, setHeroComplete } = useAnimation();
 
   // Mark the hero "complete" once progress crosses the horizontal end threshold.
   useMotionValueEvent(progress, "change", (latest) => {
@@ -135,21 +74,22 @@ export default function ScrollHero() {
   return (
     <>
       {/* ── Mobile / tablet layout (hidden on lg+) ────────────────────────
-			    Plain static stack — no scroll driver needed. All content
-			    renders immediately at its settled visual state.              */}
+				    Plain static stack — no scroll driver needed. All content
+				    renders immediately at its settled visual state.              */}
       <section
         id="profile"
         aria-label="Hero introduction"
-        className="hero-scope relative z-0 w-full bg-hero-bg overflow-hidden lg:hidden"
+        className="hero-scope relative z-0 w-full overflow-hidden lg:hidden"
       >
-        {/* Decorative ambient backdrop for mobile/tablet section. */}
-        <HeroBackdrop />
-
         {/* ── Stage 1: Badge + Tagline (Centered in Viewport) ── */}
-        <div className="w-full min-h-svh flex flex-col items-center justify-center px-6 py-12 text-center">
-          <div className="flex flex-col items-center gap-6">
+        <div className="relative w-full min-h-svh flex flex-col items-center justify-center px-6 py-12 text-center">
+          <WhiteboardDoodles />
+          <div className="relative flex flex-col items-center gap-6">
             <AkshitBansalBadge active={true} />
             <TaglineDisplay />
+          </div>
+          <div className="pointer-events-none absolute inset-x-0 bottom-6 flex justify-center">
+            <ScrollCue />
           </div>
         </div>
 
@@ -163,44 +103,13 @@ export default function ScrollHero() {
                 direction="down"
                 label={PROFILE_NOTE}
                 seed={7}
-                className="-mb-2 -rotate-3"
+                className="-mb-2 -rotate-3 text-2xl font-semibold"
               />
-              {/* Profile circle */}
-              <div className="relative h-40 w-40 sm:h-48 sm:w-48">
-                {/* Ambient halo */}
-                <div
-                  aria-hidden
-                  className="absolute -inset-3 rounded-full bg-linear-to-br from-indigo-500/40 via-rose-500/30 to-amber-400/40 blur-2xl pointer-events-none"
-                />
-                {/* Rotating conic ring */}
-                <motion.div
-                  aria-hidden
-                  className="absolute inset-0 rounded-full pointer-events-none"
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 24, repeat: Infinity, ease: "linear" }}
-                  style={{
-                    background:
-                      "conic-gradient(from 0deg, rgba(99,102,241,0.0), rgba(244,63,94,0.5), rgba(251,191,36,0.5), rgba(99,102,241,0.0))",
-                    WebkitMask: "radial-gradient(circle, transparent 60%, black 62%, black 100%)",
-                    mask: "radial-gradient(circle, transparent 60%, black 62%, black 100%)",
-                  }}
-                />
-                {/* Photo */}
-                <div className="absolute inset-0 rounded-full overflow-hidden bg-neutral-900 shadow-2xl ring-1 ring-white/10">
-                  <Image
-                    src={PROFILE_IMAGE_HOVER_URL}
-                    alt={PROFILE_NAME}
-                    fill
-                    className="object-cover"
-                    draggable={false}
-                    priority
-                  />
-                </div>
-              </div>
+              <ProfilePhoto className="w-44 sm:w-52" />
 
               {/* Name + role */}
               <div className="flex flex-col items-center gap-1 text-center">
-                <h1 className="font-clash font-bold tracking-tight whitespace-nowrap text-4xl sm:text-5xl leading-[0.95]">
+                <h1 className="font-display font-bold tracking-[-0.03em] whitespace-nowrap text-4xl sm:text-5xl leading-[0.95]">
                   <span className="text-hero-ink">{FIRST_NAME}</span>{" "}
                   <span className={NAME_ACCENT_CLASS}>{LAST_NAME}</span>
                 </h1>
@@ -209,53 +118,28 @@ export default function ScrollHero() {
                 </p>
               </div>
 
-              {/* Resume download CTA */}
-              <div>
-                <Button
-                  asChild
-                  variant="outline"
-                  size="sm"
-                  className="h-8 gap-1.5 dark:border-hero-ink/40 dark:bg-hero-surface/60 text-hero-ink/90 dark:hover:bg-hero-surface hover:text-hero-pen hover:border-hero-pen/50 transition-all duration-300 rounded-full px-3"
-                >
-                  <Link href={RESUME_PATH}>
-                    <span className="text-xs font-medium">Download Resume</span>
-                  </Link>
-                </Button>
-              </div>
+              <ResumeButton />
 
               {/* Social icons */}
-              <div className="relative">
-                <div
-                  aria-hidden
-                  className="absolute -inset-3 rounded-xl bg-linear-to-r from-indigo-500/20 via-rose-500/20 to-amber-400/20 blur-xl"
-                />
-                <div className="relative flex gap-2.5 px-3 py-2.5 rounded-xl bg-hero-surface/70 backdrop-blur-md border border-hero-ink/15 shadow-xl">
-                  {heroSocialLinks.map(({ Icon, href, name }, index) => (
-                    <MobileSocialButton
-                      key={href}
-                      href={href}
-                      label={name}
-                      Icon={Icon}
-                      index={index}
-                    />
-                  ))}
-                </div>
+              <div className="flex gap-1">
+                {heroSocialLinks.map(({ Icon, href, name }) => (
+                  <SocialIcon key={href} href={href} label={name} Icon={Icon} />
+                ))}
               </div>
             </div>
           </ScrollReveal>
         </div>
 
-        {/* ── Stage 3: What I believe in (static list, strokes draw on view) ── */}
+        {/* ── Stage 3: What I believe in (sticky notes, ticks draw on view) ── */}
         <div className="w-full flex justify-center px-6 pb-16">
-          <div className="w-full max-w-sm rounded-2xl border border-hero-ink/10 bg-hero-surface/60 px-6 py-7 backdrop-blur-xl">
-            <h3 className="mb-5 text-lg font-semibold text-hero-ink/90">{BELIEFS_HEADING}</h3>
-            <BeliefsList />
+          <div className="w-full max-w-md">
+            <BeliefsBoard />
           </div>
         </div>
       </section>
 
       {/* ── Desktop layout (hidden below lg) ─────────────────────────────
-			    Pinned, four-stage scroll-driven hero canvas.              */}
+				    Pinned, four-stage scroll-driven hero canvas.              */}
       <section
         id="profile"
         ref={wrapperRef}
@@ -263,13 +147,10 @@ export default function ScrollHero() {
         style={{ height: `${HERO_SCROLL_LENGTH_VH}vh` }}
         aria-label="Hero introduction"
       >
-        {/* Pinned, viewport-sized inner canvas. */}
-        <div className="sticky top-0 z-0 h-screen w-full overflow-hidden bg-hero-bg">
-          {/* Decorative ambient backdrop. */}
-          <HeroBackdrop />
-
-          {/* Scroll-driven pen line wandering under the stages. */}
-          <PenLine progress={progress} />
+        {/* Pinned, viewport-sized inner canvas; the whiteboard shows through. */}
+        <div className="sticky top-0 z-0 h-screen w-full overflow-hidden">
+          {/* Hand-drawn doodles around the edges, drifting with the scroll. */}
+          <WhiteboardDoodles progress={progress} />
 
           {/* The four hero stages — each consumes the same scroll progress. */}
           <TaglineStage progress={progress} active={isWelcomeComplete} />
@@ -278,9 +159,9 @@ export default function ScrollHero() {
           <SocialsStage progress={progress} />
 
           {/* ── Stage 4: Three-column flex layout ────────────────────────
-					     Uses justify-between so the QuoteCard naturally centres
+					     Uses justify-between so the beliefs board naturally centres
 					     between the left profile/socials region and the right
-					     JumpTo panel. Each column is a flex item. */}
+					     jump-to index. Each column is a flex item. */}
           <motion.div
             style={{ x: stage4X, opacity: stage4Opacity }}
             className="absolute inset-0 flex items-center justify-between px-8 md:px-12 lg:px-16 pointer-events-none z-20"
@@ -288,9 +169,9 @@ export default function ScrollHero() {
             {/* Left spacer — matches the space occupied by profile + socials */}
             <div className="w-[28vw] shrink-0" />
 
-            {/* Centre — Quote card */}
+            {/* Centre — beliefs board */}
             <div className="flex items-center justify-center flex-1">
-              <QuoteCard progress={progress} />
+              <ScrollBeliefsBoard progress={progress} />
             </div>
 
             {/* Right — Jump to panel */}
@@ -299,7 +180,10 @@ export default function ScrollHero() {
             </div>
           </motion.div>
 
-          {/* Scroll affordance hint is now rendered as a fixed overlay in layout.tsx. */}
+          {/* Scroll cue: draws in, bobs, and fades for good once the hero starts moving. */}
+          <div className="pointer-events-none absolute inset-x-0 bottom-6 flex justify-center">
+            <ScrollIndicator progress={progress} />
+          </div>
         </div>
       </section>
     </>
