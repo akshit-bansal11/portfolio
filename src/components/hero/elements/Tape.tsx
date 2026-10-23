@@ -8,7 +8,8 @@
 import { cn } from "@/lib/utils";
 
 // Strip outline: straight long edges, jagged short ends.
-const STRIP_POINTS = "3,0 77,0 80,3 77,6 80,9 77,12 80,15 77,18 80,21 77,24 3,24 0,21 3,18 0,15 3,12 0,9 3,6 0,3";
+const STRIP_POINTS =
+  "3,0 77,0 80,3 77,6 80,9 77,12 80,15 77,18 80,21 77,24 3,24 0,21 3,18 0,15 3,12 0,9 3,6 0,3";
 
 interface TapeProps {
   className?: string;

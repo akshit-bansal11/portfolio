@@ -35,9 +35,7 @@ export default function JumpToPanel() {
       className="pointer-events-auto flex flex-col gap-3"
       style={{ width: "clamp(200px, 22vw, 280px)" }}
     >
-      <p className="-rotate-2 font-hand text-4xl font-bold leading-none text-hero-muted">
-        jump to
-      </p>
+      <p className="-rotate-2 font-hand text-4xl font-bold leading-none text-hero-muted">jump to</p>
       <ul className="flex flex-col items-start gap-8">
         {JUMP_TO_CARDS.map(({ label, sectionId, description }, index) => {
           const isActive = index === active;

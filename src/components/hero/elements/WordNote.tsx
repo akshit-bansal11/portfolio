@@ -58,7 +58,10 @@ export default function WordNote({ text, side, delay }: WordNoteProps) {
       </motion.span>
       <svg
         viewBox={side === "top" ? "0 0 30 40" : "0 0 56 30"}
-        className={cn("shrink-0 overflow-visible", side === "top" ? "h-10 w-[30px]" : "h-[30px] w-14")}
+        className={cn(
+          "shrink-0 overflow-visible",
+          side === "top" ? "h-10 w-[30px]" : "h-[30px] w-14",
+        )}
       >
         <DrawnPath d={arrow.shaft} delay={delay + 0.2} duration={0.5} />
         <DrawnPath d={arrow.head} delay={delay + 0.7} duration={0.2} />

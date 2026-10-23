@@ -66,7 +66,9 @@ export default function TaglineDisplay({ active = true }: TaglineDisplayProps) {
     return (
       <span className="relative inline-block">
         {word}
-        {revealed && <WordNote text={text} side={side} delay={NOTES_START + factIndex * NOTES_STEP} />}
+        {revealed && (
+          <WordNote text={text} side={side} delay={NOTES_START + factIndex * NOTES_STEP} />
+        )}
       </span>
     );
   };
@@ -82,7 +84,9 @@ export default function TaglineDisplay({ active = true }: TaglineDisplayProps) {
           direction="top"
           active={active}
           delayOffset={LINE_OFFSETS[index] * STAGGER}
-          onComplete={active && index === TAGLINE_LINES.length - 1 ? () => setRevealed(true) : undefined}
+          onComplete={
+            active && index === TAGLINE_LINES.length - 1 ? () => setRevealed(true) : undefined
+          }
           renderWord={renderWord}
           className={TAGLINE_CLASSNAME}
         />
