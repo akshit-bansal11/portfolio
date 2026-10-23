@@ -16,7 +16,7 @@ export const experience: ExperienceCategory[] = [
       {
         location: "Bathinda (On-Site)",
         company: "Elina Club Pvt. Ltd.",
-        role: "SDE-1 & Chief Advisor",
+        role: "SDE-3 & Chief Advisor",
         date: "Jul 2026 - Present",
         generalPoint:
           "Only engineer at the company — I own frontend, backend, database, automation and deployments, and advise leadership on product and tech decisions.",
