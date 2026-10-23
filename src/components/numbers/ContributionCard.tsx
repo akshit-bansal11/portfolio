@@ -67,7 +67,9 @@ export default function ContributionCard({ className }: ContributionCardProps) {
           </div>
           <div className="flex flex-1 items-center overflow-x-auto pb-2">
             {contributions === null ? (
-              <p className="font-hand text-2xl font-bold text-page-muted">loading the calendar...</p>
+              <p className="font-hand text-2xl font-bold text-page-muted">
+                loading the calendar...
+              </p>
             ) : contributions.weeks.length > 0 ? (
               <Heatmap data={data} year={year} total={contributions.totalContributions} />
             ) : (
