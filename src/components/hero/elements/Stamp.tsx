@@ -22,19 +22,22 @@ interface StampProps {
   index: number;
   /** Optional icon drawn before the label, in the stamp colour. */
   icon?: ReactNode;
+  /** Drawn on cream paper: ink outline and text in both themes. */
+  onPaper?: boolean;
 }
 
 // Renders one stamp; its position in the row picks the tilt and colour.
-export default function Stamp({ label, index, icon }: StampProps) {
+export default function Stamp({ label, index, icon, onPaper = false }: StampProps) {
   return (
     <li
       className={cn(
         "hand-border inline-flex items-center gap-1.5 whitespace-nowrap border-[1.5px] border-current px-2.5 py-0.5 font-grotesk text-[0.72rem] font-medium uppercase leading-snug tracking-[0.06em]",
         STAMP_STYLES[index % STAMP_STYLES.length],
+        onPaper && "text-note-ink",
       )}
     >
       {icon}
-      <span className="text-hero-ink">{label}</span>
+      <span className={onPaper ? "text-note-ink" : "text-hero-ink"}>{label}</span>
     </li>
   );
 }
