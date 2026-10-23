@@ -92,7 +92,9 @@ function fieldErrors(body: unknown): Record<string, string> {
 
 export async function getEngagement(slug: string): Promise<EngagementResult> {
   try {
-    const res = await fetch(`/api/blog/${encodeURIComponent(slug)}/engagement`, { cache: "no-store" });
+    const res = await fetch(`/api/blog/${encodeURIComponent(slug)}/engagement`, {
+      cache: "no-store",
+    });
     if (res.status === 503) return { status: "unavailable" };
     const body = await readBody(res);
     return res.ok && isEngagement(body) ? { status: "ok", data: body } : { status: "error" };

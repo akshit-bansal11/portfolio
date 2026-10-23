@@ -32,9 +32,7 @@ export function isRecord(value: unknown): value is Record<string, unknown> {
 export function cleanText(value: string, multiline = false): string {
   const text = value.normalize("NFC").replace(/\r\n?/g, "\n");
   const spaced = multiline ? text : text.replace(/\s+/g, " ");
-  return spaced
-    .replace(/[\p{Cc}\p{Cf}]/gu, (ch) => (multiline && ch === "\n" ? ch : ""))
-    .trim();
+  return spaced.replace(/[\p{Cc}\p{Cf}]/gu, (ch) => (multiline && ch === "\n" ? ch : "")).trim();
 }
 
 function asString(value: unknown): string {

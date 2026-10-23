@@ -6,13 +6,13 @@
  */
 
 import {
-  NO_VISITOR_MESSAGE,
-  type SlugContext,
   checkOrigin,
   errorResponse,
   guard,
   jsonResponse,
+  NO_VISITOR_MESSAGE,
   readJson,
+  type SlugContext,
   serverError,
   visitorId,
 } from "@/lib/engagement/request";
