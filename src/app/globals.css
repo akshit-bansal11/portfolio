@@ -98,6 +98,11 @@
   --color-warn: var(--blog-warn);
   --color-ok: var(--blog-ok);
   --color-folder: var(--blog-folder);
+  --color-hero-bg: var(--hero-bg);
+  --color-hero-ink: var(--hero-ink);
+  --color-hero-muted: var(--hero-muted);
+  --color-hero-pen: var(--hero-pen);
+  --color-hero-surface: var(--hero-surface);
   --color-sticky: var(--blog-sticky);
   --color-sticky-ink: var(--blog-sticky-ink);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -301,4 +306,38 @@ html[data-blog-theme="dark"] {
     var(--blog-rule) 31px,
     var(--blog-rule) 32px
   );
+}
+
+/*
+ * Hero palette. Dark by default (the site is dark-only); the light values apply
+ * when the reader picks light with the nav toggle (sets data-theme on <html>).
+ * --hero-accent-ink-mix is how much ink is blended into the pale accent colours
+ * so they stay readable on paper (0% keeps them untouched in dark).
+ */
+:root {
+  --hero-bg: #030303;
+  --hero-ink: #fff;
+  --hero-muted: #a3a3a3;
+  --hero-pen: #fbbf24;
+  --hero-surface: #171717;
+  --hero-accent-ink-mix: 0%;
+}
+
+html[data-theme="light"] {
+  --hero-bg: #fbf8f1;
+  --hero-ink: #1c1917;
+  --hero-muted: #57534e;
+  --hero-pen: #c2410c;
+  --hero-surface: #fffdf8;
+  --hero-accent-ink-mix: 70%;
+}
+
+/* Hero scope: points the blog's pen utilities (Mark, Annotation) at the hero pen colour. */
+.hero-scope {
+  --blog-pen: var(--hero-pen);
+}
+
+/* The WebGL rays are a dark-theme effect only. */
+html[data-theme="light"] .hero-rays {
+  display: none;
 }

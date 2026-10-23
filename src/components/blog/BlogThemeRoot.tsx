@@ -10,12 +10,13 @@
 
 import { MotionConfig } from "framer-motion";
 import { createContext, type ReactNode, useContext, useEffect, useSyncExternalStore } from "react";
+import { THEME_STORAGE_KEY } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 
 export type BlogThemePreference = "system" | "light" | "dark";
 
 // localStorage key for the persisted preference.
-const STORAGE_KEY = "blog-theme";
+const STORAGE_KEY = THEME_STORAGE_KEY;
 
 // In-tab subscribers (the storage event only fires in *other* tabs).
 const listeners = new Set<() => void>();
