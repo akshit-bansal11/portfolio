@@ -95,7 +95,10 @@ function Entry({ item, index, groupLabel }: EntryProps) {
           strokeWidth={2}
           strokeLinecap="round"
           stroke="currentColor"
-          className={cn("transition-colors duration-300", filled ? "fill-hero-pen" : "fill-hero-bg")}
+          className={cn(
+            "transition-colors duration-300",
+            filled ? "fill-hero-pen" : "fill-hero-bg",
+          )}
         />
       </motion.svg>
       <p
