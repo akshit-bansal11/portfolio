@@ -23,9 +23,9 @@
   transform: translateX(-50%);
   background: linear-gradient(
     90deg,
-    rgb(99 102 241 / 0.22),
-    rgb(244 63 94 / 0.18),
-    rgb(251 191 36 / 0.16)
+    rgb(99 102 241 / 22%),
+    rgb(244 63 94 / 18%),
+    rgb(251 191 36 / 16%)
   );
   filter: blur(90px);
   pointer-events: none;
@@ -37,6 +37,7 @@
   --ink: #111;
   --ink-soft: #444;
   --rule: #111;
+
   box-sizing: border-box;
   width: 100%;
   max-width: 210mm;
@@ -50,11 +51,11 @@
   overflow-wrap: anywhere;
 }
 
-@media (min-width: 640px) {
+@media (width >= 640px) {
   .resume-sheet {
     padding: 14mm;
     border-radius: 6px;
-    box-shadow: 0 18px 50px -18px rgb(0 0 0 / 0.45);
+    box-shadow: 0 18px 50px -18px rgb(0 0 0 / 45%);
   }
 }
 
@@ -161,7 +162,7 @@
 
 /* Print: only the visible sheet, on A4, plain ink on white. */
 @page {
-  size: A4;
+  size: a4;
   margin: 12mm;
 }
 
