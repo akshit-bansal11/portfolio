@@ -52,15 +52,18 @@ const GQL_CONTRIBUTION_CALENDAR = `
 
 // Route handler: aggregate public repos + total commits and return JSON.
 export async function GET(request: NextRequest) {
+  // Check if this is a contribution calendar request.
+  const wantsContributions = request.nextUrl.searchParams.get("contributions") === "true";
+
   try {
     // Optional GitHub token unlocks the GraphQL contributions API.
     const token = process.env.GITHUB_TOKEN;
 
-    // Check if this is a contribution calendar request.
-    const wantsContributions = request.nextUrl.searchParams.get("contributions") === "true";
-
-    if (wantsContributions && token) {
-      return handleContributionCalendar(request, token);
+    // The calendar needs the GraphQL API; without a token return an empty calendar,
+    // never the stats payload (the client reads totalContributions from it).
+    if (wantsContributions) {
+      if (!token) return NextResponse.json({ totalContributions: 0, weeks: [] });
+      return await handleContributionCalendar(request, token);
     }
 
     // Headers used for plain REST calls (with optional auth).
@@ -143,7 +146,11 @@ export async function GET(request: NextRequest) {
   } catch (err) {
     // Any failure returns zeros so the UI degrades gracefully.
     console.error("[github-stats]", err);
-    return NextResponse.json({ publicRepos: 0, totalCommits: 0 });
+    return NextResponse.json(
+      wantsContributions
+        ? { totalContributions: 0, weeks: [] }
+        : { publicRepos: 0, totalCommits: 0 },
+    );
   }
 }
 

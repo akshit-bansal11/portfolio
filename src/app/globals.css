@@ -192,6 +192,11 @@
   --note-4: #bbf7d0;
   --note-ink: #1c1917;
   --note-shadow: 0 10px 18px -12px rgb(0 0 0 / 45%);
+  --heat-0: color-mix(in srgb, var(--hero-pen) 12%, var(--hero-surface));
+  --heat-1: color-mix(in srgb, var(--hero-pen) 32%, var(--hero-surface));
+  --heat-2: color-mix(in srgb, var(--hero-pen) 56%, var(--hero-surface));
+  --heat-3: color-mix(in srgb, var(--hero-pen) 80%, var(--hero-surface));
+  --heat-4: var(--hero-pen);
   --polaroid-tint-1: #c7d2fe;
   --polaroid-tint-2: #fecdd3;
   --hero-accent-ink-mix: 0%;
