@@ -46,11 +46,7 @@ export default function ResumeButton() {
         </svg>
       )}
       <span>Download Resume</span>
-      <svg
-        aria-hidden
-        viewBox="0 0 16 20"
-        className="h-5 w-4 overflow-visible text-hero-pen"
-      >
+      <svg aria-hidden viewBox="0 0 16 20" className="h-5 w-4 overflow-visible text-hero-pen">
         <DrawnPath key={`shaft-${drawKey}`} d={ARROW.shaft} delay={0.1} duration={0.4} />
         <DrawnPath key={`head-${drawKey}`} d={ARROW.head} delay={0.45} duration={0.2} />
       </svg>
