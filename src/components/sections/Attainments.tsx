@@ -1,110 +1,55 @@
 /*
  * Attainments.tsx
- * "Attainments" section.
- * Renders the badges block (Google Cloud + HackerRank star
- * badges) followed by the certifications block grouped by
- * issuer (LinkedIn/Microsoft, HackerRank).
- *
- * On mobile (<sm) each item is a compact CredentialPill.
- * On desktop the full card grids are shown instead.
+ * "Attainments" section: certificates pinned on the board (paper cards with a hand-drawn
+ * rosette), then the Google Cloud skill badges as round stickers. Everything pops in once
+ * with a short stagger; reduced motion shows the final state.
  */
 
-import CertificationCard from "@/components/cards/CertificationCard";
-import GoogleBadgeCard from "@/components/cards/GoogleBadgeCard";
-import ScrollSectionHeading from "@/components/headings/ScrollSectionHeading";
+"use client";
+
+import { motion, useReducedMotion } from "framer-motion";
+import BadgeSticker from "@/components/attainments/BadgeSticker";
+import CertificateCard from "@/components/attainments/CertificateCard";
 import ScrollSection from "@/components/layout/ScrollSection";
-import CredentialPill from "@/components/pills/CredentialPill";
+import SectionTitle from "@/components/layout/SectionTitle";
 import { googleBadges } from "@/data/badgesData";
-import {
-  hackerRankCertificationsData,
-  linkedInCertificationsData,
-} from "@/data/certificationsData";
-import type { CredentialPillItem } from "@/types/credential-pill";
+import { hackerRankCertificationsData, linkedInCertificationsData } from "@/data/certificationsData";
 
-/* ── data mappers ────────────────────────────────────────── */
-
-function badgeToPill(b: (typeof googleBadges)[number]): CredentialPillItem {
-  return {
-    iconUrl: "https://svgl.app/library/google-cloud.svg",
-    iconAlt: "Google Cloud",
-    title: b.gBadgeTitle,
-    provider: "Google Cloud",
-    href: b.gBadgeLink,
-  };
-}
-
-function certToPill(c: (typeof linkedInCertificationsData)[number]): CredentialPillItem {
-  return {
-    iconUrl: c.providers[0]?.logoUrl ?? "",
-    iconAlt: c.providers.map((p) => p.name).join(" & "),
-    title: c.name,
-    provider: c.providers.map((p) => p.name).join(" & "),
-    href: c.link,
-  };
-}
+const CERTIFICATIONS = [...linkedInCertificationsData, ...hackerRankCertificationsData];
 
 // Top-level Attainments section component.
 export default function Attainments() {
+  const reduceMotion = useReducedMotion();
+
+  // Pop-in props for the item at this position; the stagger restarts every few items.
+  const pop = (index: number) => ({
+    initial: reduceMotion ? false : { opacity: 0, y: 16, scale: 0.96 },
+    whileInView: { opacity: 1, y: 0, scale: 1 },
+    viewport: { once: true, amount: 0.3 },
+    transition: { duration: 0.35, delay: (index % 3) * 0.08 },
+  });
+
   return (
-    <ScrollSection id="attainments">
-      <ScrollSectionHeading heading="attainments" />
+    <ScrollSection id="attainments" className="gap-10 md:gap-12 lg:gap-14">
+      <SectionTitle title="Attainments" aside="proof I keep learning" />
 
-      {/* ── Badges ─────────────────────────────────────── */}
+      <ul className="grid grid-cols-1 gap-x-6 gap-y-10 pt-2 md:grid-cols-2 lg:grid-cols-3">
+        {CERTIFICATIONS.map((item, index) => (
+          <motion.li key={item.name} {...pop(index)}>
+            <CertificateCard item={item} index={index} />
+          </motion.li>
+        ))}
+      </ul>
+
       <div className="flex flex-col gap-4">
-        <h1 className="text-neutral-100 text-xs md:text-sm lg:text-2xl">Badges</h1>
-
-        {/* Mobile pills */}
-        <div className="flex flex-col gap-2 sm:hidden">
+        <h3 className="font-hand text-3xl font-bold leading-none text-hero-muted">badges</h3>
+        <ul className="flex flex-wrap gap-x-8 gap-y-8">
           {googleBadges.map((badge, index) => (
-            <CredentialPill key={index} item={badgeToPill(badge)} />
+            <motion.li key={badge.gBadgeLink} {...pop(index)}>
+              <BadgeSticker badge={badge} index={index} />
+            </motion.li>
           ))}
-        </div>
-
-        {/* Desktop cards */}
-        <div className="hidden sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {googleBadges.map((badge, index) => (
-            <GoogleBadgeCard key={index} {...badge} />
-          ))}
-        </div>
-      </div>
-
-      {/* ── Certifications ──────────────────────────────── */}
-      <div className="flex flex-col gap-4">
-        <h1 className="text-neutral-100 text-xs md:text-sm lg:text-2xl mt-4">Certifications</h1>
-
-        {/* LinkedIn & Microsoft */}
-        <h1 className="text-neutral-400 text-xs md:text-sm lg:text-xl">LinkedIn & Microsoft</h1>
-
-        {/* Mobile pills */}
-        <div className="flex flex-col gap-2 sm:hidden">
-          {linkedInCertificationsData.map((cert, index) => (
-            <CredentialPill key={index} item={certToPill(cert)} />
-          ))}
-        </div>
-
-        {/* Desktop cards */}
-        <div className="hidden sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {linkedInCertificationsData.map((cert, index) => (
-            <CertificationCard key={index} {...cert} showSkillBadges={true} />
-          ))}
-        </div>
-
-        {/* HackerRank */}
-        <h1 className="text-neutral-400 text-xs md:text-sm lg:text-xl mt-2">HackerRank</h1>
-
-        {/* Mobile pills */}
-        <div className="flex flex-col gap-2 sm:hidden">
-          {hackerRankCertificationsData.map((cert, index) => (
-            <CredentialPill key={index} item={certToPill(cert)} />
-          ))}
-        </div>
-
-        {/* Desktop cards */}
-        <div className="hidden sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {hackerRankCertificationsData.map((cert, index) => (
-            <CertificationCard key={index} {...cert} showSkillBadges={false} />
-          ))}
-        </div>
+        </ul>
       </div>
     </ScrollSection>
   );
