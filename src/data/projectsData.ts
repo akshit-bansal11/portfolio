@@ -12,6 +12,7 @@ import type { ProjectItem } from "@/types/project";
 export const projects: ProjectItem[] = [
   {
     title: "Kiteloom",
+    notes: ["real-time multiplayer on Yjs", "70+ unit test files, 11 languages"],
     description:
       "Real-time collaborative whiteboard in the browser. An infinite canvas with shapes, text and images, live cursors synced over WebSockets with Yjs CRDTs, and no account needed to join a room.",
     imgUrl: asset("projects/kiteloom/preview.svg"),
@@ -23,6 +24,7 @@ export const projects: ProjectItem[] = [
   },
   {
     title: "Edgepad",
+    notes: ["248 commits, 300+ tests", "25 GitHub stars"],
     description:
       "Turns an Android phone into a Bluetooth trackpad, media remote and control panel for a Windows laptop or a Mac. Corner dials, multi-finger gestures, an on-screen keyboard and a gamepad. No account, no server, no telemetry.",
     imgUrl: asset("projects/edgepad/preview.svg"),
@@ -35,6 +37,7 @@ export const projects: ProjectItem[] = [
   },
   {
     title: "Offkit",
+    notes: ["37 local-first tools", "800+ tests"],
     description:
       "A Windows desktop app with 37 file tools for images, video, audio, PDFs, SVG, colors and text. Everything runs on your PC: nothing is uploaded, and there is no account and no telemetry.",
     imgUrl: asset("projects/offkit/preview.png"),
@@ -46,6 +49,7 @@ export const projects: ProjectItem[] = [
   },
   {
     title: "Inlay",
+    notes: ["~54 MB RAM", "130+ tests"],
     description:
       "Live widgets set into the Windows 11 desktop: a clock, a Spotify spectrum visualizer, word-synced lyrics and a player, drawn behind the desktop icons by one small native app. A light alternative to Rainmeter.",
     imgUrl: asset("projects/inlay/preview.png"),
@@ -58,6 +62,7 @@ export const projects: ProjectItem[] = [
   },
   {
     title: "Saltcellar",
+    notes: ["AES-256-GCM + Argon2id", "zero network code"],
     description:
       "A local-only encrypted vault for passwords, environment keys and backup codes on Windows. AES-256-GCM under an Argon2id-derived key, a desktop app and a CLI, and no network code at all.",
     imgUrl: asset("projects/saltcellar/preview.png"),
@@ -69,14 +74,15 @@ export const projects: ProjectItem[] = [
     isPublic: true,
   },
   {
-    title: "Keyslate",
+    title: "Inklo",
+    notes: ["140+ tests", "zero network code"],
     description:
       "A fully local, keyboard-first notes app for Windows. Notes are plain .md and .txt files in a folder you choose, every action is a rebindable command, and there is no network code.",
     imgUrl: asset("projects/keyslate/preview.png"),
     logoUrl: asset("projects/keyslate/logo.svg"),
     videoUrl: asset("projects/keyslate/demo.mp4"),
     techStack: ["Rust", "Tauri", "React", "TypeScript"],
-    githubLink: "https://github.com/akshit-bansal11/keyslate",
+    githubLink: "https://github.com/akshit-bansal11/inklo",
     isPublic: true,
   },
   {
@@ -93,6 +99,7 @@ export const projects: ProjectItem[] = [
   },
   {
     title: "Plimsoll",
+    notes: ["a Claude Code HUD plugin"],
     description:
       "A heads-up display for Claude Code, drawn above the prompt: context-window fill, rate-limit windows, token cost, usage stats and git status, plus a small ASCII mascot.",
     imgUrl: asset("projects/plimsoll/preview.png"),

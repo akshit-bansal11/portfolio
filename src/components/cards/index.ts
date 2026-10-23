@@ -12,4 +12,3 @@ export { default as ExpItem } from "./ExpItem";
 export { default as ExpPointsList } from "./ExpPointsList";
 export { default as ExpSkillsList } from "./ExpSkillsList";
 export { default as GoogleBadgeCard } from "./GoogleBadgeCard";
-export { default as ProjectCard } from "./ProjectCard";

@@ -10,6 +10,8 @@ export interface ProjectItem {
   logoUrl?: string;
   videoUrl?: string;
   techStack: string[];
+  /** Short handwritten facts shown on the card. */
+  notes?: string[];
   demoLink?: string;
   githubLink?: string;
   siteLink?: string;

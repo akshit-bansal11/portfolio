@@ -9,17 +9,9 @@
 import { CURRENTLY, WORKED_ACROSS } from "@/data/heroContent";
 import { sketchEllipse } from "@/lib/blog/sketch";
 import { cn } from "@/lib/utils";
+import Stamp from "./Stamp";
 
 const BULLET = sketchEllipse(6, 6, 3.5, 3.5, { seed: 81, jitter: 0.1 });
-
-// Tilt (within -2..2deg) and outline colour per stamp (full class names so Tailwind can see them).
-const STAMP_STYLES = [
-  "-rotate-2 text-doodle-1",
-  "rotate-1 text-doodle-2",
-  "-rotate-1 text-doodle-3",
-  "rotate-2 text-doodle-1",
-  "rotate-0 text-doodle-2",
-] as const;
 
 interface ProfileExtrasProps {
   className?: string;
@@ -75,15 +67,7 @@ export default function ProfileExtras({ className }: ProfileExtrasProps) {
         </h3>
         <ul className="mt-3 flex flex-wrap gap-2">
           {WORKED_ACROSS.map((label, index) => (
-            <li
-              key={label}
-              className={cn(
-                "hand-border border-[1.5px] border-current px-2.5 py-0.5 font-grotesk text-[0.72rem] font-medium uppercase leading-snug tracking-[0.06em]",
-                STAMP_STYLES[index % STAMP_STYLES.length],
-              )}
-            >
-              <span className="text-hero-ink">{label}</span>
-            </li>
+            <Stamp key={label} label={label} index={index} />
           ))}
         </ul>
       </section>
