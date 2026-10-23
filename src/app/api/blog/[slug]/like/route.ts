@@ -4,9 +4,9 @@
  */
 
 import {
-  type SlugContext,
   guard,
   jsonResponse,
+  type SlugContext,
   serverError,
   visitorId,
 } from "@/lib/engagement/request";

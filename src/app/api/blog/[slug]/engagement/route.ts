@@ -4,7 +4,7 @@
  * Reads fail soft: a D1 outage returns an empty, unliked state.
  */
 
-import { type SlugContext, guard, jsonResponse, visitorId } from "@/lib/engagement/request";
+import { guard, jsonResponse, type SlugContext, visitorId } from "@/lib/engagement/request";
 import { countLikes, hasLiked, listComments } from "@/lib/engagement/store";
 
 export const runtime = "nodejs";

@@ -5,11 +5,11 @@
  */
 
 import {
-  type SlugContext,
   errorResponse,
   guard,
   jsonResponse,
   readJson,
+  type SlugContext,
   serverError,
   visitorId,
 } from "@/lib/engagement/request";
@@ -30,10 +30,7 @@ export async function POST(request: Request, { params }: SlugContext) {
   const result = validateComment(parsed.data);
   if (!result.ok) return errorResponse(400, "Please fix the highlighted fields.", result.fields);
   if (result.honeypot) {
-    return jsonResponse(
-      { comment: { id: 0, name: null, body: "", createdAt: Date.now() } },
-      201,
-    );
+    return jsonResponse({ comment: { id: 0, name: null, body: "", createdAt: Date.now() } }, 201);
   }
 
   try {

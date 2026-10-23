@@ -35,7 +35,9 @@ export function guard(slug: string): Response | null {
 
 // SHA-256 hex of salt + client IP. The raw IP is never stored.
 export function hashVisitor(salt: string, ip: string): string {
-  return createHash("sha256").update(salt + ip).digest("hex");
+  return createHash("sha256")
+    .update(salt + ip)
+    .digest("hex");
 }
 
 export function visitorId(request: Request): string {

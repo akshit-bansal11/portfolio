@@ -106,7 +106,12 @@ export async function toggleLike(slug: string): Promise<LikeResult> {
     const res = await fetch(`/api/blog/${slug}/like`, { method: "POST" });
     if (res.status === 503) return { status: "unavailable" };
     const body = await readBody(res);
-    if (res.ok && isRecord(body) && typeof body.likes === "number" && typeof body.liked === "boolean") {
+    if (
+      res.ok &&
+      isRecord(body) &&
+      typeof body.likes === "number" &&
+      typeof body.liked === "boolean"
+    ) {
       return { status: "ok", likes: body.likes, liked: body.liked };
     }
     return { status: "error" };
