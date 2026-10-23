@@ -107,16 +107,15 @@ export default function QuoteCard({ progress }: QuoteCardProps) {
           }}
         />
 
-        {/* Border — brightens on hover */}
-        <motion.div
+        {/* Border — brightens on hover (shadow derived from the hero tokens, so it shows in both themes) */}
+        <div
           aria-hidden
-          className="absolute inset-0 rounded-2xl pointer-events-none"
-          animate={{
+          className="absolute inset-0 rounded-2xl pointer-events-none transition-shadow duration-200 motion-reduce:transition-none"
+          style={{
             boxShadow: hovered
-              ? "inset 0 0 0 1px rgba(255,255,255,0.28), 0 16px 48px rgba(0,0,0,0.55)"
-              : "inset 0 0 0 1px rgba(255,255,255,0.08), 0 4px 20px rgba(0,0,0,0.35)",
+              ? "inset 0 0 0 1px color-mix(in srgb, var(--hero-ink) 28%, transparent), 0 16px 48px color-mix(in srgb, var(--hero-ink) 18%, transparent)"
+              : "inset 0 0 0 1px color-mix(in srgb, var(--hero-ink) 8%, transparent), 0 4px 20px color-mix(in srgb, var(--hero-ink) 10%, transparent)",
           }}
-          transition={{ duration: 0.22 }}
         />
 
         {/* ── Beliefs content ───────────────────────────────────── */}

@@ -8,7 +8,7 @@
 
 @import "tailwindcss";
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(html:not([data-theme="light"]) *));
 
 @plugin "tailwindcss-animate";
 

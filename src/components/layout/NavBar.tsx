@@ -4,7 +4,7 @@
  * Centered top bar with icons and hover tooltip labels.
  * Appears only once the user has scrolled past the full hero
  * and reached the first content section.
- * Hidden on the /skills route. Ends with the light/dark toggle.
+ * Hidden on the /skills route.
  */
 
 "use client";
@@ -17,7 +17,6 @@ import { HERO_HORIZONTAL_END, HERO_SCROLL_LENGTH_VH } from "@/config/heroStages"
 import { navConfigs } from "@/config/navConfig";
 import { useAnimation } from "@/context/AnimationContext";
 import { cn } from "@/lib/utils";
-import ThemeToggle from "./ThemeToggle";
 
 interface NavBarProps {
   page?: string;
@@ -151,10 +150,6 @@ export default function NavBar({ page }: NavBarProps) {
                   </div>
                 );
               })}
-              {/* Light/dark switch, set apart from the section links. */}
-              <div className="ml-1 border-l border-hero-ink/15 pl-1">
-                <ThemeToggle />
-              </div>
             </div>
           </div>
         </motion.div>

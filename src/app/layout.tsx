@@ -14,6 +14,7 @@ import LightRays from "@/components/effects/LightRays";
 import WelcomeAnimation from "@/components/effects/WelcomeAnimation";
 import ScrollIndicator from "@/components/hero/elements/ScrollIndicator";
 import NavBar from "@/components/layout/NavBar";
+import ThemeToggle from "@/components/layout/ThemeToggle";
 import { AnimationProvider } from "@/context/AnimationContext";
 import { THEME_INIT_SCRIPT } from "@/lib/theme";
 
@@ -91,6 +92,10 @@ export default function RootLayout({
           <WelcomeAnimation disabled={isWelcomeAnimationDisabled} />
           {/* Persistent navigation bar. */}
           <NavBar />
+          {/* Always-visible light/dark switch, clear of the centred NavBar. */}
+          <div className="fixed right-3 top-[max(0.75rem,env(safe-area-inset-top))] z-[10000] rounded-xl border border-hero-ink/15 bg-hero-surface/80 backdrop-blur-md md:right-5">
+            <ThemeToggle />
+          </div>
           {/* Fixed scroll affordance — stays on screen even after the hero scrolls away. */}
           <ScrollIndicator />
           {children}
