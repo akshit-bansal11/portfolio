@@ -55,7 +55,7 @@ export const blogPosts: BlogPostMeta[] = [
   },
   {
     slug: "windows-network-speed",
-    title: "That Windows Network Speed Boost Reel Is Wrong. Here's What Actually Works",
+    title: "How to Increase Your Windows Network Speed (and How Not To)",
     description:
       "No Windows setting can push you past your plan, but plenty can waste it. What actually helps (the Wi-Fi and Ethernet adapter settings worth changing, parallel downloads, DNS), how to find your real adapter in Device Manager, and the viral tweaks to skip.",
     publishedAt: "2026-10-24",
