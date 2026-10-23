@@ -56,11 +56,7 @@ export default function ProfileCluster({ progress }: ProfileClusterProps) {
   const wideOpacity = useTransform(progress, [jumpto[0], jumpto[0] + HANDOVER], [1, 0]);
   const compactOpacity = useTransform(progress, [jumpto[0], jumpto[0] + HANDOVER], [0, 1]);
   // The compact column slides left to make room for the board.
-  const compactX = useTransform(
-    progress,
-    [jumpto[0], jumptoSettled, 1],
-    ["0vw", "-28vw", "-28vw"],
-  );
+  const compactX = useTransform(progress, [jumpto[0], jumptoSettled, 1], ["0vw", "-28vw", "-28vw"]);
 
   return (
     <motion.div
