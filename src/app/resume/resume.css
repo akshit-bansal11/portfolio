@@ -403,3 +403,8 @@ li > .resume-edit {
     outline: 0;
   }
 }
+
+/* paginate() drops a block's top gap at the top of a sheet; match it here. */
+.resume-a4 > .resume-block:first-child {
+  padding-top: 0;
+}

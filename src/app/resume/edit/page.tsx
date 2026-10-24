@@ -7,7 +7,7 @@
 
 import type { Metadata } from "next";
 import ResumeEditor from "@/components/resume/ResumeEditor";
-import { getResume } from "@/lib/resume/store";
+import { loadResumeForEdit } from "@/lib/resume/store";
 import "../resume.css";
 
 export const metadata: Metadata = {
@@ -18,12 +18,12 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function ResumeEditPage() {
-  const initial = await getResume();
+  const { content, source } = await loadResumeForEdit();
   return (
     <main className="resume-page">
       <div aria-hidden className="resume-glow" />
       <div className="relative">
-        <ResumeEditor initial={initial} />
+        <ResumeEditor initial={content} source={source} />
       </div>
     </main>
   );

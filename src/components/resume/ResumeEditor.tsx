@@ -12,8 +12,9 @@
 import { type FormEvent, useEffect, useState } from "react";
 import type { ResumeContent } from "@/data/resume";
 import { getSession, saveResume, signIn, signOut } from "@/lib/api/resume";
+import type { EditSource } from "@/lib/resume/store";
 import { cn } from "@/lib/utils";
-import { EDIT_KIT } from "./EditKit";
+import { EDIT_KIT, OpenFieldContext } from "./EditKit";
 import ResumeSheet, { type SheetEdit } from "./ResumeSheet";
 import ResumeViewer from "./ResumeViewer";
 
@@ -85,7 +86,15 @@ function statusText(save: SaveState, dirty: boolean): string {
   return "No changes";
 }
 
-export default function ResumeEditor({ initial }: { initial: ResumeContent }) {
+export default function ResumeEditor({
+  initial,
+  source,
+}: {
+  initial: ResumeContent;
+  source: EditSource;
+}) {
+  const canSave = source !== "error";
+  const [openField, setOpenField] = useState<string | null>(null);
   // undefined = checking the session, null = signed out, string = CSRF token.
   const [csrf, setCsrf] = useState<string | null | undefined>(undefined);
   const [saved, setSaved] = useState(initial);
@@ -194,13 +203,23 @@ export default function ResumeEditor({ initial }: { initial: ResumeContent }) {
   const fieldErrors = save.status === "failed" ? Object.entries(save.fields) : [];
 
   return (
-    <>
+    <OpenFieldContext.Provider value={{ open: openField, setOpen: setOpenField }}>
       <div className="mx-auto mb-5 flex max-w-[210mm] flex-col gap-3 px-4 text-hero-ink sm:px-0 print:hidden">
+        {!canSave && (
+          <p role="alert" className="text-sm text-hero-pen">
+            Couldn&apos;t load the saved resume, so saving is off to protect it. Reload to try again.
+          </p>
+        )}
+        {source === "default" && (
+          <p className="text-sm text-hero-muted">
+            No saved version yet. This is the built-in copy; your first save becomes the live resume.
+          </p>
+        )}
         <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
             className={PRIMARY}
-            disabled={!dirty || save.status === "saving"}
+            disabled={!canSave || !dirty || save.status === "saving"}
             onClick={onSave}
           >
             {save.status === "saving" ? "Saving…" : "Save"}
@@ -259,6 +278,6 @@ export default function ResumeEditor({ initial }: { initial: ResumeContent }) {
           <ResumeSheet doc={draft.full} header={draft.header} variant="full" edit={edit("full")} />
         }
       />
-    </>
+    </OpenFieldContext.Provider>
   );
 }

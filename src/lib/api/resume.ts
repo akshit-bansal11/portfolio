@@ -93,7 +93,9 @@ export async function signOut(csrf: string): Promise<SignOutResult> {
       method: "DELETE",
       headers: { "X-CSRF-Token": csrf },
     });
-    return res.ok ? { status: "ok" } : { status: "error", error: errorText(await readBody(res)) };
+    // 401 means the session is already gone, which is what signing out wanted.
+    if (res.ok || res.status === 401) return { status: "ok" };
+    return { status: "error", error: errorText(await readBody(res)) };
   } catch {
     return { status: "error", error: GENERIC_ERROR };
   }

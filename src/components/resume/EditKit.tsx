@@ -9,11 +9,24 @@
 "use client";
 
 import { ArrowDown, ArrowUp, Plus, Trash2 } from "lucide-react";
-import { type KeyboardEvent, useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  createContext,
+  type KeyboardEvent,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+} from "react";
 import type { EditAction, EditKit } from "./ResumeSheet";
 import { RichText } from "./RichText";
 
 const ICONS = { up: ArrowUp, down: ArrowDown, add: Plus, remove: Trash2 };
+
+// Which field is open lives in the editor, so it survives a block moving to another sheet.
+export const OpenFieldContext = createContext<{
+  open: string | null;
+  setOpen: (label: string | null) => void;
+}>({ open: null, setOpen: () => {} });
 
 function Field({
   value,
@@ -26,12 +39,15 @@ function Field({
   rich?: boolean;
   onChange: (value: string) => void;
 }) {
-  const [editing, setEditing] = useState(false);
+  const { open, setOpen } = useContext(OpenFieldContext);
+  const editing = open === label;
   const area = useRef<HTMLTextAreaElement>(null);
 
   // Move focus into the textarea when editing starts.
   useEffect(() => {
-    if (editing) area.current?.focus();
+    const el = area.current;
+    // The off-screen measuring copy is inert and must not take focus.
+    if (editing && el && !el.closest("[inert]")) el.focus();
   }, [editing]);
 
   // Grow the textarea with its text (a direct style write, no state).
@@ -59,7 +75,10 @@ function Field({
         className="resume-field-input"
         onChange={(event) => onChange(event.target.value.replace(/[\r\n]+/g, " "))}
         onKeyDown={onKeyDown}
-        onBlur={() => setEditing(false)}
+        onBlur={(event) => {
+          // A textarea removed by repagination is not the user leaving the field.
+          if (event.currentTarget.isConnected) setOpen(null);
+        }}
       />
     );
   }
@@ -68,7 +87,7 @@ function Field({
       type="button"
       aria-label={`Edit ${label}: ${value || "empty"}`}
       className="resume-field-btn"
-      onClick={() => setEditing(true)}
+      onClick={() => setOpen(label)}
     >
       {rich ? <RichText text={value} links={false} /> : value}
     </button>

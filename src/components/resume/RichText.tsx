@@ -39,7 +39,9 @@ export function RichText({ text, links = true }: { text: string; links?: boolean
             </RichLink>
           );
         }
-        if (part.startsWith("**")) return <strong key={part}>{part.slice(2, -2)}</strong>;
+        if (part.length > 4 && part.startsWith("**") && part.endsWith("**")) {
+          return <strong key={part}>{part.slice(2, -2)}</strong>;
+        }
         return part;
       })}
     </>

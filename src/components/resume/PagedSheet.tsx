@@ -147,7 +147,7 @@ export default function PagedSheet({
       )}
       <div className="resume-sheets">
         {(pages ?? [blocks.map((_, i) => i)]).map((indices, n, all) => (
-          <div key={indices[0]} className="resume-a4" data-flow={pages ? undefined : ""}>
+          <div key={n} className="resume-a4" data-flow={pages ? undefined : ""}>
             {render(indices)}
             {pages && variant === "full" && all.length > 1 && (
               <span aria-hidden className="resume-pageno">

@@ -33,7 +33,7 @@ export default function NavBar({ page }: NavBarProps) {
   // and the first content section has come into view.
   const [isPastHero, setIsPastHero] = useState(false);
 
-  const isHidden = pathname === "/skills" || pathname === "/resume";
+  const isHidden = pathname === "/skills" || pathname.startsWith("/resume");
 
   // scrollY at which progress=1 for the hero wrapper: (vh - 1) * innerHeight
 
