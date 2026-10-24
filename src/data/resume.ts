@@ -1,11 +1,10 @@
 /*
  * resume.ts
- * Content of the /resume page, transcribed from the Google Docs
- * "Akshit Bansal - Resume (Oct 2026)" (one page) and "Akshit Bansal - CV"
- * (full). The CV keeps its longer write-ups but takes the newer facts from
- * the one-page resume (role title, project names, Edgepad numbers).
- * Inline text supports **bold** and [label](url). DEFAULT_RESUME is the
- * fallback when no edited revision is stored (lib/resume/store.ts).
+ * Built-in content of the /resume page: a one-page resume and a full CV.
+ * Written for ATS parsing: standard section names, one date format, no
+ * first person, plain-text links. Inline text supports **bold** and
+ * [label](url). DEFAULT_RESUME is the fallback when no edited revision is
+ * stored (lib/resume/store.ts).
  */
 
 export interface ResumeLink {
@@ -70,6 +69,19 @@ const gh = (repo: string): ResumeLink => ({
 const KITELOOM_LINK: ResumeLink = { label: "kiteloom.com", href: "https://kiteloom.com" };
 const TRUPEER_LINK: ResumeLink = { label: "trupeer.ai", href: "https://www.trupeer.ai/" };
 
+const EDUCATION: ResumeSection = {
+  kind: "entries",
+  heading: "Education",
+  entries: [
+    {
+      title: "B.Tech, Computer Science and Engineering",
+      dates: "Aug 2022 – Jun 2026",
+      subtitle: "Maharaja Ranjit Singh Punjab Technical University",
+      location: "Bathinda, India",
+    },
+  ],
+};
+
 /* ------------------------------------------------------------------ */
 /* One page                                                            */
 /* ------------------------------------------------------------------ */
@@ -79,30 +91,29 @@ const RESUME_ONE_PAGE: ResumeDocument = {
     {
       kind: "text",
       heading: "Summary",
-      text: "Full-stack engineer shipping production software for web, Android, Windows and macOS. Sole engineer at Elina Club, Co-Founder & CTO of a stealth startup, founder of Kiteloom. Maintain **7 open-source apps** with **650+ commits** and **1,900+ automated tests**. Seeking an SDE-1 / SDE-2 role.",
+      text: "Full-stack software engineer building production web, desktop and Android software with TypeScript, React, Next.js, Node.js and Rust. Sole engineer at Elina Club, where two web platforms went from first commit to production in under three months. Previously at Trupeer AI, cut subtitle compute cost by about 70% by moving processing into the browser.",
     },
     {
       kind: "entries",
       heading: "Experience",
       entries: [
         {
-          title: "Elina Club Pvt. Ltd",
+          title: "Elina Club Pvt. Ltd.",
           dates: "Jul 2026 – Present",
           subtitle: "SDE-3 & Chief Advisor",
-          location: "Bathinda, India (On-site)",
+          location: "Bathinda, India",
           bullets: [
-            "Sole engineer owning frontend, backend, database, CI/CD and deployments; advise leadership on product and tech strategy.",
-            "Shipped **2 production web platforms** on Next.js 16, React 19 and TypeScript in under 3 months (**~350 commits**).",
-            "Postgres (Neon) schema and REST APIs for **4 lead-capture pipelines** (Zod, Redis rate limiting); RBAC admin console with Excel export.",
+            "Own the full stack as the company's only engineer: frontend, backend, database, CI/CD and deployments.",
+            "Built and launched two production web platforms with Next.js 16, React 19 and TypeScript in under three months.",
+            "Designed the PostgreSQL (Neon) schema and REST APIs for four lead-capture pipelines, with server-side Zod validation and Redis rate limiting.",
+            "Built an internal admin console with role-based access, filterable lead tables and Excel export.",
           ],
         },
         {
           title: "Stealth Startup",
           dates: "Jul 2026 – Present",
           subtitle: "Co-Founder & CTO",
-          bullets: [
-            "Own technical direction, system architecture and engineering execution for a pre-launch company.",
-          ],
+          bullets: ["Lead architecture and engineering for a pre-launch product."],
         },
         {
           title: "Kiteloom",
@@ -110,8 +121,8 @@ const RESUME_ONE_PAGE: ResumeDocument = {
           dates: "Jan 2026 – Present",
           subtitle: "Founder",
           bullets: [
-            "Infinite canvas unifying sketches, wireframes and diagrams, with real-time multiplayer on **Yjs CRDTs** (Next.js, TypeScript, Convex).",
-            "Better Auth (email, Google OAuth, 2FA), Paddle billing, Sentry; **70+ unit test files** plus Playwright E2E in GitHub Actions; **11 languages**.",
+            "Built an infinite canvas for sketches, wireframes and diagrams with real-time collaboration on Yjs CRDTs (Next.js, TypeScript, Convex).",
+            "Added email, Google OAuth and 2FA sign-in (Better Auth), Paddle billing and Sentry; CI runs 70+ unit test files and Playwright E2E tests.",
           ],
         },
         {
@@ -119,11 +130,12 @@ const RESUME_ONE_PAGE: ResumeDocument = {
           link: TRUPEER_LINK,
           dates: "Jan 2026 – Jul 2026",
           subtitle: "Full-Stack Intern",
-          location: "Bengaluru, India (On-site)",
+          location: "Bengaluru, India",
           bullets: [
-            "Moved subtitles client-side with FFmpeg WASM + ElevenLabs Scribe v2: **~70%** lower compute cost and **90+ languages**.",
-            "Rebuilt the Chrome extension recorder on WebCodecs with chunked IndexedDB writes, ending data loss on **30+ min** recordings.",
-            "Hardened auth (OWASP A07): Redis rate limits, short-lived JWTs, reCAPTCHA v3; sole intern on the Next.js App Router rewrite.",
+            "Moved subtitle generation into the browser with FFmpeg WASM and ElevenLabs Scribe v2, cutting compute cost by about 70% and adding 90+ languages.",
+            "Rebuilt the Chrome extension recorder on WebCodecs with chunked IndexedDB writes, fixing data loss on recordings over 30 minutes.",
+            "Secured the password-reset flow with Redis sliding-window rate limits, short-lived JWTs and reCAPTCHA v3, and set up the Vitest suite.",
+            "Built a typed REST client, Zod form validation and optimistic UI for the Next.js App Router rewrite.",
           ],
         },
       ],
@@ -135,16 +147,16 @@ const RESUME_ONE_PAGE: ResumeDocument = {
         {
           title: "Edgepad",
           link: gh("edgepad"),
-          subtitle: "Kotlin, C# / .NET, Swift, Bluetooth RFCOMM",
+          subtitle: "Kotlin, C#, .NET, Swift, Bluetooth RFCOMM",
           bullets: [
-            "Turns an Android phone into a trackpad, media remote, keyboard and virtual Xbox gamepad for Windows and macOS over a custom Bluetooth protocol; **248 commits, 300+ tests, 25 GitHub stars**.",
+            "Android app that works as a trackpad, keyboard, media remote and virtual Xbox controller for Windows and macOS over a custom Bluetooth protocol with two-way state sync; 300+ tests.",
           ],
         },
         {
           title: "Flick",
           subtitle: "Rust, Tauri, React, TypeScript",
           bullets: [
-            "Keyboard-first Windows launcher with BYO-key AI chat; fuzzy-matches 2,000 apps in **0.25 ms** and **305K file paths at p95 ≤ 4.7 ms**; **470+ tests**.",
+            "Keyboard-first Windows launcher for apps, files, system commands and AI chat; fuzzy search over 305K file paths at p95 ≤ 4.7 ms; 470+ tests.",
           ],
         },
         {
@@ -152,7 +164,7 @@ const RESUME_ONE_PAGE: ResumeDocument = {
           link: gh("offkit"),
           subtitle: "Rust, Slint, Next.js, WebAssembly",
           bullets: [
-            "**37 local-first** media, PDF, image, SVG and dev tools as a native Rust app and a WASM web app from one shared tool registry; **800+ tests**.",
+            "37 offline media, PDF, image and developer tools shipped as a native Rust desktop app and a WebAssembly web app from one tool registry; 800+ tests.",
           ],
         },
         {
@@ -160,47 +172,33 @@ const RESUME_ONE_PAGE: ResumeDocument = {
           link: gh("saltcellar"),
           subtitle: "Rust, Tauri, TypeScript",
           bullets: [
-            "Offline secrets vault: AES-256-GCM envelope encryption under Argon2id (64 MiB), CSP blocking all network I/O, 30 s clipboard auto-clear; signed build attestations.",
+            "Offline secrets vault with AES-256-GCM envelope encryption under Argon2id, no network access, clipboard auto-clear and signed release builds.",
           ],
         },
       ],
     },
     {
       kind: "pairs",
-      heading: "Technical Skills",
+      heading: "Skills",
       pairs: [
-        { label: "Languages", value: "TypeScript, JavaScript, Rust, Kotlin, C#, Swift, SQL, Go" },
-        {
-          label: "Frontend",
-          value: "Next.js, React, Tailwind CSS, shadcn/ui, Motion, GSAP, CodeMirror, WebAssembly",
-        },
+        { label: "Languages", value: "TypeScript, JavaScript, SQL, Go, Rust, Kotlin, C#, Swift" },
+        { label: "Frontend", value: "React, Next.js, Tailwind CSS, shadcn/ui, WebAssembly" },
         {
           label: "Backend & Data",
-          value:
-            "Node.js, Express, REST, WebSockets, Convex, PostgreSQL (Neon), MongoDB, Redis (Upstash), Firebase",
+          value: "Node.js, Express, REST, WebSockets, Convex, PostgreSQL, MongoDB, Redis, Firebase",
         },
+        { label: "Security", value: "OAuth, JWT, 2FA, rate limiting, AES-GCM, Argon2" },
         {
-          label: "Testing, Security & Tools",
-          value:
-            "Vitest, Playwright, RTL, Better Auth, Auth0, JWT, OAuth, 2FA, AES-GCM, Argon2, Claude Code, GitHub Actions, Vercel, Sentry",
+          label: "Testing & DevOps",
+          value: "Vitest, Playwright, React Testing Library, GitHub Actions, Vercel, Sentry",
         },
       ],
     },
-    {
-      kind: "entries",
-      heading: "Education",
-      entries: [
-        {
-          title:
-            "B.Tech, Computer Science & Engineering, Maharaja Ranjit Singh Punjab Technical University",
-          dates: "Aug 2022 – Jun 2026",
-        },
-      ],
-    },
+    EDUCATION,
     {
       kind: "text",
       heading: "Certifications",
-      text: "Google Cloud Generative AI Learning Path · Microsoft & LinkedIn Career Essentials (Generative AI, Software Development) · HackerRank Frontend Developer (React)",
+      text: "Google Cloud Generative AI Learning Path; HackerRank Frontend Developer (React)",
     },
   ],
 };
@@ -213,27 +211,26 @@ const RESUME_FULL: ResumeDocument = {
   sections: [
     {
       kind: "text",
-      heading: "Profile",
-      text: "Full-stack software engineer who has shipped production software for the web, Android, Windows and macOS. I run engineering end to end as SDE-3 at Elina Club, co-founded a stealth startup as its CTO, and built my own product, Kiteloom. I use Claude Code every day and know how to get secure, well-tested code out of it. Looking for an SDE-1 / SDE-2 role where I can keep building reliable products with a strong team.",
+      heading: "Summary",
+      text: "Full-stack software engineer working across web, desktop and Android. Currently the sole engineer at Elina Club, responsible for two production web platforms end to end, and founder of Kiteloom, a collaborative canvas product. Previously a full-stack intern at Trupeer AI on the web app, Chrome extension and Node.js backend. Maintains open-source desktop and Android apps in Rust, Kotlin, C# and Swift, each with automated tests and CI-built releases.",
     },
     {
       kind: "entries",
       heading: "Experience",
       entries: [
         {
-          title: "Elina Club Pvt. Ltd",
+          title: "Elina Club Pvt. Ltd.",
           dates: "Jul 2026 – Present",
           subtitle: "SDE-3 & Chief Advisor",
-          location: "Bathinda, India (On-site)",
-          intro:
-            "I'm the only engineer here, so everything technical is mine: frontend, backend, database, automation and deployments. As Chief Advisor I also advise leadership on product and technical decisions.",
+          location: "Bathinda, India",
           bullets: [
-            "**Two production platforms.** Built and shipped two web platforms on Next.js 16, React 19 and TypeScript, from the first commit to the live site. About 350 commits across both in under three months.",
-            "**Database and lead pipeline.** Designed the Postgres (Neon) schema and the APIs behind the lead, careers, feedback and newsletter forms. Every submission is validated with Zod on the server, rate limited with Upstash Redis and saved before the visitor is handed off to WhatsApp.",
-            "**Admin panel and access control.** Wrote the internal admin panel: searchable and filterable lead tables, Excel export and viewer/editor permissions. Sessions are signed by httpOnly cookies and passwords are hashed with scrypt. The one super admin lives in an environment config, so it can never be locked out from inside the app.",
-            "**Interactive location map.** Built a map that drills down from state to district to town and village, and deferred its bundle so it doesn't slow down the first page load.",
-            "**Testing and code quality.** Set up Vitest unit tests and Playwright end-to-end tests, plus a single command that formats, lints and type-checks the code. Nothing gets committed unless it passes.",
-            "**Android and automation.** Also working on the company's Android apps and the internal automation the rest of the team depends on.",
+            "Sole engineer, responsible for frontend, backend, database, automation and deployments; as Chief Advisor, advise leadership on product and technical decisions.",
+            "Built and launched two production web platforms on Next.js 16, React 19 and TypeScript, from first commit to live site in under three months.",
+            "Designed the PostgreSQL (Neon) schema and APIs behind the lead, careers, feedback and newsletter forms; every submission is validated server-side with Zod, rate limited with Upstash Redis and stored before the visitor is handed off to WhatsApp.",
+            "Built the internal admin panel with searchable lead tables, Excel export and viewer/editor roles, on signed httpOnly session cookies and scrypt password hashing; the super-admin account lives in environment config so it cannot be locked out from inside the app.",
+            "Built a drill-down location map (state, district, town, village) and lazy-loaded its bundle to keep it off the initial page load.",
+            "Set up Vitest unit tests, Playwright end-to-end tests and a single pre-commit check for formatting, linting and type-checking.",
+            "Contribute to the company's Android apps and internal automation tooling.",
           ],
         },
         {
@@ -241,7 +238,7 @@ const RESUME_FULL: ResumeDocument = {
           dates: "Jul 2026 – Present",
           subtitle: "Co-Founder & CTO",
           bullets: [
-            "Co-founded an early-stage company that is still in stealth, so I can't name it or its products yet. I own the technical direction, architecture and engineering.",
+            "Co-founded a pre-launch company; responsible for technical direction, system architecture and engineering. Company and product details withheld until launch.",
           ],
         },
         {
@@ -250,12 +247,12 @@ const RESUME_FULL: ResumeDocument = {
           dates: "Jan 2026 – Present",
           subtitle: "Founder",
           intro:
-            "Kiteloom is my own product: an infinite canvas where sketches, wireframes and diagrams are the same object, so an idea never has to be exported into another tool to get finished. Built with Next.js, TypeScript, Convex and Yjs.",
+            "Infinite canvas where sketches, wireframes and diagrams are the same kind of object, so work moves from rough idea to finished diagram without switching tools. Next.js, TypeScript, Convex, Yjs.",
           bullets: [
-            "**Real-time multiplayer.** Yjs CRDTs over a WebSocket server that I run separately. Each browser keeps a local copy that reconciles after a dropped connection.",
-            "**Diagramming.** Arrows bind to a shape's edge, so a diagram re-routes instead of breaking when you move things.",
-            "**Backend, auth and billing.** Convex with Better Auth (email, Google sign-in, 2FA), Paddle billing, per-user rate limits and Sentry error tracking. Private by default, with shared links that can be revoked.",
-            "**Quality and reach.** 70+ unit test files and a Playwright end-to-end suite run in GitHub Actions. The marketing site ships in 11 languages.",
+            "Built real-time collaboration on Yjs CRDTs over a separately hosted WebSocket server; each client keeps a local copy that reconciles after a dropped connection.",
+            "Implemented connectors that bind to shape edges and re-route when shapes move, instead of detaching.",
+            "Integrated Better Auth (email, Google OAuth, 2FA), Paddle billing, per-user rate limits and Sentry; documents are private by default, with revocable share links.",
+            "Maintain 70+ unit test files and a Playwright end-to-end suite in GitHub Actions; the marketing site is localized into 11 languages.",
           ],
         },
         {
@@ -263,14 +260,16 @@ const RESUME_FULL: ResumeDocument = {
           link: TRUPEER_LINK,
           dates: "Jan 2026 – Jul 2026",
           subtitle: "Full-Stack Intern",
-          location: "Bengaluru, India (On-site)",
+          location: "Bengaluru, India",
           intro:
-            "Worked across the Next.js web app, the Chrome extension and the Node.js backend, with MongoDB, Redis and third-party webhooks.",
+            "Worked across the Next.js web app, the Chrome extension and the Node.js backend (MongoDB, Redis, third-party webhooks).",
           bullets: [
-            "**Subtitle system.** Moved subtitle processing off the server and into the browser, using FFmpeg WASM and ElevenLabs Scribe v2 for transcription and SRT editing. That cut compute costs by about 70% and added support for 90+ languages.",
-            "**Chrome extension recording.** Switched the recorder from MediaRecorder to the WebCodecs API and wrote chunks to IndexedDB instead of holding them in memory, so recordings longer than 30 minutes stopped losing data. Added upload retries with exponential backoff, and a fallback web recorder for companies that block extensions.",
-            "**Backend security and tests.** Tightened the password reset flow with Upstash Redis sliding-window rate limiting, short-lived JWTs, reCAPTCHA v3 and a honeypot field. Set up Vitest from scratch and covered the Auth0 middleware, token refresh, signup routes and the Stripe, Intercom and Mixpanel integrations.",
-            "**Frontend rewrite.** I was the only intern on the rewrite to the Next.js App Router with TypeScript, Tailwind CSS and shadcn/ui. Wrote a typed REST client, Zod form validation and webhook-driven optimistic UI for the Organization module.",
+            "Moved subtitle processing from the server to the browser, using FFmpeg WASM and ElevenLabs Scribe v2 for transcription and SRT editing; cut compute cost by about 70% and extended support to 90+ languages.",
+            "Replaced MediaRecorder with the WebCodecs API in the Chrome extension and streamed chunks to IndexedDB instead of memory, ending data loss on recordings longer than 30 minutes.",
+            "Added upload retries with exponential backoff and a fallback web recorder for organizations that block browser extensions.",
+            "Secured the password-reset flow with Upstash Redis sliding-window rate limiting, short-lived JWTs, reCAPTCHA v3 and a honeypot field.",
+            "Set up Vitest from scratch and wrote tests for the Auth0 middleware, token refresh, signup routes and the Stripe, Intercom and Mixpanel integrations.",
+            "Only intern on the Next.js App Router rewrite (TypeScript, Tailwind CSS, shadcn/ui); built a typed REST client, Zod form validation and webhook-driven optimistic UI for the Organization module.",
           ],
         },
       ],
@@ -283,14 +282,14 @@ const RESUME_FULL: ResumeDocument = {
           title: "Edgepad",
           link: gh("edgepad"),
           dates: "Sep 2026 – Present",
-          subtitle: "Kotlin, C# / .NET, Swift, Bluetooth RFCOMM",
+          subtitle: "Kotlin, C#, .NET, Swift, Bluetooth RFCOMM",
           intro:
-            "Turns an Android phone into a trackpad, media remote, keyboard and virtual Xbox gamepad for Windows and macOS over a direct Bluetooth link. No account, no Wi-Fi, no server in between. Open source, 25 GitHub stars.",
+            "Open-source Android app that turns a phone into a trackpad, keyboard, media remote and virtual Xbox controller for Windows and macOS over a direct Bluetooth link, with no account, Wi-Fi or server.",
           bullets: [
-            "Android app in Kotlin with desktop companions in C# on .NET (Windows) and Swift (macOS), talking over a custom Bluetooth RFCOMM wire protocol I designed.",
-            "Multi-finger gestures, corner dials for volume and brightness, drawn-shape shortcuts that run macros, an on-screen keyboard, and a gamepad that shows up on the computer as a real virtual Xbox controller.",
-            "Live two-way state sync: the dials show the computer's real volume, brightness and playback position, and follow changes made on the computer itself.",
-            "248 commits, 300+ tests and regular releases (v3.5 at the moment), built and tested in CI. Submitted to the Windows Package Manager (winget) community repository.",
+            "Designed a custom Bluetooth RFCOMM wire protocol between the Kotlin Android app and desktop companions in C# on .NET (Windows) and Swift (macOS).",
+            "Implemented multi-finger gestures, volume and brightness dials, drawn-shape macro shortcuts, an on-screen keyboard and a gamepad the OS sees as a virtual Xbox controller.",
+            "Built two-way state sync, so the phone shows the computer's real volume, brightness and playback position, including changes made on the computer.",
+            "300+ tests, CI builds and regular releases (currently v3.5); 25 GitHub stars; submitted to the winget community repository.",
           ],
         },
         {
@@ -299,22 +298,21 @@ const RESUME_FULL: ResumeDocument = {
           dates: "Sep 2026",
           subtitle: "Rust, Tauri, TypeScript",
           intro:
-            "An offline encrypted vault for passwords, environment keys and backup codes. A free, open-source alternative to paid password managers.",
+            "Offline encrypted vault for passwords, environment keys and backup codes; an open-source alternative to paid password managers.",
           bullets: [
-            "Written in Rust: a Tauri desktop app and a CLI on top of one shared core crate.",
-            "AES-256-GCM envelope encryption under an Argon2id KDF (64 MiB). The whole vault is one encrypted file on disk.",
-            "No network code at all; the app's content security policy blocks every connection. Clipboard auto-clears after 30 s and the window is excluded from screen capture.",
-            "Rejects master passwords found in leaked-password lists, and every release ships with SHA-256 checksums and a signed build attestation.",
+            "Tauri desktop app and CLI built on one shared Rust core crate.",
+            "AES-256-GCM envelope encryption under an Argon2id KDF (64 MiB); the vault is a single encrypted file on disk.",
+            "No network code: the content security policy blocks every connection, the clipboard clears after 30 seconds and the window is excluded from screen capture.",
+            "Rejects master passwords found in breach lists; releases ship with SHA-256 checksums and signed build attestations.",
           ],
         },
         {
           title: "Flick",
           subtitle: "Rust, Tauri, React, TypeScript",
           intro:
-            "A keyboard-first Windows launcher: apps, system commands, file search and BYO-key AI chat (OpenAI, Anthropic, OpenRouter, Ollama) in one bar.",
+            "Keyboard-first Windows launcher that combines app launch, system commands, file search and bring-your-own-key AI chat (OpenAI, Anthropic, OpenRouter, Ollama) in one search bar.",
           bullets: [
-            "Fuzzy-matches 2,000 apps in 0.25 ms and 305K file paths at p95 ≤ 4.7 ms.",
-            "470+ tests.",
+            "Fuzzy search matches 2,000 apps in 0.25 ms and 305K file paths at p95 ≤ 4.7 ms; 470+ automated tests.",
           ],
         },
         {
@@ -322,37 +320,36 @@ const RESUME_FULL: ResumeDocument = {
           link: gh("offkit"),
           subtitle: "Rust, Slint, Next.js, WebAssembly",
           intro:
-            "37 local-first media, PDF, image, SVG and dev tools, shipped as a native Rust app (Windows/macOS/Linux) and a WebAssembly web app from one shared tool registry.",
-          bullets: ["Replaced Electron with Slint.", "800+ tests."],
+            "37 offline media, PDF, image, SVG and developer tools, shipped as a native Rust desktop app (Windows, macOS, Linux) and a WebAssembly web app from one shared tool registry.",
+          bullets: ["Moved the desktop UI from Electron to Slint; 800+ automated tests."],
         },
         {
           title: "Inlay",
           link: gh("inlay"),
           subtitle: "Rust, Direct2D, Win32",
           intro:
-            "A lightweight Rainmeter alternative that embeds a clock, audio visualizer, time-synced lyrics and a Spotify player into the Windows desktop.",
-          bullets: ["One native process with event-driven redraws at ~54 MB RAM.", "130+ tests."],
+            "Lightweight Rainmeter alternative that embeds a clock, audio visualizer, time-synced lyrics and a Spotify player in the Windows desktop.",
+          bullets: [
+            "Runs as one native process with event-driven redraws at about 54 MB RAM; 130+ tests.",
+          ],
         },
         {
           title: "Inklo",
           link: gh("inklo"),
           subtitle: "Tauri, Rust, React, CodeMirror 6",
           intro:
-            "A fully local, keyboard-first Markdown notes app for Windows, macOS and Linux, over plain .md files.",
+            "Local, keyboard-driven Markdown notes app for Windows, macOS and Linux that works directly on plain .md files.",
           bullets: [
-            "Command palette, rebindable shortcuts, pins and tags.",
-            "Zero network code, enforced by CSP. 140+ tests.",
+            "Command palette, rebindable shortcuts, pins and tags; no network code, enforced by CSP; 140+ tests.",
           ],
         },
         {
           title: "Plimsoll",
           link: gh("plimsoll"),
           subtitle: "TypeScript, Node.js, Claude Code plugin API",
-          intro:
-            "A Claude Code HUD plugin with an animated pixel-art mascot, distributed via the plugin marketplace.",
+          intro: "Claude Code status-bar plugin, distributed through the plugin marketplace.",
           bullets: [
-            "Shows context-window usage and 5-hour/weekly rate limits.",
-            "Shows token spend at API prices and Git/PR/CI status.",
+            "Shows context-window usage, 5-hour and weekly rate limits, token spend at API prices, and Git, PR and CI status.",
           ],
         },
       ],
@@ -361,52 +358,41 @@ const RESUME_FULL: ResumeDocument = {
       kind: "list",
       heading: "Other Projects",
       items: [
-        "**Open Whiteboard** ([github.com/akshit-bansal11/open-whiteboard](https://github.com/akshit-bansal11/open-whiteboard)): real-time collaborative whiteboard with my own HTML5 Canvas engine, Yjs CRDTs and a Node.js WebSocket server.",
-        "**Lyric Veil** ([lyric-veil.vercel.app](https://lyric-veil.vercel.app)): word-synced Spotify lyrics as a transparent, click-through desktop overlay (Electron, React, TypeScript) with its own drift-corrected clock.",
-        "**Also:** Is It Canon (story-order tracker for connected franchises), cmd-ref (dev command reference, one JSON file per route), Audio Visualizer (C#, WPF, WASAPI loopback), Plotline (media tracker), Canopy (bookmark manager).",
+        "Open Whiteboard ([github.com/akshit-bansal11/open-whiteboard](https://github.com/akshit-bansal11/open-whiteboard)): real-time collaborative whiteboard with a custom HTML5 Canvas engine, Yjs CRDTs and a Node.js WebSocket server.",
+        "Lyric Veil ([lyric-veil.vercel.app](https://lyric-veil.vercel.app)): transparent, click-through desktop overlay for word-synced Spotify lyrics (Electron, React, TypeScript) with a drift-corrected playback clock.",
+        "Smaller projects: Is It Canon (story-order tracker for connected franchises), cmd-ref (developer command reference), Audio Visualizer (C#, WPF, WASAPI loopback), Plotline (media tracker), Canopy (bookmark manager).",
       ],
     },
     {
       kind: "pairs",
-      heading: "Technical Skills",
+      heading: "Skills",
       pairs: [
         {
           label: "Languages",
-          value: "TypeScript, JavaScript, SQL, Go; Kotlin, Rust, C# and Swift in my own projects",
+          value: "TypeScript, JavaScript, SQL, Go; Rust, Kotlin, C#, Swift (open-source projects)",
         },
         {
           label: "Frontend",
-          value: "Next.js, React, Tailwind CSS, shadcn/ui, Motion, GSAP, CodeMirror, WebAssembly",
+          value: "React, Next.js, Tailwind CSS, shadcn/ui, Motion, GSAP, CodeMirror, WebAssembly",
         },
-        { label: "Backend", value: "Node.js, Express, REST APIs, WebSockets, Convex, CRDTs, Yjs" },
+        { label: "Backend", value: "Node.js, Express, REST APIs, WebSockets, Convex, Yjs (CRDTs)" },
         {
           label: "Databases",
           value: "PostgreSQL (Neon), MongoDB, Redis (Upstash), Firebase, IndexedDB",
         },
         {
-          label: "Auth & Security",
-          value: "Better Auth, Auth0, JWT, OAuth, 2FA, rate limiting, reCAPTCHA, AES-GCM, Argon2",
+          label: "Security",
+          value: "Better Auth, Auth0, OAuth, JWT, 2FA, rate limiting, reCAPTCHA, AES-GCM, Argon2",
         },
         { label: "Testing", value: "Vitest, Playwright, React Testing Library" },
-        { label: "Mobile & Desktop", value: "Android (Kotlin), Tauri (Rust), Slint, .NET (C#)" },
+        { label: "Mobile & Desktop", value: "Android (Kotlin), Tauri, Slint, .NET" },
         {
-          label: "AI & Dev Tools",
-          value: "Claude Code (expert), GitHub Actions, Vercel, Sentry, Biome, Figma, Postman",
+          label: "Tools",
+          value: "GitHub Actions, Vercel, Sentry, Biome, Figma, Postman, Claude Code",
         },
       ],
     },
-    {
-      kind: "entries",
-      heading: "Education",
-      entries: [
-        {
-          title: "B.Tech, Computer Science & Engineering",
-          dates: "Aug 2022 – Jun 2026",
-          subtitle: "Maharaja Ranjit Singh Punjab Technical University",
-          location: "Bathinda, Punjab",
-        },
-      ],
-    },
+    EDUCATION,
     {
       kind: "entries",
       heading: "Training",
@@ -438,24 +424,22 @@ const RESUME_FULL: ResumeDocument = {
             "[Generative AI Learning Path](https://www.skills.google/public_profiles/57032e10-4253-4ac1-9944-91f03bb226d1/badges/24146512): Gen AI Agents, Gen AI Apps, Navigate the Landscape, Foundational Concepts, Beyond the Chatbot",
         },
         {
-          label: "Microsoft & LinkedIn",
-          value:
-            "[Career Essentials in Generative AI](https://www.linkedin.com/learning/certificates/b0d6803487e5b12b7ddf935a52b4efa6541460fcae5faacb7e7354ec96f78832?trk=share_certificate), [Career Essentials in Software Development](https://www.linkedin.com/learning/certificates/b49081d79547f863f12dd8656302ede27f342d628631d481085b14b727dcc910?trk=share_certificate)",
-        },
-        {
           label: "HackerRank",
           value:
             "[Frontend Developer (React)](https://www.hackerrank.com/certificates/ce37450b1013), [JavaScript](https://www.hackerrank.com/certificates/9eabe8ab61b1), [CSS](https://www.hackerrank.com/certificates/35384d086309), [SQL](https://www.hackerrank.com/certificates/7f1a01b7b859), [React](https://www.hackerrank.com/certificates/23a74130dbd8), [Node](https://www.hackerrank.com/certificates/893d3bf8ee68)",
+        },
+        {
+          label: "Microsoft & LinkedIn",
+          value:
+            "[Career Essentials in Generative AI](https://www.linkedin.com/learning/certificates/b0d6803487e5b12b7ddf935a52b4efa6541460fcae5faacb7e7354ec96f78832?trk=share_certificate), [Career Essentials in Software Development](https://www.linkedin.com/learning/certificates/b49081d79547f863f12dd8656302ede27f342d628631d481085b14b727dcc910?trk=share_certificate)",
         },
       ],
     },
     {
       kind: "list",
-      heading: "Open Source & Community",
+      heading: "Talks",
       items: [
-        "**Open source:** I build free, open alternatives to paid apps (Edgepad, Saltcellar, Inlay, Offkit) and help other people with their projects.",
-        "**Reddit:** active contributor in developer communities.",
-        "**Speaking:** I regularly give seminars to juniors at different colleges to help them plan what comes after their degree.",
+        "Give regular seminars to students at several colleges on planning their careers after graduation.",
       ],
     },
   ],
