@@ -183,9 +183,14 @@ const RESUME_ONE_PAGE: ResumeDocument = {
         { label: "Frontend", value: "React, Next.js, Tailwind CSS, shadcn/ui, WebAssembly" },
         {
           label: "Backend & Data",
-          value: "Node.js, Express, REST, WebSockets, Convex, PostgreSQL, MongoDB, Redis, Firebase",
+          value: "Node.js, Express, REST, Convex, PostgreSQL, MongoDB, Redis, Firebase",
         },
-        { label: "Security", value: "OAuth, JWT, 2FA, rate limiting, AES-GCM, Argon2" },
+        {
+          label: "System Design",
+          value:
+            "Rate limiting, caching, load balancing, real-time sync (WebSockets, CRDTs), loose coupling, circuit breakers, retries with backoff, offline-first, event-driven architecture",
+        },
+        { label: "Security", value: "OAuth, JWT, 2FA, AES-GCM, Argon2" },
         {
           label: "Testing & DevOps",
           value: "Vitest, Playwright, React Testing Library, GitHub Actions, Vercel, Sentry",
