@@ -111,7 +111,7 @@ function FlipNote({ belief, index, progress }: FlipNoteProps) {
   return (
     <li
       className={cn(
-        "relative aspect-square w-full max-w-[200px] text-note-ink transition-transform duration-300 [perspective:900px]",
+        "relative aspect-square w-full max-w-[200px] lg:w-[min(260px,29vh)] lg:max-w-none text-note-ink transition-transform duration-300 [perspective:900px]",
         "hover:z-10 hover:-translate-y-1.5 hover:rotate-0 motion-reduce:transition-none",
         NOTE_TILTS[index],
       )}
@@ -154,11 +154,11 @@ function FlipNote({ belief, index, progress }: FlipNoteProps) {
                 <DrawnPath d={TICK_PATHS[index]} delay={index * 0.25} duration={0.5} />
               )}
             </svg>
-            <span className="font-display text-[1.35rem] font-medium leading-tight tracking-[-0.01em]">
+            <span className="font-display text-[1.35rem] font-medium leading-tight tracking-[-0.01em] lg:text-[1.6rem]">
               {word}
             </span>
           </span>
-          <span className="mt-2 block font-hand text-[1.35rem] font-semibold leading-[1.1]">
+          <span className="mt-2 block font-hand text-[1.35rem] font-semibold leading-[1.1] lg:text-[1.55rem]">
             {gloss}
           </span>
         </span>
@@ -178,7 +178,7 @@ function FlipNote({ belief, index, progress }: FlipNoteProps) {
           {points.map((point) => (
             <span
               key={point}
-              className="flex items-start gap-2 font-hand text-[1.1rem] font-semibold leading-[1.05]"
+              className="flex items-start gap-2 font-hand text-[1.1rem] font-semibold leading-[1.05] lg:text-[1.3rem]"
             >
               <svg
                 aria-hidden
@@ -207,10 +207,10 @@ function FlipNote({ belief, index, progress }: FlipNoteProps) {
 export default function BeliefsBoard({ progress }: BeliefsBoardProps) {
   return (
     <div className="flex flex-col gap-6">
-      <h3 className="font-display text-2xl font-medium tracking-[-0.01em] text-hero-ink md:text-3xl">
+      <h3 className="font-display text-2xl font-medium tracking-[-0.01em] text-hero-ink md:text-3xl lg:text-center">
         {BELIEFS_HEADING}
       </h3>
-      <ul className="grid grid-cols-1 justify-items-center gap-6 sm:grid-cols-2">
+      <ul className="grid grid-cols-1 justify-items-center gap-6 sm:grid-cols-2 lg:gap-8">
         {BELIEFS.map((belief, index) => (
           <FlipNote key={belief.word} belief={belief} index={index} progress={progress} />
         ))}

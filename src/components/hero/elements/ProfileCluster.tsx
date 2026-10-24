@@ -118,7 +118,7 @@ export function CompactProfile({ progress }: ProfileClusterProps) {
       inert={!compact}
       className="flex w-full max-w-[520px] flex-col items-start gap-3 will-change-transform"
     >
-      <ProfilePhoto className="w-[clamp(190px,32vh,290px)] self-center" />
+      <ProfilePhoto className="w-[clamp(190px,32vh,290px)] self-start" />
       <div className="flex flex-col gap-0.5">
         <p className="font-display text-4xl font-medium leading-[0.95] tracking-[-0.01em] whitespace-nowrap">
           <span className="text-hero-ink">{FIRST_NAME}</span>{" "}
