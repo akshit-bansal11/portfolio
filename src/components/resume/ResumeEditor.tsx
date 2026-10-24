@@ -1,7 +1,7 @@
 /*
  * ResumeEditor.tsx
  * The /resume/edit screen. Checks the admin session, shows the key form when
- * signed out, and when signed in shows the same tabs and A4 sheets as /resume
+ * signed out, and when signed in shows the same A4 sheet as /resume
  * with every text editable in place. Edits live in a draft; Save writes a new
  * revision, Discard restores the last saved copy (with Undo), and leaving the
  * page with unsaved edits asks first. Nothing here is printed except the sheets.
@@ -195,11 +195,11 @@ export default function ResumeEditor({
     );
   }
 
-  const edit = (key: "one" | "full"): SheetEdit => ({
+  const edit: SheetEdit = {
     kit: EDIT_KIT,
-    onDoc: (doc) => update({ ...draft, [key]: doc }),
+    onDoc: (doc) => update({ ...draft, one: doc }),
     onHeader: (header) => update({ ...draft, header }),
-  });
+  };
   const fieldErrors = save.status === "failed" ? Object.entries(save.fields) : [];
 
   return (
@@ -258,7 +258,7 @@ export default function ResumeEditor({
         )}
         {overflow && (
           <p role="status" className="text-sm text-hero-pen">
-            The one-page version runs past one sheet. Trim it before printing.
+            The resume runs past one sheet. Trim it before printing.
           </p>
         )}
         <p className="text-sm text-hero-muted">
@@ -266,20 +266,9 @@ export default function ResumeEditor({
           a line. Sign out is available once there are no unsaved changes.
         </p>
       </div>
-      <ResumeViewer
-        onePage={
-          <ResumeSheet
-            doc={draft.one}
-            header={draft.header}
-            variant="one"
-            edit={edit("one")}
-            onOverflow={setOverflow}
-          />
-        }
-        full={
-          <ResumeSheet doc={draft.full} header={draft.header} variant="full" edit={edit("full")} />
-        }
-      />
+      <ResumeViewer>
+        <ResumeSheet doc={draft.one} header={draft.header} edit={edit} onOverflow={setOverflow} />
+      </ResumeViewer>
     </OpenFieldContext.Provider>
   );
 }

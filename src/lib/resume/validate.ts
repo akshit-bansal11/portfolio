@@ -203,11 +203,11 @@ class Checker {
 // allowlist, 422 when the shape is known but a value breaks a rule.
 export function validateResume(input: unknown): ResumeResult {
   const check = new Checker();
+  // "full" is accepted and dropped: older revisions stored a full CV there.
   const raw = check.record(input, "content", ["header", "one", "full"]);
   const value: ResumeContent = {
     header: check.header(raw?.header, "header"),
     one: check.document(raw?.one, "one"),
-    full: check.document(raw?.full, "full"),
   };
   if (Object.keys(check.fields).length > 0) {
     return { ok: false, status: check.unknown ? 400 : 422, fields: check.fields };

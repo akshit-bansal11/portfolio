@@ -33,7 +33,7 @@
 
 /*
  * Paper: white with near-black ink in both themes. .resume-pages carries the
- * type for a variant; each .resume-a4 is a true 210mm x 297mm sheet whose
+ * type; each .resume-a4 is a true 210mm x 297mm sheet whose
  * padding is the page margin (--m).
  */
 .resume-pages {
@@ -41,28 +41,17 @@
   --ink: #111;
   --ink-soft: #444;
   --rule: #111;
+  --m: 5mm;
+  --gap-scale: 0.75;
 
   position: relative;
   color: var(--ink);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
   overflow-wrap: anywhere;
-}
 
-.resume-pages[data-variant="one"] {
-  --m: 5mm;
-  --gap-scale: 0.75;
-
-  /* --fit (set by PagedSheet) shrinks everything so the one-pager stays on one sheet. */
+  /* --fit (set by PagedSheet) shrinks everything so the resume stays on one sheet. */
   font-size: calc(9pt * var(--fit, 1));
   line-height: 1.3;
-}
-
-.resume-pages[data-variant="full"] {
-  --m: 14mm;
-  --gap-scale: 1;
-
-  font-size: 10.5pt;
-  line-height: 1.42;
 }
 
 .resume-sheets {
@@ -110,15 +99,6 @@
   height: 297mm;
 }
 
-.resume-pageno {
-  position: absolute;
-  right: var(--m);
-  bottom: calc(var(--m) / 2 - 0.5em);
-  color: var(--ink-soft);
-  font-size: 8pt;
-  line-height: 1;
-}
-
 /* A block's top gap is padding (not margin) so measured heights include it. */
 .resume-block {
   display: flow-root;
@@ -142,15 +122,10 @@
 
 .resume-pages h1 {
   margin: 0;
-  font-size: 2.48em; /* 26pt at the CV's 10.5pt */
+  font-size: 2.22em; /* in em so it shrinks with --fit: 20pt at 9pt */
   font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.01em;
-}
-
-/* In em so it shrinks with --fit: 20pt at 9pt. */
-.resume-pages[data-variant="one"] h1 {
-  font-size: 2.22em;
 }
 
 .resume-tagline {
@@ -241,7 +216,7 @@
 
 /*
  * Print: every sheet is exactly one A4 page. The sheet is a hair under 297mm
- * so rounding never spills a blank page; hidden tabs (display: none) do not print.
+ * so rounding never spills a blank page.
  */
 @page {
   size: a4;

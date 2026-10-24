@@ -41,7 +41,6 @@ export interface SheetEdit {
 interface ResumeSheetProps {
   doc: ResumeDocument;
   header: ResumeHeader;
-  variant: "one" | "full";
   edit?: SheetEdit;
   onOverflow?: (overflowing: boolean) => void;
 }
@@ -428,11 +427,10 @@ function buildBlocks(doc: ResumeDocument, header: ResumeHeader, edit?: SheetEdit
   return blocks;
 }
 
-export default function ResumeSheet({ doc, header, variant, edit, onOverflow }: ResumeSheetProps) {
+export default function ResumeSheet({ doc, header, edit, onOverflow }: ResumeSheetProps) {
   return (
     <PagedSheet
       blocks={buildBlocks(doc, header, edit)}
-      variant={variant}
       editing={edit !== undefined}
       onOverflow={onOverflow}
     />

@@ -6,8 +6,8 @@
  * Print uses the same sheets, so screen and PDF break in the same places.
  * Before measuring (SSR, no JS, hidden tab) everything sits on one auto-height
  * sheet so nothing is ever hidden. Narrow screens scale the true A4 layout
- * down via --resume-scale instead of reflowing it. A one-sheet document
- * (maxPages 1) never breaks: its type shrinks via --fit until it fits.
+ * down via --resume-scale instead of reflowing it. The resume is one sheet:
+ * its type shrinks via --fit until it fits.
  */
 
 "use client";
@@ -31,12 +31,9 @@ export interface PagedBlock {
 
 interface PagedSheetProps {
   blocks: PagedBlock[];
-  variant: "one" | "full";
-  /** Sheets allowed before the content counts as overflowing (one-page: 1). */
-  maxPages?: number;
   /** Editor view: marks the sheets so edit-only controls can be styled (and hidden in print). */
   editing?: boolean;
-  /** Called whenever the content starts or stops exceeding maxPages. */
+  /** Called whenever the content starts or stops exceeding one sheet. */
   onOverflow?: (overflowing: boolean) => void;
 }
 
@@ -65,7 +62,7 @@ function paginate(blocks: Measured[], available: number): number[][] {
 
 const samePages = (a: number[][] | null, b: number[][]) => JSON.stringify(a) === JSON.stringify(b);
 
-// One-sheet documents shrink their type (--fit) until every block fits; below this it overflows.
+// The document shrinks their type (--fit) until every block fits; below this it overflows.
 const FIT_MIN = 0.5;
 const FIT_STEPS = 10;
 
@@ -74,14 +71,7 @@ const subscribeNever = () => () => {};
 const onClient = () => true;
 const onServer = () => false;
 
-export default function PagedSheet({
-  blocks,
-  variant,
-  maxPages,
-  editing,
-  onOverflow,
-}: PagedSheetProps) {
-  const limit = maxPages ?? (variant === "one" ? 1 : Number.POSITIVE_INFINITY);
+export default function PagedSheet({ blocks, editing, onOverflow }: PagedSheetProps) {
   const rootRef = useRef<HTMLElement>(null);
   const probeRef = useRef<HTMLDivElement>(null);
   const columnRef = useRef<HTMLDivElement>(null);
@@ -114,19 +104,17 @@ export default function PagedSheet({
       const setFit = (fit: number) => root.style.setProperty("--fit", String(fit));
 
       // Binary search for the largest type scale that keeps the content on one sheet.
-      if (limit === 1) {
-        setFit(1);
-        if (layout().length > 1) {
-          let lo = FIT_MIN;
-          let hi = 1;
-          for (let step = 0; step < FIT_STEPS; step++) {
-            const mid = (lo + hi) / 2;
-            setFit(mid);
-            if (layout().length > 1) hi = mid;
-            else lo = mid;
-          }
-          setFit(lo);
+      setFit(1);
+      if (layout().length > 1) {
+        let lo = FIT_MIN;
+        let hi = 1;
+        for (let step = 0; step < FIT_STEPS; step++) {
+          const mid = (lo + hi) / 2;
+          setFit(mid);
+          if (layout().length > 1) hi = mid;
+          else lo = mid;
         }
+        setFit(lo);
       }
       const next = layout();
       setPages((prev) => (samePages(prev, next) ? prev : next));
@@ -143,9 +131,9 @@ export default function PagedSheet({
       live = false;
       observer.disconnect();
     };
-  }, [mounted, blocks, limit]);
+  }, [mounted, blocks]);
 
-  const overflowing = pages !== null && pages.length > limit;
+  const overflowing = pages !== null && pages.length > 1;
   useEffect(() => onOverflow?.(overflowing), [overflowing, onOverflow]);
 
   const render = (indices: number[]) =>
@@ -159,7 +147,6 @@ export default function PagedSheet({
     <article
       ref={rootRef}
       className="resume-pages"
-      data-variant={variant}
       data-editing={editing ? "" : undefined}
       data-overflow={overflowing ? "" : undefined}
     >
@@ -172,14 +159,9 @@ export default function PagedSheet({
         </>
       )}
       <div className="resume-sheets">
-        {(pages ?? [blocks.map((_, i) => i)]).map((indices, n, all) => (
+        {(pages ?? [blocks.map((_, i) => i)]).map((indices, n) => (
           <div key={n} className="resume-a4" data-flow={pages ? undefined : ""}>
             {render(indices)}
-            {pages && variant === "full" && all.length > 1 && (
-              <span aria-hidden className="resume-pageno">
-                {n + 1} / {all.length}
-              </span>
-            )}
           </div>
         ))}
       </div>
