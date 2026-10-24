@@ -50,7 +50,10 @@ export function createSession(now = Date.now()): { value: string; expires: Date 
   const key = adminKey();
   if (!key) throw new Error("resume admin key is not set");
   const expiresAt = now + SESSION_TTL_MS;
-  return { value: `${expiresAt}.${sign(key, `session:${expiresAt}`)}`, expires: new Date(expiresAt) };
+  return {
+    value: `${expiresAt}.${sign(key, `session:${expiresAt}`)}`,
+    expires: new Date(expiresAt),
+  };
 }
 
 // Fails closed: no key, a malformed value, a bad signature or a past expiry all mean "no session".

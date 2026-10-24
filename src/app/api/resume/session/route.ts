@@ -53,7 +53,10 @@ export async function POST(request: NextRequest) {
 
   const session = createSession();
   const response = jsonResponse({ admin: true, csrf: csrfToken(session.value) });
-  response.cookies.set(SESSION_COOKIE, session.value, { ...COOKIE_OPTIONS, expires: session.expires });
+  response.cookies.set(SESSION_COOKIE, session.value, {
+    ...COOKIE_OPTIONS,
+    expires: session.expires,
+  });
   return response;
 }
 

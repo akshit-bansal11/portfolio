@@ -97,7 +97,8 @@ class Checker {
     const raw = this.record(value, path, ["label", "href"]);
     const label = this.string(raw?.label, `${path}.label`);
     const href = this.string(raw?.href, `${path}.href`);
-    if (href && !isSafeHref(href)) this.fail(`${path}.href`, "Use an https:, http: or mailto: link.");
+    if (href && !isSafeHref(href))
+      this.fail(`${path}.href`, "Use an https:, http: or mailto: link.");
     return { label, href };
   }
 
