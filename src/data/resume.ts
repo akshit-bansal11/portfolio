@@ -101,7 +101,7 @@ const RESUME_ONE_PAGE: ResumeDocument = {
         {
           title: "Elina Club Pvt. Ltd.",
           dates: "Jul 2026 – Present",
-          subtitle: "SDE Lead & Chief Advisor",
+          subtitle: "SDE Lead",
           location: "Bathinda, India",
           bullets: [
             "Own the full stack as the company's only engineer: frontend, backend, database, CI/CD and deployments.",
@@ -196,7 +196,7 @@ const RESUME_ONE_PAGE: ResumeDocument = {
     {
       kind: "text",
       heading: "Certifications",
-      text: "Google Cloud Generative AI Learning Path; HackerRank Frontend Developer (React)",
+      text: "Google Cloud Generative AI Learning Path; HackerRank Frontend Developer (React), SQL and Node.js",
     },
   ],
 };
@@ -219,10 +219,10 @@ const RESUME_FULL: ResumeDocument = {
         {
           title: "Elina Club Pvt. Ltd.",
           dates: "Jul 2026 – Present",
-          subtitle: "SDE Lead & Chief Advisor",
+          subtitle: "SDE Lead",
           location: "Bathinda, India",
           bullets: [
-            "Sole engineer, responsible for frontend, backend, database, automation and deployments; as Chief Advisor, advise leadership on product and technical decisions.",
+            "Sole engineer, responsible for frontend, backend, database, automation and deployments.",
             "Built and launched two production web platforms on Next.js 16, React 19 and TypeScript, from first commit to live site in under three months.",
             "Designed the PostgreSQL (Neon) schema and APIs behind the lead, careers, feedback and newsletter forms; every submission is validated server-side with Zod, rate limited with Upstash Redis and stored before the visitor is handed off to WhatsApp.",
             "Built the internal admin panel with searchable lead tables, Excel export and viewer/editor roles, on signed httpOnly session cookies and scrypt password hashing; the super-admin account lives in environment config so it cannot be locked out from inside the app.",
