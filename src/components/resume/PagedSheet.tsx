@@ -6,7 +6,8 @@
  * Print uses the same sheets, so screen and PDF break in the same places.
  * Before measuring (SSR, no JS, hidden tab) everything sits on one auto-height
  * sheet so nothing is ever hidden. Narrow screens scale the true A4 layout
- * down via --resume-scale instead of reflowing it.
+ * down via --resume-scale instead of reflowing it. A one-sheet document
+ * (maxPages 1) never breaks: its type shrinks via --fit until it fits.
  */
 
 "use client";
@@ -64,6 +65,10 @@ function paginate(blocks: Measured[], available: number): number[][] {
 
 const samePages = (a: number[][] | null, b: number[][]) => JSON.stringify(a) === JSON.stringify(b);
 
+// One-sheet documents shrink their type (--fit) until every block fits; below this it overflows.
+const FIT_MIN = 0.5;
+const FIT_STEPS = 10;
+
 // "Are we on the client?" without a setState-in-effect: false on the server, true after hydration.
 const subscribeNever = () => () => {};
 const onClient = () => true;
@@ -98,11 +103,32 @@ export default function PagedSheet({
       const margin = Number.parseFloat(getComputedStyle(probe).paddingTop);
       // 1px of slack so print rounding never pushes a block onto an extra sheet.
       const available = probe.clientHeight - 2 * margin - 1;
-      const measured = Array.from(column.children, (el) => ({
-        height: el.getBoundingClientRect().height,
-        gap: Number.parseFloat(getComputedStyle(el).paddingTop),
-      }));
-      const next = paginate(measured, available);
+      const layout = () =>
+        paginate(
+          Array.from(column.children, (el) => ({
+            height: el.getBoundingClientRect().height,
+            gap: Number.parseFloat(getComputedStyle(el).paddingTop),
+          })),
+          available,
+        );
+      const setFit = (fit: number) => root.style.setProperty("--fit", String(fit));
+
+      // Binary search for the largest type scale that keeps the content on one sheet.
+      if (limit === 1) {
+        setFit(1);
+        if (layout().length > 1) {
+          let lo = FIT_MIN;
+          let hi = 1;
+          for (let step = 0; step < FIT_STEPS; step++) {
+            const mid = (lo + hi) / 2;
+            setFit(mid);
+            if (layout().length > 1) hi = mid;
+            else lo = mid;
+          }
+          setFit(lo);
+        }
+      }
+      const next = layout();
       setPages((prev) => (samePages(prev, next) ? prev : next));
     };
 
@@ -117,7 +143,7 @@ export default function PagedSheet({
       live = false;
       observer.disconnect();
     };
-  }, [mounted, blocks]);
+  }, [mounted, blocks, limit]);
 
   const overflowing = pages !== null && pages.length > limit;
   useEffect(() => onOverflow?.(overflowing), [overflowing, onOverflow]);

@@ -52,7 +52,8 @@
   --m: 10mm;
   --gap-scale: 0.75;
 
-  font-size: 9pt;
+  /* --fit (set by PagedSheet) shrinks everything so the one-pager stays on one sheet. */
+  font-size: calc(9pt * var(--fit, 1));
   line-height: 1.3;
 }
 
@@ -141,14 +142,15 @@
 
 .resume-pages h1 {
   margin: 0;
-  font-size: 26pt;
+  font-size: 2.48em; /* 26pt at the CV's 10.5pt */
   font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.01em;
 }
 
+/* In em so it shrinks with --fit: 20pt at 9pt. */
 .resume-pages[data-variant="one"] h1 {
-  font-size: 20pt;
+  font-size: 2.22em;
 }
 
 .resume-tagline {
