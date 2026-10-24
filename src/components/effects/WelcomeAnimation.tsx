@@ -47,7 +47,9 @@ function decide(skipped: boolean): boolean {
       // Storage blocked: still shows once per page load via `decision`.
     }
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    decision = !skipped && !reduced && !seen;
+    // ?welcome in the URL always plays it (for reviewing the intro).
+    const forced = new URLSearchParams(window.location.search).has("welcome");
+    decision = !skipped && (forced || (!reduced && !seen));
   }
   return decision;
 }
