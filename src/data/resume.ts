@@ -64,7 +64,7 @@ export const RESUME_ONE_PAGE: ResumeDocument = {
     {
       kind: "text",
       heading: "Summary",
-      text: "Full-stack engineer shipping production software for web, Android, Windows and macOS. Sole engineer at Elina Club, Co-Founder & CTO of a stealth startup and founder of Kiteloom. Maintain 7 open-source apps with **650+ commits** and **1,900+ automated tests** behind signed CI releases. Seeking an SDE-1 / SDE-2 role.",
+      text: "Full-stack engineer shipping production software for web, Android, Windows and macOS. Sole engineer at Elina Club, Co-Founder & CTO of a stealth startup, founder of Kiteloom. Maintain **7 open-source apps** with **650+ commits** and **1,900+ automated tests**. Seeking an SDE-1 / SDE-2 role.",
     },
     {
       kind: "entries",
@@ -77,9 +77,8 @@ export const RESUME_ONE_PAGE: ResumeDocument = {
           location: "Bathinda, India (On-site)",
           bullets: [
             "Sole engineer owning frontend, backend, database, CI/CD and deployments; advise leadership on product and tech strategy.",
-            "Shipped **2 production web platforms** on Next.js 16, React 19 and TypeScript, zero to launch in under 3 months (**~350 commits**).",
-            "Designed the Postgres (Neon) schema and REST APIs for **4 lead-capture pipelines** with Zod validation and Redis rate limiting.",
-            "Built an RBAC admin console with filterable lead tables and Excel export, on signed httpOnly sessions and scrypt hashing.",
+            "Shipped **2 production web platforms** on Next.js 16, React 19 and TypeScript in under 3 months (**~350 commits**).",
+            "Postgres (Neon) schema and REST APIs for **4 lead-capture pipelines** (Zod, Redis rate limiting); RBAC admin console with Excel export.",
           ],
         },
         {
@@ -97,7 +96,7 @@ export const RESUME_ONE_PAGE: ResumeDocument = {
           subtitle: "Founder",
           bullets: [
             "Infinite canvas unifying sketches, wireframes and diagrams, with real-time multiplayer on **Yjs CRDTs** (Next.js, TypeScript, Convex).",
-            "Better Auth (email, Google OAuth, 2FA), Paddle billing, per-user rate limiting and Sentry; **70+ unit test files** plus Playwright E2E gated in GitHub Actions; localized in **11 languages**.",
+            "Better Auth (email, Google OAuth, 2FA), Paddle billing, Sentry; **70+ unit test files** plus Playwright E2E in GitHub Actions; **11 languages**.",
           ],
         },
         {
@@ -109,8 +108,7 @@ export const RESUME_ONE_PAGE: ResumeDocument = {
           bullets: [
             "Moved subtitles client-side with FFmpeg WASM + ElevenLabs Scribe v2: **~70%** lower compute cost and **90+ languages**.",
             "Rebuilt the Chrome extension recorder on WebCodecs with chunked IndexedDB writes, ending data loss on **30+ min** recordings.",
-            "Hardened auth (OWASP A07): Redis sliding-window rate limits, short-lived JWTs, reCAPTCHA v3; built the Vitest suite.",
-            "Sole intern on the Next.js App Router rewrite: typed REST client, Zod schemas, webhook-driven optimistic UI.",
+            "Hardened auth (OWASP A07): Redis rate limits, short-lived JWTs, reCAPTCHA v3; sole intern on the Next.js App Router rewrite.",
           ],
         },
       ],
@@ -124,14 +122,14 @@ export const RESUME_ONE_PAGE: ResumeDocument = {
           link: gh("edgepad"),
           subtitle: "Kotlin, C# / .NET, Swift, Bluetooth RFCOMM",
           bullets: [
-            "Turns an Android phone into a trackpad, media remote, keyboard and virtual Xbox gamepad for Windows and macOS over a custom Bluetooth wire protocol with live two-way state sync; v3.5, **248 commits, 300+ tests, 25 GitHub stars**.",
+            "Turns an Android phone into a trackpad, media remote, keyboard and virtual Xbox gamepad for Windows and macOS over a custom Bluetooth protocol; **248 commits, 300+ tests, 25 GitHub stars**.",
           ],
         },
         {
           title: "Flick",
           subtitle: "Rust, Tauri, React, TypeScript",
           bullets: [
-            "Keyboard-first Windows launcher: apps, system commands, file search and BYO-key AI chat (OpenAI, Anthropic, OpenRouter, Ollama) in one bar; fuzzy-matches 2,000 apps in **0.25 ms** and **305K file paths at p95 ≤ 4.7 ms**; **470+ tests**.",
+            "Keyboard-first Windows launcher with BYO-key AI chat; fuzzy-matches 2,000 apps in **0.25 ms** and **305K file paths at p95 ≤ 4.7 ms**; **470+ tests**.",
           ],
         },
         {
@@ -139,7 +137,7 @@ export const RESUME_ONE_PAGE: ResumeDocument = {
           link: gh("offkit"),
           subtitle: "Rust, Slint, Next.js, WebAssembly",
           bullets: [
-            "**37 local-first** media, PDF, image, SVG and dev tools shipped as a native Rust app (Windows/macOS/Linux) and a WASM web app from one shared tool registry; replaced Electron with Slint; **800+ tests**.",
+            "**37 local-first** media, PDF, image, SVG and dev tools as a native Rust app and a WASM web app from one shared tool registry; **800+ tests**.",
           ],
         },
         {
@@ -147,31 +145,7 @@ export const RESUME_ONE_PAGE: ResumeDocument = {
           link: gh("saltcellar"),
           subtitle: "Rust, Tauri, TypeScript",
           bullets: [
-            "Offline secrets vault: AES-256-GCM envelope encryption under an Argon2id KDF (64 MiB), CSP blocking all network I/O, 30 s clipboard auto-clear and screen-capture exclusion; SHA-256 checksums and signed build attestations.",
-          ],
-        },
-        {
-          title: "Inlay",
-          link: gh("inlay"),
-          subtitle: "Rust, Direct2D, Win32",
-          bullets: [
-            "Lightweight Rainmeter alternative embedding a clock, audio visualizer, time-synced lyrics and a Spotify player into the Windows desktop; single native process with event-driven redraws at **~54 MB RAM**; **130+ tests**.",
-          ],
-        },
-        {
-          title: "Inklo",
-          link: gh("inklo"),
-          subtitle: "Tauri, Rust, React, CodeMirror 6",
-          bullets: [
-            "Fully local, keyboard-first Markdown notes app for Windows, macOS and Linux over plain .md files; command palette, rebindable shortcuts, pins and tags, with zero network code enforced by CSP; **140+ tests**.",
-          ],
-        },
-        {
-          title: "Plimsoll",
-          link: gh("plimsoll"),
-          subtitle: "TypeScript, Node.js, Claude Code plugin API",
-          bullets: [
-            "Claude Code HUD plugin showing context-window usage, 5-hour/weekly rate limits, token spend at API prices and Git/PR/CI status, with an animated pixel-art mascot; distributed via the plugin marketplace.",
+            "Offline secrets vault: AES-256-GCM envelope encryption under Argon2id (64 MiB), CSP blocking all network I/O, 30 s clipboard auto-clear; signed build attestations.",
           ],
         },
       ],
@@ -191,14 +165,9 @@ export const RESUME_ONE_PAGE: ResumeDocument = {
             "Node.js, Express, REST, WebSockets, Convex, PostgreSQL (Neon), MongoDB, Redis (Upstash), Firebase",
         },
         {
-          label: "Security & Testing",
+          label: "Testing, Security & Tools",
           value:
-            "Better Auth, Auth0, JWT, OAuth, 2FA, rate limiting, reCAPTCHA, AES-GCM, Argon2, Vitest, Playwright, RTL",
-        },
-        {
-          label: "Mobile, Desktop & Tools",
-          value:
-            "Android (Kotlin), Tauri (Rust), Slint, .NET (C#), Claude Code, GitHub Actions, Vercel, Sentry, Figma",
+            "Vitest, Playwright, RTL, Better Auth, Auth0, JWT, OAuth, 2FA, AES-GCM, Argon2, Claude Code, GitHub Actions, Vercel, Sentry",
         },
       ],
     },
@@ -323,17 +292,60 @@ export const RESUME_FULL: ResumeDocument = {
             "Rejects master passwords found in leaked-password lists, and every release ships with SHA-256 checksums and a signed build attestation.",
           ],
         },
+        {
+          title: "Flick",
+          subtitle: "Rust, Tauri, React, TypeScript",
+          intro:
+            "A keyboard-first Windows launcher: apps, system commands, file search and BYO-key AI chat (OpenAI, Anthropic, OpenRouter, Ollama) in one bar.",
+          bullets: [
+            "Fuzzy-matches 2,000 apps in 0.25 ms and 305K file paths at p95 ≤ 4.7 ms.",
+            "470+ tests.",
+          ],
+        },
+        {
+          title: "Offkit",
+          link: gh("offkit"),
+          subtitle: "Rust, Slint, Next.js, WebAssembly",
+          intro:
+            "37 local-first media, PDF, image, SVG and dev tools, shipped as a native Rust app (Windows/macOS/Linux) and a WebAssembly web app from one shared tool registry.",
+          bullets: ["Replaced Electron with Slint.", "800+ tests."],
+        },
+        {
+          title: "Inlay",
+          link: gh("inlay"),
+          subtitle: "Rust, Direct2D, Win32",
+          intro:
+            "A lightweight Rainmeter alternative that embeds a clock, audio visualizer, time-synced lyrics and a Spotify player into the Windows desktop.",
+          bullets: ["One native process with event-driven redraws at ~54 MB RAM.", "130+ tests."],
+        },
+        {
+          title: "Inklo",
+          link: gh("inklo"),
+          subtitle: "Tauri, Rust, React, CodeMirror 6",
+          intro:
+            "A fully local, keyboard-first Markdown notes app for Windows, macOS and Linux, over plain .md files.",
+          bullets: [
+            "Command palette, rebindable shortcuts, pins and tags.",
+            "Zero network code, enforced by CSP. 140+ tests.",
+          ],
+        },
+        {
+          title: "Plimsoll",
+          link: gh("plimsoll"),
+          subtitle: "TypeScript, Node.js, Claude Code plugin API",
+          intro:
+            "A Claude Code HUD plugin with an animated pixel-art mascot, distributed via the plugin marketplace.",
+          bullets: [
+            "Shows context-window usage and 5-hour/weekly rate limits.",
+            "Shows token spend at API prices and Git/PR/CI status.",
+          ],
+        },
       ],
     },
     {
       kind: "list",
       heading: "Other Projects",
       items: [
-        "**Flick:** keyboard-first Windows launcher in Rust, Tauri, React and TypeScript: apps, system commands, file search and BYO-key AI chat (OpenAI, Anthropic, OpenRouter, Ollama) in one bar. Fuzzy-matches 2,000 apps in 0.25 ms and 305K file paths at p95 ≤ 4.7 ms; 470+ tests.",
-        "**Offkit** ([github.com/akshit-bansal11/offkit](https://github.com/akshit-bansal11/offkit)): 37 local-first media, PDF, image, SVG and dev tools, shipped as a native Rust app (Windows/macOS/Linux) and a WebAssembly web app from one shared tool registry. Replaced Electron with Slint; 800+ tests.",
-        "**Inlay** ([github.com/akshit-bansal11/inlay](https://github.com/akshit-bansal11/inlay)): lightweight Rainmeter alternative in Rust, Direct2D and Win32 that embeds a clock, audio visualizer, time-synced lyrics and a Spotify player into the Windows desktop. One native process with event-driven redraws at ~54 MB RAM; 130+ tests.",
-        "**Inklo** ([github.com/akshit-bansal11/inklo](https://github.com/akshit-bansal11/inklo)): fully local, keyboard-first Markdown notes app for Windows, macOS and Linux built with Tauri (Rust), React and CodeMirror 6, over plain .md files. Command palette, rebindable shortcuts, pins and tags; zero network code enforced by CSP; 140+ tests.",
-        "**Plimsoll** ([github.com/akshit-bansal11/plimsoll](https://github.com/akshit-bansal11/plimsoll)): Claude Code HUD plugin showing context-window usage, 5-hour/weekly rate limits, token spend at API prices and Git/PR/CI status, with an animated pixel-art mascot. Distributed via the plugin marketplace.",
         "**Open Whiteboard** ([github.com/akshit-bansal11/open-whiteboard](https://github.com/akshit-bansal11/open-whiteboard)): real-time collaborative whiteboard with my own HTML5 Canvas engine, Yjs CRDTs and a Node.js WebSocket server.",
         "**Lyric Veil** ([lyric-veil.vercel.app](https://lyric-veil.vercel.app)): word-synced Spotify lyrics as a transparent, click-through desktop overlay (Electron, React, TypeScript) with its own drift-corrected clock.",
         "**Also:** Is It Canon (story-order tracker for connected franchises), cmd-ref (dev command reference, one JSON file per route), Audio Visualizer (C#, WPF, WASAPI loopback), Plotline (media tracker), Canopy (bookmark manager).",
