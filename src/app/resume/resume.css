@@ -49,7 +49,7 @@
 }
 
 .resume-pages[data-variant="one"] {
-  --m: 10mm;
+  --m: 5mm;
   --gap-scale: 0.75;
 
   /* --fit (set by PagedSheet) shrinks everything so the one-pager stays on one sheet. */
