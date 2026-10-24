@@ -2,7 +2,7 @@ name: quality
 
 on:
   push:
-    branches: [main, redesign/v4]
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
