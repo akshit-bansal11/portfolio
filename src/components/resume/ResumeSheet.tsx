@@ -7,17 +7,13 @@
  */
 
 import type { ReactNode } from "react";
-import {
-  RESUME_HEADER,
-  type ResumeDocument,
-  type ResumeEntry,
-  type ResumeSection,
-} from "@/data/resume";
+import type { ResumeDocument, ResumeEntry, ResumeHeader, ResumeSection } from "@/data/resume";
 import PagedSheet, { type BlockKind, type PagedBlock } from "./PagedSheet";
 import { RichLink, RichText } from "./RichText";
 
 interface ResumeSheetProps {
   doc: ResumeDocument;
+  header: ResumeHeader;
   variant: "one" | "full";
 }
 
@@ -104,19 +100,19 @@ function sectionItems(section: ResumeSection): { kind: BlockKind; node: ReactNod
 }
 
 // Header first, then per section: heading + first item together, the rest alone.
-function buildBlocks(doc: ResumeDocument): PagedBlock[] {
+function buildBlocks(doc: ResumeDocument, header: ResumeHeader): PagedBlock[] {
   const blocks: PagedBlock[] = [
     {
       key: "header",
       kind: "header",
       node: (
         <header>
-          <h1>{RESUME_HEADER.name}</h1>
+          <h1>{header.name}</h1>
           <p className="resume-tagline">
-            {RESUME_HEADER.title} · {RESUME_HEADER.location}
+            {header.title} · {header.location}
           </p>
           <ul className="resume-links">
-            {RESUME_HEADER.links.map((link) => (
+            {header.links.map((link) => (
               <li key={link.href}>
                 <RichLink href={link.href}>{link.label}</RichLink>
               </li>
@@ -146,6 +142,6 @@ function buildBlocks(doc: ResumeDocument): PagedBlock[] {
   return blocks;
 }
 
-export default function ResumeSheet({ doc, variant }: ResumeSheetProps) {
-  return <PagedSheet blocks={buildBlocks(doc)} variant={variant} />;
+export default function ResumeSheet({ doc, header, variant }: ResumeSheetProps) {
+  return <PagedSheet blocks={buildBlocks(doc, header)} variant={variant} />;
 }

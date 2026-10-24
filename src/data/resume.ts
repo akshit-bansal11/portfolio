@@ -4,7 +4,8 @@
  * "Akshit Bansal - Resume (Oct 2026)" (one page) and "Akshit Bansal - CV"
  * (full). The CV keeps its longer write-ups but takes the newer facts from
  * the one-page resume (role title, project names, Edgepad numbers).
- * Inline text supports **bold** and [label](url).
+ * Inline text supports **bold** and [label](url). DEFAULT_RESUME is the
+ * fallback when no edited revision is stored (lib/resume/store.ts).
  */
 
 export interface ResumeLink {
@@ -32,7 +33,21 @@ export interface ResumeDocument {
   sections: ResumeSection[];
 }
 
-export const RESUME_HEADER = {
+export interface ResumeHeader {
+  name: string;
+  title: string;
+  location: string;
+  links: ResumeLink[];
+}
+
+// Everything the page renders; the editor saves this shape to D1.
+export interface ResumeContent {
+  header: ResumeHeader;
+  one: ResumeDocument;
+  full: ResumeDocument;
+}
+
+const RESUME_HEADER: ResumeHeader = {
   name: "Akshit Bansal",
   title: "Full-Stack Software Engineer",
   location: "Punjab, India",
@@ -45,7 +60,7 @@ export const RESUME_HEADER = {
     },
     { label: "github.com/akshit-bansal11", href: "https://github.com/akshit-bansal11" },
   ],
-} as const satisfies { name: string; title: string; location: string; links: ResumeLink[] };
+};
 
 const gh = (repo: string): ResumeLink => ({
   label: `github.com/akshit-bansal11/${repo}`,
@@ -59,7 +74,7 @@ const TRUPEER_LINK: ResumeLink = { label: "trupeer.ai", href: "https://www.trupe
 /* One page                                                            */
 /* ------------------------------------------------------------------ */
 
-export const RESUME_ONE_PAGE: ResumeDocument = {
+const RESUME_ONE_PAGE: ResumeDocument = {
   sections: [
     {
       kind: "text",
@@ -194,7 +209,7 @@ export const RESUME_ONE_PAGE: ResumeDocument = {
 /* Full CV                                                             */
 /* ------------------------------------------------------------------ */
 
-export const RESUME_FULL: ResumeDocument = {
+const RESUME_FULL: ResumeDocument = {
   sections: [
     {
       kind: "text",
@@ -444,4 +459,10 @@ export const RESUME_FULL: ResumeDocument = {
       ],
     },
   ],
+};
+
+export const DEFAULT_RESUME: ResumeContent = {
+  header: RESUME_HEADER,
+  one: RESUME_ONE_PAGE,
+  full: RESUME_FULL,
 };

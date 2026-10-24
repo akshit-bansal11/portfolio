@@ -86,13 +86,14 @@ export function checkOrigin(request: Request): Response | null {
 
 export type JsonBody = { ok: true; data: unknown } | { ok: false; response: Response };
 
-// Reads a JSON body capped at 8 KB (checked up front and again while streaming).
-export async function readJson(request: Request): Promise<JsonBody> {
+// Reads a JSON body capped at maxBytes (8 KB by default; checked up front and again while
+// streaming).
+export async function readJson(request: Request, maxBytes = MAX_BODY_BYTES): Promise<JsonBody> {
   const tooLarge = { ok: false, response: errorResponse(413, "That is too large.") } as const;
   if (!request.headers.get("content-type")?.includes("application/json")) {
     return { ok: false, response: errorResponse(400, "Expected JSON.") };
   }
-  if (Number(request.headers.get("content-length") ?? 0) > MAX_BODY_BYTES) return tooLarge;
+  if (Number(request.headers.get("content-length") ?? 0) > maxBytes) return tooLarge;
   if (!request.body) return { ok: false, response: errorResponse(400, "Invalid JSON.") };
 
   const reader = request.body.getReader();
@@ -102,7 +103,7 @@ export async function readJson(request: Request): Promise<JsonBody> {
     const { done, value } = await reader.read();
     if (done) break;
     total += value.byteLength;
-    if (total > MAX_BODY_BYTES) {
+    if (total > maxBytes) {
       await reader.cancel();
       return tooLarge;
     }

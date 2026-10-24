@@ -1,13 +1,14 @@
 /*
  * page.tsx
- * The /resume route. Statically renders both resume documents (one page and
- * full CV) on the server; ResumeViewer switches between them and prints.
+ * The /resume route. Renders both resume documents (one page and full CV)
+ * from the stored resume (D1, falling back to the built-in copy). Static,
+ * revalidated hourly and on every save; ResumeViewer switches and prints.
  */
 
 import type { Metadata } from "next";
 import ResumeSheet from "@/components/resume/ResumeSheet";
 import ResumeViewer from "@/components/resume/ResumeViewer";
-import { RESUME_FULL, RESUME_ONE_PAGE } from "@/data/resume";
+import { getResume } from "@/lib/resume/store";
 import "./resume.css";
 
 export const metadata: Metadata = {
@@ -17,15 +18,18 @@ export const metadata: Metadata = {
   alternates: { canonical: "/resume" },
 };
 
-export default function ResumePage() {
+export const revalidate = 3600;
+
+export default async function ResumePage() {
+  const { header, one, full } = await getResume();
   return (
     <main className="resume-page">
       {/* One soft static glow behind the paper. */}
       <div aria-hidden className="resume-glow" />
       <div className="relative">
         <ResumeViewer
-          onePage={<ResumeSheet doc={RESUME_ONE_PAGE} variant="one" />}
-          full={<ResumeSheet doc={RESUME_FULL} variant="full" />}
+          onePage={<ResumeSheet doc={one} header={header} variant="one" />}
+          full={<ResumeSheet doc={full} header={header} variant="full" />}
         />
       </div>
     </main>

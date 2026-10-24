@@ -1,10 +1,13 @@
 /*
  * RichText.tsx
  * Renders resume inline text: **bold** becomes <strong>, [label](url)
- * becomes a real link. External links open in a new tab.
+ * becomes a real link. External links open in a new tab. Only https:, http:
+ * and mailto: targets become links; anything else (javascript:, data:) is
+ * rendered as plain text, since stored content is editable.
  */
 
 import type { ReactNode } from "react";
+import { isSafeHref } from "@/lib/resume/validate";
 
 // Splits on **bold** and [label](url), keeping the delimiters as parts.
 const TOKEN = /(\*\*[^*]+\*\*|\[[^\]]+\]\([^)]+\))/g;
@@ -12,6 +15,7 @@ const LINK = /^\[([^\]]+)\]\(([^)]+)\)$/;
 
 // Anchor that opens http(s) targets in a new tab and leaves mailto: in place.
 export function RichLink({ href, children }: { href: string; children: ReactNode }) {
+  if (!isSafeHref(href)) return <>{children}</>;
   const isExternal = href.startsWith("http");
   return (
     <a href={href} {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
