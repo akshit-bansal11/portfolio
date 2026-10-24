@@ -33,6 +33,8 @@ interface PagedSheetProps {
   variant: "one" | "full";
   /** Sheets allowed before the content counts as overflowing (one-page: 1). */
   maxPages?: number;
+  /** Editor view: marks the sheets so edit-only controls can be styled (and hidden in print). */
+  editing?: boolean;
   /** Called whenever the content starts or stops exceeding maxPages. */
   onOverflow?: (overflowing: boolean) => void;
 }
@@ -67,7 +69,13 @@ const subscribeNever = () => () => {};
 const onClient = () => true;
 const onServer = () => false;
 
-export default function PagedSheet({ blocks, variant, maxPages, onOverflow }: PagedSheetProps) {
+export default function PagedSheet({
+  blocks,
+  variant,
+  maxPages,
+  editing,
+  onOverflow,
+}: PagedSheetProps) {
   const limit = maxPages ?? (variant === "one" ? 1 : Number.POSITIVE_INFINITY);
   const rootRef = useRef<HTMLElement>(null);
   const probeRef = useRef<HTMLDivElement>(null);
@@ -126,6 +134,7 @@ export default function PagedSheet({ blocks, variant, maxPages, onOverflow }: Pa
       ref={rootRef}
       className="resume-pages"
       data-variant={variant}
+      data-editing={editing ? "" : undefined}
       data-overflow={overflowing ? "" : undefined}
     >
       {mounted && (

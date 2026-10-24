@@ -290,3 +290,116 @@
     text-decoration: none;
   }
 }
+
+/*
+ * Editor (/resume/edit): fields look like the printed text until used; the
+ * move / add / remove controls float over an item on hover or focus and are
+ * never printed. Outlines only, so nothing shifts the layout (and pagination).
+ */
+.resume-field-btn {
+  display: inline-block;
+  min-width: 2ch;
+  min-height: 1em;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+  cursor: text;
+}
+
+.resume-field-btn:hover {
+  outline: 1px dashed var(--rule);
+  outline-offset: 2px;
+}
+
+.resume-field-btn:focus-visible,
+.resume-field-input {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.resume-field-input {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 12ch;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: var(--paper);
+  color: inherit;
+  font: inherit;
+  resize: none;
+  overflow: hidden;
+}
+
+.resume-pages[data-editing] :is(li, p, .resume-entry) {
+  position: relative;
+}
+
+.resume-edit {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--paper);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+}
+
+li > .resume-edit {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.resume-pages[data-editing] :is(li, p, .resume-entry):is(:hover, :focus-within) > .resume-edit {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.resume-edit button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.resume-edit button:hover {
+  outline: 1px solid var(--ink);
+  outline-offset: -2px;
+}
+
+.resume-edit button:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: -2px;
+}
+
+.resume-edit button[data-kind="remove"] {
+  margin-left: 8px;
+}
+
+@media print {
+  .resume-edit {
+    display: none;
+  }
+
+  .resume-field-btn:hover {
+    outline: 0;
+  }
+}

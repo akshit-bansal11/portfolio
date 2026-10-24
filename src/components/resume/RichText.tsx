@@ -24,13 +24,15 @@ export function RichLink({ href, children }: { href: string; children: ReactNode
   );
 }
 
-// Renders one string with its bold and link markup.
-export function RichText({ text }: { text: string }) {
+// Renders one string with its bold and link markup. links={false} keeps link
+// labels as plain text (the editor, where the whole field is a button).
+export function RichText({ text, links = true }: { text: string; links?: boolean }) {
   return (
     <>
       {text.split(TOKEN).map((part) => {
         const link = LINK.exec(part);
         if (link) {
+          if (!links) return link[1];
           return (
             <RichLink key={part} href={link[2]}>
               {link[1]}
