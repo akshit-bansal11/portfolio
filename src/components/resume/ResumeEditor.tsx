@@ -207,12 +207,14 @@ export default function ResumeEditor({
       <div className="mx-auto mb-5 flex max-w-[210mm] flex-col gap-3 px-4 text-hero-ink sm:px-0 print:hidden">
         {!canSave && (
           <p role="alert" className="text-sm text-hero-pen">
-            Couldn&apos;t load the saved resume, so saving is off to protect it. Reload to try again.
+            Couldn&apos;t load the saved resume, so saving is off to protect it. Reload to try
+            again.
           </p>
         )}
         {source === "default" && (
           <p className="text-sm text-hero-muted">
-            No saved version yet. This is the built-in copy; your first save becomes the live resume.
+            No saved version yet. This is the built-in copy; your first save becomes the live
+            resume.
           </p>
         )}
         <div className="flex flex-wrap items-center gap-2">
