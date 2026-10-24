@@ -24,7 +24,7 @@ export const LINKS_MAX = 8;
 
 const SAFE_PROTOCOLS = new Set(["https:", "http:", "mailto:"]);
 // Control, format (zero-width, bidi override) and line/paragraph separators.
-const HIDDEN_CHARS = /[\p{Cc}\p{Cf}  ]/u;
+const HIDDEN_CHARS = /[\p{Cc}\p{Cf}\p{Zl}\p{Zp}]/u;
 
 export type ResumeResult =
   | { ok: true; value: ResumeContent }
