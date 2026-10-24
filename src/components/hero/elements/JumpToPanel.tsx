@@ -1,9 +1,9 @@
 /*
  * JumpToPanel.tsx
- * Hero stage-4 "jump to" index, written on the board: a handwritten label over
- * a compact list of typed section names. Every entry has a short hand-drawn underline;
+ * Hero stage-4 "jump to" index, written on the board and right-aligned: a handwritten label
+ * over a compact list of typed section names. Every entry has a short hand-drawn underline;
  * only the current one (last hovered or focused) turns ink-coloured, stretches its
- * underline past the word and writes its description in to the right. The description
+ * underline past the word and writes its description in to the left. The description
  * is positioned out of flow, so no other entry ever moves.
  * Clicking an entry smooth-scrolls the page to that section.
  */
@@ -34,11 +34,11 @@ export default function JumpToPanel() {
 
   return (
     <div
-      className="pointer-events-auto flex flex-col gap-3"
+      className="pointer-events-auto flex flex-col items-end gap-3 text-right"
       style={{ width: "clamp(220px, 24vw, 320px)" }}
     >
       <p className="-rotate-2 font-hand text-4xl font-bold leading-none text-hero-muted">jump to</p>
-      <ul className="flex flex-col items-start gap-2.5">
+      <ul className="flex flex-col items-end gap-2.5">
         {JUMP_TO_CARDS.map(({ label, sectionId, description }, index) => {
           const isActive = index === active;
           return (
@@ -49,7 +49,7 @@ export default function JumpToPanel() {
                 onFocus={() => setActive(index)}
                 onClick={() => scrollToSection(sectionId)}
                 className={cn(
-                  "relative cursor-pointer py-1 text-left font-grotesk text-lg font-semibold outline-none transition-colors duration-200",
+                  "relative cursor-pointer py-1 text-right font-grotesk text-lg font-semibold outline-none transition-colors duration-200",
                   isActive ? "text-hero-ink" : "text-hero-muted",
                 )}
               >
@@ -59,7 +59,7 @@ export default function JumpToPanel() {
                   viewBox="0 0 100 8"
                   preserveAspectRatio="none"
                   className={cn(
-                    "pointer-events-none absolute -bottom-0.5 left-0 h-2 overflow-visible transition-[width] duration-300 motion-reduce:transition-none",
+                    "pointer-events-none absolute -bottom-0.5 right-0 h-2 overflow-visible transition-[width] duration-300 motion-reduce:transition-none",
                     isActive ? "w-[calc(100%+1.5rem)] text-hero-pen" : "w-7 text-hero-muted",
                   )}
                 >
@@ -75,8 +75,8 @@ export default function JumpToPanel() {
               </button>
               {isActive && (
                 <motion.span
-                  className="pointer-events-none absolute left-full top-1/2 ml-6 -translate-y-1/2 whitespace-nowrap font-hand text-xl font-semibold leading-none text-hero-pen"
-                  initial={reduceMotion ? false : { opacity: 0, x: -8 }}
+                  className="pointer-events-none absolute right-full top-1/2 mr-6 -translate-y-1/2 whitespace-nowrap font-hand text-xl font-semibold leading-none text-hero-pen"
+                  initial={reduceMotion ? false : { opacity: 0, x: 8 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.25, ease: "easeOut" }}
                 >

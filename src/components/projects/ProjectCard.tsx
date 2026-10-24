@@ -2,18 +2,16 @@
  * ProjectCard.tsx
  * One project on the whiteboard: its screenshot as a taped print, then logo, title, blurb,
  * tech-stack stamps, handwritten notes and hand-drawn buttons. The board variant is tilted
- * a little; hover or keyboard focus straightens and lifts it and plays the demo muted over
- * the screenshot (the video element is created on the first such moment, never on page
- * load). Touch and reduced motion never autoplay; "watch demo" opens the video in a modal.
+ * a little; hover or keyboard focus straightens and lifts it. Demos play only through
+ * "watch demo", which opens the video in a modal.
  * `featured` lays the card out as a full-width row (screenshot left, text right).
  */
 
 "use client";
 
-import { useReducedMotion } from "framer-motion";
 import { Github, Globe, Play } from "lucide-react";
 import Image from "next/image";
-import { type FocusEvent, type PointerEvent, useRef, useState } from "react";
+import { useState } from "react";
 import { DrawnPath } from "@/components/blog/Annotation";
 import Stamp from "@/components/hero/elements/Stamp";
 import Tape from "@/components/hero/elements/Tape";
@@ -54,47 +52,10 @@ interface ProjectCardProps {
 export default function ProjectCard({ project, index, featured = false }: ProjectCardProps) {
   const { title, description, imgUrl, logoUrl, videoUrl, techStack, notes, siteLink, githubLink } =
     project;
-  const reduceMotion = useReducedMotion();
-  const videoRef = useRef<HTMLVideoElement>(null);
-  // The video exists only after the first hover/focus; `playing` shows or hides it.
-  const [loaded, setLoaded] = useState(false);
-  const [playing, setPlaying] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-
-  const start = () => {
-    if (reduceMotion || !videoUrl || modalOpen) return;
-    setPlaying(true);
-    const video = videoRef.current;
-    if (video) void video.play().catch(() => undefined);
-    else setLoaded(true); // autoPlay starts it on mount
-  };
-
-  const stop = () => {
-    setPlaying(false);
-    const video = videoRef.current;
-    if (video) {
-      video.pause();
-      video.currentTime = 0;
-    }
-  };
-
-  const onPointerEnter = (e: PointerEvent) => {
-    if (e.pointerType === "mouse") start();
-  };
-  // Keyboard focus only: a tap on touch also focuses the control but must not autoplay.
-  const onFocus = (e: FocusEvent) => {
-    if (e.target.matches(":focus-visible")) start();
-  };
-  const onBlur = (e: FocusEvent<HTMLElement>) => {
-    if (!e.currentTarget.contains(e.relatedTarget)) stop();
-  };
 
   return (
     <article
-      onPointerEnter={onPointerEnter}
-      onPointerLeave={stop}
-      onFocus={onFocus}
-      onBlur={onBlur}
       className={cn(
         "relative transition-[rotate,translate] duration-300 hover:-translate-y-1 focus-within:-translate-y-1 motion-reduce:transition-none",
         featured
@@ -120,24 +81,6 @@ export default function ProjectCard({ project, index, featured = false }: Projec
                     : "(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
                 }
                 className="object-cover object-top"
-              />
-            )}
-            {loaded && videoUrl && (
-              <video
-                ref={videoRef}
-                src={videoUrl}
-                poster={imgUrl}
-                preload="none"
-                muted
-                loop
-                playsInline
-                autoPlay
-                aria-hidden
-                tabIndex={-1}
-                className={cn(
-                  "absolute inset-0 h-full w-full object-cover object-top transition-opacity duration-200 motion-reduce:transition-none",
-                  playing ? "opacity-100" : "opacity-0",
-                )}
               />
             )}
             <div
@@ -210,10 +153,7 @@ export default function ProjectCard({ project, index, featured = false }: Projec
             <button
               type="button"
               aria-haspopup="dialog"
-              onClick={() => {
-                stop();
-                setModalOpen(true);
-              }}
+              onClick={() => setModalOpen(true)}
               className={cn(BUTTON, BUTTON_FILLED)}
             >
               <Play aria-hidden className="h-4 w-4" strokeWidth={2.5} />

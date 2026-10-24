@@ -1,10 +1,11 @@
 /*
  * ProfileCluster.tsx
- * The desktop profile group, one centred composition (max 1080px): a big polaroid on
- * the left; on the right the name, role, "currently" list, "worked across" stamps, then
- * the resume button and social stickers. It slides in from the right and holds. As the
- * beliefs board arrives it cross-fades into a compact left column (small polaroid, name,
- * role, resume, socials; the extras are gone) which slides left to make room.
+ * The desktop profile group. Stages 2–3 show one centred composition (max 1080px): a big
+ * polaroid on the left; on the right the name, role, "currently" list, "worked across"
+ * stamps, then the resume button and social stickers, all at once. It slides in from the
+ * right and holds. As the beliefs board arrives it cross-fades into `CompactProfile`, the
+ * same content as one compact column (small polaroid on top) that slides into the left
+ * cell of the stage-4 grid.
  */
 
 "use client";
@@ -14,12 +15,9 @@ import { useState } from "react";
 import { Annotation } from "@/components/blog/Annotation";
 import { entryEnd, HERO_STAGES } from "@/config/heroStages";
 import { NAME_ACCENT_CLASS, PROFILE_NAME, PROFILE_NOTE, PROFILE_ROLE } from "@/data/heroContent";
-import { heroSocialLinks } from "@/data/heroSocialLinks";
-import SocialsStage from "../stages/SocialsStage";
+import ProfileActions from "./ProfileActions";
 import ProfileExtras from "./ProfileExtras";
 import ProfilePhoto from "./ProfilePhoto";
-import ResumeButton from "./ResumeButton";
-import SocialIcon from "./SocialIcon";
 
 // Public props for the cluster.
 interface ProfileClusterProps {
@@ -33,37 +31,33 @@ const LAST_NAME = PROFILE_NAME.split(" ").slice(1).join(" ");
 // Progress distance over which the wide composition hands over to the compact column.
 const HANDOVER = 0.03;
 
-// Renders the entire profile group across all four hero stages.
-export default function ProfileCluster({ progress }: ProfileClusterProps) {
-  // Pull stage ranges and their settled points for transform math.
-  const profile = HERO_STAGES.profile.range;
-  const jumpto = HERO_STAGES.jumpto.range;
-
-  const profileSettled = entryEnd(profile);
-  const jumptoSettled = entryEnd(jumpto);
-
-  // Which of the two layers is live (the other is inert and hidden from assistive tech).
+// True once the hero has reached the stage-4 hand-over (drives which layer is inert).
+function useCompact(progress: MotionValue<number>) {
   const [compact, setCompact] = useState(false);
   useMotionValueEvent(progress, "change", (latest) => {
-    setCompact(latest >= jumpto[0] + HANDOVER / 2);
+    setCompact(latest >= HERO_STAGES.jumpto.range[0] + HANDOVER / 2);
   });
+  return compact;
+}
+
+// Renders the wide profile composition (stages 2–3).
+export default function ProfileCluster({ progress }: ProfileClusterProps) {
+  const profile = HERO_STAGES.profile.range;
+  const jumpto = HERO_STAGES.jumpto.range;
+  const profileSettled = entryEnd(profile);
+  const compact = useCompact(progress);
 
   // Enter from the right and fade in.
   const enterX = useTransform(progress, [profile[0], profileSettled], ["55vw", "0vw"]);
   const enterOpacity = useTransform(progress, [profile[0], profileSettled], [0, 1]);
-
-  // Hand-over between the wide composition and the compact column.
+  // Hand-over to the compact column.
   const wideOpacity = useTransform(progress, [jumpto[0], jumpto[0] + HANDOVER], [1, 0]);
-  const compactOpacity = useTransform(progress, [jumpto[0], jumpto[0] + HANDOVER], [0, 1]);
-  // The compact column slides left to make room for the board.
-  const compactX = useTransform(progress, [jumpto[0], jumptoSettled, 1], ["0vw", "-28vw", "-28vw"]);
 
   return (
     <motion.div
       style={{ x: enterX, opacity: enterOpacity }}
       className="pointer-events-none absolute inset-0 will-change-transform"
     >
-      {/* ── Wide composition (stages 2–3) ───────────────────── */}
       <motion.div
         style={{ opacity: wideOpacity }}
         aria-hidden={compact}
@@ -99,37 +93,41 @@ export default function ProfileCluster({ progress }: ProfileClusterProps) {
               </h2>
             </div>
             <ProfileExtras className="pointer-events-auto" />
-            <SocialsStage progress={progress} />
+            <ProfileActions />
           </div>
         </div>
       </motion.div>
+    </motion.div>
+  );
+}
 
-      {/* ── Compact column (stage 4) ────────────────────────── */}
-      <motion.div
-        style={{ opacity: compactOpacity, x: compactX }}
-        aria-hidden={!compact}
-        inert={!compact}
-        className="absolute inset-0 flex flex-col items-center justify-center gap-3"
-      >
-        <ProfilePhoto className="w-44 xl:w-52" />
-        <div className="mt-3 flex flex-col items-center gap-1 text-center">
-          <p className="font-display text-4xl font-medium leading-[0.95] tracking-[-0.01em] whitespace-nowrap xl:text-5xl">
-            <span className="text-hero-ink">{FIRST_NAME}</span>{" "}
-            <span className={NAME_ACCENT_CLASS}>{LAST_NAME}</span>
-          </p>
-          <p className="font-grotesk text-sm text-hero-muted whitespace-nowrap xl:text-base">
-            {PROFILE_ROLE}
-          </p>
-        </div>
-        <div className="pointer-events-auto flex flex-col items-center gap-3">
-          <ResumeButton />
-          <div className="flex gap-2 pb-6">
-            {heroSocialLinks.map((link, index) => (
-              <SocialIcon key={link.href} {...link} index={index} />
-            ))}
-          </div>
-        </div>
-      </motion.div>
+// Renders the stage-4 left column: the profile content, compact, polaroid on top.
+export function CompactProfile({ progress }: ProfileClusterProps) {
+  const jumpto = HERO_STAGES.jumpto.range;
+  const jumptoSettled = entryEnd(jumpto);
+  const compact = useCompact(progress);
+
+  // Fade in as the wide composition fades out, drifting in from where its text column sat.
+  const opacity = useTransform(progress, [jumpto[0], jumpto[0] + HANDOVER], [0, 1]);
+  const x = useTransform(progress, [jumpto[0], jumptoSettled], ["22vw", "0vw"]);
+
+  return (
+    <motion.div
+      style={{ opacity, x }}
+      aria-hidden={!compact}
+      inert={!compact}
+      className="flex w-full max-w-[360px] flex-col items-start gap-3 will-change-transform"
+    >
+      <ProfilePhoto className="w-[clamp(130px,22vh,200px)] self-center" />
+      <div className="flex flex-col gap-0.5">
+        <p className="font-display text-4xl font-medium leading-[0.95] tracking-[-0.01em] whitespace-nowrap">
+          <span className="text-hero-ink">{FIRST_NAME}</span>{" "}
+          <span className={NAME_ACCENT_CLASS}>{LAST_NAME}</span>
+        </p>
+        <p className="font-grotesk text-sm text-hero-muted">{PROFILE_ROLE}</p>
+      </div>
+      <ProfileExtras compact className="pointer-events-auto" />
+      <ProfileActions />
     </motion.div>
   );
 }

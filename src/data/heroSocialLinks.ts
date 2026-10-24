@@ -24,7 +24,7 @@ export const heroSocialLinks: HeroSocialLink[] = [
   { name: "LinkedIn", note: "linkedin", href: "https://www.linkedin.com/in/akshit-bansal11/" },
   {
     name: "Google Skills",
-    note: "skills",
+    note: "Google Skills",
     href: "https://www.skills.google/public_profiles/57032e10-4253-4ac1-9944-91f03bb226d1",
   },
   { name: "HackerRank", note: "hackerrank", href: "http://hackerrank.com/profile/akshitbansal11" },

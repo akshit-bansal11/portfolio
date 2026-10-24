@@ -14,27 +14,40 @@ import Stamp from "./Stamp";
 const BULLET = sketchEllipse(6, 6, 3.5, 3.5, { seed: 81, jitter: 0.1 });
 
 interface ProfileExtrasProps {
+  /** Smaller type and spacing for the stage-4 column. */
+  compact?: boolean;
   className?: string;
 }
 
 // Renders the two handwritten blocks.
-export default function ProfileExtras({ className }: ProfileExtrasProps) {
+export default function ProfileExtras({ className, compact = false }: ProfileExtrasProps) {
   return (
-    <div className={cn("flex flex-col gap-5 text-left", className)}>
+    <div className={cn("flex flex-col text-left", compact ? "gap-3" : "gap-5", className)}>
       <section>
-        <h3 className="-rotate-2 font-hand text-3xl font-bold leading-none text-hero-pen">
+        <h3
+          className={cn(
+            "-rotate-2 font-hand font-bold leading-none text-hero-pen",
+            compact ? "text-2xl" : "text-3xl",
+          )}
+        >
           currently:
         </h3>
-        <ul className="mt-2 flex flex-col gap-1">
+        <ul className={cn("flex flex-col gap-1", compact ? "mt-1" : "mt-2")}>
           {CURRENTLY.map(({ text, link }) => (
             <li
               key={text + (link?.label ?? "")}
-              className="flex items-start gap-2 font-hand text-2xl font-semibold leading-tight text-hero-ink"
+              className={cn(
+                "flex items-start gap-2 font-hand font-semibold leading-tight text-hero-ink",
+                compact ? "text-xl" : "text-2xl",
+              )}
             >
               <svg
                 aria-hidden
                 viewBox="0 0 12 12"
-                className="mt-2 h-3 w-3 shrink-0 overflow-visible text-hero-pen"
+                className={cn(
+                  "h-3 w-3 shrink-0 overflow-visible text-hero-pen",
+                  compact ? "mt-1.5" : "mt-2",
+                )}
               >
                 <path
                   d={BULLET}
@@ -65,7 +78,7 @@ export default function ProfileExtras({ className }: ProfileExtrasProps) {
         <h3 className="font-hand text-2xl font-semibold leading-none text-hero-muted">
           worked across
         </h3>
-        <ul className="mt-3 flex flex-wrap gap-2">
+        <ul className={cn("flex flex-wrap gap-2", compact ? "mt-2" : "mt-3")}>
           {WORKED_ACROSS.map((label, index) => (
             <Stamp key={label} label={label} index={index} />
           ))}

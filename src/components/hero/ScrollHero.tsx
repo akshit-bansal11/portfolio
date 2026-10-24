@@ -32,7 +32,7 @@ import WhiteboardDoodles from "./backdrop/WhiteboardDoodles";
 import AkshitBansalBadge from "./elements/AkshitBansalBadge";
 import BeliefsBoard, { ScrollBeliefsBoard } from "./elements/BeliefsBoard";
 import JumpToPanel from "./elements/JumpToPanel";
-import ProfileCluster from "./elements/ProfileCluster";
+import ProfileCluster, { CompactProfile } from "./elements/ProfileCluster";
 import ProfileExtras from "./elements/ProfileExtras";
 import ProfilePhoto from "./elements/ProfilePhoto";
 import ResumeButton from "./elements/ResumeButton";
@@ -158,27 +158,23 @@ export default function ScrollHero() {
           <TaglineStage progress={progress} active={isWelcomeComplete} />
           <ProfileCluster progress={progress} />
 
-          {/* ── Stage 4: Three-column flex layout ────────────────────────
-					     Uses justify-between so the beliefs board naturally centres
-					     between the left profile/socials region and the right
-					     jump-to index. Each column is a flex item. */}
-          <motion.div
-            style={{ x: stage4X, opacity: stage4Opacity }}
-            className="absolute inset-0 flex items-center justify-between px-8 md:px-12 lg:px-16 pointer-events-none z-20"
-          >
-            {/* Left spacer — matches the space occupied by profile + socials */}
-            <div className="w-[28vw] shrink-0" />
+          {/* ── Stage 4: three-column grid ───────────────────────────────
+					     Left: the compact profile column. Centre: the beliefs board, exactly
+					     centred in the viewport (equal 1fr sides). Right: the jump-to index,
+					     right-aligned. All sit inside the page's outer margins. */}
+          <div className="pointer-events-none absolute inset-0 z-20 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center px-8 md:px-12 lg:px-16">
+            <div className="justify-self-start">
+              <CompactProfile progress={progress} />
+            </div>
 
-            {/* Centre — beliefs board */}
-            <div className="flex items-center justify-center flex-1">
+            <motion.div style={{ x: stage4X, opacity: stage4Opacity }} className="justify-self-center">
               <ScrollBeliefsBoard progress={progress} />
-            </div>
+            </motion.div>
 
-            {/* Right — Jump to panel */}
-            <div className="shrink-0">
+            <motion.div style={{ x: stage4X, opacity: stage4Opacity }} className="justify-self-end">
               <JumpToPanel />
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
 
           {/* Scroll cue: draws in, bobs, and fades for good once the hero starts moving. */}
           <div className="pointer-events-none absolute inset-x-0 bottom-6 flex justify-center">
