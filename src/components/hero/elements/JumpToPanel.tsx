@@ -37,8 +37,8 @@ export default function JumpToPanel() {
       className="pointer-events-auto flex flex-col items-end gap-3 text-right"
       style={{ width: "clamp(220px, 24vw, 320px)" }}
     >
-      <p className="-rotate-2 font-hand text-4xl font-bold leading-none text-hero-muted">jump to</p>
-      <ul className="flex flex-col items-end gap-2.5">
+      <p className="-rotate-2 font-hand text-5xl font-bold leading-none text-hero-muted">jump to</p>
+      <ul className="flex flex-col items-end gap-4">
         {JUMP_TO_CARDS.map(({ label, sectionId, description }, index) => {
           const isActive = index === active;
           return (
@@ -49,7 +49,7 @@ export default function JumpToPanel() {
                 onFocus={() => setActive(index)}
                 onClick={() => scrollToSection(sectionId)}
                 className={cn(
-                  "relative cursor-pointer py-1 text-right font-grotesk text-lg font-semibold outline-none transition-colors duration-200",
+                  "relative cursor-pointer py-1 text-right font-grotesk text-2xl font-semibold outline-none transition-colors duration-200",
                   isActive ? "text-hero-ink" : "text-hero-muted",
                 )}
               >
@@ -75,7 +75,7 @@ export default function JumpToPanel() {
               </button>
               {isActive && (
                 <motion.span
-                  className="pointer-events-none absolute right-full top-1/2 mr-6 -translate-y-1/2 whitespace-nowrap font-hand text-xl font-semibold leading-none text-hero-pen"
+                  className="pointer-events-none absolute right-full top-1/2 mr-6 -translate-y-1/2 whitespace-nowrap font-hand text-2xl font-semibold leading-none text-hero-pen"
                   initial={reduceMotion ? false : { opacity: 0, x: 8 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.25, ease: "easeOut" }}
