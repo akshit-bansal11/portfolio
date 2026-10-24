@@ -8,12 +8,11 @@
 
 import type { HeroStage } from "@/types/hero";
 
-// Progress ranges (0..1) for each of the four hero beats.
+// Progress ranges (0..1) for each of the three hero beats.
 export const HERO_STAGES = {
-  tagline: { id: "tagline", range: [0.0, 0.18] },
-  profile: { id: "profile", range: [0.18, 0.42] },
-  socials: { id: "socials", range: [0.42, 0.62] },
-  jumpto: { id: "jumpto", range: [0.62, 0.86] },
+  tagline: { id: "tagline", range: [0.0, 0.24] },
+  profile: { id: "profile", range: [0.24, 0.5] },
+  jumpto: { id: "jumpto", range: [0.5, 0.82] },
 } as const satisfies Record<string, HeroStage>;
 
 // Fraction of each stage spent animating in (the rest is dwell).
@@ -24,7 +23,7 @@ export const entryEnd = (range: readonly [number, number], ratio = STAGE_ENTRY_R
   range[0] + (range[1] - range[0]) * ratio;
 
 // Progress value past which the hero is considered finished.
-export const HERO_HORIZONTAL_END = 0.88;
+export const HERO_HORIZONTAL_END = 0.84;
 
 // Total pinned wrapper height in viewport heights.
-export const HERO_SCROLL_LENGTH_VH = 800;
+export const HERO_SCROLL_LENGTH_VH = 600;

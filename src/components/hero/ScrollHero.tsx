@@ -7,9 +7,9 @@
  *   name, role, resume link, socials, beliefs. No scroll magic.
  *
  * Desktop (≥ lg):
- *   Pinned, four-stage scroll-driven hero canvas. Owns the
+ *   Pinned, three-stage scroll-driven hero canvas. Owns the
  *   scroll-progress source, mounts each stage (tagline, profile,
- *   socials, jumpto) plus the doodle layer and scroll cue, and reports
+ *   jumpto) plus the doodle layer and scroll cue, and reports
  *   completion to the context.
  */
 

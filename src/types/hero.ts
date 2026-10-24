@@ -6,7 +6,7 @@
 
 import type { ReactNode } from "react";
 
-export type HeroStageId = "tagline" | "profile" | "socials" | "jumpto";
+export type HeroStageId = "tagline" | "profile" | "jumpto";
 
 export interface HeroStage {
   id: HeroStageId;

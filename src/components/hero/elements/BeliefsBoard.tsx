@@ -37,7 +37,13 @@ const NOTE_TILTS = [
   "rotate-1 sm:-mt-2",
   "-rotate-2 sm:mt-3",
 ] as const;
-const NOTE_COLOURS = ["bg-note-1", "bg-note-2", "bg-note-3", "bg-note-4"] as const;
+// Each note is a different paper: ruled, squared, dotted and a legal pad.
+const NOTE_COLOURS = [
+  "bg-note-1 paper-ruled",
+  "bg-note-2 paper-grid",
+  "bg-note-3 paper-dots",
+  "bg-note-4 paper-legal",
+] as const;
 
 // Stroke whose pathLength follows the scroll across this item's slice of the stage.
 function ScrollTick({
@@ -210,7 +216,7 @@ export default function BeliefsBoard({ progress }: BeliefsBoardProps) {
       <h3 className="font-display text-2xl font-medium tracking-[-0.01em] text-hero-ink md:text-3xl lg:text-center">
         {BELIEFS_HEADING}
       </h3>
-      <ul className="grid grid-cols-1 justify-items-center gap-6 sm:grid-cols-2 lg:gap-8">
+      <ul className="grid grid-cols-1 justify-items-center gap-8 sm:grid-cols-2 lg:gap-x-14 lg:gap-y-12">
         {BELIEFS.map((belief, index) => (
           <FlipNote key={belief.word} belief={belief} index={index} progress={progress} />
         ))}
