@@ -167,7 +167,10 @@ export default function ScrollHero() {
               <CompactProfile progress={progress} />
             </div>
 
-            <motion.div style={{ x: stage4X, opacity: stage4Opacity }} className="justify-self-center">
+            <motion.div
+              style={{ x: stage4X, opacity: stage4Opacity }}
+              className="justify-self-center"
+            >
               <ScrollBeliefsBoard progress={progress} />
             </motion.div>
 
