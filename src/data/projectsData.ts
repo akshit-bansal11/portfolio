@@ -12,11 +12,7 @@ import type { ProjectItem } from "@/types/project";
 export const projects: ProjectItem[] = [
   {
     title: "Kiteloom",
-    notes: [
-      "in development",
-      "real-time multiplayer on Yjs",
-      "70+ unit test files, 11 languages",
-    ],
+    notes: ["in development", "real-time multiplayer on Yjs", "70+ unit test files, 11 languages"],
     description:
       "Real-time collaborative whiteboard in the browser. An infinite canvas with shapes, text and images, live cursors synced over WebSockets with Yjs CRDTs, and no account needed to join a room.",
     imgUrl: asset("projects/kiteloom/preview.svg"),
@@ -52,7 +48,7 @@ export const projects: ProjectItem[] = [
     githubLink: "https://github.com/akshit-bansal11/saltcellar",
     isPublic: true,
   },
-   {
+  {
     title: "Offkit",
     notes: ["37 local-first tools", "800+ tests"],
     description:
@@ -77,7 +73,7 @@ export const projects: ProjectItem[] = [
     githubLink: "https://github.com/akshit-bansal11/inlay",
     isPublic: true,
   },
- {
+  {
     title: "Inklo",
     notes: ["140+ tests", "zero network code"],
     description:
