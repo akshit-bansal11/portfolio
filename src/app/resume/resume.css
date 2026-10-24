@@ -1,7 +1,7 @@
 /*
  * resume.css
- * Styles for the /resume page: themed backdrop with a soft glow, the always
- * white paper sheet, and the print rules (A4, active document only).
+ * Styles for the /resume page: themed backdrop with a soft glow, the A4 paper
+ * sheets, and the print rules (A4, active document only).
  */
 
 .resume-page {
@@ -31,40 +31,124 @@
   pointer-events: none;
 }
 
-/* Paper: white with near-black ink in both themes. */
-.resume-sheet {
+/*
+ * Paper: white with near-black ink in both themes. .resume-pages carries the
+ * type for a variant; each .resume-a4 is a true 210mm x 297mm sheet whose
+ * padding is the page margin (--m).
+ */
+.resume-pages {
   --paper: #fff;
   --ink: #111;
   --ink-soft: #444;
   --rule: #111;
 
-  box-sizing: border-box;
-  width: 100%;
-  max-width: 210mm;
-  margin: 0 auto;
-  padding: 16px;
-  background: var(--paper);
+  position: relative;
   color: var(--ink);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
-  font-size: 10.5pt;
-  line-height: 1.4;
   overflow-wrap: anywhere;
 }
 
-@media (width >= 640px) {
-  .resume-sheet {
-    padding: 14mm;
-    border-radius: 6px;
-    box-shadow: 0 18px 50px -18px rgb(0 0 0 / 45%);
-  }
+.resume-pages[data-variant="one"] {
+  --m: 10mm;
+  --gap-scale: 0.75;
+
+  font-size: 9pt;
+  line-height: 1.3;
 }
 
-.resume-sheet h1 {
+.resume-pages[data-variant="full"] {
+  --m: 14mm;
+  --gap-scale: 1;
+
+  font-size: 10.5pt;
+  line-height: 1.42;
+}
+
+.resume-sheets {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+/* Narrow screens keep the real A4 layout and shrink it (--resume-scale, set by PagedSheet). */
+.resume-a4 {
+  position: relative;
+  box-sizing: border-box;
+  flex: none;
+  width: 210mm;
+  height: 297mm;
+  padding: var(--m);
+  overflow: hidden;
+  background: var(--paper);
+  border-radius: 4px;
+  box-shadow: 0 18px 50px -18px rgb(0 0 0 / 45%);
+  zoom: var(--resume-scale, 1);
+}
+
+/* Before measuring (SSR, no JS) everything sits on one sheet that grows with its content. */
+.resume-a4[data-flow] {
+  height: auto;
+  min-height: 297mm;
+}
+
+/* Off-screen: probe = empty sheet to read A4 size and margin, measure = all blocks. */
+.resume-probe,
+.resume-measure {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  width: 210mm;
+  padding: var(--m);
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.resume-probe {
+  height: 297mm;
+}
+
+.resume-pageno {
+  position: absolute;
+  right: var(--m);
+  bottom: calc(var(--m) / 2 - 0.5em);
+  color: var(--ink-soft);
+  font-size: 8pt;
+  line-height: 1;
+}
+
+/* A block's top gap is padding (not margin) so measured heights include it. */
+.resume-block {
+  display: flow-root;
+}
+
+.resume-block[data-kind="section"] {
+  padding-top: calc(0.9em * var(--gap-scale));
+}
+
+.resume-block[data-kind="entry"] {
+  padding-top: calc(0.6em * var(--gap-scale));
+}
+
+.resume-block[data-kind="line"] {
+  padding-top: 0.25em;
+}
+
+.resume-block[data-kind="bullet"] {
+  padding-top: 0.15em;
+}
+
+.resume-pages h1 {
   margin: 0;
   font-size: 26pt;
   font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.01em;
+}
+
+.resume-pages[data-variant="one"] h1 {
+  font-size: 20pt;
 }
 
 .resume-tagline {
@@ -87,23 +171,19 @@
   color: var(--ink-soft);
 }
 
-.resume-sheet a {
+.resume-pages a {
   color: var(--ink);
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 2px;
 }
 
-.resume-sheet a:focus-visible {
+.resume-pages a:focus-visible {
   outline: 2px solid #4f46e5;
   outline-offset: 2px;
 }
 
-.resume-sheet section {
-  margin-top: 0.9em;
-}
-
-.resume-sheet h2 {
+.resume-pages h2 {
   margin: 0 0 0.4em;
   padding-bottom: 0.15em;
   border-bottom: 1px solid var(--rule);
@@ -111,26 +191,16 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  break-after: avoid;
 }
 
-.resume-sheet p {
-  margin: 0.25em 0 0;
+.resume-pages p {
+  margin: 0;
 }
 
-.resume-sheet h3 {
+.resume-pages h3 {
   margin: 0;
   font-size: 1em;
   font-weight: 700;
-}
-
-.resume-entry {
-  margin-top: 0.6em;
-  break-inside: avoid;
-}
-
-.resume-entry:first-of-type {
-  margin-top: 0;
 }
 
 .resume-row {
@@ -149,21 +219,31 @@
   color: var(--ink-soft);
 }
 
-.resume-sheet ul:not(.resume-links) {
+.resume-pages ul:not(.resume-links) {
   margin: 0.2em 0 0;
   padding-left: 1.2em;
   list-style: disc;
 }
 
-.resume-sheet li {
-  margin-top: 0.15em;
-  break-inside: avoid;
+.resume-block[data-kind="bullet"] ul {
+  margin: 0;
 }
 
-/* Print: only the visible sheet, on A4, plain ink on white. */
+.resume-pages li {
+  margin-top: 0.15em;
+}
+
+.resume-block[data-kind="bullet"] li {
+  margin-top: 0;
+}
+
+/*
+ * Print: every sheet is exactly one A4 page. The sheet is a hair under 297mm
+ * so rounding never spills a blank page; hidden tabs (display: none) do not print.
+ */
 @page {
   size: a4;
-  margin: 12mm;
+  margin: 0;
 }
 
 @media print {
@@ -179,45 +259,34 @@
     background: #fff;
   }
 
-  .resume-glow {
+  .resume-glow,
+  .resume-probe,
+  .resume-measure {
     display: none;
   }
 
-  .resume-sheet {
-    max-width: none;
-    padding: 0;
+  .resume-sheets {
+    display: block;
+  }
+
+  .resume-a4 {
+    height: 296.5mm;
     border-radius: 0;
     box-shadow: none;
-    font-size: 10.5pt;
+    break-after: page;
+    zoom: 1;
   }
 
-  .resume-sheet a {
+  .resume-a4:last-child {
+    break-after: auto;
+  }
+
+  .resume-a4[data-flow] {
+    height: auto;
+    min-height: 0;
+  }
+
+  .resume-pages a {
     text-decoration: none;
-  }
-
-  /* One-page variant is compact so it fits a single A4 sheet. */
-  .resume-sheet[data-variant="one"] {
-    font-size: 9.5pt;
-    line-height: 1.28;
-  }
-
-  .resume-sheet[data-variant="one"] h1 {
-    font-size: 22pt;
-  }
-
-  .resume-sheet[data-variant="one"] section {
-    margin-top: 0.6em;
-  }
-
-  .resume-sheet[data-variant="one"] h2 {
-    margin-bottom: 0.25em;
-  }
-
-  .resume-sheet[data-variant="one"] .resume-entry {
-    margin-top: 0.35em;
-  }
-
-  .resume-sheet[data-variant="one"] li {
-    margin-top: 0.05em;
   }
 }
