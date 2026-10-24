@@ -102,8 +102,7 @@ export const BELIEFS = [
 
 // Profile stage: what I am doing now (an item may carry a link), and the domains I have worked across.
 export const CURRENTLY: readonly { text: string; link?: { label: string; href: string } }[] = [
-  { text: "SDE-3 & Chief Advisor @ Elina Club" },
-  { text: "Co-founder & CTO @ a stealth startup" },
+  { text: "SDE Lead @ Elina Club" },
   { text: "building ", link: { label: "Kiteloom", href: "https://kiteloom.com" } },
 ];
 export const WORKED_ACROSS = ["FOSS", "Real Estate", "SaaS", "PR", "Design / UI/UX"] as const;

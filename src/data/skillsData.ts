@@ -141,6 +141,40 @@ export const SkillCategories: SkillCategory[] = [
     ],
   },
   {
+    title: "System Design",
+    skills: [
+      {
+        name: "Rate limiting",
+        Icon: "",
+        usedIn: [
+          "Redis rate limits on Elina Club's lead forms (Upstash)",
+          "Trupeer password reset; Kiteloom per-user limits",
+        ],
+      },
+      { name: "Caching", Icon: "" },
+      { name: "Load balancing", Icon: "" },
+      {
+        name: "WebSockets",
+        Icon: "",
+        usedIn: ["Kiteloom's live cursors and room sync"],
+      },
+      {
+        name: "CRDTs",
+        Icon: "",
+        usedIn: ["Kiteloom's real-time collaboration on Yjs"],
+      },
+      { name: "Loose coupling", Icon: "" },
+      { name: "Circuit breakers", Icon: "" },
+      {
+        name: "Retries with backoff",
+        Icon: "",
+        usedIn: ["Exponential-backoff upload retries in Trupeer's recorder"],
+      },
+      { name: "Offline-first", Icon: "" },
+      { name: "Event-driven architecture", Icon: "" },
+    ],
+  },
+  {
     title: "Security & Testing",
     skills: [
       {

@@ -12,7 +12,11 @@ import type { ProjectItem } from "@/types/project";
 export const projects: ProjectItem[] = [
   {
     title: "Kiteloom",
-    notes: ["real-time multiplayer on Yjs", "70+ unit test files, 11 languages"],
+    notes: [
+      "in development",
+      "real-time multiplayer on Yjs",
+      "70+ unit test files, 11 languages",
+    ],
     description:
       "Real-time collaborative whiteboard in the browser. An infinite canvas with shapes, text and images, live cursors synced over WebSockets with Yjs CRDTs, and no account needed to join a room.",
     imgUrl: asset("projects/kiteloom/preview.svg"),
@@ -24,7 +28,7 @@ export const projects: ProjectItem[] = [
   },
   {
     title: "Edgepad",
-    notes: ["248 commits, 300+ tests", "25 GitHub stars"],
+    notes: ["26 stars, 4 forks, 258 downloads", "300+ tests"],
     description:
       "Turns an Android phone into a Bluetooth trackpad, media remote and control panel for a Windows laptop or a Mac. Corner dials, multi-finger gestures, an on-screen keyboard and a gamepad. No account, no server, no telemetry.",
     imgUrl: asset("projects/edgepad/preview.svg"),
@@ -36,10 +40,23 @@ export const projects: ProjectItem[] = [
     isPublic: true,
   },
   {
+    title: "Saltcellar",
+    notes: ["AES-256-GCM + Argon2id", "zero network code"],
+    description:
+      "A local-only encrypted vault for passwords, environment keys and backup codes on Windows, macOS and Linux. AES-256-GCM under an Argon2id-derived key, a desktop app and a CLI, and no network code at all.",
+    imgUrl: asset("projects/saltcellar/preview.png"),
+    logoUrl: asset("projects/saltcellar/logo.svg"),
+    videoUrl: asset("projects/saltcellar/demo.mp4"),
+    techStack: ["Rust", "Tauri", "TypeScript"],
+    siteLink: "https://saltcellar.akshitbansal.dev",
+    githubLink: "https://github.com/akshit-bansal11/saltcellar",
+    isPublic: true,
+  },
+   {
     title: "Offkit",
     notes: ["37 local-first tools", "800+ tests"],
     description:
-      "A Windows desktop app with 37 file tools for images, video, audio, PDFs, SVG, colors and text. Everything runs on your PC: nothing is uploaded, and there is no account and no telemetry.",
+      "A native desktop app for Windows, macOS and Linux, plus a web app, with 37 file tools for images, video, audio, PDFs, SVG, colors and text. Everything runs on your device: nothing is uploaded, and there is no account and no telemetry.",
     imgUrl: asset("projects/offkit/preview.png"),
     logoUrl: asset("projects/offkit/logo.svg"),
     videoUrl: asset("projects/offkit/demo.mp4"),
@@ -60,20 +77,7 @@ export const projects: ProjectItem[] = [
     githubLink: "https://github.com/akshit-bansal11/inlay",
     isPublic: true,
   },
-  {
-    title: "Saltcellar",
-    notes: ["AES-256-GCM + Argon2id", "zero network code"],
-    description:
-      "A local-only encrypted vault for passwords, environment keys and backup codes on Windows. AES-256-GCM under an Argon2id-derived key, a desktop app and a CLI, and no network code at all.",
-    imgUrl: asset("projects/saltcellar/preview.png"),
-    logoUrl: asset("projects/saltcellar/logo.svg"),
-    videoUrl: asset("projects/saltcellar/demo.mp4"),
-    techStack: ["Rust", "Tauri", "TypeScript"],
-    siteLink: "https://saltcellar.akshitbansal.dev",
-    githubLink: "https://github.com/akshit-bansal11/saltcellar",
-    isPublic: true,
-  },
-  {
+ {
     title: "Inklo",
     notes: ["140+ tests", "zero network code"],
     description:

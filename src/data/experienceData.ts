@@ -16,14 +16,14 @@ export const experience: ExperienceCategory[] = [
       {
         location: "Bathinda (On-Site)",
         company: "Elina Club Pvt. Ltd.",
-        role: "SDE-3 & Chief Advisor",
+        role: "SDE Lead",
         date: "Jul 2026 - Present",
         generalPoint:
-          "Only engineer at the company — I own frontend, backend, database, automation and deployments, and advise leadership on product and tech decisions.",
+          "Only engineer at the company — I own frontend, backend, database, automation and deployments.",
         points: [
           {
             label: "Production Platforms",
-            body: "Built and shipped two production web platforms on Next.js 16, React 19 and TypeScript, from first commit to live site; about 350 commits in under three months.",
+            body: "Built and shipped two production web platforms on Next.js 16, React 19 and TypeScript, from first commit to live site in under three months.",
           },
           {
             label: "Data & APIs",
@@ -37,22 +37,13 @@ export const experience: ExperienceCategory[] = [
         skills: ["Next.js", "React", "TypeScript", "PostgreSQL", "Neon", "Zod", "Upstash", "Redis"],
       },
       {
-        location: "Undisclosed",
-        company: "Stealth Startup",
-        role: "Co-Founder & CTO",
-        date: "Jul 2026 - Present",
-        generalPoint:
-          "Co-founded an early-stage company that is still in stealth; I own the technical direction, architecture and engineering.",
-        points: [],
-      },
-      {
         location: "Remote",
         company: "Kiteloom",
         logo: asset("projects/kiteloom/logo.svg"),
         role: "Founder",
-        date: "Jan 2026 - Present",
+        date: "Nov 2025 - Present",
         generalPoint:
-          "My own product: an infinite canvas where sketches, wireframes and diagrams are the same object, with real-time multiplayer on Yjs CRDTs.",
+          "My own product, in development: an infinite canvas where sketches, wireframes and diagrams are the same object, with real-time multiplayer on Yjs CRDTs.",
         points: [
           {
             label: "Auth & Billing",
