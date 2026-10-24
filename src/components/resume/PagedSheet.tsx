@@ -11,7 +11,14 @@
 
 "use client";
 
-import { type ReactNode, useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  type ReactNode,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 
 export type BlockKind = "header" | "section" | "entry" | "bullet" | "line";
 
@@ -55,16 +62,19 @@ function paginate(blocks: Measured[], available: number): number[][] {
 
 const samePages = (a: number[][] | null, b: number[][]) => JSON.stringify(a) === JSON.stringify(b);
 
+// "Are we on the client?" without a setState-in-effect: false on the server, true after hydration.
+const subscribeNever = () => () => {};
+const onClient = () => true;
+const onServer = () => false;
+
 export default function PagedSheet({ blocks, variant, maxPages, onOverflow }: PagedSheetProps) {
   const limit = maxPages ?? (variant === "one" ? 1 : Number.POSITIVE_INFINITY);
   const rootRef = useRef<HTMLElement>(null);
   const probeRef = useRef<HTMLDivElement>(null);
   const columnRef = useRef<HTMLDivElement>(null);
-  const [mounted, setMounted] = useState(false);
-  const [pages, setPages] = useState<number[][] | null>(null);
-
   // The measuring column is client-only, so the server HTML carries the content once.
-  useLayoutEffect(() => setMounted(true), []);
+  const mounted = useSyncExternalStore(subscribeNever, onClient, onServer);
+  const [pages, setPages] = useState<number[][] | null>(null);
 
   useLayoutEffect(() => {
     const root = rootRef.current;
