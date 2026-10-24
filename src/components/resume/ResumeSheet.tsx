@@ -262,14 +262,9 @@ function sectionItems(
                 edit && {
                   kit: edit.kit,
                   name: `${name}, ${entry.title}`,
-                  actions: listActions(
-                    section.entries,
-                    i,
-                    "entry",
-                    name,
-                    change,
-                    { title: "New entry" },
-                  ),
+                  actions: listActions(section.entries, i, "entry", name, change, {
+                    title: "New entry",
+                  }),
                   onChange: (next) => change(section.entries.map((x, k) => (k === i ? next : x))),
                 }
               }
