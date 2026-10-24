@@ -157,7 +157,10 @@ const WelcomeAnimation = ({ disabled = false }: WelcomeAnimationProps) => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 className="welcome-pen"
-                style={{ animationDelay: `${stroke.delay}s`, animationDuration: `${stroke.duration}s` }}
+                style={{
+                  animationDelay: `${stroke.delay}s`,
+                  animationDuration: `${stroke.duration}s`,
+                }}
               />
             ))}
           </mask>
@@ -185,10 +188,16 @@ const WelcomeAnimation = ({ disabled = false }: WelcomeAnimationProps) => {
         </svg>
       </div>
 
-      <h1 className="welcome-rise mt-8 font-display text-3xl font-medium tracking-normal text-hero-ink md:text-4xl" style={{ animationDelay: "1.9s" }}>
+      <h1
+        className="welcome-rise mt-8 font-display text-3xl font-medium tracking-normal text-hero-ink md:text-4xl"
+        style={{ animationDelay: "1.9s" }}
+      >
         Akshit Bansal
       </h1>
-      <p className="welcome-rise relative mt-1 font-hand text-3xl font-bold text-hero-pen" style={{ animationDelay: "2.3s" }}>
+      <p
+        className="welcome-rise relative mt-1 font-hand text-3xl font-bold text-hero-pen"
+        style={{ animationDelay: "2.3s" }}
+      >
         always building
         <svg
           viewBox="0 0 156 14"
