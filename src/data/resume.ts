@@ -51,6 +51,7 @@ const RESUME_HEADER: ResumeHeader = {
   title: "Full-Stack Software Engineer",
   location: "Punjab, India",
   links: [
+    { label: "+91 70092 50361", href: "tel:+917009250361" },
     { label: "er.akshitbansal11@gmail.com", href: "mailto:er.akshitbansal11@gmail.com" },
     { label: "akshitbansal.dev", href: "https://akshitbansal.dev" },
     {
@@ -100,29 +101,23 @@ const RESUME_ONE_PAGE: ResumeDocument = {
         {
           title: "Elina Club Pvt. Ltd.",
           dates: "Jul 2026 – Present",
-          subtitle: "SDE-3 & Chief Advisor",
+          subtitle: "SDE Lead & Chief Advisor",
           location: "Bathinda, India",
           bullets: [
             "Own the full stack as the company's only engineer: frontend, backend, database, CI/CD and deployments.",
             "Built and launched two production web platforms with Next.js 16, React 19 and TypeScript in under three months.",
             "Designed the PostgreSQL (Neon) schema and REST APIs for four lead-capture pipelines, with server-side Zod validation and Redis rate limiting.",
-            "Built an internal admin console with role-based access, filterable lead tables and Excel export.",
+            "Built an internal admin console with role-based access, filterable lead tables and Excel export, on signed httpOnly sessions and scrypt hashing.",
           ],
-        },
-        {
-          title: "Stealth Startup",
-          dates: "Jul 2026 – Present",
-          subtitle: "Co-Founder & CTO",
-          bullets: ["Lead architecture and engineering for a pre-launch product."],
         },
         {
           title: "Kiteloom",
           link: KITELOOM_LINK,
-          dates: "Jan 2026 – Present",
-          subtitle: "Founder",
+          dates: "Nov 2025 – Present",
+          subtitle: "Founder (in development)",
           bullets: [
-            "Built an infinite canvas for sketches, wireframes and diagrams with real-time collaboration on Yjs CRDTs (Next.js, TypeScript, Convex).",
-            "Added email, Google OAuth and 2FA sign-in (Better Auth), Paddle billing and Sentry; CI runs 70+ unit test files and Playwright E2E tests.",
+            "Building an infinite canvas for sketches, wireframes and diagrams with real-time collaboration on Yjs CRDTs (Next.js, TypeScript, Convex).",
+            "Set up email, Google OAuth and 2FA sign-in (Better Auth), Paddle billing and Sentry; CI runs 70+ unit test files and Playwright E2E tests.",
           ],
         },
         {
@@ -145,18 +140,29 @@ const RESUME_ONE_PAGE: ResumeDocument = {
       heading: "Projects",
       entries: [
         {
+          title: "Flick",
+          link: gh("flick"),
+          dates: "In development",
+          subtitle: "Rust, Tauri, React, TypeScript",
+          bullets: [
+            "Keyboard-first Windows launcher for apps, files, system commands and AI chat with provider fallback; fuzzy search over 305K file paths at p95 ≤ 4.7 ms; 470+ tests.",
+          ],
+        },
+        {
           title: "Edgepad",
           link: gh("edgepad"),
           subtitle: "Kotlin, C#, .NET, Swift, Bluetooth RFCOMM",
           bullets: [
-            "Android app that works as a trackpad, keyboard, media remote and virtual Xbox controller for Windows and macOS over a custom Bluetooth protocol with two-way state sync; 300+ tests.",
+            "Android app that works as a trackpad, keyboard, media remote and virtual Xbox controller for Windows and macOS over a custom Bluetooth protocol with two-way state sync.",
+            "26 GitHub stars, 4 forks, 12 releases and 258 release downloads; 25 merged pull requests, 300+ tests.",
           ],
         },
         {
-          title: "Flick",
-          subtitle: "Rust, Tauri, React, TypeScript",
+          title: "Saltcellar",
+          link: gh("saltcellar"),
+          subtitle: "Rust, Tauri, TypeScript",
           bullets: [
-            "Keyboard-first Windows launcher for apps, files, system commands and AI chat; fuzzy search over 305K file paths at p95 ≤ 4.7 ms; 470+ tests.",
+            "Offline secrets vault for Windows, macOS and Linux with AES-256-GCM envelope encryption under Argon2id, no network access, clipboard auto-clear and signed release builds.",
           ],
         },
         {
@@ -165,14 +171,6 @@ const RESUME_ONE_PAGE: ResumeDocument = {
           subtitle: "Rust, Slint, Next.js, WebAssembly",
           bullets: [
             "37 offline media, PDF, image and developer tools shipped as a native Rust desktop app and a WebAssembly web app from one tool registry; 800+ tests.",
-          ],
-        },
-        {
-          title: "Saltcellar",
-          link: gh("saltcellar"),
-          subtitle: "Rust, Tauri, TypeScript",
-          bullets: [
-            "Offline secrets vault with AES-256-GCM envelope encryption under Argon2id, no network access, clipboard auto-clear and signed release builds.",
           ],
         },
       ],
@@ -212,7 +210,7 @@ const RESUME_FULL: ResumeDocument = {
     {
       kind: "text",
       heading: "Summary",
-      text: "Full-stack software engineer working across web, desktop and Android. Currently the sole engineer at Elina Club, responsible for two production web platforms end to end, and founder of Kiteloom, a collaborative canvas product. Previously a full-stack intern at Trupeer AI on the web app, Chrome extension and Node.js backend. Maintains open-source desktop and Android apps in Rust, Kotlin, C# and Swift, each with automated tests and CI-built releases.",
+      text: "Full-stack software engineer working across web, desktop and Android. Currently the sole engineer at Elina Club, responsible for two production web platforms end to end, and building Kiteloom, a collaborative canvas product. Previously a full-stack intern at Trupeer AI on the web app, Chrome extension and Node.js backend. Maintains open-source desktop and Android apps in Rust, Kotlin, C# and Swift, each with automated tests and CI-built releases.",
     },
     {
       kind: "entries",
@@ -221,7 +219,7 @@ const RESUME_FULL: ResumeDocument = {
         {
           title: "Elina Club Pvt. Ltd.",
           dates: "Jul 2026 – Present",
-          subtitle: "SDE-3 & Chief Advisor",
+          subtitle: "SDE Lead & Chief Advisor",
           location: "Bathinda, India",
           bullets: [
             "Sole engineer, responsible for frontend, backend, database, automation and deployments; as Chief Advisor, advise leadership on product and technical decisions.",
@@ -234,20 +232,12 @@ const RESUME_FULL: ResumeDocument = {
           ],
         },
         {
-          title: "Stealth Startup",
-          dates: "Jul 2026 – Present",
-          subtitle: "Co-Founder & CTO",
-          bullets: [
-            "Co-founded a pre-launch company; responsible for technical direction, system architecture and engineering. Company and product details withheld until launch.",
-          ],
-        },
-        {
           title: "Kiteloom",
           link: KITELOOM_LINK,
-          dates: "Jan 2026 – Present",
-          subtitle: "Founder",
+          dates: "Nov 2025 – Present",
+          subtitle: "Founder (in development)",
           intro:
-            "Infinite canvas where sketches, wireframes and diagrams are the same kind of object, so work moves from rough idea to finished diagram without switching tools. Next.js, TypeScript, Convex, Yjs.",
+            "Infinite canvas, in development, where sketches, wireframes and diagrams are the same kind of object, so work moves from rough idea to finished diagram without switching tools. Next.js, TypeScript, Convex, Yjs.",
           bullets: [
             "Built real-time collaboration on Yjs CRDTs over a separately hosted WebSocket server; each client keeps a local copy that reconciles after a dropped connection.",
             "Implemented connectors that bind to shape edges and re-route when shapes move, instead of detaching.",
@@ -279,6 +269,20 @@ const RESUME_FULL: ResumeDocument = {
       heading: "Projects",
       entries: [
         {
+          title: "Flick",
+          link: gh("flick"),
+          dates: "In development",
+          subtitle: "Rust, Tauri, React, TypeScript",
+          intro:
+            "Keyboard-first Windows launcher: one search bar with a prefix per mode for system commands, apps, file search and AI chat.",
+          bullets: [
+            "Fuzzy search matches 2,000 apps in 0.25 ms and 305K file paths at p95 ≤ 4.7 ms, with frecency ranking on a 7-day half-life; 470+ automated tests.",
+            "Bring-your-own-key AI chat over local models (Ollama, LM Studio, llama.cpp) and hosted providers (OpenAI, Anthropic, OpenRouter), falling back down the user's order on connection errors, 429s and 5xx responses.",
+            "Provider keys live in Windows Credential Manager, are bound to the host they were entered for and are sent only over HTTPS; all network calls run in Rust, and text that looks like a secret is blocked from reaching a model.",
+            "Offline natural-language file finder, port and process lookup, media controls, inline math and unit conversion, and quick capture to Obsidian, Notion or a webhook.",
+          ],
+        },
+        {
           title: "Edgepad",
           link: gh("edgepad"),
           dates: "Sep 2026 – Present",
@@ -286,10 +290,11 @@ const RESUME_FULL: ResumeDocument = {
           intro:
             "Open-source Android app that turns a phone into a trackpad, keyboard, media remote and virtual Xbox controller for Windows and macOS over a direct Bluetooth link, with no account, Wi-Fi or server.",
           bullets: [
-            "Designed a custom Bluetooth RFCOMM wire protocol between the Kotlin Android app and desktop companions in C# on .NET (Windows) and Swift (macOS).",
+            "Designed a binary wire protocol over Bluetooth RFCOMM (2 to 258-byte semantic frames, one write per batch) between the Kotlin Android app and desktop companions in C# on .NET and Swift.",
+            "All three codecs are tested against one set of golden-byte fixtures, so the Android, Windows and macOS apps cannot drift apart on the protocol.",
             "Implemented multi-finger gestures, volume and brightness dials, drawn-shape macro shortcuts, an on-screen keyboard and a gamepad the OS sees as a virtual Xbox controller.",
-            "Built two-way state sync, so the phone shows the computer's real volume, brightness and playback position, including changes made on the computer.",
-            "300+ tests, CI builds and regular releases (currently v3.5); 25 GitHub stars; submitted to the winget community repository.",
+            "Built two-way state sync, so the phone shows the computer's real volume, brightness and playback position, including changes made on the computer; each new phone must be explicitly trusted on the computer.",
+            "26 GitHub stars, 4 forks, 12 releases and 258 release downloads; 25 merged pull requests; 300+ tests; submitted to the winget community repository.",
           ],
         },
         {
@@ -298,21 +303,12 @@ const RESUME_FULL: ResumeDocument = {
           dates: "Sep 2026",
           subtitle: "Rust, Tauri, TypeScript",
           intro:
-            "Offline encrypted vault for passwords, environment keys and backup codes; an open-source alternative to paid password managers.",
+            "Offline encrypted vault for passwords, environment keys and backup codes on Windows, macOS and Linux; an open-source alternative to paid password managers.",
           bullets: [
-            "Tauri desktop app and CLI built on one shared Rust core crate.",
-            "AES-256-GCM envelope encryption under an Argon2id KDF (64 MiB); the vault is a single encrypted file on disk.",
-            "No network code: the content security policy blocks every connection, the clipboard clears after 30 seconds and the window is excluded from screen capture.",
-            "Rejects master passwords found in breach lists; releases ship with SHA-256 checksums and signed build attestations.",
-          ],
-        },
-        {
-          title: "Flick",
-          subtitle: "Rust, Tauri, React, TypeScript",
-          intro:
-            "Keyboard-first Windows launcher that combines app launch, system commands, file search and bring-your-own-key AI chat (OpenAI, Anthropic, OpenRouter, Ollama) in one search bar.",
-          bullets: [
-            "Fuzzy search matches 2,000 apps in 0.25 ms and 305K file paths at p95 ≤ 4.7 ms; 470+ automated tests.",
+            "Tauri desktop app and CLI built on one shared Rust core crate; the vault is a single encrypted file on disk.",
+            "Entries are sealed with AES-256-GCM under a random data key, which is sealed under a key derived from the master password with Argon2id (64 MiB, 3 passes).",
+            "No network code: the content security policy blocks every connection. The clipboard clears after 30 seconds and stays out of Windows clipboard history, the window is excluded from screen capture, and the vault locks after 5 minutes idle.",
+            "Master passwords must be at least 15 characters and are checked against breach lists; 6 releases, each with SHA-256 checksums and a signed build attestation.",
           ],
         },
         {
@@ -320,8 +316,12 @@ const RESUME_FULL: ResumeDocument = {
           link: gh("offkit"),
           subtitle: "Rust, Slint, Next.js, WebAssembly",
           intro:
-            "37 offline media, PDF, image, SVG and developer tools, shipped as a native Rust desktop app (Windows, macOS, Linux) and a WebAssembly web app from one shared tool registry.",
-          bullets: ["Moved the desktop UI from Electron to Slint; 800+ automated tests."],
+            "37 offline audio, video, image, PDF, SVG, CSS and developer tools, shipped as a native desktop app for Windows, macOS and Linux and as a web app.",
+          bullets: [
+            "One tool registry drives both apps; the desktop app runs each tool on shared engines (FFmpeg, PDFium and lopdf, resvg).",
+            "Moved the desktop UI from Electron to Slint; files never leave the device and existing files are never overwritten without a save dialog.",
+            "800+ automated tests; the web app is served with a strict content security policy.",
+          ],
         },
         {
           title: "Inlay",
@@ -330,7 +330,7 @@ const RESUME_FULL: ResumeDocument = {
           intro:
             "Lightweight Rainmeter alternative that embeds a clock, audio visualizer, time-synced lyrics and a Spotify player in the Windows desktop.",
           bullets: [
-            "Runs as one native process with event-driven redraws at about 54 MB RAM; 130+ tests.",
+            "Runs as one native process with event-driven redraws at about 54 MB RAM; 130+ tests, 9 releases.",
           ],
         },
         {
@@ -358,7 +358,7 @@ const RESUME_FULL: ResumeDocument = {
       kind: "list",
       heading: "Other Projects",
       items: [
-        "Open Whiteboard ([github.com/akshit-bansal11/open-whiteboard](https://github.com/akshit-bansal11/open-whiteboard)): real-time collaborative whiteboard with a custom HTML5 Canvas engine, Yjs CRDTs and a Node.js WebSocket server.",
+        "Open Whiteboard: real-time collaborative whiteboard with a custom HTML5 Canvas engine, Yjs CRDTs and a Node.js WebSocket server.",
         "Lyric Veil ([lyric-veil.vercel.app](https://lyric-veil.vercel.app)): transparent, click-through desktop overlay for word-synced Spotify lyrics (Electron, React, TypeScript) with a drift-corrected playback clock.",
         "Smaller projects: Is It Canon (story-order tracker for connected franchises), cmd-ref (developer command reference), Audio Visualizer (C#, WPF, WASAPI loopback), Plotline (media tracker), Canopy (bookmark manager).",
       ],
@@ -393,27 +393,6 @@ const RESUME_FULL: ResumeDocument = {
       ],
     },
     EDUCATION,
-    {
-      kind: "entries",
-      heading: "Training",
-      entries: [
-        {
-          title: "MERN Stack + AI (API Integration)",
-          dates: "Jun 2025 – Jul 2025",
-          subtitle: "Sun Soft Technologies",
-        },
-        {
-          title: "Data Structures & Algorithms",
-          dates: "Dec 2024 – Feb 2025",
-          subtitle: "Bangalore Computer Education",
-        },
-        {
-          title: "Node.js Full Stack",
-          dates: "Jun 2024 – Jul 2024",
-          subtitle: "Bangalore Computer Education",
-        },
-      ],
-    },
     {
       kind: "pairs",
       heading: "Certifications",

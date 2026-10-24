@@ -22,7 +22,7 @@ export const ITEMS_MAX = 30;
 export const BULLETS_MAX = 12;
 export const LINKS_MAX = 8;
 
-const SAFE_PROTOCOLS = new Set(["https:", "http:", "mailto:"]);
+const SAFE_PROTOCOLS = new Set(["https:", "http:", "mailto:", "tel:"]);
 // Control, format (zero-width, bidi override) and line/paragraph separators.
 const HIDDEN_CHARS = /[\p{Cc}\p{Cf}\p{Zl}\p{Zp}]/u;
 
@@ -30,7 +30,7 @@ export type ResumeResult =
   | { ok: true; value: ResumeContent }
   | { ok: false; status: 400 | 422; fields: Record<string, string> };
 
-// Only absolute http(s) and mailto: URLs may become links.
+// Only absolute http(s), mailto: and tel: URLs may become links.
 export function isSafeHref(href: string): boolean {
   try {
     return SAFE_PROTOCOLS.has(new URL(href).protocol);
@@ -98,7 +98,7 @@ class Checker {
     const label = this.string(raw?.label, `${path}.label`);
     const href = this.string(raw?.href, `${path}.href`);
     if (href && !isSafeHref(href))
-      this.fail(`${path}.href`, "Use an https:, http: or mailto: link.");
+      this.fail(`${path}.href`, "Use an https:, http:, mailto: or tel: link.");
     return { label, href };
   }
 

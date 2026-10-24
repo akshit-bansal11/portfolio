@@ -1,8 +1,8 @@
 /*
  * RichText.tsx
  * Renders resume inline text: **bold** becomes <strong>, [label](url)
- * becomes a real link. External links open in a new tab. Only https:, http:
- * and mailto: targets become links; anything else (javascript:, data:) is
+ * becomes a real link. External links open in a new tab. Only https:, http:,
+ * mailto: and tel: targets become links; anything else (javascript:, data:) is
  * rendered as plain text, since stored content is editable.
  */
 
@@ -13,7 +13,7 @@ import { isSafeHref } from "@/lib/resume/validate";
 const TOKEN = /(\*\*[^*]+\*\*|\[[^\]]+\]\([^)]+\))/g;
 const LINK = /^\[([^\]]+)\]\(([^)]+)\)$/;
 
-// Anchor that opens http(s) targets in a new tab and leaves mailto: in place.
+// Anchor that opens http(s) targets in a new tab and leaves mailto:/tel: in place.
 export function RichLink({ href, children }: { href: string; children: ReactNode }) {
   if (!isSafeHref(href)) return <>{children}</>;
   const isExternal = href.startsWith("http");
