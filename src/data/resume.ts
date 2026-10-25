@@ -163,11 +163,10 @@ const RESUME_ONE_PAGE: ResumeDocument = {
       heading: "Skills",
       pairs: [
         { label: "Languages", value: "TypeScript, SQL, Go, Rust, Kotlin, C#, Swift" },
-        { label: "Frontend", value: "React, Next.js, WebAssembly" },
         {
-          label: "Backend & Data",
+          label: "Frameworks & Data",
           value:
-            "Node.js, Express, REST, Convex, PostgreSQL, MongoDB, Redis, Cloudflare D1, KV and R2",
+            "React, Next.js, WebAssembly, Node.js, Express, REST, Convex, PostgreSQL, Redis, Cloudflare D1, KV and R2",
         },
         {
           label: "System Design",
