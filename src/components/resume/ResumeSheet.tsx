@@ -108,7 +108,7 @@ interface EntryEdit {
   onChange: (entry: ResumeEntry) => void;
 }
 
-// "Title | subtitle" with dates on the right, then a link/location row, intro and bullets.
+// "Title | subtitle" with "location · dates" on the right, then a link row, intro and bullets.
 // With no dates the link takes the right-hand slot, saving a line (most projects).
 function Entry({ entry, edit }: { entry: ResumeEntry; edit?: EntryEdit }) {
   const kit = edit?.kit;
@@ -141,6 +141,17 @@ function Entry({ entry, edit }: { entry: ResumeEntry; edit?: EntryEdit }) {
         </h3>
         {entry.dates !== undefined ? (
           <span className="resume-dates">
+            {entry.location !== undefined && (
+              <>
+                <Txt
+                  kit={kit}
+                  value={entry.location}
+                  label={`${name}, location`}
+                  onChange={(location) => set({ location })}
+                />
+                {" · "}
+              </>
+            )}
             <Txt
               kit={kit}
               value={entry.dates}
@@ -152,21 +163,7 @@ function Entry({ entry, edit }: { entry: ResumeEntry; edit?: EntryEdit }) {
           link
         )}
       </div>
-      {((link && !linkOnTitleRow) || entry.location) && (
-        <div className="resume-row resume-sub">
-          <span>{!linkOnTitleRow && link}</span>
-          {entry.location !== undefined && (
-            <span>
-              <Txt
-                kit={kit}
-                value={entry.location}
-                label={`${name}, location`}
-                onChange={(location) => set({ location })}
-              />
-            </span>
-          )}
-        </div>
-      )}
+      {link && !linkOnTitleRow && <div className="resume-sub">{link}</div>}
       {entry.intro !== undefined && (
         <p>
           <Txt
