@@ -108,12 +108,15 @@ interface EntryEdit {
   onChange: (entry: ResumeEntry) => void;
 }
 
-// Title/dates row, italic subtitle/location row, intro and bullets.
+// "Title | subtitle" with dates on the right, then a link/location row, intro and bullets.
+// With no dates the link takes the right-hand slot, saving a line (most projects).
 function Entry({ entry, edit }: { entry: ResumeEntry; edit?: EntryEdit }) {
   const kit = edit?.kit;
   const set = (patch: Partial<ResumeEntry>) => edit?.onChange({ ...entry, ...patch });
   const name = edit?.name ?? "";
   const bullets = entry.bullets ?? [];
+  const link = entry.link && <RichLink href={entry.link.href}>{entry.link.label}</RichLink>;
+  const linkOnTitleRow = entry.dates === undefined;
   return (
     <div className="resume-entry">
       <div className="resume-row">
@@ -124,14 +127,19 @@ function Entry({ entry, edit }: { entry: ResumeEntry; edit?: EntryEdit }) {
             label={`${name}, title`}
             onChange={(title) => set({ title })}
           />
-          {entry.link && (
-            <>
+          {entry.subtitle !== undefined && (
+            <span className="resume-role">
               {" | "}
-              <RichLink href={entry.link.href}>{entry.link.label}</RichLink>
-            </>
+              <Txt
+                kit={kit}
+                value={entry.subtitle}
+                label={`${name}, subtitle`}
+                onChange={(subtitle) => set({ subtitle })}
+              />
+            </span>
           )}
         </h3>
-        {entry.dates !== undefined && (
+        {entry.dates !== undefined ? (
           <span className="resume-dates">
             <Txt
               kit={kit}
@@ -140,20 +148,13 @@ function Entry({ entry, edit }: { entry: ResumeEntry; edit?: EntryEdit }) {
               onChange={(dates) => set({ dates })}
             />
           </span>
+        ) : (
+          link
         )}
       </div>
-      {(entry.subtitle || entry.location) && (
+      {((link && !linkOnTitleRow) || entry.location) && (
         <div className="resume-row resume-sub">
-          <span>
-            {entry.subtitle !== undefined && (
-              <Txt
-                kit={kit}
-                value={entry.subtitle}
-                label={`${name}, subtitle`}
-                onChange={(subtitle) => set({ subtitle })}
-              />
-            )}
-          </span>
+          <span>{!linkOnTitleRow && link}</span>
           {entry.location !== undefined && (
             <span>
               <Txt

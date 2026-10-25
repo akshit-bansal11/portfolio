@@ -92,8 +92,7 @@ const RESUME_ONE_PAGE: ResumeDocument = {
           bullets: [
             "Own the full stack as the company's only engineer: frontend, backend, database, CI/CD and deployments.",
             "Built and launched two production web platforms with Next.js 16, React 19 and TypeScript in under three months.",
-            "Designed the PostgreSQL (Neon) schema and REST APIs for four lead-capture pipelines, with server-side Zod validation and Redis rate limiting.",
-            "Built an internal admin console with role-based access, filterable lead tables and Excel export, on signed httpOnly sessions and scrypt hashing.",
+            "Designed the PostgreSQL (Neon) schema, REST APIs and role-based admin console behind four lead-capture pipelines, with Zod validation and Redis rate limiting.",
           ],
         },
         {
@@ -115,8 +114,7 @@ const RESUME_ONE_PAGE: ResumeDocument = {
           bullets: [
             "Moved subtitle generation into the browser with FFmpeg WASM and ElevenLabs Scribe v2, cutting compute cost by about 70% and adding 90+ languages.",
             "Rebuilt the Chrome extension recorder on WebCodecs with chunked IndexedDB writes, fixing data loss on recordings over 30 minutes.",
-            "Secured the password-reset flow with Redis sliding-window rate limits, short-lived JWTs and reCAPTCHA v3, and set up the Vitest suite.",
-            "Built a typed REST client, Zod form validation and optimistic UI for the Next.js App Router rewrite.",
+            "Secured password reset with Redis sliding-window rate limits, short-lived JWTs and reCAPTCHA v3; built the typed REST client for the Next.js App Router rewrite.",
           ],
         },
       ],
@@ -126,9 +124,8 @@ const RESUME_ONE_PAGE: ResumeDocument = {
       heading: "Projects",
       entries: [
         {
-          title: "Flick",
+          title: "Flick (in development)",
           link: gh("flick"),
-          dates: "In development",
           subtitle: "Rust, Tauri, React, TypeScript",
           bullets: [
             "Keyboard-first Windows launcher for apps, files, system commands and AI chat with provider fallback; fuzzy search over 305K file paths at p95 ≤ 4.7 ms; 470+ tests.",
@@ -165,21 +162,22 @@ const RESUME_ONE_PAGE: ResumeDocument = {
       kind: "pairs",
       heading: "Skills",
       pairs: [
-        { label: "Languages", value: "TypeScript, JavaScript, SQL, Go, Rust, Kotlin, C#, Swift" },
-        { label: "Frontend", value: "React, Next.js, Tailwind CSS, shadcn/ui, WebAssembly" },
+        { label: "Languages", value: "TypeScript, SQL, Go, Rust, Kotlin, C#, Swift" },
+        { label: "Frontend", value: "React, Next.js, WebAssembly" },
         {
           label: "Backend & Data",
-          value: "Node.js, Express, REST, Convex, PostgreSQL, MongoDB, Redis, Firebase",
+          value:
+            "Node.js, Express, REST, Convex, PostgreSQL, MongoDB, Redis, Cloudflare D1, KV and R2",
         },
         {
           label: "System Design",
           value:
-            "Rate limiting, caching, load balancing, real-time sync (WebSockets, CRDTs), loose coupling, circuit breakers, retries with backoff, offline-first, event-driven architecture",
+            "Rate limiting, caching, load balancing, real-time sync (WebSockets, CRDTs), circuit breakers, retries with backoff, event-driven architecture",
         },
         { label: "Security", value: "OAuth, JWT, 2FA, AES-GCM, Argon2" },
         {
           label: "Testing & DevOps",
-          value: "Vitest, Playwright, React Testing Library, GitHub Actions, Vercel, Sentry",
+          value: "Vitest, Playwright, React Testing Library, GitHub Actions, Sentry, PostHog",
         },
       ],
     },

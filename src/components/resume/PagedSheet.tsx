@@ -7,7 +7,8 @@
  * Before measuring (SSR, no JS, hidden tab) everything sits on one auto-height
  * sheet so nothing is ever hidden. Narrow screens scale the true A4 layout
  * down via --resume-scale instead of reflowing it. The resume is one sheet:
- * its type shrinks via --fit until it fits.
+ * its type shrinks via --fit until it fits, and spare room goes to spacing
+ * via --air (0 = tight, 1 = most open) rather than to bigger type.
  */
 
 "use client";
@@ -62,9 +63,9 @@ function paginate(blocks: Measured[], available: number): number[][] {
 
 const samePages = (a: number[][] | null, b: number[][]) => JSON.stringify(a) === JSON.stringify(b);
 
-// The document shrinks their type (--fit) until every block fits; below this it overflows.
+// The type shrinks (--fit) until every block fits; below FIT_MIN it overflows.
 const FIT_MIN = 0.5;
-const FIT_STEPS = 10;
+const SEARCH_STEPS = 10;
 
 // "Are we on the client?" without a setState-in-effect: false on the server, true after hydration.
 const subscribeNever = () => () => {};
@@ -101,21 +102,26 @@ export default function PagedSheet({ blocks, editing, onOverflow }: PagedSheetPr
           })),
           available,
         );
-      const setFit = (fit: number) => root.style.setProperty("--fit", String(fit));
-
-      // Binary search for the largest type scale that keeps the content on one sheet.
-      setFit(1);
-      if (layout().length > 1) {
-        let lo = FIT_MIN;
-        let hi = 1;
-        for (let step = 0; step < FIT_STEPS; step++) {
+      const fits = () => layout().length === 1;
+      const set = (name: string, value: number) => root.style.setProperty(name, String(value));
+      // Binary search for the largest value of a CSS variable that keeps one sheet.
+      const largest = (name: string, min: number, max: number) => {
+        let lo = min;
+        let hi = max;
+        for (let step = 0; step < SEARCH_STEPS; step++) {
           const mid = (lo + hi) / 2;
-          setFit(mid);
-          if (layout().length > 1) hi = mid;
-          else lo = mid;
+          set(name, mid);
+          if (fits()) lo = mid;
+          else hi = mid;
         }
-        setFit(lo);
-      }
+        set(name, lo);
+      };
+
+      // Too long: shrink the type. Room to spare: spread the spacing, never grow the type.
+      set("--fit", 1);
+      set("--air", 0);
+      if (!fits()) largest("--fit", FIT_MIN, 1);
+      else largest("--air", 0, 1);
       const next = layout();
       setPages((prev) => (samePages(prev, next) ? prev : next));
     };
