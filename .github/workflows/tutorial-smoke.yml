@@ -137,7 +137,7 @@ jobs:
           curl --retry 15 --retry-all-errors --retry-delay 1 -fsS http://localhost:8081 | grep -q "version: 1.0"
           kill "$PF"
           for i in 1 2 3; do
-            kubectl exec deploy/web -- wget -qO- http://web | grep -q "version: 1.0"
+            kubectl exec deploy/web -- wget -T 5 -qO- http://web | grep -q "version: 1.0"
           done
 
       - name: Part 3 - scale, delete a pod, lose redis data
@@ -161,7 +161,7 @@ jobs:
           kubectl delete pod -l app=redis
           kubectl rollout status deployment/redis --timeout=120s
           for i in $(seq 1 20); do
-            kubectl exec deploy/web -- wget -qO- http://web | grep -q "hits: 1," && exit 0
+            kubectl exec deploy/web -- wget -T 5 -qO- http://web | grep -q "hits: 1," && exit 0
             sleep 2
           done
           echo "counter did not restart at 1 after redis was replaced"
@@ -171,11 +171,20 @@ jobs:
         working-directory: ${{ runner.temp }}/tutorial/hits
         run: |
           set -euo pipefail
+          # A Service can briefly route to a pod that just left; retry, logging each miss.
+          hit() {
+            for i in $(seq 1 10); do
+              kubectl exec deploy/web -- wget -T 5 -qO- http://web && return 0
+              echo "attempt $i missed" >&2
+              sleep 2
+            done
+            return 1
+          }
           docker build -t hits:2.0 --build-arg VERSION=2.0 .
           kind load docker-image hits:2.0 --name hits
           kubectl set image deployment/web web=hits:2.0
           kubectl rollout status deployment/web --timeout=180s
-          kubectl exec deploy/web -- wget -qO- http://web | grep -q "version: 2.0"
+          hit | grep -q "version: 2.0"
           kubectl set image deployment/web web=hits:9.9
           BAD=""
           for i in $(seq 1 60); do
@@ -190,7 +199,7 @@ jobs:
           test "$(kubectl get pods -l app=web --no-headers | grep -c Running)" -ge 3
           kubectl rollout undo deployment/web
           kubectl rollout status deployment/web --timeout=180s
-          kubectl exec deploy/web -- wget -qO- http://web | grep -q "version: 2.0"
+          hit | grep -q "version: 2.0"
 
       - name: Part 4 - clean up
         if: ${{ !cancelled() }}
