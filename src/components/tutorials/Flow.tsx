@@ -9,7 +9,18 @@ import { Fragment, type ReactNode } from "react";
 import { sketchArrow } from "@/lib/blog/sketch";
 import { cn } from "@/lib/utils";
 
-export type Tone = "blue" | "violet" | "green" | "amber" | "pink" | "cyan" | "red";
+export type Tone =
+  | "blue"
+  | "violet"
+  | "green"
+  | "amber"
+  | "pink"
+  | "cyan"
+  | "red"
+  | "docker"
+  | "k8s"
+  | "vm"
+  | "term";
 
 export interface FlowStep {
   title: string;
@@ -29,14 +40,15 @@ const ACROSS = sketchArrow(2, 12, 46, 12, { seed: 3, curve: 0.08, headSize: 7 })
 const DOWN = sketchArrow(12, 2, 12, 46, { seed: 5, curve: 0.08, headSize: 7 });
 
 // One arrow between two boxes; `across` points right, otherwise down.
-function Arrow({ across, className }: { across: boolean; className?: string }) {
+function Arrow({ across, tone, className }: { across: boolean; tone: Tone; className?: string }) {
   const path = across ? ACROSS : DOWN;
 
   return (
     <svg
       aria-hidden
+      data-tone={tone}
       viewBox={across ? "0 0 48 24" : "0 0 24 48"}
-      className={cn(across ? "h-6 w-12" : "h-12 w-6", "shrink-0 text-ink-muted", className)}
+      className={cn(across ? "h-6 w-12" : "h-12 w-6", "shrink-0 text-(--tone)", className)}
     >
       <path
         d={path.shaft}
@@ -74,7 +86,7 @@ export default function Flow({ steps, direction = "horizontal" }: FlowProps) {
           <li
             data-tone={step.tone}
             className={cn(
-              "w-full min-w-0 rounded-xl border-2 border-(--tone) bg-(--tone-soft) p-3 text-center",
+              "tut-glow w-full min-w-0 rounded-xl border-2 border-(--tone) bg-(image:--tone-fill) p-3 text-center",
               row && "md:flex-1",
             )}
           >
@@ -91,8 +103,8 @@ export default function Flow({ steps, direction = "horizontal" }: FlowProps) {
           </li>
           {index < steps.length - 1 && (
             <li aria-hidden className="flex items-center justify-center">
-              <Arrow across={false} className={row ? "md:hidden" : undefined} />
-              {row && <Arrow across className="hidden md:block" />}
+              <Arrow across={false} tone={step.tone} className={row ? "md:hidden" : undefined} />
+              {row && <Arrow across tone={step.tone} className="hidden md:block" />}
             </li>
           )}
         </Fragment>
