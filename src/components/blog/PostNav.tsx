@@ -11,13 +11,21 @@ import type { BlogPostMeta } from "@/types/blog";
 interface PostNavProps {
   previous?: BlogPostMeta;
   next?: BlogPostMeta;
+  /** Route the posts live under; defaults to the blog. */
+  basePath?: string;
   className?: string;
 }
 
-function NavCard({ post, direction }: { post: BlogPostMeta; direction: "previous" | "next" }) {
+interface NavCardProps {
+  post: BlogPostMeta;
+  direction: "previous" | "next";
+  basePath: string;
+}
+
+function NavCard({ post, direction, basePath }: NavCardProps) {
   return (
     <Link
-      href={`/blog/${post.slug}`}
+      href={`${basePath}/${post.slug}`}
       className={cn(
         "group block rounded-2xl border-2 border-ink bg-paper-raised p-4 transition-transform hover:-translate-y-0.5",
         "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pen",
@@ -32,15 +40,19 @@ function NavCard({ post, direction }: { post: BlogPostMeta; direction: "previous
   );
 }
 
-export default function PostNav({ previous, next, className }: PostNavProps) {
+export default function PostNav({ previous, next, basePath = "/blog", className }: PostNavProps) {
   if (!previous && !next) return null;
   return (
     <nav
       aria-label="More posts in this series"
       className={cn("mt-16 grid gap-4 sm:grid-cols-2", className)}
     >
-      {previous ? <NavCard post={previous} direction="previous" /> : <span aria-hidden />}
-      {next && <NavCard post={next} direction="next" />}
+      {previous ? (
+        <NavCard post={previous} direction="previous" basePath={basePath} />
+      ) : (
+        <span aria-hidden />
+      )}
+      {next && <NavCard post={next} direction="next" basePath={basePath} />}
     </nav>
   );
 }

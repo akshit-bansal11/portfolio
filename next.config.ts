@@ -7,7 +7,10 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   // The blog index now lives on the home page; every post keeps /blog/<slug>.
   async redirects() {
-    return [{ source: "/blog", destination: "/#blog", permanent: true }];
+    return [
+      { source: "/blog", destination: "/#blog", permanent: true },
+      { source: "/tutorials", destination: "/#tutorials", permanent: true },
+    ];
   },
   images: {
     remotePatterns: [

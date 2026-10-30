@@ -17,6 +17,7 @@ import Education from "@/components/sections/Education";
 import Experience from "@/components/sections/Experience";
 import Projects from "@/components/sections/Projects";
 import Skills from "@/components/sections/Skills";
+import Tutorials from "@/components/sections/Tutorials";
 import { experience } from "@/data/experienceData";
 
 // Started building in March 2021.
@@ -70,6 +71,9 @@ function Home() {
         </ScrollReveal>
         <ScrollReveal className="w-full" delay={300}>
           <Blog />
+        </ScrollReveal>
+        <ScrollReveal className="w-full" delay={325}>
+          <Tutorials />
         </ScrollReveal>
         <ScrollReveal className="w-full" delay={350}>
           <Skills />

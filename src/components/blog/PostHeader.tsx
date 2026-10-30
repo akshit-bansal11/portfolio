@@ -15,21 +15,32 @@ import type { BlogPost } from "@/types/blog";
 
 interface PostHeaderProps {
   post: BlogPost;
+  /** Where the back link goes; defaults to the blog section. */
+  backHref?: string;
+  backLabel?: string;
+  /** Word before the number in the meta line, e.g. "Part" or "Tutorial". */
+  partLabel?: string;
   className?: string;
 }
 
-export default function PostHeader({ post, className }: PostHeaderProps) {
+export default function PostHeader({
+  post,
+  backHref = "/#blog",
+  backLabel = "All posts",
+  partLabel = "Part",
+  className,
+}: PostHeaderProps) {
   return (
     <header className={cn("mb-10", className)}>
       <Link
-        href="/#blog"
+        href={backHref}
         className="group mb-8 inline-flex items-center gap-2 text-sm text-ink-muted transition-colors hover:text-ink"
       >
         <ArrowLeft
           className="h-4 w-4 transition-transform group-hover:-translate-x-1"
           aria-hidden
         />
-        All posts
+        {backLabel}
       </Link>
 
       <ul aria-label="Tags" className="mb-4 flex flex-wrap gap-2">
@@ -56,7 +67,7 @@ export default function PostHeader({ post, className }: PostHeaderProps) {
           <span aria-hidden> · </span>
           {formatReadingTime(post.readingMinutes)}
           <span aria-hidden> · </span>
-          Part {post.part}
+          {partLabel} {post.part}
         </p>
         {post.headerNote && (
           <Annotation kind="arrow" direction="left" label={post.headerNote} className="-rotate-2" />

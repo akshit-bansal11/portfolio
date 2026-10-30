@@ -11,7 +11,7 @@ import path from "node:path";
 import { WORDS_PER_MINUTE } from "@/config/blogConfig";
 import { blogPosts } from "@/data/blogPosts";
 import { slugify, stripInlineMarkdown } from "@/lib/blog/slugify";
-import type { BlogPost, TocHeading } from "@/types/blog";
+import type { BlogPost, BlogPostMeta, TocHeading } from "@/types/blog";
 
 // Folder holding one <slug>.mdx file per post.
 const CONTENT_DIR = path.join(process.cwd(), "src", "content", "blog");
@@ -50,22 +50,25 @@ export function countWords(source: string): number {
   return readable.match(/[\p{L}\p{N}][\p{L}\p{N}'’-]*/gu)?.length ?? 0;
 }
 
-// Returns a single enriched post, or null when the slug is unknown.
-export async function getPost(slug: string): Promise<BlogPost | null> {
-  const index = blogPosts.findIndex((post) => post.slug === slug);
-  if (index === -1) return null;
-  const meta = blogPosts[index];
-
-  const source = await readPostSource(slug);
+// Merges a registry entry with the values derived from its MDX source.
+export function enrichPost(meta: BlogPostMeta, part: number, source: string): BlogPost {
   const wordCount = countWords(source);
 
   return {
     ...meta,
-    part: index + 1,
+    part,
     wordCount,
     readingMinutes: Math.max(1, Math.round(wordCount / WORDS_PER_MINUTE)),
     headings: extractHeadings(source),
   };
+}
+
+// Returns a single enriched post, or null when the slug is unknown.
+export async function getPost(slug: string): Promise<BlogPost | null> {
+  const index = blogPosts.findIndex((post) => post.slug === slug);
+  if (index === -1) return null;
+
+  return enrichPost(blogPosts[index], index + 1, await readPostSource(slug));
 }
 
 // Returns every published post, newest first (later parts first on the same day).
