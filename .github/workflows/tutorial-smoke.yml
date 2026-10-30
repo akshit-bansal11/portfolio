@@ -1,0 +1,205 @@
+# Tutorial smoke test: rebuilds the files published in
+# src/content/tutorials/docker-kubernetes-vms.mdx (every code block whose first line is
+# "# file: x" or "// file: x") and runs the walkthrough's commands against them, so the text
+# readers copy is what gets tested.
+#
+# What this does NOT exercise: Multipass (Part 1), the Windows and macOS installers, Docker
+# Desktop, WSL, PowerShell syntax, and the Linux install script. It runs on one Ubuntu
+# runner with a preinstalled Docker, kind and kubectl.
+# CI-only additions to the published commands: retry/timeout flags, and checks (grep) on the
+# output; placeholders such as POD_NAME are filled in from kubectl output.
+
+name: tutorial-smoke
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "src/content/tutorials/**"
+      - "src/lib/tutorials/**"
+      - ".github/workflows/tutorial-smoke.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tutorial-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  walkthrough:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Highlighter test
+        run: npm test
+
+      - name: Rebuild the tutorial's files from the MDX
+        run: |
+          node - <<'JS'
+          const fs = require("node:fs");
+          const path = require("node:path");
+          const mdx = fs.readFileSync("src/content/tutorials/docker-kubernetes-vms.mdx", "utf8");
+          const out = path.resolve(process.env.RUNNER_TEMP, "tutorial");
+          const seen = new Set();
+          for (const [, body] of mdx.matchAll(/^```[^\n]*\n([\s\S]*?)^```/gm)) {
+            const [first, ...rest] = body.split("\n");
+            const match = /^(?:#|\/\/) file: (\S+)$/.exec(first);
+            if (!match) continue;
+            const target = path.resolve(out, match[1]);
+            if (!target.startsWith(out + path.sep)) throw new Error(`bad path ${match[1]}`);
+            if (seen.has(match[1])) throw new Error(`duplicate file ${match[1]}`);
+            seen.add(match[1]);
+            fs.mkdirSync(path.dirname(target), { recursive: true });
+            fs.writeFileSync(target, rest.join("\n"));
+            console.log("wrote", match[1]);
+          }
+          if (seen.size !== 8) throw new Error(`expected 8 files, found ${seen.size}`);
+          JS
+
+      - name: Part 0 - tool versions
+        working-directory: ${{ runner.temp }}/tutorial/hits
+        run: |
+          set -euo pipefail
+          docker version
+          kind version
+          kubectl version --client
+
+      - name: Part 2 - build and run with plain Docker
+        working-directory: ${{ runner.temp }}/tutorial/hits
+        run: |
+          set -euo pipefail
+          docker run --rm alpine uname -r
+          docker build -t hits:1.0 --build-arg VERSION=1.0 .
+          docker images hits
+          docker network create hits-net
+          docker run -d --name cache --network hits-net redis:7-alpine
+          docker run -d --name web --network hits-net -p 8080:3000 -e REDIS_URL=redis://cache:6379 hits:1.0
+          docker ps
+          curl --retry 15 --retry-connrefused --retry-delay 1 -fsS http://localhost:8080 | tee /dev/stderr | grep -q "hits: 1, version: 1.0"
+          curl -fsS http://localhost:8080 | grep -q "hits: 2,"
+          curl -fsS http://localhost:8080/healthz | grep -qx ok
+          docker logs web | grep -q "hits 1.0 listening on 3000"
+          docker exec web whoami | grep -qx node
+          docker exec web sh -c 'echo $VERSION' | grep -qx 1.0
+
+      - name: Part 2 - rebuild hits the cache
+        working-directory: ${{ runner.temp }}/tutorial/hits
+        run: |
+          set -euo pipefail
+          echo "// touched" >> server.js
+          docker build --progress=plain -t hits:1.0 --build-arg VERSION=1.0 . 2>&1 | tee build.log
+          grep -q CACHED build.log
+
+      - name: Part 2 - Compose and the volume
+        working-directory: ${{ runner.temp }}/tutorial/hits
+        run: |
+          set -euo pipefail
+          docker rm -f web cache
+          docker network rm hits-net
+          docker compose up -d --build --wait
+          docker compose ps
+          curl --retry 15 --retry-connrefused --retry-delay 1 -fsS http://localhost:8080 | grep -q "hits: 1,"
+          docker compose down
+          docker compose up -d --wait
+          curl --retry 15 --retry-connrefused --retry-delay 1 -fsS http://localhost:8080 | grep -q "hits: 2,"
+          docker compose down -v
+          docker compose up -d --wait
+          curl --retry 15 --retry-connrefused --retry-delay 1 -fsS http://localhost:8080 | grep -q "hits: 1,"
+          docker compose down -v
+
+      - name: Part 3 - cluster, image and apply
+        working-directory: ${{ runner.temp }}/tutorial/hits
+        run: |
+          set -euo pipefail
+          kind create cluster --name hits --config k8s/kind.yaml
+          kubectl wait --for=condition=Ready nodes --all --timeout=180s
+          kubectl get nodes
+          kind load docker-image hits:1.0 --name hits
+          kubectl apply -f k8s/redis.yaml -f k8s/web.yaml
+          kubectl rollout status deployment/redis --timeout=180s
+          kubectl rollout status deployment/web --timeout=180s
+          kubectl get pods
+
+      - name: Part 3 - port-forward and load balancing
+        working-directory: ${{ runner.temp }}/tutorial/hits
+        run: |
+          set -euo pipefail
+          kubectl port-forward service/web 8081:80 &
+          PF=$!
+          curl --retry 15 --retry-connrefused --retry-delay 1 -fsS http://localhost:8081 | grep -q "version: 1.0"
+          kill "$PF"
+          for i in 1 2 3; do
+            kubectl exec deploy/web -- wget -qO- http://web | grep -q "version: 1.0"
+          done
+
+      - name: Part 3 - scale, delete a pod, lose redis data
+        working-directory: ${{ runner.temp }}/tutorial/hits
+        run: |
+          set -euo pipefail
+          kubectl scale deployment/web --replicas=5
+          kubectl rollout status deployment/web --timeout=120s
+          test "$(kubectl get pods -l app=web --no-headers | grep -c Running)" -eq 5
+          kubectl scale deployment/web --replicas=3
+          for i in $(seq 1 30); do
+            [ "$(kubectl get pods -l app=web --no-headers | wc -l)" -eq 3 ] && break
+            sleep 2
+          done
+          test "$(kubectl get pods -l app=web --no-headers | wc -l)" -eq 3
+          POD=$(kubectl get pods -l app=web -o jsonpath='{.items[0].metadata.name}')
+          kubectl delete pod "$POD"
+          kubectl rollout status deployment/web --timeout=120s
+          test "$(kubectl get pods -l app=web --no-headers | grep -c Running)" -eq 3
+          if kubectl get pod "$POD"; then echo "deleted pod still exists"; exit 1; fi
+          kubectl delete pod -l app=redis
+          kubectl rollout status deployment/redis --timeout=120s
+          for i in $(seq 1 20); do
+            kubectl exec deploy/web -- wget -qO- http://web | grep -q "hits: 1," && exit 0
+            sleep 2
+          done
+          echo "counter did not restart at 1 after redis was replaced"
+          exit 1
+
+      - name: Part 3 - rolling update, bad image, rollback
+        working-directory: ${{ runner.temp }}/tutorial/hits
+        run: |
+          set -euo pipefail
+          docker build -t hits:2.0 --build-arg VERSION=2.0 .
+          kind load docker-image hits:2.0 --name hits
+          kubectl set image deployment/web web=hits:2.0
+          kubectl rollout status deployment/web --timeout=180s
+          kubectl exec deploy/web -- wget -qO- http://web | grep -q "version: 2.0"
+          kubectl set image deployment/web web=hits:9.9
+          BAD=""
+          for i in $(seq 1 60); do
+            BAD=$(kubectl get pods -l app=web --no-headers | awk '/ErrImagePull|ImagePullBackOff/ {print $1; exit}')
+            [ -n "$BAD" ] && break
+            sleep 2
+          done
+          test -n "$BAD"
+          kubectl get pods -l app=web
+          kubectl get events --sort-by=.lastTimestamp | grep -q "hits:9.9"
+          kubectl describe pod "$BAD" | grep -q "hits:9.9"
+          test "$(kubectl get pods -l app=web --no-headers | grep -c Running)" -ge 3
+          kubectl rollout undo deployment/web
+          kubectl rollout status deployment/web --timeout=180s
+          kubectl exec deploy/web -- wget -qO- http://web | grep -q "version: 2.0"
+
+      - name: Part 4 - clean up
+        if: ${{ !cancelled() }}
+        working-directory: ${{ runner.temp }}/tutorial/hits
+        run: |
+          set -euo pipefail
+          kind delete cluster --name hits
+          docker compose down -v
+          kind get clusters
+          docker ps
+          docker image rm hits:1.0 hits:2.0 hits-web redis:7-alpine
+          docker image ls kindest/node
