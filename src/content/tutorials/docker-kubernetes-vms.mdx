@@ -1,0 +1,54 @@
+import { Box, Server } from "lucide-react";
+
+This is a placeholder that exercises every piece of the tutorial kit. The real tutorial replaces it.
+
+## How the pieces stack
+
+<Flow
+  steps={[
+    { title: "Your machine", note: "The real hardware", tone: "blue", icon: <Server /> },
+    { title: "A container", note: "Shares the host kernel", tone: "green", icon: <Box /> },
+    { title: "Your app", note: "Runs inside it", tone: "violet" },
+  ]}
+/>
+
+<Callout kind="real-world">A shipping container holds anything and fits any ship, which is why the name stuck.</Callout>
+
+<Callout kind="tip">Run each command yourself and compare it with the checkpoint.</Callout>
+
+<Callout kind="warn">Never paste a command you do not understand into a root shell.</Callout>
+
+## Do it yourself
+
+<Tabs group="os">
+  <Tab label="Windows">Open PowerShell from the Start menu.</Tab>
+  <Tab label="macOS">Open Terminal from Spotlight.</Tab>
+  <Tab label="Linux">Open your terminal emulator.</Tab>
+</Tabs>
+
+<Steps>
+  <Step title="Write a Dockerfile" tone="blue" checkpoint="The file exists next to your app.">
+
+```dockerfile
+# file: Dockerfile
+FROM alpine
+CMD ["echo", "hello"]
+```
+
+  </Step>
+  <Step title="Run it" tone="green" checkpoint="The terminal prints hello.">
+
+```bash
+echo hello
+```
+
+  </Step>
+</Steps>
+
+<TroubleGroup>
+  <Trouble symptom="command not found" cause="The tool is not installed or not on your PATH.">
+
+Install it, then open a new terminal.
+
+  </Trouble>
+</TroubleGroup>
