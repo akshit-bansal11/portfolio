@@ -1,54 +1,1439 @@
-import { Box, Server } from "lucide-react";
+import { Box, Boxes, Container, Eye, Package, Rocket, ScrollText, Search, Server, Terminal } from "lucide-react";
+import ClusterDiagram from "@/components/tutorials/docker-kubernetes-vms/ClusterDiagram";
+import ClusterSim from "@/components/tutorials/docker-kubernetes-vms/ClusterSim";
+import HypervisorDiagram from "@/components/tutorials/docker-kubernetes-vms/HypervisorDiagram";
+import LayerCacheDemo from "@/components/tutorials/docker-kubernetes-vms/LayerCacheDemo";
+import ReconcileDiagram from "@/components/tutorials/docker-kubernetes-vms/ReconcileDiagram";
+import ServiceDiagram from "@/components/tutorials/docker-kubernetes-vms/ServiceDiagram";
+import StackExplorer from "@/components/tutorials/docker-kubernetes-vms/StackExplorer";
 
-This is a placeholder that exercises every piece of the tutorial kit. The real tutorial replaces it.
+## TLDR and what you will build
 
-## How the pieces stack
+<TLDR>
+  <Takeaway>A VM is a whole pretend computer, with its own OS.</Takeaway>
+  <Takeaway>A container is just an isolated process that shares the host's kernel.</Takeaway>
+  <Takeaway>Docker builds and runs containers on one machine.</Takeaway>
+  <Takeaway>Kubernetes keeps many containers alive across many machines.</Takeaway>
+</TLDR>
 
-<Flow
-  steps={[
-    { title: "Your machine", note: "The real hardware", tone: "blue", icon: <Server /> },
-    { title: "A container", note: "Shares the host kernel", tone: "green", icon: <Box /> },
-    { title: "Your app", note: "Runs inside it", tone: "violet" },
+These three tools get mixed up constantly, because they all answer the same question: how do I run my software somewhere else without it breaking? They answer it at different sizes. A **virtual machine** fakes a whole computer. A **container** fakes only the corner of a computer your app needs. **Kubernetes** does not fake anything. It is the manager that decides which containers run on which machines and replaces them when they die.
+
+We will use one picture for the whole tutorial. A VM is an **independent house**: its own plot, its own water tank, its own wiring, and a lot of cost to build. A container is a **flat in an apartment society**: its own front door and meter, but the foundation, the lift and the main plumbing are shared with everyone else in the block. Kubernetes is the **society's building manager**: it decides who gets which flat, notices when a flat has a leak, and sends a replacement tenant the same day.
+
+By the end you will have built this yourself, on your own machine:
+
+1. A throwaway virtual machine, to feel what "a whole computer" costs. This part is optional.
+2. A small web app called `hits` that counts page views in Redis, packed into a Docker image and run with Docker Compose.
+3. The same app on a real three-node Kubernetes cluster, where you scale it, kill its pods, roll out a new version, break the rollout on purpose and roll it back.
+
+What you need:
+
+- A laptop or desktop with Windows 11, macOS or Linux. Windows 10 and Home editions work for the Docker parts.
+- Roughly 8 GB of RAM (more is nicer) and about 20 GB of free disk. These are my rough suggestions, not hard limits. Running three Kubernetes nodes on top of Docker is the heaviest part.
+- Hardware virtualization switched on in your BIOS or UEFI. Most machines ship with it on.
+- A terminal you are comfortable pasting commands into. Windows commands assume PowerShell.
+- About two to three hours the first time. That is an estimate. Most of the time goes into downloads and into reading what each command printed, which is the point.
+
+<Callout kind="tip" title="How to use this page">
+
+Read sections 2 to 7 once, then do section 8 with a terminal open. Every walkthrough step ends with a green "You should see" box. If your screen does not match it, open section 9 and search for the first line of your error. Pick your operating system in any tab and every other OS tab on the page switches with it.
+
+</Callout>
+
+## The problem all three solve
+
+Two problems keep coming up in a developer's life, and these tools exist because of them.
+
+**Problem one: it works on my machine.** You build a service on your laptop with Node 24 and a recent Redis. You deploy it to a server that has Node 18 from three years ago, or to your teammate's laptop where a global package clashes with yours. The code is identical and the behaviour is not. Everything around the code (the runtime, the libraries, the OS files, the settings) was different. Think of cooking a recipe in your own kitchen versus a hostel kitchen. The recipe is the same. The pans, the gas pressure and the salt are not.
+
+**Problem two: one server, many apps.** A server costs money whether it is busy or idle. You want to pack several apps onto it. But if each app needs different library versions, or one app eats all the memory, or one gets hacked, the others suffer. You want walls between them without buying one machine per app.
+
+Look at how each tool answers:
+
+- A **VM** puts a complete computer inside your computer. The wall is thick: even a hacked guest sees only fake hardware. The price is that every VM carries its own full operating system.
+- A **container** keeps the wall but drops the extra operating system. It packs your app with the files it needs and runs it as an ordinary process that the host kernel fences off. Cheap and fast, with a thinner wall.
+- **Kubernetes** appears when you have fifty containers and ten machines. Nobody can start, watch, restart and reroute that by hand at three in the morning, so you describe what you want and Kubernetes keeps making it true.
+
+<Callout kind="real-world">
+
+Think of a housing society in Pune. The independent bungalows on the edge of town each have their own borewell and generator. The flats in the society share water supply, lift and security, so each flat costs far less to run. And when a pipe bursts in flat 304, nobody phones the plumber individually: the society's facility manager already has a contract and a replacement schedule. Bungalow, flat, facility manager. VM, container, Kubernetes.
+
+</Callout>
+
+One more thing to keep in mind: these are not rivals. In real systems they stack. Your Kubernetes cluster runs containers, and those containers usually run on nodes that are themselves VMs in someone's cloud. Section 4 shows that stack with your own hands.
+
+## Virtual machines
+
+A virtual machine is a program that behaves like a computer. It has a virtual CPU, virtual memory, a virtual disk and a virtual network card, and you install a normal operating system into it. That operating system, called the **guest**, believes it owns real hardware. It does not.
+
+The software that makes this trick work is the **hypervisor**. It sits between the real hardware and the VMs, hands out slices of CPU, RAM and disk, and makes sure one VM cannot peek into another. It is the house-builder and the land registry: it marks out the plots and makes sure no one builds across a boundary.
+
+There are two kinds, and the difference is only what sits underneath:
+
+- **Type 1 (bare metal)** runs directly on the hardware. There is no ordinary operating system below it. Servers in data centres and the machines that cloud providers rent out work this way, because a missing layer means less waste.
+- **Type 2 (hosted)** is an ordinary program running on your normal Windows, macOS or Linux. VirtualBox and VMware Workstation are examples. Convenient for a laptop, one layer heavier.
+
+<Figure caption="The two kinds of hypervisor. Type 2 adds a complete host operating system between the hardware and the hypervisor.">
+  <HypervisorDiagram />
+</Figure>
+
+### What a guest operating system costs
+
+Every VM boots a full operating system: its own kernel, its own background services, its own memory reservation, its own copy of system files. Start two VMs and you have three operating systems on one machine. That is why a VM usually takes seconds to minutes to boot, why its disk image is measured in gigabytes, and why a laptop struggles with more than a few.
+
+Back to the housing metaphor: an independent house needs its own foundation, its own water tank and its own electrical panel before the first person moves in. It is wonderfully private. It is just not cheap or quick to build.
+
+### Where VMs still win
+
+Containers are popular, but do not write VMs off. They are the right answer when:
+
+- **You need a hard wall.** Each VM runs its own kernel, so a bug in the guest kernel does not hand the attacker the host. This is why cloud providers put different customers on different VMs, not just different containers.
+- **You need a different OS or kernel.** A Windows VM on a Linux host, an older Linux kernel for a vendor tool, or a test across three operating systems on one laptop.
+- **You are running legacy software** that expects a specific old OS version and cannot be moved without risk.
+- **You want the machine underneath everything else.** Almost every managed Kubernetes cluster runs its nodes as VMs. Your containers live in flats, but the building stands on land that a VM carved out.
+
+In short: VMs are not the old way that containers replaced. They are the layer below, and still the right tool when isolation or a different kernel matters more than size.
+
+## Containers
+
+Here is the sentence that clears most confusion: **a container is not a small VM. A container is a normal process with blinkers on.**
+
+When you run a container, the host's own kernel starts your program like any other program. Then it applies two features that Linux has had for years:
+
+- **Namespaces** limit what the process can *see*. Inside its own namespaces the program sees only its own process list, its own network interfaces, its own filesystem view and its own hostname. It believes it is alone on the machine. This is the front door with your name on it: from inside the flat you cannot see into the neighbour's.
+- **Control groups (cgroups)** limit how much it can *use*: a ceiling on memory, a share of CPU. This is the electricity meter with a cap on it.
+
+A third piece is the filesystem. A container's files come from an **image**, which is a stack of read-only **layers** (base OS files, then your dependencies, then your code), with one thin writable layer added on top when the container runs. Layers are shared between images, so ten images built on the same base store that base once.
+
+And the kernel is **shared**. There is exactly one Linux kernel and every container on the machine uses it. That is the foundation and plumbing of the apartment block. It is why a container starts in about a second and takes megabytes rather than gigabytes. It is also why a container cannot bring its own kernel: a Linux container needs a Linux kernel underneath.
+
+### The link people miss: Docker on Windows and macOS
+
+Your Windows or macOS has no Linux kernel, yet Docker runs Linux containers there. How? **Docker Desktop quietly starts a small Linux virtual machine** and runs your containers inside it. On Windows that VM uses WSL 2, which is why Docker's install page asks for it and for hardware virtualization. So on a Windows laptop you really have all three layers stacked: a hypervisor, a Linux VM, and containers in it. Later, kind will add a fourth: Kubernetes nodes that are themselves containers. The walkthrough proves this with one command.
+
+Press each layer below. The same layer lights up in all three stacks, so you can see which parts are copied per app and which are shared.
+
+<StackExplorer />
+
+### Comparing the two
+
+<SettingsTable
+  columns={["Question", "Virtual machine", "Container"]}
+  rows={[
+    ["What is virtualised?", "The hardware", "The operating system's view of itself"],
+    ["Has its own kernel?", "Yes, one per VM", "No, shares the host kernel"],
+    ["Typical start time", "Seconds to minutes", "A second or less"],
+    ["Typical size on disk", "Gigabytes", "Tens to hundreds of megabytes"],
+    ["Isolation", "Strong, hardware-level boundary", "Good, but the kernel is shared"],
+    ["Other OS inside?", "Yes, any OS the hypervisor supports", "Only same-kernel userlands, so Linux on Linux"],
+    ["Best for", "Hard isolation, odd OS, legacy, cloud nodes", "Packaging and running apps, microservices, CI"],
   ]}
 />
 
-<Callout kind="real-world">A shipping container holds anything and fits any ship, which is why the name stuck.</Callout>
+The sizes above are the usual ballpark, not measurements of any specific image. Your own numbers will differ, and the walkthrough lets you measure them.
 
-<Callout kind="tip">Run each command yourself and compare it with the checkpoint.</Callout>
+## Docker essentials
 
-<Callout kind="warn">Never paste a command you do not understand into a root shell.</Callout>
+Docker is the tool that made containers easy. The two words people mix up are **image** and **container**:
 
-## Do it yourself
+- An **image** is the packaged, frozen result: your app, its dependencies and the OS files it needs. It is a class in code, or the written recipe, or the sealed tiffin box.
+- A **container** is a running copy of an image. It is an object created from the class, the dish cooked from the recipe, the opened tiffin. You can start ten containers from one image.
+
+You write a **Dockerfile** (the recipe), run `docker build` to produce an image, and `docker run` to start a container from it. Because the image carries everything, the same image behaves the same on your laptop, on a teammate's laptop and on a server. That is the answer to "works on my machine".
+
+### A Dockerfile, line by line
+
+This block is for explanation only. The real file you will build is in the walkthrough.
+
+```dockerfile
+# Annotated example, not the walkthrough file
+FROM node:24-alpine
+WORKDIR /app
+COPY package.json ./
+RUN npm install --omit=dev
+COPY server.js ./
+USER node
+EXPOSE 3000
+CMD ["node", "server.js"]
+```
+
+- `FROM` picks the base image to start from. `alpine` variants are small. Think of it as moving into an already-built flat rather than building walls.
+- `WORKDIR` sets the folder that later lines work in, and creates it if needed.
+- `COPY` brings files from your project folder into the image.
+- `RUN` runs a command while *building* (here, installing packages). Its result is saved into the image.
+- `USER` switches from root to a normal user, so a bug in your app has fewer powers.
+- `EXPOSE` documents the port the app listens on. It does not publish it; you do that when you run.
+- `CMD` is the command that runs when a container *starts*. Use the list form so signals reach your program.
+- `ENV` sets an environment variable that is present both while building and while running. `ARG` exists only while building.
+
+The classic confusion is `RUN` versus `CMD`. `RUN` happens once, at build time, and its result is frozen into the image (installing packages). `CMD` happens every time a container starts from that image (launching your server). If you put `npm start` in a `RUN` line, the build would sit there running your server forever and never finish.
+
+When you publish a port with `-p 8080:3000`, the number on the **left** is the port on your computer and the number on the **right** is the port inside the container. Mixing them up is the most common reason a freshly started container "does nothing".
+
+### Layers and the build cache
+
+Every `FROM`, `COPY` and `RUN` line makes a layer. Docker remembers each layer and reuses it if neither the instruction nor anything it reads has changed. Once one layer has to be rebuilt, every layer after it is rebuilt too. This single rule explains why Dockerfile line order matters so much.
+
+The bad habit is `COPY . .` followed by `npm install`: any code edit changes the copied files, so the packages are reinstalled every time. The good habit is to copy only `package.json`, install, and *then* copy your code. Try it:
+
+<LayerCacheDemo />
+
+### Keep junk out: .dockerignore
+
+`COPY . .` copies everything in the folder, including `node_modules` from your machine, your `.git` history and maybe a `.env` full of secrets. A `.dockerignore` file lists what to leave out, and it also stops needless cache misses. Add it to every project.
+
+### Multi-stage builds
+
+Some tools are needed to build the app but not to run it: compilers, test frameworks, dev dependencies. A multi-stage build uses one image to build and a second, clean one to ship, copying across only the finished result.
+
+```dockerfile
+# Illustration only: build in one stage, ship from another
+FROM node:24-alpine AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+FROM node:24-alpine
+WORKDIR /app
+COPY --from=build /app/dist ./dist
+USER node
+CMD ["node", "dist/server.js"]
+```
+
+The final image never contains the compiler or the test tools. It is smaller and has less in it for an attacker to use. Our little `hits` app has no build step, so the walkthrough keeps one stage.
+
+### Storage: volumes and bind mounts
+
+A container's writable layer disappears with the container. For data that must survive (a database), mount storage from outside:
+
+- A **volume** is storage that Docker manages for you. It outlives the container and is the normal choice for databases. We use one for Redis.
+- A **bind mount** maps a folder from your machine into the container. It is perfect in development (edit code on your laptop, see it inside the container) and a poor choice in production because it ties the container to one machine's folder layout.
+
+### Networks and names
+
+Containers on the same user-defined Docker network can reach each other by **name**. If one container is called `cache`, another one can connect to `redis://cache:6379`, with no IP addresses involved. Docker runs a small DNS service for this. It is the society intercom: you dial "flat 304", not the wiring path. Docker Compose builds such a network for you automatically and names each container after its service.
+
+### Compose: several containers, one file
+
+Real apps are rarely one container. **Docker Compose** describes several services, their networks and their volumes in one `compose.yaml`, and starts them all with `docker compose up`. It is the right tool for local development and for small single-server deployments. It is not a cluster manager, and that gap is where Kubernetes comes in.
+
+### Registries and tags
+
+An image lives in a **registry**: Docker Hub is the default, and clouds and GitHub have their own. An image name looks like `registry/user/name:tag`. The tag is a label, usually a version.
+
+Be careful with `latest`. It is only a tag, and it is not guaranteed to be the newest. It can be moved to point at a different image tomorrow, so the same name can give you different software next week. In real deployments, use an explicit version or a Git commit hash as the tag, and never rely on `latest`.
+
+### Habits worth having from day one
+
+- Run as a non-root user (`USER`).
+- Start from a small base image, and pin its version in the tag.
+- Never put secrets in an image. Anyone with the image can read every layer. Pass secrets at run time.
+- Add a `HEALTHCHECK` so Docker, Compose and later Kubernetes can tell "running" from "working".
+- Write a `.dockerignore`.
+- Order the Dockerfile from least to most frequently changing.
+- Scan your images for known vulnerabilities. Docker Scout (`docker scout quickview IMAGE`, or the Vulnerabilities tab in Docker Desktop) lists the packages inside an image and flags known problems with suggestions. Other scanners do the same job, and many registries scan on push.
+- Commit your lockfile and use `npm ci` in real projects. The walkthrough uses `npm install` only because it has no lockfile to keep short.
+
+### Tools that make this nicer
+
+Docker Desktop has a window where you can see running containers, read their logs, open a terminal inside one and browse images. It does the same as `docker logs` and `docker exec`, so use whichever you like, but learn the commands because servers have no window. The Docker extension for VS Code adds Dockerfile highlighting and hover help. And once you know what a Dockerfile is for, `docker init` can generate a starter Dockerfile and Compose file for your project. Read what it makes before you trust it.
+
+### Command cheat sheet
+
+Images:
+
+<SettingsTable
+  columns={["Command", "What it does"]}
+  rows={[
+    ["docker build -t name:tag .", "Build an image from the Dockerfile in this folder"],
+    ["docker images", "List images on this machine"],
+    ["docker pull name:tag", "Download an image from a registry"],
+    ["docker tag src dst", "Give an existing image another name or tag"],
+    ["docker push name:tag", "Upload an image to a registry (after docker login)"],
+    ["docker image rm name:tag", "Delete an image"],
+  ]}
+/>
+
+Containers:
+
+<SettingsTable
+  columns={["Command", "What it does"]}
+  rows={[
+    ["docker run -d --name n -p 8080:3000 img", "Start a container in the background and publish a port"],
+    ["docker ps", "List running containers (add -a for stopped ones too)"],
+    ["docker logs -f n", "Show and follow a container's output"],
+    ["docker exec -it n sh", "Open a shell inside a running container"],
+    ["docker stop n", "Ask the container to stop politely"],
+    ["docker rm -f n", "Stop and remove a container"],
+    ["docker inspect n", "Print everything Docker knows about it, as JSON"],
+  ]}
+/>
+
+Compose, volumes and cleanup:
+
+<SettingsTable
+  columns={["Command", "What it does"]}
+  rows={[
+    ["docker compose up -d", "Create and start every service in compose.yaml"],
+    ["docker compose logs -f", "Follow the logs of all services"],
+    ["docker compose down", "Stop and remove containers and the network, keep volumes"],
+    ["docker compose down -v", "Same, and also delete the volumes (your data)"],
+    ["docker volume ls", "List volumes"],
+    ["docker system df", "Show how much disk Docker is using"],
+  ]}
+/>
+
+## Kubernetes essentials
+
+Docker alone is perfect for one machine. The trouble starts when the app must survive a machine dying, handle traffic spikes by adding copies, update without downtime and spread across several servers. Doing that with `docker run` over SSH means you become the building manager yourself: tracking which flat is where, restarting things at night, and updating every load-balancer entry by hand. This job is called **orchestration**, and Kubernetes (often written K8s) is the standard tool for it.
+
+Be clear about the split. Docker (or any tool that builds standard images) *packages* the app. Kubernetes *runs and manages* the packages across many machines. They work together, not against each other.
+
+### The cluster, piece by piece
+
+A Kubernetes **cluster** is a group of machines called **nodes**, split into two roles.
+
+<Figure caption="The control plane decides, the worker nodes do. Every node reports back to the API server.">
+  <ClusterDiagram />
+</Figure>
+
+The **control plane** is the brain:
+
+- The **API server** is the front door. Every tool, including `kubectl`, talks to it, and so does every other part of the cluster.
+- **etcd** is the database where the cluster's desired and current state is stored. Lose it without a backup and you lose the cluster's memory.
+- The **scheduler** picks a node for each new pod, based on free memory and CPU and any rules you set.
+- The **controller manager** runs the control loops (more on these below) that keep reality matching what you asked for.
+
+Each **worker node** runs your workload:
+
+- The **kubelet** is the node's agent. It asks the API server what should be running here, starts it and reports back.
+- **kube-proxy** keeps the network rules on the node that make Services work.
+- A **container runtime** actually runs containers. In modern clusters this is **containerd** (or CRI-O), not Docker Engine. Kubernetes removed its built-in Docker support in version 1.24. This does not break your images: images built by `docker build` follow the standard image format, so containerd runs them without complaint.
+
+### Desired state and the reconcile loop
+
+This is the idea that makes Kubernetes feel different. You do not tell it *do these steps*. You tell it *what you want to be true*: "three copies of this app, always". That is the **desired state**. Controllers then run in an endless loop: look at what is actually running, compare with what you asked for, fix any difference, repeat.
+
+<Figure caption="The reconcile loop. It never finishes: it runs for as long as the cluster does.">
+  <ReconcileDiagram />
+</Figure>
+
+<Callout kind="real-world">
+
+A thermostat is a reconcile loop. You set 24 degrees (desired state). It measures the room (actual state). When the room drifts, it switches the AC on or off. You never script "run the AC for ten minutes". Kubernetes treats your apps like the thermostat treats your room.
+
+</Callout>
+
+Here is what happens when you hand Kubernetes a file:
+
+<Flow
+  steps={[
+    { title: "kubectl apply", note: "You send the YAML", tone: "blue", icon: <Terminal /> },
+    { title: "API server", note: "Checks and accepts it", tone: "violet", icon: <Server /> },
+    { title: "etcd", note: "Stores the new desired state", tone: "amber", icon: <Package /> },
+    { title: "Controllers + scheduler", note: "Create pods, pick nodes", tone: "green", icon: <Boxes /> },
+    { title: "kubelet", note: "Starts the containers", tone: "cyan", icon: <Container /> },
+    { title: "Pod running", note: "Status goes back up", tone: "pink", icon: <Rocket /> },
+  ]}
+/>
+
+### The objects that matter
+
+You write YAML describing **objects**. Learn these ones first.
+
+**Pod.** The smallest thing Kubernetes runs: a wrapper around one or more containers that share a network address and storage. Usually it is one container. Pods are **disposable**. Kubernetes does not repair a sick pod, it replaces it, and the replacement gets a new IP address. A pod is a single tenant in a flat: when they leave, a new tenant moves in, with a new phone number.
+
+**Deployment (and ReplicaSet).** You almost never create bare pods. You create a Deployment that says "keep three pods of this template running". It manages a ReplicaSet, which counts the copies, and it handles rolling updates by creating a new ReplicaSet and shifting pods across a few at a time. Deployments also keep the previous version around so you can roll back.
+
+**Service.** Because pod IPs keep changing, a Service gives a group of pods one stable name and address, and spreads requests across whichever pods are healthy right now. It picks its pods with **labels**: the Service says "send traffic to pods labelled `app=web`".
+
+<Figure caption="Clients know only the Service. Pods can come and go, and their IPs can change, behind it.">
+  <ServiceDiagram />
+</Figure>
+
+Services come in three common kinds. **ClusterIP** (the default) is reachable only inside the cluster. **NodePort** also opens a port on every node. **LoadBalancer** asks your cloud to provision a real external load balancer, and costs real money on a real cloud.
+
+**ConfigMap and Secret.** Configuration lives outside the image so the same image works in every environment. A ConfigMap holds ordinary settings. A Secret holds sensitive values like passwords and tokens. But be honest about it: by default a Secret is only **base64 encoded**, which is a way of writing bytes as text, not encryption. Anyone who can read the Secret can decode it in one command. Real protection needs access rules (RBAC) and, ideally, encryption of etcd at rest or an external secrets system.
+
+**Namespace.** A folder inside the cluster for grouping and separating objects, such as one per team or per environment. Names must be unique only within a namespace.
+
+**Probes.** Kubernetes asks your app how it is doing. A **readiness** probe decides whether a pod receives traffic: while it fails, the pod is taken out of the Service but left running. A **liveness** probe decides whether the container is stuck: if it fails repeatedly, the container is restarted. A **startup** probe gives slow starters extra time before the other two begin. Mixing these up is a classic mistake: a liveness probe that checks the database will restart all your pods when the database blips.
+
+**Requests and limits.** A *request* is what a container needs; the scheduler uses it to decide whether a node has room. A *limit* is the ceiling. Go over the CPU limit and the container is slowed down. Go over the memory limit and it is killed, which you will see as `OOMKilled`. Without requests the scheduler is guessing, and without them autoscaling cannot do its sums.
+
+**HorizontalPodAutoscaler (HPA).** Adds or removes pods based on measured usage, usually CPU as a percentage of the request. It needs a metrics source (the metrics-server add-on) and it only works if you set requests. This is how the cluster absorbs a traffic spike without you waking up.
+
+**PersistentVolumeClaim (PVC).** A pod's own disk dies with it. A PVC is a request for durable storage that outlives pods. Databases need one, and in practice you run databases with a StatefulSet or, more often, buy a managed database instead.
+
+**Getting traffic in: Gateway API.** A Service is internal by default. To expose HTTP routes like `/shop` and `/api` on one public address, Kubernetes has used **Ingress** objects. The popular ingress-nginx controller was retired in March 2026, when its maintenance ended, and the Kubernetes networking group recommends the newer **Gateway API** (or another maintained controller) for new work. Existing Ingress objects are still everywhere in the wild, so you will read them, but write new routing with Gateway API. We do not need either for the walkthrough because `kubectl port-forward` is enough on a laptop.
+
+### Play with the loop
+
+Below is a toy cluster with three nodes. Change the number of wanted copies, delete a pod, take a node down and watch the controller notice and repair. Take all three nodes down and see what "Pending" means. The log underneath says what the loop decided and why.
+
+<ClusterSim />
+
+### When not to use Kubernetes
+
+Kubernetes is heavy machinery. It is probably the wrong choice if:
+
+- You run one app, or a few, on one server. Docker Compose is simpler and honest.
+- Your team has nobody who will own the cluster's upgrades, access rules and monitoring.
+- A managed service already does the job: your cloud's container platform (for example AWS ECS or Fargate, Google Cloud Run, Azure Container Apps) takes a container and runs it, scaling included, without you operating nodes.
+- Traffic is small and steady. Autoscaling is wasted on it.
+
+The reasonable path is to start with one machine and Compose, move to a managed container service when you outgrow it, and reach for Kubernetes when you truly need its flexibility or your company already runs it.
+
+## Which one do I use?
+
+Start from what you actually need:
+
+<Flow
+  direction="vertical"
+  steps={[
+    { title: "Need another OS, a different kernel, or a hard security wall?", note: "Windows on Linux, legacy software, untrusted tenants", tone: "violet", icon: <Server /> },
+    { title: "Use a virtual machine", note: "Your cloud provider's VM is the same idea", tone: "blue", icon: <Box /> },
+  ]}
+/>
+
+<Flow
+  direction="vertical"
+  steps={[
+    { title: "One app or a few, on one machine, a small team?", note: "Most side projects and many real products", tone: "amber", icon: <Package /> },
+    { title: "Use Docker and Compose", note: "Add a managed container service when you outgrow it", tone: "green", icon: <Container /> },
+  ]}
+/>
+
+<Flow
+  direction="vertical"
+  steps={[
+    { title: "Many services, many machines, self-healing, safe rollouts?", note: "And someone to run the cluster, or a managed one", tone: "pink", icon: <Boxes /> },
+    { title: "Use Kubernetes", note: "Containers are the unit it manages", tone: "cyan", icon: <Rocket /> },
+  ]}
+/>
+
+### What the market expects
+
+I have no survey to quote, so take this as my judgment about where a junior developer should spend the first months, and check it against job posts you actually want.
+
+- **Learn now:** the Linux command line, Git, Docker and Compose (writing Dockerfiles, reading logs, debugging a container), reading and writing YAML, and the daily `kubectl` commands: `get`, `describe`, `logs`, `apply`, `exec`, `port-forward`, `rollout`. Know what a Pod, Deployment, Service, ConfigMap and Secret are, and why probes and resource limits exist.
+- **Learn on the job:** Helm or Kustomize for templating YAML, Gateway API and cluster networking, RBAC and security policy, GitOps tools, monitoring and logging stacks, cluster upgrades, cloud-specific storage and load balancers. These depend on your employer, so learn them when you meet them.
+- **Skip for now:** building a cluster from scratch by hand, service meshes, writing your own operators, multi-cluster setups, and Docker Swarm (rarely chosen for new work). They are worth learning later, not before the basics are solid.
+
+## DIY walkthrough
+
+Time to build it. Every step says what to run and ends with what you should see. If something differs, jump to section 9.
+
+<Callout kind="warn" title="Windows readers">
+
+Commands assume PowerShell. In PowerShell, plain `curl` is not the real curl, so wherever you see `curl` type `curl.exe`. Also, when a step says to create a file, create it with an editor such as VS Code and save it exactly where the title bar says. Keep the file contents exactly as shown: indentation matters in YAML.
+
+</Callout>
+
+### Part 0: install the tools
 
 <Tabs group="os">
-  <Tab label="Windows">Open PowerShell from the Start menu.</Tab>
-  <Tab label="macOS">Open Terminal from Spotlight.</Tab>
-  <Tab label="Linux">Open your terminal emulator.</Tab>
+  <Tab label="Windows">
+
+Docker Desktop on Windows runs on WSL 2 and needs hardware virtualization turned on. Docker's install page lists Windows 21H2 or newer. Check virtualization first: open Task Manager, go to the Performance tab, pick CPU, and look for "Virtualization: Enabled".
+
+Install Docker Desktop from [docs.docker.com/desktop/setup/install/windows-install](https://docs.docker.com/desktop/setup/install/windows-install/) and follow its WSL 2 option. If you work for a company, check Docker's current terms before using Docker Desktop at work.
+
+Then, in PowerShell:
+
+```powershell
+winget install Kubernetes.kind
+winget install -e --id Kubernetes.kubectl
+```
+
+Close and reopen PowerShell so the new commands are on your PATH.
+
+  </Tab>
+  <Tab label="macOS">
+
+Install Docker Desktop from [docs.docker.com/desktop/setup/install/mac-install](https://docs.docker.com/desktop/setup/install/mac-install/) and start it. Check Docker's current terms if you use it for a company. Then install the other two with Homebrew:
+
+```bash
+brew install kind kubectl
+```
+
+  </Tab>
+  <Tab label="Linux">
+
+Docker's own convenience script is the quickest route. Its page says the script is only recommended for testing and development, which is exactly what we are doing. The second block lets you run `docker` without `sudo`.
+
+```bash
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+```
+
+```bash
+sudo groupadd docker
+sudo usermod -aG docker $USER
+newgrp docker
+```
+
+Next, kind. This downloads the amd64 build (the page has an arm64 variant) and the version number in the address may be newer by the time you read this, so check the [kind quick start](https://kind.sigs.k8s.io/docs/user/quick-start/).
+
+```bash
+curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.33.0/kind-linux-amd64
+chmod +x ./kind
+sudo mv ./kind /usr/local/bin/kind
+```
+
+For `kubectl`, follow the [official Linux guide](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/). `sudo snap install kubectl --classic` is a shortcut if you have snap.
+
+  </Tab>
 </Tabs>
 
 <Steps>
-  <Step title="Write a Dockerfile" tone="blue" checkpoint="The file exists next to your app.">
+  <Step title="Check that everything installed" tone="blue" checkpoint="Each command prints a version. The docker version command shows both a Client and a Server section. If Server is missing, Docker is not running yet.">
 
-```dockerfile
-# file: Dockerfile
-FROM alpine
-CMD ["echo", "hello"]
+Start Docker Desktop (Windows and macOS) and wait until it says it is running. Then:
+
+```bash
+docker version
+kind version
+kubectl version --client
 ```
 
   </Step>
-  <Step title="Run it" tone="green" checkpoint="The terminal prints hello.">
+  <Step title="Create the project folder" tone="blue" checkpoint="Your terminal is now inside a folder called hits that contains an empty k8s folder.">
+
+<Tabs group="os">
+  <Tab label="Windows">
+
+```powershell
+mkdir hits\k8s; cd hits
+```
+
+  </Tab>
+  <Tab label="macOS">
 
 ```bash
-echo hello
+mkdir -p hits/k8s && cd hits
+```
+
+  </Tab>
+  <Tab label="Linux">
+
+```bash
+mkdir -p hits/k8s && cd hits
+```
+
+  </Tab>
+</Tabs>
+
+Every file below is named in its title bar, like `hits/server.js`. Create it inside the `hits` folder at that path. Run all commands from inside `hits/` unless a step says otherwise.
+
+  </Step>
+</Steps>
+
+### Part 1: a virtual machine (optional)
+
+This part makes the "independent house" concrete. If your machine is tight on resources or Multipass will not install, skip to Part 2. Nothing later depends on it.
+
+<Tabs group="os">
+  <Tab label="Windows">
+
+Multipass is Canonical's tool for quickly launching Ubuntu VMs. Its install page lists Windows 10 and 11 on Home, Pro and Enterprise as supported, from build 1809 up, and asks for the Virtual Machine Platform Windows feature to be enabled. You need administrator rights to run the installer. Download it from [canonical.com/multipass](https://canonical.com/multipass). I did not verify which hypervisor driver it uses on Home, so if launch fails, see the troubleshooting section.
+
+  </Tab>
+  <Tab label="macOS">
+
+Download the installer from [canonical.com/multipass](https://canonical.com/multipass) and run it. You need an account with administrator rights.
+
+  </Tab>
+  <Tab label="Linux">
+
+```bash
+sudo snap install multipass
+```
+
+  </Tab>
+</Tabs>
+
+<Steps>
+  <Step title="Launch a VM and time it" tone="violet" checkpoint="After a download on the first run, multipass list shows tutorial-vm as Running with an IP address.">
+
+The first launch downloads an Ubuntu image, which takes a while. Launch is much quicker after that.
+
+```bash
+multipass launch --name tutorial-vm --cpus 1 --memory 1G --disk 5G
+multipass list
+```
+
+  </Step>
+  <Step title="Step inside" tone="violet" checkpoint="Your prompt changes to ubuntu@tutorial-vm. uname -r prints a kernel version, free -h shows about 1 GB of memory, and df -h shows a disk of about 5 GB. This is a complete computer with its own kernel.">
+
+```bash
+multipass shell tutorial-vm
+uname -r
+free -h
+df -h
+exit
+```
+
+Remember that kernel line. In Part 2 you will compare it to what a container reports.
+
+  </Step>
+  <Step title="Throw it away" tone="violet" checkpoint="multipass list no longer shows tutorial-vm.">
+
+```bash
+multipass delete tutorial-vm --purge
+multipass list
 ```
 
   </Step>
 </Steps>
 
-<TroubleGroup>
-  <Trouble symptom="command not found" cause="The tool is not installed or not on your PATH.">
+### Part 2: Docker
 
-Install it, then open a new terminal.
+First the application files. They are small on purpose.
+
+The app is a tiny web server. `GET /` adds one to a counter stored in Redis and returns it, along with the version and the name of the machine that answered. `GET /healthz` says the process is alive. It also stops cleanly when asked to, which makes rollouts quick later.
+
+```javascript
+// file: hits/server.js
+import { createServer } from "node:http";
+import { hostname } from "node:os";
+import { createClient } from "redis";
+
+const PORT = 3000;
+const VERSION = process.env.VERSION ?? "dev";
+const redis = createClient({ url: process.env.REDIS_URL ?? "redis://localhost:6379" });
+redis.on("error", (err) => console.error("redis error:", err.message));
+await redis.connect();
+
+const server = createServer(async (req, res) => {
+  if (req.url === "/healthz") {
+    res.writeHead(200).end("ok\n");
+    return;
+  }
+  if (req.url !== "/") {
+    res.writeHead(404).end("not found\n");
+    return;
+  }
+  try {
+    const hits = await redis.incr("hits");
+    res.writeHead(200, { "content-type": "text/plain" });
+    res.end(`hits: ${hits}, version: ${VERSION}, served by: ${hostname()}\n`);
+  } catch {
+    res.writeHead(503).end("redis unavailable\n");
+  }
+});
+
+server.listen(PORT, "0.0.0.0", () => console.log(`hits ${VERSION} listening on ${PORT}`));
+
+process.on("SIGTERM", () => {
+  server.close(() => process.exit(0));
+});
+```
+
+```json
+// file: hits/package.json
+{
+  "name": "hits",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "redis": "^5.0.0"
+  }
+}
+```
+
+```dockerfile
+// file: hits/Dockerfile
+FROM node:24-alpine
+ARG VERSION=dev
+ENV VERSION=$VERSION NODE_ENV=production
+WORKDIR /app
+COPY package.json ./
+RUN npm install --omit=dev
+COPY server.js ./
+USER node
+EXPOSE 3000
+HEALTHCHECK --interval=10s --timeout=3s CMD wget -qO- http://127.0.0.1:3000/healthz || exit 1
+CMD ["node", "server.js"]
+```
+
+```text
+# file: hits/.dockerignore
+node_modules
+npm-debug.log
+.git
+.env
+Dockerfile
+compose.yaml
+k8s
+```
+
+<Callout kind="tip">
+
+Real projects commit a lockfile (`package-lock.json`) and install with `npm ci`, which gives the exact same packages every time. This tutorial skips the lockfile so you do not need Node on your machine, and uses `npm install` instead.
+
+</Callout>
+
+```yaml
+# file: hits/compose.yaml
+services:
+  web:
+    build:
+      context: .
+      args:
+        VERSION: "1.0"
+    ports:
+      - "8080:3000"
+    environment:
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      redis:
+        condition: service_healthy
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - hits-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+volumes:
+  hits-data:
+```
+
+<Steps>
+  <Step title="Peek at the shared kernel" tone="green" checkpoint="A kernel version prints. On Windows and macOS it is a Linux kernel, not the one your computer runs: Docker started a hidden Linux VM. On Linux it matches the kernel of your own machine, because nothing was virtualised.">
+
+This pulls a tiny image, runs one command in a container, and removes the container afterwards.
+
+```bash
+docker run --rm alpine uname -r
+```
+
+Compare it with the line you saw inside the VM, or with `uname -r` on a Linux host. A container does not have a kernel of its own.
+
+  </Step>
+  <Step title="Build the image" tone="green" checkpoint="The build ends without errors, and docker images lists hits with tag 1.0.">
+
+```bash
+docker build -t hits:1.0 --build-arg VERSION=1.0 .
+docker images hits
+```
+
+  </Step>
+  <Step title="Run Redis and the app on one network" tone="green" checkpoint="docker ps lists two running containers, cache and web, and the web one shows 0.0.0.0:8080->3000/tcp.">
+
+A user-defined network gives you name lookup: the app will reach Redis simply as `cache`.
+
+```bash
+docker network create hits-net
+docker run -d --name cache --network hits-net redis:7-alpine
+docker run -d --name web --network hits-net -p 8080:3000 -e REDIS_URL=redis://cache:6379 hits:1.0
+docker ps
+```
+
+  </Step>
+  <Step title="Talk to it" tone="green" checkpoint="The first call prints hits: 1 with version: 1.0 and a short hexadecimal name. Each call raises the number by one. /healthz prints ok.">
+
+```bash
+curl http://localhost:8080
+curl http://localhost:8080
+curl http://localhost:8080/healthz
+```
+
+  </Step>
+  <Step title="Look around inside" tone="green" checkpoint="The logs show the line 'hits 1.0 listening on 3000'. whoami prints node, which proves the app is not running as root, and the last command prints 1.0.">
+
+```bash
+docker logs web
+docker exec web whoami
+docker exec web sh -c 'echo $VERSION'
+```
+
+  </Step>
+  <Step title="Rebuild and watch the cache" tone="green" checkpoint="In the second build output most steps say CACHED. Only the COPY server.js step and later ones run again. Order matters, just like the demo showed.">
+
+Open `hits/server.js`, add a harmless comment line at the bottom and save. Then build again with plain progress output so you can read each step.
+
+```bash
+docker build --progress=plain -t hits:1.0 --build-arg VERSION=1.0 .
+```
+
+  </Step>
+  <Step title="Stop the manual containers and switch to Compose" tone="green" checkpoint="docker compose ps shows web and redis running, and web is healthy. The counter starts again at 1 because this is a fresh Redis.">
+
+We remove the hand-made containers first because Compose wants the same port, 8080. Then one file does the work of all those commands.
+
+```bash
+docker rm -f web cache
+docker network rm hits-net
+docker compose up -d --build --wait
+docker compose ps
+curl http://localhost:8080
+```
+
+  </Step>
+  <Step title="Prove the volume keeps your data" tone="green" checkpoint="After the restart the next call prints 2, continuing from the call you made before, because the volume survived. After down -v and a fresh up, the number is 1 again: you deleted the volume.">
+
+```bash
+docker compose down
+docker compose up -d --wait
+curl http://localhost:8080
+docker compose down -v
+docker compose up -d --wait
+curl http://localhost:8080
+docker compose down -v
+```
+
+  </Step>
+</Steps>
+
+### Part 3: Kubernetes on kind
+
+kind (Kubernetes in Docker) builds a real cluster whose nodes are Docker containers. That is why it is perfect for a laptop, and why it is a fourth layer in the stack from section 4.
+
+```yaml
+# file: hits/k8s/kind.yaml
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+  - role: worker
+  - role: worker
+```
+
+The Redis file runs one Redis and gives it a Service named `redis`. It has no persistent volume, which is a deliberate shortcut and you will see its cost soon.
+
+```yaml
+# file: hits/k8s/redis.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:7-alpine
+          ports:
+            - containerPort: 6379
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+spec:
+  selector:
+    app: redis
+  ports:
+    - port: 6379
+      targetPort: 6379
+```
+
+The web file has four things: a ConfigMap with the Redis address, a Deployment with three copies, probes and resource settings, and a Service that gives them one name. The rolling update settings mean "never remove a working pod before its replacement is ready".
+
+```yaml
+# file: hits/k8s/web.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hits-config
+data:
+  REDIS_URL: redis://redis:6379
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+        - name: web
+          image: hits:1.0
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: hits-config
+          ports:
+            - containerPort: 3000
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+            periodSeconds: 3
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+spec:
+  selector:
+    app: web
+  ports:
+    - port: 80
+      targetPort: 3000
+```
+
+<Steps>
+  <Step title="Create the cluster" tone="cyan" checkpoint="kind prints a few progress lines and ends with a message that you can now use your cluster. kubectl get nodes lists three nodes, all Ready (this can take a minute).">
+
+The first run downloads a large node image, so be patient.
+
+```bash
+kind create cluster --name hits --config k8s/kind.yaml
+kubectl get nodes
+```
+
+  </Step>
+  <Step title="Get your image into the cluster" tone="cyan" checkpoint="kind prints that it loaded the image onto each node.">
+
+The cluster's nodes cannot see the images on your Docker. Normally they would pull from a registry. For a local image, load it into the nodes.
+
+```bash
+kind load docker-image hits:1.0 --name hits
+```
+
+  </Step>
+  <Step title="Apply the desired state" tone="cyan" checkpoint="After a short wait, rollout status says the deployment was successfully rolled out, and kubectl get pods shows three web pods and one redis pod, all Running and 1/1 Ready.">
+
+```bash
+kubectl apply -f k8s/redis.yaml -f k8s/web.yaml
+kubectl get pods --watch
+```
+
+Press Ctrl+C once everything is Running, then:
+
+```bash
+kubectl rollout status deployment/web
+kubectl get pods
+```
+
+  </Step>
+  <Step title="Open a door to the Service" tone="cyan" checkpoint="The port-forward command stays running and prints Forwarding from 127.0.0.1:8081. In a second terminal the curl prints hits with a version of 1.0.">
+
+`port-forward` is a temporary tunnel from your laptop to the Service. It is for debugging, not for production. Run it in one terminal and leave it running, and curl from another.
+
+```bash
+kubectl port-forward service/web 8081:80
+```
+
+```bash
+curl http://localhost:8081
+```
+
+Notice the "served by" name is always the same pod: the tunnel picked one pod when it started. To see the Service spreading load, ask from inside the cluster instead.
+
+```bash
+kubectl exec deploy/web -- wget -qO- http://web
+kubectl exec deploy/web -- wget -qO- http://web
+kubectl exec deploy/web -- wget -qO- http://web
+```
+
+  </Step>
+  <Step title="Scale it" tone="cyan" checkpoint="Five web pods are listed and become Ready within a few seconds. Scaling back to three terminates two.">
+
+```bash
+kubectl scale deployment/web --replicas=5
+kubectl get pods
+kubectl scale deployment/web --replicas=3
+```
+
+  </Step>
+  <Step title="Kill a pod and watch it come back" tone="cyan" checkpoint="The pod you deleted goes Terminating, and a new pod with a different suffix appears right away. The count stays at three.">
+
+Pick any pod name from the list, replace `POD_NAME` with it, and delete it. This is the reconcile loop from section 6, live.
+
+```bash
+kubectl get pods -l app=web
+kubectl delete pod POD_NAME
+kubectl get pods -l app=web
+```
+
+  </Step>
+  <Step title="Feel the missing volume" tone="cyan" checkpoint="After the Redis pod is replaced, the counter starts again at 1. The pod's disk went with it.">
+
+Redis here has no persistent storage, so its data lived and died with its pod. Real data needs a PVC (or a managed database).
+
+```bash
+kubectl delete pod -l app=redis
+kubectl rollout status deployment/redis
+kubectl exec deploy/web -- wget -qO- http://web
+```
+
+  </Step>
+  <Step title="Roll out version 2.0" tone="cyan" checkpoint="Old pods are replaced gradually. rollout status ends with a success message. Calling the Service now prints version: 2.0.">
+
+Build a second image with a different version baked in, load it, and tell the Deployment to use it.
+
+```bash
+docker build -t hits:2.0 --build-arg VERSION=2.0 .
+kind load docker-image hits:2.0 --name hits
+kubectl set image deployment/web web=hits:2.0
+kubectl rollout status deployment/web
+kubectl exec deploy/web -- wget -qO- http://web
+```
+
+If your port-forward from before dropped, that is normal: the pod it was attached to was replaced. Start it again if you want it.
+
+  </Step>
+  <Step title="Break it on purpose" tone="red" checkpoint="One new pod is stuck in ErrImagePull and then ImagePullBackOff, while the three version 2.0 pods keep serving traffic. The events end with a line like 'Back-off pulling image hits:9.9'.">
+
+Point the Deployment at a tag that does not exist. Because we set `maxUnavailable: 0`, Kubernetes refuses to remove a working pod until the new one is ready, so your app stays up.
+
+```bash
+kubectl set image deployment/web web=hits:9.9
+kubectl get pods -l app=web
+kubectl get events --sort-by=.lastTimestamp
+```
+
+Read the output top to bottom. Then ask for details of the broken pod (replace `BAD_POD` with its name). Look at the Events section at the bottom.
+
+```bash
+kubectl describe pod BAD_POD
+```
+
+  </Step>
+  <Step title="Roll back" tone="red" checkpoint="rollout undo reports the rollback and rollout status ends with a success message. The broken pod disappears, and the Service answers with version: 2.0 again.">
+
+```bash
+kubectl rollout undo deployment/web
+kubectl rollout status deployment/web
+kubectl exec deploy/web -- wget -qO- http://web
+```
+
+  </Step>
+</Steps>
+
+### Part 4: clean up everything
+
+Leave nothing running. Stop any `port-forward` terminal with Ctrl+C first.
+
+<Steps>
+  <Step title="Delete the cluster and the containers" tone="amber" checkpoint="kind get clusters prints no clusters. docker ps shows nothing from this tutorial.">
+
+```bash
+kind delete cluster --name hits
+docker compose down -v
+kind get clusters
+docker ps
+```
+
+  </Step>
+  <Step title="Delete the images" tone="amber" checkpoint="docker images no longer lists hits, hits-web or redis.">
+
+The kind node image is large. List it, then remove it by the image ID shown in the first column.
+
+```bash
+docker image rm hits:1.0 hits:2.0 hits-web redis:7-alpine
+docker image ls kindest/node
+```
+
+  </Step>
+  <Step title="Remove the project and the VM" tone="amber" checkpoint="multipass list shows no tutorial-vm, if you did Part 1. Your hits folder is gone.">
+
+Delete the `hits` folder yourself from your file manager or terminal. If the Multipass VM from Part 1 is somehow still around:
+
+```bash
+multipass delete tutorial-vm --purge
+multipass list
+```
+
+  </Step>
+</Steps>
+
+<Callout kind="warn">
+
+Avoid `docker system prune -a --volumes` as a shortcut. It deletes every unused image and every unused volume on your machine, including data from other projects.
+
+</Callout>
+
+## Troubleshooting
+
+Click an entry to open it. The grey monospace line is the error as you are likely to see it. Wording shifts slightly between versions, so match on the key phrase.
+
+<TroubleGroup title="Installing and starting Docker">
+  <Trouble
+    symptom="WslRegisterDistribution failed with error: 0x80370102"
+    cause="Hardware virtualization is turned off in your BIOS or UEFI, or the Windows Virtual Machine Platform feature is off. Docker Desktop on Windows needs both."
+  >
+
+Restart the PC and open the BIOS or UEFI setup (often Del, F2 or F10 at power-on). Find a setting named Intel Virtualization Technology, VT-x, SVM Mode or AMD-V and enable it. Back in Windows, open PowerShell as administrator:
+
+```powershell
+wsl --install
+wsl --update
+```
+
+Restart if asked, then confirm in Task Manager (Performance, CPU) that Virtualization says Enabled.
+
+  </Trouble>
+  <Trouble
+    symptom="Docker Desktop stays on 'Starting...' and never turns green"
+    cause="WSL is missing, outdated or stuck, or another virtualization tool is holding the hypervisor."
+  >
+
+Update WSL, restart it, then restart Docker Desktop.
+
+```powershell
+wsl --update
+wsl --shutdown
+```
+
+If it still hangs, restart Windows. On a company laptop, a security policy may block WSL, so ask IT.
+
+  </Trouble>
+  <Trouble
+    symptom="Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?"
+    cause="The Docker engine is not running. On Windows the text instead mentions a pipe such as dockerDesktopLinuxEngine, with the same meaning."
+  >
+
+Windows and macOS: start Docker Desktop and wait for it to say it is running. Linux:
+
+```bash
+sudo systemctl start docker
+sudo systemctl enable docker
+```
+
+  </Trouble>
+  <Trouble
+    symptom="permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock"
+    cause="On Linux, only root and members of the docker group may use the socket, and your user is not in it."
+  >
+
+Add yourself to the group and refresh your session. The `docker` group effectively grants root powers, so add only people you trust.
+
+```bash
+sudo usermod -aG docker $USER
+newgrp docker
+docker run hello-world
+```
+
+Log out and back in if a new terminal still complains.
+
+  </Trouble>
+  <Trouble
+    symptom="multipass : The term 'multipass' is not recognized as the name of a cmdlet"
+    cause="Multipass is not installed, or this terminal was opened before the install and has an old PATH."
+  >
+
+Close the terminal, open a new one and try `multipass version`. If it is still missing, run the installer again (Windows needs administrator rights).
+
+  </Trouble>
+  <Trouble
+    symptom="multipass launch fails or hangs on Windows Home"
+    cause="Multipass lists Windows Home as supported but needs the Virtual Machine Platform Windows feature, and hardware virtualization, to be on. I could not verify the exact message you will see, so check these first."
+  >
+
+Enable the feature from an administrator PowerShell, restart, and try again.
+
+```powershell
+Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform
+```
+
+If it still fails, skip Part 1. Nothing later needs it, and the stack explorer above shows the same idea.
 
   </Trouble>
 </TroubleGroup>
+
+<TroubleGroup title="Building and running with Docker">
+  <Trouble
+    symptom="Bind for 0.0.0.0:8080 failed: port is already allocated"
+    cause="Something else is using host port 8080. Often it is the hand-made web container from Part 2 still running when you start Compose, or an old container from a previous attempt."
+  >
+
+Find and remove the owner, or publish on another port such as `-p 8090:3000`.
+
+```bash
+docker ps
+docker rm -f web
+```
+
+  </Trouble>
+  <Trouble
+    symptom="exec format error"
+    cause="The image was built for a different CPU architecture than your machine, for example an amd64-only image on an Apple Silicon (arm64) laptop. The official images in this tutorial support both, so this usually points at a third-party image."
+  >
+
+Check the architecture and ask for the one you need. Docker can emulate amd64 on arm64, more slowly.
+
+```bash
+docker image inspect IMAGE --format "{{.Architecture}}"
+docker run --platform linux/amd64 IMAGE
+```
+
+  </Trouble>
+  <Trouble
+    symptom="no space left on device"
+    cause="Docker's disk (the VM disk on Windows and macOS) is full of old images, stopped containers and build cache."
+  >
+
+See what uses space, then prune. `docker system prune` removes stopped containers, unused networks, dangling images and build cache. It does not remove volumes unless you add `--volumes`, and `-a` also removes every unused image, so read the prompt before saying yes.
+
+```bash
+docker system df
+docker system prune
+```
+
+  </Trouble>
+  <Trouble
+    symptom="toomanyrequests: You have reached your pull rate limit"
+    cause="Docker Hub limits how many images an anonymous or free account may pull in a period, and your network, such as a shared office or college, has used it up."
+  >
+
+Wait and retry, or sign in, which usually gives a higher allowance. Check Docker's current limits on its site.
+
+```bash
+docker login
+```
+
+  </Trouble>
+  <Trouble
+    symptom="connect ECONNREFUSED 127.0.0.1:6379"
+    cause="The app cannot reach Redis. Inside a container, 127.0.0.1 is the container itself, not Redis. This is what you get if REDIS_URL is missing, because the app falls back to localhost."
+  >
+
+Make sure both containers share a network and the URL uses the container name.
+
+```bash
+docker run -d --name web --network hits-net -p 8080:3000 -e REDIS_URL=redis://cache:6379 hits:1.0
+```
+
+With Compose, check that the Redis service is named `redis` and the environment line matches. Some Node versions hide the address and print only AggregateError, so the cause is the same.
+
+  </Trouble>
+  <Trouble
+    symptom="dependency failed to start: container hits-redis-1 is unhealthy"
+    cause="Compose waited for Redis to pass its health check and it never did. Redis may have crashed, or the health check command is wrong."
+  >
+
+Read Redis's own output and fix what it complains about.
+
+```bash
+docker compose logs redis
+docker compose down -v
+docker compose up -d --wait
+```
+
+  </Trouble>
+</TroubleGroup>
+
+<TroubleGroup title="Running on Kubernetes">
+  <Trouble
+    symptom="The connection to the server localhost:8080 was refused - did you specify the right host or port?"
+    cause="kubectl has no cluster to talk to. Either no cluster exists yet, it was deleted, Docker is stopped (kind nodes are containers), or kubectl points at the wrong context."
+  >
+
+```bash
+docker ps
+kind get clusters
+kubectl config get-contexts
+kubectl config use-context kind-hits
+```
+
+If the cluster is missing, recreate it with the `kind create cluster` step.
+
+  </Trouble>
+  <Trouble
+    symptom="web pod status: ErrImagePull, then ImagePullBackOff"
+    cause="The node tried to download the image and failed. In this tutorial that means the image was never loaded into kind, or the tag is misspelled. 'Back-off' means Kubernetes is waiting longer between tries."
+  >
+
+Read the exact reason in the Events at the bottom of `describe`. Then fix the tag or load the image.
+
+```bash
+kubectl describe pod POD_NAME
+kind load docker-image hits:1.0 --name hits
+```
+
+If `kind load` itself errors, save the image to a file and load that instead.
+
+```bash
+docker save hits:1.0 -o hits.tar
+kind load image-archive hits.tar --name hits
+```
+
+  </Trouble>
+  <Trouble
+    symptom="ErrImageNeverPull"
+    cause="The pod uses imagePullPolicy: Never, so Kubernetes will only use an image already on the node, and it is not there."
+  >
+
+Load the image into the cluster, or switch the policy back to `IfNotPresent` in the YAML and apply again.
+
+```bash
+kind load docker-image hits:1.0 --name hits
+kubectl apply -f k8s/web.yaml
+```
+
+  </Trouble>
+  <Trouble
+    symptom="CrashLoopBackOff"
+    cause="The container starts, exits and is restarted over and over, with growing waits. The cause is inside the app: a crash, a missing setting, or a failed connection."
+  >
+
+Read the logs of the crashed attempt, not the new empty one.
+
+```bash
+kubectl logs POD_NAME --previous
+kubectl describe pod POD_NAME
+```
+
+  </Trouble>
+  <Trouble
+    symptom="Pending, and the event says: 0/3 nodes are available: 3 Insufficient memory"
+    cause="The scheduler cannot find a node with enough free resources to satisfy the pod's requests. On a laptop this is often Docker's memory allowance being too small for three nodes."
+  >
+
+Check what the event says exactly, then lower the requests in the YAML or give Docker more memory (Docker Desktop settings, Resources). Also look for a taint or label mismatch if the event says so.
+
+```bash
+kubectl describe pod POD_NAME
+kubectl describe nodes
+```
+
+  </Trouble>
+  <Trouble
+    symptom="Reason: OOMKilled, Exit Code: 137"
+    cause="The container used more memory than its limit, so the kernel killed it. Exit code 137 means it was killed by a signal."
+  >
+
+Find it in `describe`, then raise the memory limit or fix the memory use.
+
+```bash
+kubectl describe pod POD_NAME
+```
+
+Edit `limits.memory` in `k8s/web.yaml` and apply it again.
+
+  </Trouble>
+  <Trouble
+    symptom="Readiness probe failed: HTTP probe failed with statuscode: 503"
+    cause="The app answered, but with an error, or it was not listening yet. For readiness this only removes the pod from the Service. For liveness, repeated failures restart the container."
+  >
+
+Check the path, the port and the app's logs. The probe has to hit a URL that really exists.
+
+```bash
+kubectl describe pod POD_NAME
+kubectl logs POD_NAME
+```
+
+If the failure says connection refused during start-up, raise `initialDelaySeconds` or add a startup probe.
+
+  </Trouble>
+  <Trouble
+    symptom="error: lost connection to pod"
+    cause="port-forward is attached to one specific pod. When that pod is replaced during a rollout, restart, or crash, the tunnel breaks."
+  >
+
+Run the command again. It picks a pod that exists now.
+
+```bash
+kubectl port-forward service/web 8081:80
+```
+
+  </Trouble>
+  <Trouble
+    symptom="bind: address already in use"
+    cause="An earlier port-forward is still running in another terminal, or another program uses that port."
+  >
+
+Stop the old one with Ctrl+C, or choose another local port such as `8082:80`.
+
+  </Trouble>
+</TroubleGroup>
+
+### A debug routine for any pod that is not running
+
+Whatever the status says, work through the same five checks in order. Most problems show up in the first two.
+
+<Flow
+  steps={[
+    { title: "get pods", note: "What is the status?", tone: "blue", icon: <Eye /> },
+    { title: "describe", note: "Read Events at the bottom", tone: "violet", icon: <Search /> },
+    { title: "logs", note: "What did the app say?", tone: "green", icon: <ScrollText /> },
+    { title: "logs --previous", note: "What did the last crash say?", tone: "amber", icon: <ScrollText /> },
+    { title: "exec", note: "Look inside and test", tone: "pink", icon: <Terminal /> },
+  ]}
+/>
+
+```bash
+kubectl get pods
+kubectl describe pod POD_NAME
+kubectl logs POD_NAME
+kubectl logs POD_NAME --previous
+kubectl exec -it POD_NAME -- sh
+```
+
+## Next steps and sources
+
+You now have built a VM, a container image and a cluster, and broken and fixed each. To go further:
+
+- Write a second service and make the two talk to each other over Services.
+- Add a PersistentVolumeClaim to Redis so the counter survives a pod deletion.
+- Install the metrics-server add-on and try an HPA on the web Deployment.
+- Replace the port-forward with a Gateway API route.
+- Read about RBAC, namespaces and Helm or Kustomize.
+- Try a managed Kubernetes service on a cloud account, and learn what the provider takes off your hands.
+
+Official documentation (the source of truth when this page ages):
+
+- Docker: [docs.docker.com](https://docs.docker.com/)
+- Kubernetes: [kubernetes.io/docs](https://kubernetes.io/docs/home/)
+- kind: [kind.sigs.k8s.io](https://kind.sigs.k8s.io/)
+- Gateway API: [gateway-api.sigs.k8s.io](https://gateway-api.sigs.k8s.io/)
+- Multipass: [canonical.com/multipass](https://canonical.com/multipass)
+
+This tutorial was planned around three videos. The ideas are theirs; the wording, examples, diagrams and every command here are my own, and I checked the facts against the official documentation.
+
+- [Docker vs virtual machines](https://www.youtube.com/watch?v=a1M_thDTqmU) by IBM Technology
+- [Docker vs Kubernetes](https://www.youtube.com/watch?v=GvbsN5jv-hQ) by NextWork
+- [Docker tutorial](https://www.youtube.com/watch?v=DQdB7wFEygo) by The Coding Sloth
