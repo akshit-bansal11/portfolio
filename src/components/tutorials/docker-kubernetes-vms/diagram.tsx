@@ -28,10 +28,11 @@ export function Box({ x, y, width, height, tone, title, note, seed = 1 }: BoxPro
   return (
     <g data-tone={tone}>
       <rect x={x} y={y} width={width} height={height} rx={6} className="fill-(--tone-soft)" />
+      <rect x={x} y={y} width={width} height={6} rx={3} className="fill-(--tone)" />
       <path
         d={sketchRect(x, y, width, height, { seed })}
         fill="none"
-        strokeWidth={2}
+        strokeWidth={2.25}
         className="stroke-(--tone)"
       />
       <text

@@ -3,7 +3,7 @@
  * /tutorials/[slug] — a single tutorial. Statically generated for
  * every registered slug: loads the MDX module with the tutorial kit,
  * builds SEO metadata, and lays out the sticky table of contents,
- * the article (with reading progress) and the theme toggle.
+ * the full-width article (with reading progress) and the theme toggle.
  */
 
 import type { Metadata } from "next";
@@ -66,18 +66,18 @@ export default async function TutorialPage({ params }: TutorialPageProps) {
   const { default: Content } = await import(`@/content/tutorials/${slug}.mdx`);
 
   return (
-    <main className="mx-auto max-w-[78rem] px-4 pt-24 pb-28 sm:px-6 md:pt-28">
+    <main className="mx-auto max-w-[120rem] px-4 pt-24 pb-28 sm:px-6 md:pt-28 lg:px-10">
       <div className="mb-6 flex flex-wrap items-start justify-end gap-3">
         <ThemeToggle />
       </div>
 
-      <div className="lg:grid lg:grid-cols-[13.5rem_minmax(0,1fr)] lg:gap-12">
+      <div className="lg:grid lg:grid-cols-[14rem_minmax(0,1fr)] lg:gap-10">
         <aside className="hidden lg:block">
           <TableOfContents headings={tutorial.headings} variant="sidebar" />
         </aside>
 
-        <div className="min-w-0 xl:pr-[296px]">
-          <ReadingProgress className="mx-auto max-w-[42.5rem]">
+        <div className="min-w-0">
+          <ReadingProgress>
             <article data-blog-article data-tutorial-article>
               <PostHeader
                 post={tutorial}

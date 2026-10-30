@@ -18,10 +18,19 @@ Hold every tutorial to this. Reasons are given so the rule survives later edits.
 - Never invent a statistic, benchmark, quote, case study or version number. Check versions and retirements with a web search on the day you write. Prefer commands that do not pin a version that will go stale.
 
 **Visuals**
-- Black background with white text, or the inverse, following light or dark mode. Colour goes in the diagrams and code, not the page.
+- Full width, unlike the blog. Blocks (diagrams, grids, widgets, code) span the column; running text is capped at 88ch for readability (done in `tutorials.css`).
+- True black background with white text, or the inverse, following light or dark mode (tutorials override the blog's paper tones). Colour goes in the diagrams, terms, callouts and code, not the page.
+- Tutorials have their own palette, separate from the blog: tones `blue violet green amber pink cyan red` plus brand-ish `docker k8s vm` and `term`, defined in `tutorials.css` for both themes. Coloured boxes use `bg-(image:--tone-fill)` and `tut-glow` (glows in dark mode only).
+- Bold text renders as a key term in the term colour. Use `<Term def="...">` for terms worth a hover definition.
+- Callout kinds: `note`, `insight`, `important`, `tip`, `warn`, `real-world`. Use them to break up long prose.
+- Show the tools' logos (`<Logo tech>` / `<LogoRow>`; react-icons `si`) at the top and at each tool's section.
 - Coloured diagrams, flowcharts, arrows and icons. Diagrams show the real mechanism and are not decoration.
 - Code blocks look like a real IDE: title bar, file name, line numbers, syntax colours, copy button.
-- Make it interactive where that teaches something a static picture cannot, such as a simulator the reader can break. Do not add interaction for show.
+- Make it interactive where that teaches something a static picture cannot, such as a simulator the reader can break, a state machine, a step-through or a decision tree. Do not add interaction for show.
+- Add a `<Quiz>` self-check after each hard idea, and a `FeatureGrid` where several parts work together.
+
+**Content sources**
+- Check topic coverage against the matching roadmap.sh roadmap (`kamranahmedse/developer-roadmap`, `src/data/roadmaps/<name>/content`; roadmap.sh itself may be blocked from cloud sessions, the GitHub repo is not). Cover the core topics, list the rest as "learn next" in a roadmap checklist.
 
 **DIY walkthrough (required)**
 - A full walkthrough the reader completes on their own machine, covering Windows, macOS and Linux with `Tabs group="os"`.
@@ -56,4 +65,4 @@ The PDF comes from `window.print()`, so anything missing from the printed DOM is
 
 - Every DIY command must run. Add the walkthrough to `.github/workflows/tutorial-smoke.yml`, which rebuilds the `# file:` blocks from the MDX and runs them on CI, so the published text is what gets tested.
 - State what CI could not exercise, such as Windows or macOS installers, in the final report. A clean run covers only what ran.
-- Never build or run the site locally. The laptop crashes under load; CI is the gate.
+- Never build or run the site on the owner's laptop; it crashes under load. CI, or a cloud session's container, is the gate.
