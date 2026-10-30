@@ -3,7 +3,7 @@
  * Replaces <pre> in tutorials with an IDE-style window: a title bar (three dots, file name
  * or language, copy button), a line-number gutter and syntax colours from highlight.ts.
  * A first line like `# file: Dockerfile` or `// file: app.js` names the file and is not shown.
- * Only the code region scrolls sideways; in print it wraps instead.
+ * Only the code region scrolls sideways.
  */
 
 import { type ComponentPropsWithoutRef, isValidElement, type ReactNode } from "react";
@@ -46,7 +46,7 @@ export default function CodeWindow({ children }: ComponentPropsWithoutRef<"pre">
   const title = fileName ?? lang;
 
   return (
-    <div className="tut-code my-7 overflow-hidden rounded-xl border border-rule bg-(--code-bg) text-(--code-fg)">
+    <div className="my-7 overflow-hidden rounded-xl border border-rule bg-(--code-bg) text-(--code-fg)">
       <div className="flex items-center gap-3 bg-(--code-bar) pl-3">
         <span aria-hidden className="flex shrink-0 gap-1.5">
           <span className="h-3 w-3 rounded-full bg-(--tut-red)" />
@@ -73,7 +73,7 @@ export default function CodeWindow({ children }: ComponentPropsWithoutRef<"pre">
                 >
                   {index + 1}
                 </span>
-                <span className="tut-line min-w-0 flex-1 pr-4 whitespace-pre">
+                <span className="min-w-0 flex-1 pr-4 whitespace-pre">
                   {tokens.map((token, i) => (
                     <span key={i} className={KIND_CLASS[token.kind]}>
                       {token.text}

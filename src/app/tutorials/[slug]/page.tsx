@@ -3,7 +3,7 @@
  * /tutorials/[slug] — a single tutorial. Statically generated for
  * every registered slug: loads the MDX module with the tutorial kit,
  * builds SEO metadata, and lays out the sticky table of contents,
- * the article (with reading progress) and the PDF download buttons.
+ * the article (with reading progress) and the theme toggle.
  */
 
 import type { Metadata } from "next";
@@ -13,7 +13,6 @@ import PostNav from "@/components/blog/PostNav";
 import ReadingProgress from "@/components/blog/ReadingProgress";
 import TableOfContents from "@/components/blog/TableOfContents";
 import ThemeToggle from "@/components/blog/ThemeToggle";
-import DownloadPdf from "@/components/tutorials/DownloadPdf";
 import { tutorialComponents } from "@/components/tutorials/mdxComponents";
 import { AUTHOR_NAME } from "@/config/blogConfig";
 import { tutorials } from "@/data/tutorials";
@@ -68,18 +67,17 @@ export default async function TutorialPage({ params }: TutorialPageProps) {
 
   return (
     <main className="mx-auto max-w-[78rem] px-4 pt-24 pb-28 sm:px-6 md:pt-28">
-      <div className="mb-6 flex flex-wrap items-start justify-end gap-3 print:hidden">
-        <DownloadPdf />
+      <div className="mb-6 flex flex-wrap items-start justify-end gap-3">
         <ThemeToggle />
       </div>
 
       <div className="lg:grid lg:grid-cols-[13.5rem_minmax(0,1fr)] lg:gap-12">
-        <aside className="hidden lg:block print:hidden">
+        <aside className="hidden lg:block">
           <TableOfContents headings={tutorial.headings} variant="sidebar" />
         </aside>
 
-        <div className="min-w-0 xl:pr-[296px] print:pr-0">
-          <ReadingProgress className="mx-auto max-w-[42.5rem] print:max-w-none">
+        <div className="min-w-0 xl:pr-[296px]">
+          <ReadingProgress className="mx-auto max-w-[42.5rem]">
             <article data-blog-article data-tutorial-article>
               <PostHeader
                 post={tutorial}
@@ -87,18 +85,13 @@ export default async function TutorialPage({ params }: TutorialPageProps) {
                 backLabel="All tutorials"
                 partLabel="Tutorial"
               />
-              <TableOfContents
-                headings={tutorial.headings}
-                variant="inline"
-                className="lg:hidden print:hidden"
-              />
+              <TableOfContents headings={tutorial.headings} variant="inline" className="lg:hidden" />
               <Content components={tutorialComponents} />
             </article>
             <PostNav
               previous={tutorials[tutorial.part - 2]}
               next={tutorials[tutorial.part]}
               basePath="/tutorials"
-              className="print:hidden"
             />
           </ReadingProgress>
         </div>

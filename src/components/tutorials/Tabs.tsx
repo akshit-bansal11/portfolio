@@ -3,7 +3,7 @@
  * WAI-ARIA tabs (automatic activation, roving tabindex, arrow/Home/End keys) for
  * per-OS instructions. Tabs with the same `group` share one selection through a
  * module-level store, so choosing macOS once switches every OS tab on the page.
- * All panels stay in the DOM (inactive ones are `hidden`); print shows every panel.
+ * All panels stay in the DOM (inactive ones are `hidden`).
  */
 
 "use client";
@@ -90,7 +90,7 @@ export default function Tabs({ group, children }: TabsProps) {
       <div
         role="tablist"
         aria-label="Choose your system"
-        className="tut-tablist flex gap-1 overflow-x-auto border-b border-rule"
+        className="flex gap-1 overflow-x-auto border-b border-rule"
       >
         {labels.map((label, index) => {
           const active = label === selected;
@@ -127,10 +127,9 @@ export default function Tabs({ group, children }: TabsProps) {
           role="tabpanel"
           id={`${id}-panel-${index}`}
           aria-labelledby={`${id}-tab-${index}`}
-          data-label={tab.props.label}
           hidden={tab.props.label !== selected}
           tabIndex={0}
-          className="tut-tabpanel pt-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pen"
+          className="pt-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pen"
         >
           {tab.props.children}
         </div>

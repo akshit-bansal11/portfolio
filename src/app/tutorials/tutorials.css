@@ -2,7 +2,7 @@
  * tutorials.css
  * Styles for /tutorials that plain Tailwind cannot express: the colour tones and code
  * colours (both themes, same three states as the blog palette in globals.css), the
- * step counter, marching-ants arrows, and the print rules that turn a tutorial into a PDF.
+ * step counter and marching-ants arrows.
  * Text tones are 4.5:1 or better on --blog-paper (#fbf8f1 light, #0b0b0c dark).
  */
 
@@ -132,79 +132,5 @@ html[data-blog-theme="dark"] {
 @keyframes tut-march {
   to {
     stroke-dashoffset: -10;
-  }
-}
-
-@page {
-  size: A4;
-  margin: 0;
-}
-
-@media print {
-  html,
-  body,
-  .blog-theme {
-    background: var(--blog-paper) !important;
-  }
-
-  * {
-    print-color-adjust: exact;
-  }
-
-  /* Fixed chrome: the nav bar, reading progress bar and welcome overlay. */
-  .fixed,
-  .welcome-board {
-    display: none !important;
-  }
-
-  /* Margins live in padding so the dark background fills every page edge to edge. */
-  .blog-theme main {
-    max-width: none;
-    padding: 14mm;
-    box-decoration-break: clone;
-  }
-
-  /* Code wraps instead of scrolling. */
-  .tut-code [role="region"] {
-    overflow: visible;
-  }
-
-  .tut-code pre {
-    min-width: 0;
-  }
-
-  .tut-line {
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-  }
-
-  /* Tabs print every panel, each headed by its label. */
-  .tut-tablist {
-    display: none;
-  }
-
-  .tut-tabpanel[hidden] {
-    display: block;
-  }
-
-  .tut-tabpanel::before {
-    content: attr(data-label);
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 700;
-    color: var(--blog-pen);
-  }
-
-  .tut-code,
-  .tut-step,
-  .tut-trouble,
-  .tut-callout,
-  figure {
-    break-inside: avoid;
-  }
-
-  h2,
-  h3 {
-    break-after: avoid;
   }
 }

@@ -2,7 +2,7 @@
  * Flow.tsx
  * Coloured step boxes joined by hand-drawn arrows with marching-ants dashes. Boxes stack
  * vertically on phones and sit in a row from `md` up (or always stack with
- * direction="vertical"). Plain server-rendered HTML/SVG, so it prints as it looks.
+ * direction="vertical"). Plain server-rendered HTML/SVG.
  */
 
 import { Fragment, type ReactNode } from "react";

@@ -2,7 +2,7 @@
  * Trouble.tsx
  * Troubleshooting entries as native <details>: the exact error text is the summary
  * (monospace), then a Cause block and a Fix block. `TroubleGroup` is a titled list of
- * them. Print opens every entry (see DownloadPdf).
+ * them.
  */
 
 import { ChevronRight } from "lucide-react";
@@ -21,7 +21,7 @@ export function Trouble({ symptom, cause, children }: TroubleProps) {
   return (
     <details
       data-tone="red"
-      className="tut-trouble group my-3 rounded-lg border border-(--tone) bg-(--tone-soft)"
+      className="group my-3 rounded-lg border border-(--tone) bg-(--tone-soft)"
     >
       <summary className="flex min-h-11 cursor-pointer items-center gap-2 px-3 py-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pen">
         <ChevronRight

@@ -2,7 +2,7 @@
  * layout.tsx
  * Layout for the /tutorials route segment. Wraps every tutorial in the
  * themed notebook root (same tokens as the blog), loads the tutorial
- * styles (tones, code colours, print rules) and sets metadata defaults.
+ * styles (tones, code colours) and sets metadata defaults.
  */
 
 import type { Metadata } from "next";

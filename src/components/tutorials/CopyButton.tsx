@@ -1,7 +1,7 @@
 /*
  * CopyButton.tsx
  * "Copy" button for a code window. Copies the raw code (never the line numbers) and
- * announces the result through a polite live region. Hidden in print.
+ * announces the result through a polite live region.
  */
 
 "use client";
@@ -40,7 +40,7 @@ export default function CopyButton({ code }: { code: string }) {
     <button
       type="button"
       onClick={copy}
-      className="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center gap-1.5 rounded-md px-2 text-xs text-(--code-fg) transition-colors hover:bg-(--code-bg) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pen print:hidden"
+      className="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center gap-1.5 rounded-md px-2 text-xs text-(--code-fg) transition-colors hover:bg-(--code-bg) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pen"
     >
       {state === "copied" ? (
         <Check className="h-4 w-4" aria-hidden />

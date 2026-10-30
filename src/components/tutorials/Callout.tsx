@@ -29,7 +29,7 @@ export default function Callout({ kind = "tip", title, children }: CalloutProps)
   return (
     <aside
       data-tone={tone}
-      className="tut-callout my-7 rounded-xl border-l-4 border-(--tone) bg-(--tone-soft) p-4"
+      className="my-7 rounded-xl border-l-4 border-(--tone) bg-(--tone-soft) p-4"
     >
       <p className="flex items-center gap-2 font-semibold text-(--tone)">
         <Icon className="h-5 w-5 shrink-0" aria-hidden />
