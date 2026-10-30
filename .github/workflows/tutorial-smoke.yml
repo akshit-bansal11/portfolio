@@ -83,7 +83,7 @@ jobs:
           docker run -d --name cache --network hits-net redis:7-alpine
           docker run -d --name web --network hits-net -p 8080:3000 -e REDIS_URL=redis://cache:6379 hits:1.0
           docker ps
-          curl --retry 15 --retry-connrefused --retry-delay 1 -fsS http://localhost:8080 | tee /dev/stderr | grep -q "hits: 1, version: 1.0"
+          curl --retry 15 --retry-all-errors --retry-delay 1 -fsS http://localhost:8080 | tee /dev/stderr | grep -q "hits: 1, version: 1.0"
           curl -fsS http://localhost:8080 | grep -q "hits: 2,"
           curl -fsS http://localhost:8080/healthz | grep -qx ok
           docker logs web | grep -q "hits 1.0 listening on 3000"
@@ -106,13 +106,13 @@ jobs:
           docker network rm hits-net
           docker compose up -d --build --wait
           docker compose ps
-          curl --retry 15 --retry-connrefused --retry-delay 1 -fsS http://localhost:8080 | grep -q "hits: 1,"
+          curl --retry 15 --retry-all-errors --retry-delay 1 -fsS http://localhost:8080 | grep -q "hits: 1,"
           docker compose down
           docker compose up -d --wait
-          curl --retry 15 --retry-connrefused --retry-delay 1 -fsS http://localhost:8080 | grep -q "hits: 2,"
+          curl --retry 15 --retry-all-errors --retry-delay 1 -fsS http://localhost:8080 | grep -q "hits: 2,"
           docker compose down -v
           docker compose up -d --wait
-          curl --retry 15 --retry-connrefused --retry-delay 1 -fsS http://localhost:8080 | grep -q "hits: 1,"
+          curl --retry 15 --retry-all-errors --retry-delay 1 -fsS http://localhost:8080 | grep -q "hits: 1,"
           docker compose down -v
 
       - name: Part 3 - cluster, image and apply
@@ -134,7 +134,7 @@ jobs:
           set -euo pipefail
           kubectl port-forward service/web 8081:80 &
           PF=$!
-          curl --retry 15 --retry-connrefused --retry-delay 1 -fsS http://localhost:8081 | grep -q "version: 1.0"
+          curl --retry 15 --retry-all-errors --retry-delay 1 -fsS http://localhost:8081 | grep -q "version: 1.0"
           kill "$PF"
           for i in 1 2 3; do
             kubectl exec deploy/web -- wget -qO- http://web | grep -q "version: 1.0"

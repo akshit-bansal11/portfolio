@@ -1185,6 +1185,19 @@ If it still fails, skip Part 1. Nothing later needs it, and the stack explorer a
 
 <TroubleGroup title="Building and running with Docker">
   <Trouble
+    symptom="curl: (56) Recv failure: Connection reset by peer"
+    cause="You were faster than the app. Docker opens the port the moment the container starts, but Node needs a second to boot and connect to Redis. The door is there before anyone is standing behind it."
+  >
+
+Wait a couple of seconds and run `curl` again. If it keeps failing, the app has stopped, so read its logs.
+
+```bash
+docker ps -a
+docker logs web
+```
+
+  </Trouble>
+  <Trouble
     symptom="Bind for 0.0.0.0:8080 failed: port is already allocated"
     cause="Something else is using host port 8080. Often it is the hand-made web container from Part 2 still running when you start Compose, or an old container from a previous attempt."
   >

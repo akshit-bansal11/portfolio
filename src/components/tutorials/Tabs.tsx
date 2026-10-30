@@ -111,9 +111,7 @@ export default function Tabs({ group, children }: TabsProps) {
               className={cn(
                 "-mb-px min-h-11 shrink-0 cursor-pointer border-b-2 px-4 text-sm font-medium transition-colors",
                 "focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-pen",
-                active
-                  ? "border-pen text-ink"
-                  : "border-transparent text-ink-muted hover:text-ink",
+                active ? "border-pen text-ink" : "border-transparent text-ink-muted hover:text-ink",
               )}
             >
               {label}

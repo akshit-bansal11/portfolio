@@ -85,7 +85,11 @@ export default async function TutorialPage({ params }: TutorialPageProps) {
                 backLabel="All tutorials"
                 partLabel="Tutorial"
               />
-              <TableOfContents headings={tutorial.headings} variant="inline" className="lg:hidden" />
+              <TableOfContents
+                headings={tutorial.headings}
+                variant="inline"
+                className="lg:hidden"
+              />
               <Content components={tutorialComponents} />
             </article>
             <PostNav
