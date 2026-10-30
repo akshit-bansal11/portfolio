@@ -1,0 +1,210 @@
+/*
+ * tutorials.css
+ * Styles for /tutorials that plain Tailwind cannot express: the colour tones and code
+ * colours (both themes, same three states as the blog palette in globals.css), the
+ * step counter, marching-ants arrows, and the print rules that turn a tutorial into a PDF.
+ * Text tones are 4.5:1 or better on --blog-paper (#fbf8f1 light, #0b0b0c dark).
+ */
+
+/* Raw palette, light. */
+html {
+  --tut-blue: #1d4ed8;
+  --tut-violet: #6d28d9;
+  --tut-green: #15803d;
+  --tut-amber: #92400e;
+  --tut-pink: #be185d;
+  --tut-cyan: #0e7490;
+  --tut-red: #b91c1c;
+
+  /* VS Code Light+ feel. */
+  --code-bg: #fff;
+  --code-fg: #1f1f1f;
+  --code-gutter: #237893;
+  --code-bar: #f3f3f3;
+  --code-keyword: #00f;
+  --code-string: #a31515;
+  --code-comment: #007000;
+  --code-number: #098658;
+  --code-key: #0451a5;
+  --code-var: #001080;
+}
+
+/* Raw palette, dark: the OS asks for it and the reader has not forced light. */
+@media (prefers-color-scheme: dark) {
+  html:not([data-blog-theme="light"]) {
+    --tut-blue: #60a5fa;
+    --tut-violet: #a78bfa;
+    --tut-green: #4ade80;
+    --tut-amber: #fbbf24;
+    --tut-pink: #f472b6;
+    --tut-cyan: #22d3ee;
+    --tut-red: #f87171;
+
+    /* VS Code Dark+ feel. */
+    --code-bg: #1e1e1e;
+    --code-fg: #d4d4d4;
+    --code-gutter: #8b8b8b;
+    --code-bar: #323233;
+    --code-keyword: #569cd6;
+    --code-string: #ce9178;
+    --code-comment: #6a9955;
+    --code-number: #b5cea8;
+    --code-key: #9cdcfe;
+    --code-var: #4fc1ff;
+  }
+}
+
+/* Raw palette, dark: the reader picked dark with the theme toggle. */
+html[data-blog-theme="dark"] {
+  --tut-blue: #60a5fa;
+  --tut-violet: #a78bfa;
+  --tut-green: #4ade80;
+  --tut-amber: #fbbf24;
+  --tut-pink: #f472b6;
+  --tut-cyan: #22d3ee;
+  --tut-red: #f87171;
+  --code-bg: #1e1e1e;
+  --code-fg: #d4d4d4;
+  --code-gutter: #8b8b8b;
+  --code-bar: #323233;
+  --code-keyword: #569cd6;
+  --code-string: #ce9178;
+  --code-comment: #6a9955;
+  --code-number: #b5cea8;
+  --code-key: #9cdcfe;
+  --code-var: #4fc1ff;
+}
+
+/* A tone paints with --tone (borders, icons, bold text) and --tone-soft (fills). */
+[data-tone] {
+  --tone: var(--tone-base);
+  --tone-soft: color-mix(in srgb, var(--tone-base) 12%, transparent);
+}
+
+[data-tone="blue"] {
+  --tone-base: var(--tut-blue);
+}
+
+[data-tone="violet"] {
+  --tone-base: var(--tut-violet);
+}
+
+[data-tone="green"] {
+  --tone-base: var(--tut-green);
+}
+
+[data-tone="amber"] {
+  --tone-base: var(--tut-amber);
+}
+
+[data-tone="pink"] {
+  --tone-base: var(--tut-pink);
+}
+
+[data-tone="cyan"] {
+  --tone-base: var(--tut-cyan);
+}
+
+[data-tone="red"] {
+  --tone-base: var(--tut-red);
+}
+
+/* Numbered walkthrough: the badge number comes from a counter. */
+.tut-steps {
+  counter-reset: tut-step;
+}
+
+.tut-step {
+  counter-increment: tut-step;
+}
+
+.tut-step-num::before {
+  content: counter(tut-step);
+}
+
+/* Marching-ants arrows: screen only, and only when motion is welcome. */
+@media screen and (prefers-reduced-motion: no-preference) {
+  .tut-flow {
+    animation: tut-march 1s linear infinite;
+  }
+}
+
+@keyframes tut-march {
+  to {
+    stroke-dashoffset: -10;
+  }
+}
+
+@page {
+  size: A4;
+  margin: 0;
+}
+
+@media print {
+  html,
+  body,
+  .blog-theme {
+    background: var(--blog-paper) !important;
+  }
+
+  * {
+    print-color-adjust: exact;
+  }
+
+  /* Fixed chrome: the nav bar, reading progress bar and welcome overlay. */
+  .fixed,
+  .welcome-board {
+    display: none !important;
+  }
+
+  /* Margins live in padding so the dark background fills every page edge to edge. */
+  .blog-theme main {
+    max-width: none;
+    padding: 14mm;
+    box-decoration-break: clone;
+  }
+
+  /* Code wraps instead of scrolling. */
+  .tut-code [role="region"] {
+    overflow: visible;
+  }
+
+  .tut-code pre {
+    min-width: 0;
+  }
+
+  .tut-line {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  /* Tabs print every panel, each headed by its label. */
+  .tut-tablist {
+    display: none;
+  }
+
+  .tut-tabpanel[hidden] {
+    display: block;
+  }
+
+  .tut-tabpanel::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    color: var(--blog-pen);
+  }
+
+  .tut-code,
+  .tut-step,
+  .tut-trouble,
+  .tut-callout,
+  figure {
+    break-inside: avoid;
+  }
+
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+}
