@@ -25,7 +25,7 @@ export default function Quiz({ question, options, answer, children }: QuizProps)
   return (
     <section
       data-tone="violet"
-      className="my-8 max-w-[88ch] rounded-xl border-2 border-dashed border-(--tone) p-4"
+      className="my-8 rounded-xl border-2 border-dashed border-(--tone) p-4"
     >
       <p className="flex items-start gap-2 font-semibold text-ink">
         <CircleHelp className="mt-0.5 h-5 w-5 shrink-0 text-(--tone)" aria-hidden />

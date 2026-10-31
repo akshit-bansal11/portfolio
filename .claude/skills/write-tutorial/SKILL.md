@@ -12,19 +12,21 @@ Tutorials are hands-on notes, not blog essays. The reader finishes with somethin
 Hold every tutorial to this. Reasons are given so the rule survives later edits.
 
 **Content**
+- The reader should get the full story without reading much. Points over paragraphs, tables (`Compare`) for any X-vs-Y, a diagram for any mechanism. Paragraphs only for the one sentence of "why". Never say the same thing twice (e.g. a logo card and a TLDR repeating each other).
 - Detailed, typed notes on what is actually useful in today's dev market. No filler, no history lessons, nothing kept only for completeness. If a working developer would not use it, cut it.
 - Detailed but to the point, in simple language. Explain each idea with a real-life reference or example before the jargon.
 - Say what to skip as well as what to learn. Mark things that are outdated or retired.
 - Never invent a statistic, benchmark, quote, case study or version number. Check versions and retirements with a web search on the day you write. Prefer commands that do not pin a version that will go stale.
 
 **Visuals**
-- Full width, unlike the blog. Blocks (diagrams, grids, widgets, code) span the column; running text is capped at 88ch for readability (done in `tutorials.css`).
+- Full width, unlike the blog: text, diagrams, grids, widgets and code all span the column.
 - True black background with white text, or the inverse, following light or dark mode (tutorials override the blog's paper tones). Colour goes in the diagrams, terms, callouts and code, not the page.
 - Tutorials have their own palette, separate from the blog: tones `blue violet green amber pink cyan red` plus brand-ish `docker k8s vm` and `term`, defined in `tutorials.css` for both themes. Coloured boxes use `bg-(image:--tone-fill)` and `tut-glow` (glows in dark mode only).
 - Bold text renders as a key term in the term colour. Use `<Term def="...">` for terms worth a hover definition.
 - Callout kinds: `note`, `insight`, `important`, `tip`, `warn`, `real-world`. Use them to break up long prose.
 - Show the tools' logos (`<Logo tech>` / `<LogoRow>`; react-icons `si`) at the top and at each tool's section.
 - Coloured diagrams, flowcharts, arrows and icons. Diagrams show the real mechanism and are not decoration.
+- Draw diagrams in MDX with the HTML kit in `Diagram.tsx`: `Diagram` (canvas + caption), `Group` (titled region, `cols`, `dashed` for boundaries like a VM or network), `Node` (icon or `tech` logo, title, note), `Row` and `Link` (labelled arrow; `dir="right"` inside rows, `"both"` for two-way). Nest Groups to show "runs inside". Do not hand-draw SVG with fixed coordinates: text shrinks or balloons at full width.
 - Code blocks look like a real IDE: title bar, file name, line numbers, syntax colours, copy button.
 - Make it interactive where that teaches something a static picture cannot, such as a simulator the reader can break, a state machine, a step-through or a decision tree. Do not add interaction for show.
 - Add a `<Quiz>` self-check after each hard idea, and a `FeatureGrid` where several parts work together.

@@ -41,7 +41,7 @@ export default function Callout({ kind = "tip", title, children }: CalloutProps)
   return (
     <aside
       data-tone={tone}
-      className="tut-glow my-7 max-w-[88ch] rounded-xl border border-l-[6px] border-(--tone) bg-(image:--tone-fill) p-4"
+      className="tut-glow my-7 rounded-xl border border-l-[6px] border-(--tone) bg-(image:--tone-fill) p-4"
     >
       <p className="flex items-center gap-2">
         <span className="inline-flex items-center gap-1.5 rounded-full bg-(--tone) px-2.5 py-0.5 text-xs font-bold tracking-wide text-paper uppercase">

@@ -193,13 +193,67 @@ html:has([data-tutorial-article])[data-blog-theme="dark"] {
   --blog-rule: #26282e;
 }
 
-/* Full-width article: blocks span the column, running text keeps a readable measure. */
-[data-tutorial-article] > :is(p, ul:not(.list-none), ol:not(.list-none), h2, h3, h4, blockquote) {
-  max-width: 88ch;
-}
-
 [data-tutorial-article] figure svg {
   max-height: 36rem;
+}
+
+/* Long URLs wrap instead of pushing the page sideways on phones. */
+[data-tutorial-article] a {
+  overflow-wrap: anywhere;
+}
+
+/* Diagram canvas: a faint dot grid behind the boxes. */
+.tut-canvas {
+  background-image: radial-gradient(var(--blog-rule) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
+/* Diagram arrows: a dashed line and a CSS triangle head (points down by default). */
+.tut-line {
+  background: repeating-linear-gradient(to bottom, currentcolor 0 6px, transparent 6px 10px);
+}
+
+.tut-head {
+  width: 0;
+  height: 0;
+  border-inline: 6px solid transparent;
+  border-top: 9px solid currentcolor;
+}
+
+.tut-head-up {
+  border-top: 0;
+  border-bottom: 9px solid currentcolor;
+}
+
+@media (width >= 48rem) {
+  .tut-across .tut-line {
+    background: repeating-linear-gradient(to right, currentcolor 0 6px, transparent 6px 10px);
+  }
+
+  .tut-across .tut-head {
+    rotate: -90deg;
+  }
+
+  .tut-across .tut-head-up {
+    rotate: -90deg;
+  }
+}
+
+@media screen and (prefers-reduced-motion: no-preference) {
+  .tut-line {
+    background-size: 100% 20px;
+    animation: tut-line-down 0.8s linear infinite;
+  }
+
+  .tut-across .tut-line {
+    background-size: 100% 100%;
+  }
+}
+
+@keyframes tut-line-down {
+  to {
+    background-position: 0 10px;
+  }
 }
 
 /* Glow on coloured boxes in dark mode only (the light value is transparent). */
