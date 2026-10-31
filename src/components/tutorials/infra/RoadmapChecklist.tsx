@@ -1,7 +1,7 @@
 /*
  * RoadmapChecklist.tsx
  * The Docker and Kubernetes roadmaps from roadmap.sh, condensed into what to learn now
- * and what comes next, with links to where this page covers each topic. Ticks are kept
+ * and what comes next, with links to where each topic is covered. `only` shows one roadmap. Ticks are kept
  * in this browser only (localStorage), as a personal progress tracker.
  */
 
@@ -23,9 +23,12 @@ const GROUPS: { tech: Tech; title: string; topics: Topic[] }[] = [
     tech: "docker",
     title: "Docker roadmap",
     topics: [
-      { label: "Bare metal vs VMs vs containers", href: "#containers" },
-      { label: "Namespaces, cgroups, union filesystems", href: "#under-the-hood" },
-      { label: "Images and containers", href: "#docker-essentials" },
+      {
+        label: "Bare metal vs VMs vs containers",
+        href: "/tutorials/docker-vs-kubernetes-vs-vm#all-four-side-by-side",
+      },
+      { label: "Namespaces, cgroups, union filesystems", href: "#what-a-container-really-is" },
+      { label: "Images and containers", href: "#image-vs-container" },
       { label: "Dockerfiles and efficient layer caching", href: "#layers-and-the-build-cache" },
       {
         label: "Image size and multi-stage builds",
@@ -39,7 +42,7 @@ const GROUPS: { tech: Tech; title: string; topics: Topic[] }[] = [
       { label: "Docker Compose", href: "#compose-registries-and-tags" },
       { label: "Registries and tagging", href: "#compose-registries-and-tags" },
       { label: "Image and runtime security", href: "#habits-worth-having-from-day-one" },
-      { label: "Using third-party images (databases, CLIs)", href: "#part-2-docker" },
+      { label: "Using third-party images (databases, CLIs)", href: "#build-and-run-hits" },
       { label: "Hot reloading, debuggers, tests in containers", later: true },
       { label: "Containers in CI pipelines", later: true },
       { label: "Deploying: PaaS, Kubernetes, Nomad", later: true },
@@ -49,7 +52,7 @@ const GROUPS: { tech: Tech; title: string; topics: Topic[] }[] = [
     tech: "k8s",
     title: "Kubernetes roadmap",
     topics: [
-      { label: "Why Kubernetes, key terms", href: "#kubernetes-essentials" },
+      { label: "Why Kubernetes, key terms", href: "#why-kubernetes-exists" },
       { label: "Control plane and nodes", href: "#the-cluster-piece-by-piece" },
       { label: "Pods, ReplicaSets, Deployments", href: "#the-objects-that-matter" },
       { label: "Services and pod-to-pod networking", href: "#the-objects-that-matter" },
@@ -59,7 +62,7 @@ const GROUPS: { tech: Tech; title: string; topics: Topic[] }[] = [
       { label: "Blue-green and canary deployments", href: "#rolling-blue-green-and-canary" },
       { label: "Jobs, CronJobs, StatefulSets", href: "#more-objects-you-will-meet" },
       { label: "RBAC and network policies", href: "#more-objects-you-will-meet" },
-      { label: "Installing a local cluster", href: "#part-3-kubernetes-on-kind" },
+      { label: "Installing a local cluster", href: "#build-the-cluster-and-deploy" },
       { label: "HPA, VPA, cluster autoscaling", later: true },
       { label: "Helm charts and GitOps", later: true },
       { label: "Monitoring, logs, metrics, traces", later: true },
@@ -100,7 +103,7 @@ function write(next: string[]) {
   for (const listener of listeners) listener();
 }
 
-export default function RoadmapChecklist() {
+export default function RoadmapChecklist({ only }: { only?: Tech }) {
   const raw = useSyncExternalStore(subscribe, read, () => "[]");
   const done: string[] = JSON.parse(raw);
 
@@ -109,8 +112,8 @@ export default function RoadmapChecklist() {
   }
 
   return (
-    <div className="my-8 grid gap-4 lg:grid-cols-2">
-      {GROUPS.map((group) => {
+    <div className={cn("my-8 grid gap-4", !only && "lg:grid-cols-2")}>
+      {GROUPS.filter((group) => !only || group.tech === only).map((group) => {
         const count = group.topics.filter((t) => done.includes(`${group.tech}:${t.label}`)).length;
         return (
           <section key={group.tech} className="rounded-2xl border border-rule bg-paper-raised p-4">
@@ -149,7 +152,7 @@ export default function RoadmapChecklist() {
                         data-tone="green"
                         className="ml-auto shrink-0 text-xs font-semibold text-(--tone) hover:underline"
                       >
-                        on this page
+                        {topic.href.startsWith("#") ? "on this page" : "in another tutorial"}
                       </a>
                     ) : (
                       <span

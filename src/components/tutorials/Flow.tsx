@@ -86,7 +86,7 @@ export default function Flow({ steps, direction = "horizontal" }: FlowProps) {
           <li
             data-tone={step.tone}
             className={cn(
-              "tut-glow w-full min-w-0 rounded-xl border-2 border-(--tone) bg-(image:--tone-fill) p-3 text-center",
+              "tut-sketch-alt w-full min-w-0 border-[2.5px] border-(--tone) bg-(--tone-soft) px-3 py-2 text-center",
               row && "md:flex-1",
             )}
           >
@@ -98,8 +98,10 @@ export default function Flow({ steps, direction = "horizontal" }: FlowProps) {
                 {step.icon}
               </span>
             )}
-            <p className="font-semibold text-ink">{step.title}</p>
-            {step.note && <p className="mt-1 text-sm leading-snug text-ink-muted">{step.note}</p>}
+            <p className="font-hand text-2xl leading-6 font-bold text-ink">{step.title}</p>
+            {step.note && (
+              <p className="mt-0.5 font-hand text-lg leading-5 text-ink-muted">{step.note}</p>
+            )}
           </li>
           {index < steps.length - 1 && (
             <li aria-hidden className="flex items-center justify-center">
