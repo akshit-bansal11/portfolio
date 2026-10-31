@@ -1,0 +1,292 @@
+import { Cloud, Cpu, Globe, HardDrive, Laptop, Layers, MemoryStick, Monitor, Network, Package, Play, Server, Settings, Shield } from "lucide-react";
+
+## In one minute
+
+<Logo tech="vm" label className="text-2xl" />
+
+- A **virtual machine (VM)** is a computer made of software, running inside a real computer.
+- It has its own operating system, its own files and its own pretend hardware.
+- One real machine can run many VMs, each sealed off from the others.
+- Almost every cloud server you can rent (AWS EC2, Azure Virtual Machines, Google Compute Engine) is a VM.
+
+## Words you need
+
+Read these once. Every one of them is used below.
+
+<Glossary
+  items={[
+    { term: "Hardware", means: "The physical parts of a computer: the processor (CPU), memory (RAM), disk and network card.", like: "the body of a person" },
+    { term: "Operating system (OS)", means: "The main program that runs the computer and lets other apps use the hardware. Windows, macOS, Linux and Android are operating systems.", like: "the manager of a shop who gives every worker a desk and tools" },
+    { term: "Kernel", means: "The core of the operating system. It is the only part allowed to touch the hardware directly; every app has to ask it.", like: "the back office every request in the shop goes through" },
+    { term: "Host", means: "The real, physical computer that everything else runs on.", like: "the building" },
+    { term: "Guest", means: "The operating system running inside a VM. It believes it owns real hardware.", like: "a tenant in one flat of the building" },
+    { term: "Hypervisor", means: "The software that creates VMs, shares the real CPU, RAM and disk between them, and keeps them apart.", like: "a landlord who splits one building into flats" },
+    { term: "Virtualization", means: "Making one physical thing behave like several separate pretend ones.", like: "one big hall split into rooms with partition walls" },
+    { term: "Disk image", means: "One file that holds a VM's whole disk: the OS plus every file on it. Copy it and you have copied the computer.", like: "a full backup of a phone" },
+    { term: "Snapshot", means: "A saved moment of a VM that you can roll back to if you break something.", like: "a save point in a game" },
+  ]}
+/>
+
+## What a VM really is
+
+Say you have a Windows laptop and need to try Linux. You can buy a second computer, wipe your laptop, or run Linux **in a window** on the laptop you already have. A VM is that third option.
+
+<Diagram caption="One host, two guests. Each VM gets its own slice of the real hardware and its own OS.">
+  <Group title="Your laptop (the host)" tone="blue" icon={<Laptop />}>
+    <Row>
+      <Group title="VM 1" tone="vm" icon={<Monitor />}>
+        <Node title="Apps" note="a web server, a database" tone="pink" icon={<Package />} />
+        <Node title="Guest OS: Ubuntu Linux" note="with its own kernel" tone="amber" icon={<Cpu />} />
+      </Group>
+      <Group title="VM 2" tone="vm" icon={<Monitor />}>
+        <Node title="Apps" note="an old accounting tool" tone="pink" icon={<Package />} />
+        <Node title="Guest OS: Windows 10" note="with its own kernel" tone="amber" icon={<Cpu />} />
+      </Group>
+    </Row>
+    <Link label="asks for CPU, RAM, disk" tone="vm" />
+    <Node title="Hypervisor" note="shares out the hardware, keeps VMs apart" tone="vm" icon={<Layers />} />
+    <Link tone="blue" />
+    <Node title="Real hardware" note="CPU, RAM, disk, network card" tone="blue" icon={<Server />} />
+  </Group>
+</Diagram>
+
+What the guest gets is all pretend, but it behaves like the real thing:
+
+<FeatureGrid
+  items={[
+    { title: "Virtual CPU (vCPU)", tone: "blue", icon: <Cpu />, tag: "--cpus 2", text: "A share of the real processor's time. The guest sees it as a normal CPU." },
+    { title: "Virtual memory", tone: "green", icon: <MemoryStick />, tag: "--memory 4G", text: "A part of the host's RAM set aside for the VM while it runs." },
+    { title: "Virtual disk", tone: "amber", icon: <HardDrive />, tag: ".vdi .vmdk .vhdx .qcow2", text: "Just a big file on the host's disk. The guest thinks it is a whole drive." },
+    { title: "Virtual network card", tone: "cyan", icon: <Network />, tag: "NAT / bridged", text: "A pretend network port. The hypervisor connects it to the host's real network." },
+  ]}
+/>
+
+## How a VM starts
+
+<Flow
+  direction="vertical"
+  steps={[
+    { title: "You ask for a VM", note: "2 CPUs, 4 GB RAM, 20 GB disk", tone: "blue", icon: <Settings /> },
+    { title: "The hypervisor sets aside resources", note: "and creates the disk file", tone: "vm", icon: <Layers /> },
+    { title: "It attaches an OS", note: "an installer (ISO) or a ready-made disk image", tone: "amber", icon: <HardDrive /> },
+    { title: "The guest OS boots", note: "exactly like a real PC: kernel first, then services", tone: "green", icon: <Play /> },
+    { title: "Apps run inside", note: "they never see the host", tone: "pink", icon: <Package /> },
+  ]}
+/>
+
+<Callout kind="insight" title="Why it says 'turn on virtualization in BIOS'">
+
+Modern processors have built-in features for VMs: **Intel VT-x** and **AMD-V**. With them, the guest's code runs straight on the real CPU at close to full speed, and the hypervisor only steps in for sensitive operations. If the feature is switched off in your BIOS/UEFI settings, most hypervisors cannot start a VM at all, or run it very slowly.
+
+</Callout>
+
+## Two kinds of hypervisor
+
+<Diagram caption="Type 1 sits on the bare hardware. Type 2 is an app on your normal OS, so it has one more layer underneath.">
+  <Row>
+    <Group title="Type 1: bare metal" tone="vm">
+      <Row>
+        <Node title="VM" tone="pink" icon={<Monitor />} />
+        <Node title="VM" tone="pink" icon={<Monitor />} />
+      </Row>
+      <Node title="Hypervisor" note="ESXi, Hyper-V, KVM, Xen" tone="vm" icon={<Layers />} />
+      <Node title="Hardware" tone="blue" icon={<Server />} />
+    </Group>
+    <Group title="Type 2: hosted" tone="violet">
+      <Row>
+        <Node title="VM" tone="pink" icon={<Monitor />} />
+        <Node title="VM" tone="pink" icon={<Monitor />} />
+      </Row>
+      <Node title="Hypervisor app" note="VirtualBox, VMware Workstation" tone="vm" icon={<Layers />} />
+      <Node title="Host OS" note="Windows, macOS, Linux" tone="green" icon={<Laptop />} />
+      <Node title="Hardware" tone="blue" icon={<Server />} />
+    </Group>
+  </Row>
+</Diagram>
+
+<Compare
+  columns={[{ title: "Type 1 (bare metal)", tone: "vm" }, { title: "Type 2 (hosted)", tone: "violet" }]}
+  rows={[
+    ["Runs on", "Directly on the hardware", "As an app on Windows, macOS or Linux"],
+    ["Examples", "VMware ESXi, Microsoft Hyper-V, KVM (built into Linux), Xen", "Oracle VirtualBox, VMware Workstation, Parallels Desktop"],
+    ["Who uses it", "Data centres and cloud providers", "Developers and learners on laptops"],
+    ["Speed", "Faster: no extra OS in between", "A bit slower: the host OS takes its share"],
+  ]}
+/>
+
+<Callout kind="note">
+
+Hyper-V is Type 1 even on a Windows laptop: when you turn it on, Windows itself starts running on top of the hypervisor. This is also how **WSL 2** runs a real Linux kernel on Windows: inside a lightweight VM.
+
+</Callout>
+
+## How a VM reaches the network
+
+<Compare
+  label="Mode"
+  columns={[{ title: "What happens", tone: "cyan" }, { title: "Use it for", tone: "green" }]}
+  rows={[
+    ["NAT (usual default)", "The VM goes out to the internet through the host. Other machines cannot reach the VM directly.", "Browsing, downloading, everyday use"],
+    ["Bridged", "The VM joins your network like a separate device with its own IP address.", "When other devices must reach the VM"],
+    ["Host-only", "Only the host and its VMs can talk to each other. No internet.", "Private test labs"],
+  ]}
+/>
+
+## Bare metal vs VM
+
+<Compare
+  columns={[{ title: "Bare metal (no VM)", tone: "blue" }, { title: "Virtual machine", tone: "vm", tech: "vm" }]}
+  rows={[
+    ["What it is", "One OS directly on one physical machine", "Many OSes sharing one physical machine"],
+    ["Speed", "Full speed", "Close to full speed with VT-x / AMD-V"],
+    ["Getting a new one", "Buy and set up hardware: days", "Click or one command: minutes"],
+    ["If it breaks", "Repair or reinstall", "Roll back to a snapshot, or delete and recreate"],
+    ["Isolation", "Separate machines", "Strong: each VM has its own kernel"],
+  ]}
+/>
+
+## Where VMs are used today
+
+<Compare
+  label="Use"
+  columns={[{ title: "Why a VM", tone: "vm" }]}
+  rows={[
+    ["Cloud servers", "Renting a slice of a big machine is cheaper than buying one"],
+    ["Trying another OS", "Linux on Windows, Windows on a Mac, without touching your main system"],
+    ["Hard security walls", "Each VM has its own kernel, so a break-in stays inside one VM. Clouds separate customers this way"],
+    ["Old software", "It needs one specific old OS that you can freeze in a VM"],
+    ["Under containers", "Docker Desktop, WSL 2 and most Kubernetes nodes run inside VMs"],
+  ]}
+/>
+
+<Compare
+  label="#"
+  columns={[{ title: "Good", tone: "green" }, { title: "Costs", tone: "red" }]}
+  rows={[
+    ["1", "Strong isolation: each VM has its own kernel", "A full OS in every VM: gigabytes on disk"],
+    ["2", "Any OS on any host", "Boots in seconds to minutes"],
+    ["3", "Snapshots: break things, roll back", "Every guest OS needs its own RAM first"],
+  ]}
+/>
+
+<Quiz
+  question="An Ubuntu VM runs on a Windows laptop. Which kernel do the Linux apps inside the VM use?"
+  options={["The Windows kernel of the laptop", "The VM's own Linux kernel", "No kernel at all", "The hypervisor's kernel"]}
+  answer={1}
+>
+
+Every VM boots its own complete OS, kernel included. That is exactly what makes VMs heavy, and what containers avoid (see Docker 101).
+
+</Quiz>
+
+## DIY walkthrough
+
+You will launch a real Ubuntu VM with **Multipass**, a free tool from Canonical (the company behind Ubuntu), look inside it, and delete it.
+
+<Callout kind="warn" title="Windows readers">
+
+Commands assume PowerShell. In PowerShell, plain `curl` is not the real curl, so wherever you see `curl` type `curl.exe`. When a step says to create a file, create it with an editor such as VS Code and save it exactly where the title bar says. Keep the contents exactly as shown: indentation matters in YAML.
+
+</Callout>
+
+### Install Multipass
+
+<Tabs group="os">
+  <Tab label="Windows">
+
+Multipass is Canonical's tool for quickly launching Ubuntu VMs. Its install page lists Windows 10 and 11 on Home, Pro and Enterprise as supported, from build 1809 up, and asks for the Virtual Machine Platform Windows feature to be enabled. You need administrator rights to run the installer. Download it from [canonical.com/multipass](https://canonical.com/multipass). I did not verify which hypervisor driver it uses on Home, so if launch fails, see the troubleshooting section.
+
+  </Tab>
+  <Tab label="macOS">
+
+Download the installer from [canonical.com/multipass](https://canonical.com/multipass) and run it. You need an account with administrator rights.
+
+  </Tab>
+  <Tab label="Linux">
+
+```bash
+sudo snap install multipass
+```
+
+  </Tab>
+</Tabs>
+
+<Steps>
+  <Step title="Launch a VM and time it" tone="violet" checkpoint="After a download on the first run, multipass list shows tutorial-vm as Running with an IP address.">
+
+The first launch downloads an Ubuntu image, which takes a while. Launch is much quicker after that.
+
+```bash
+multipass launch --name tutorial-vm --cpus 1 --memory 1G --disk 5G
+multipass list
+```
+
+  </Step>
+  <Step title="Step inside" tone="violet" checkpoint="Your prompt changes to ubuntu@tutorial-vm. uname -r prints a kernel version, free -h shows about 1 GB of memory, and df -h shows a disk of about 5 GB. This is a complete computer with its own kernel.">
+
+```bash
+multipass shell tutorial-vm
+uname -r
+free -h
+df -h
+exit
+```
+
+Remember that kernel line. In [Docker 101](/tutorials/docker-101) you will see what a container reports instead.
+
+  </Step>
+  <Step title="Look at it from outside" tone="violet" checkpoint="multipass info shows the VM's state, IP address, memory and disk use. exec prints Ubuntu's release details without opening a shell. After stop, multipass list shows it as Stopped; after start, Running again.">
+
+```bash
+multipass info tutorial-vm
+multipass exec tutorial-vm -- lsb_release -a
+multipass stop tutorial-vm
+multipass list
+multipass start tutorial-vm
+```
+
+  </Step>
+  <Step title="Throw it away" tone="violet" checkpoint="multipass list no longer shows tutorial-vm.">
+
+```bash
+multipass delete tutorial-vm --purge
+multipass list
+```
+
+  </Step>
+</Steps>
+
+## Troubleshooting
+
+<TroubleGroup title="Multipass and virtual machines">
+  <Trouble
+    symptom="multipass : The term 'multipass' is not recognized as the name of a cmdlet"
+    cause="Multipass is not installed, or this terminal was opened before the install and has an old PATH."
+  >
+
+Close the terminal, open a new one and try `multipass version`. If it is still missing, run the installer again (Windows needs administrator rights).
+
+  </Trouble>
+  <Trouble
+    symptom="multipass launch fails or hangs on Windows Home"
+    cause="Multipass lists Windows Home as supported but needs the Virtual Machine Platform Windows feature, and hardware virtualization, to be on. I could not verify the exact message you will see, so check these first."
+  >
+
+Enable the feature from an administrator PowerShell, restart, and try again.
+
+```powershell
+Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform
+```
+
+If it still fails, try another machine. The diagrams above show the same idea.
+
+  </Trouble>
+</TroubleGroup>
+
+## Next steps and sources
+
+- Next: [Docker 101](/tutorials/docker-101), to see how containers skip the guest OS.
+- Then [Docker vs Kubernetes vs VM](/tutorials/docker-vs-kubernetes-vs-vm) for the side-by-side comparison.
+- Multipass docs: [canonical.com/multipass](https://canonical.com/multipass)
+- Background reading: the "Bare metal vs VMs vs containers" topic on the [roadmap.sh Docker roadmap](https://roadmap.sh/docker)
+- Video this was planned around: [Docker vs virtual machines](https://www.youtube.com/watch?v=a1M_thDTqmU) by IBM Technology

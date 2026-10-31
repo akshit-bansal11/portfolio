@@ -1,0 +1,829 @@
+import { Activity, Boxes, Brain, Box, Cpu, Eye, ScrollText, Database, FileCode, Globe, HardDrive, KeyRound, Layers, Network, Package, Play, RefreshCw, Route, Scale, Search, Server, Settings, Terminal, UserCog } from "lucide-react";
+import ClusterSim from "@/components/tutorials/infra/ClusterSim";
+import PodStatusExplorer from "@/components/tutorials/infra/PodStatusExplorer";
+import RoadmapChecklist from "@/components/tutorials/infra/RoadmapChecklist";
+import RolloutStrategies from "@/components/tutorials/infra/RolloutStrategies";
+
+## In one minute
+
+<Logo tech="k8s" label className="text-2xl" />
+
+- **Kubernetes** (K8s for short: K, then 8 letters, then s) runs containers across a group of machines.
+- You write down what you want ("3 copies of my web app"), and it keeps that true, forever.
+- If a container crashes or a machine dies, it starts a replacement by itself.
+- It does not build images. Docker (or a similar tool) builds them; Kubernetes runs them.
+
+<Callout kind="tip" title="Before this">
+
+You should know what an image and a container are. If not, do [Docker 101](/tutorials/docker-101) first: its walkthrough builds the app we deploy here.
+
+</Callout>
+
+## Words you need
+
+<Glossary
+  items={[
+    { term: "Cluster", means: "A group of machines that Kubernetes manages as one big computer.", like: "a whole apartment society" },
+    { term: "Node", means: "One machine in the cluster, real or a VM. Your containers run on nodes.", like: "one building in the society" },
+    { term: "Control plane", means: "The brain of the cluster. It stores what you want and decides where things run. It does not run your app.", like: "the society office" },
+    { term: "Pod", means: "The smallest thing Kubernetes runs: a wrapper around one container (sometimes a few) with one IP address. Pods are disposable.", like: "one tenant; when they leave, a new one moves in" },
+    { term: "Replica", means: "One identical copy of a pod. Three replicas = three copies of your app sharing the work.", like: "three cashiers doing the same job" },
+    { term: "Deployment", means: "Your instruction 'keep N replicas of this pod running', plus safe updates to a new version.", like: "a standing order: always keep 3 flats rented" },
+    { term: "Service", means: "One fixed name and address in front of a changing group of pods. Callers use the Service, never a pod.", like: "the society's reception phone number" },
+    { term: "Desired state", means: "What you said you want, written down. Kubernetes keeps comparing reality to it and fixes differences.", like: "a thermostat set to 24°C" },
+    { term: "Manifest (YAML)", means: "A text file in YAML format that describes the desired state.", like: "the order form" },
+    { term: "kubectl", means: "The command-line tool you use to talk to a cluster. Say it 'kube-control' or 'kube-cuddle'; both are common.", like: "the phone to the society office" },
+    { term: "Label", means: "A key=value sticker on an object, like app=web. Services and Deployments find pods by their labels.", like: "a name tag at an event" },
+    { term: "Namespace", means: "A folder inside the cluster that groups objects, often one per team or environment.", like: "one wing of the building" },
+  ]}
+/>
+
+## Why Kubernetes exists
+
+Docker runs containers on **one** machine. Real apps need more: many copies, many machines, and nobody awake at 3 a.m. to restart things.
+
+<Compare
+  label="Job"
+  columns={[{ title: "By hand with docker run + SSH", tone: "red" }, { title: "With Kubernetes", tone: "k8s", tech: "k8s" }]}
+  rows={[
+    ["A server dies", "You notice, SSH elsewhere, restart everything", "Pods are rescheduled on healthy nodes automatically"],
+    ["Traffic spike", "Start more copies by hand, edit the load balancer", "Change a number, or let the autoscaler do it"],
+    ["New version", "Stop, pull, start on every server; downtime", "Rolling update, one pod at a time; rollback in one command"],
+    ["Where does it run", "A spreadsheet of IPs", "The scheduler picks a node with room"],
+  ]}
+/>
+
+What it gives you, from the official overview:
+
+<FeatureGrid
+  items={[
+    { title: "Self-healing", tone: "green", icon: <RefreshCw />, text: "Restarts crashed containers, replaces pods on dead nodes, and stops sending traffic to pods that fail their health checks." },
+    { title: "Scaling", tone: "blue", icon: <Scale />, text: "Change one number to run more or fewer copies, or let an autoscaler do it from CPU usage." },
+    { title: "Load balancing", tone: "cyan", icon: <Network />, text: "A Service gives pods one name and spreads requests across the healthy ones." },
+    { title: "Rollouts and rollbacks", tone: "violet", icon: <Play />, text: "Moves to a new version a few pods at a time, and back again with one command." },
+    { title: "Bin packing", tone: "amber", icon: <Boxes />, text: "You say how much CPU and memory each container needs; it fits them onto nodes efficiently." },
+    { title: "Config and secrets", tone: "pink", icon: <KeyRound />, text: "Keeps settings and passwords outside your images, so one image works everywhere." },
+  ]}
+/>
+
+## The cluster, piece by piece
+
+<Diagram caption="The control plane decides. Worker nodes do the work and report back.">
+  <Group title="Control plane (the brain)" tone="k8s" icon={<Brain />} cols={4}>
+    <Node title="API server" note="the front door; kubectl talks to it" tone="blue" icon={<Terminal />} />
+    <Node title="etcd" note="the memory: desired state" tone="amber" icon={<Database />} />
+    <Node title="Scheduler" note="picks a node for each pod" tone="violet" icon={<Route />} />
+    <Node title="Controllers" note="fix differences, forever" tone="green" icon={<RefreshCw />} />
+  </Group>
+  <Link dir="both" label="kubelets watch for work + report status" tone="k8s" />
+  <Row>
+    <Group title="Worker node 1" tone="cyan" icon={<Server />} cols={2}>
+      <Node title="kubelet" note="node agent" tone="cyan" icon={<UserCog />} />
+      <Node title="kube-proxy" note="Service routing" tone="cyan" icon={<Network />} />
+      <Node title="containerd" note="runtime" tone="docker" tech="docker" />
+      <Node title="Pods" note="web, web" tone="pink" icon={<Boxes />} />
+    </Group>
+    <Group title="Worker node 2" tone="cyan" icon={<Server />} cols={2}>
+      <Node title="kubelet" note="node agent" tone="cyan" icon={<UserCog />} />
+      <Node title="kube-proxy" note="Service routing" tone="cyan" icon={<Network />} />
+      <Node title="containerd" note="runtime" tone="docker" tech="docker" />
+      <Node title="Pods" note="web, redis" tone="pink" icon={<Boxes />} />
+    </Group>
+  </Row>
+</Diagram>
+
+<Compare
+  label="Component"
+  columns={[{ title: "Its job", tone: "k8s", tech: "k8s" }, { title: "Lives on", tone: "cyan" }]}
+  rows={[
+    ["kube-apiserver", "The front door. Every command and every component talks to the cluster through it", "Control plane"],
+    ["etcd", "A small database holding the whole desired state of the cluster", "Control plane"],
+    ["kube-scheduler", "Finds pods with no node yet and picks a suitable node for each", "Control plane"],
+    ["kube-controller-manager", "Runs the controllers: loops that fix differences between wanted and actual", "Control plane"],
+    ["kubelet", "The node's agent: makes sure the pods assigned to this node are running", "Every node"],
+    ["kube-proxy", "Sets up network rules so Service addresses reach the right pods", "Every node"],
+    ["Container runtime", "Actually runs containers, for example containerd", "Every node"],
+  ]}
+/>
+
+## What happens when you run kubectl apply
+
+<Flow
+  direction="vertical"
+  steps={[
+    { title: "kubectl sends your YAML", note: "to the API server", tone: "blue", icon: <Terminal /> },
+    { title: "Saved in etcd", note: "this is now the desired state", tone: "amber", icon: <Database /> },
+    { title: "Deployment controller acts", note: "creates a ReplicaSet, which creates 3 pods", tone: "green", icon: <RefreshCw /> },
+    { title: "Scheduler picks nodes", note: "each pod gets a node with room", tone: "violet", icon: <Route /> },
+    { title: "kubelet on that node starts it", note: "asks containerd to pull the image and run it", tone: "cyan", icon: <Play /> },
+    { title: "Status reported back", note: "kubectl get pods shows Running", tone: "pink", icon: <Activity /> },
+  ]}
+/>
+
+## Desired state and the reconcile loop
+
+You never say "start 3 pods". You say "**there should be** 3 pods", and controllers keep making it true.
+
+<Diagram caption="The loop never finishes. It runs as long as the cluster does.">
+  <Row>
+    <Node title="You apply YAML" note="replicas: 3" tone="blue" icon={<FileCode />} />
+    <Link dir="right" tone="blue" label="saved in etcd" />
+    <Node title="Controller compares" note="want 3, have 2" tone="violet" icon={<Search />} />
+    <Link dir="right" tone="violet" label="difference" />
+    <Node title="Acts" note="creates 1 pod" tone="green" icon={<Play />} />
+    <Link dir="right" tone="green" label="then" />
+    <Node title="Watches again" note="forever" tone="amber" icon={<RefreshCw />} />
+  </Row>
+</Diagram>
+
+Break it yourself: change replicas, delete pods, take nodes down, and read the log.
+
+<ClusterSim />
+
+## A first manifest, explained
+
+```yaml
+# Annotated example, not the walkthrough file
+apiVersion: apps/v1
+kind: Deployment            # "keep N copies running"
+metadata:
+  name: web
+spec:
+  replicas: 3               # how many copies
+  selector:
+    matchLabels:
+      app: web              # manage pods with this label
+  template:                 # what each pod looks like
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+        - name: web
+          image: hits:1.0   # the image Docker built
+          ports:
+            - containerPort: 3000
+---
+apiVersion: v1
+kind: Service               # one stable name in front of the pods
+metadata:
+  name: web
+spec:
+  selector:
+    app: web                # send traffic to pods labelled app=web
+  ports:
+    - port: 80              # the Service's port
+      targetPort: 3000      # the container's port
+```
+
+<Callout kind="insight">
+
+Labels are the glue. The Deployment stamps `app: web` on every pod it makes, and the Service sends traffic to anything wearing `app: web`. Nothing refers to a pod by name or IP.
+
+</Callout>
+
+## The objects that matter
+
+<Compare
+  label="Object"
+  columns={[{ title: "What it is", tone: "k8s", tech: "k8s" }, { title: "Society analogy", tone: "violet" }]}
+  rows={[
+    ["Pod", "Smallest unit: 1+ containers sharing an IP. Disposable, gets a new IP when replaced", "A tenant"],
+    ["Deployment", "Keeps N identical pods running, does rolling updates and rollbacks", "\"Always keep 3 flats rented\""],
+    ["Service", "One stable name and IP in front of changing pods, picked by label", "The society's reception number"],
+    ["ConfigMap / Secret", "Settings / passwords outside the image. Secrets are only base64, not encrypted", "The notice board / the locked drawer"],
+    ["Namespace", "A folder for objects, per team or environment", "A wing of the building"],
+    ["PVC", "A request for storage that outlives pods", "A storeroom you rent"],
+    ["HPA", "Adds or removes pods based on CPU (needs requests + metrics-server)", "More guards at festival time"],
+    ["Gateway API", "Routes outside HTTP traffic in. Replaces Ingress for new work (ingress-nginx retired March 2026)", "The main gate"],
+  ]}
+/>
+
+<Diagram caption="Clients only know the Service. Pods behind it come and go.">
+  <Row>
+    <Node title="Client pod" note="calls http://web" tone="blue" icon={<Globe />} />
+    <Link dir="right" tone="blue" />
+    <Node title="Service: web" note="stable name + IP, selector app=web" tone="k8s" tech="k8s" />
+    <Link dir="right" tone="k8s" label="load-balances" />
+    <Group title="Pods labelled app=web" tone="pink" icon={<Boxes />}>
+      <Node title="web-7d9f-x2k" note="10.244.1.5" tone="pink" />
+      <Node title="web-7d9f-q8p" note="10.244.2.3" tone="pink" />
+      <Node title="web-7d9f-m1z" note="10.244.1.9 (new, replaced one)" tone="pink" />
+    </Group>
+  </Row>
+</Diagram>
+
+<Compare
+  label="Service type"
+  columns={[{ title: "Reachable from", tone: "k8s" }, { title: "Use for", tone: "green" }]}
+  rows={[
+    ["ClusterIP (default)", "Inside the cluster only", "Service-to-service calls"],
+    ["NodePort", "A port on every node", "Quick tests, bare-metal setups"],
+    ["LoadBalancer", "A real cloud load balancer", "Public traffic on a cloud (costs money)"],
+  ]}
+/>
+
+<Compare
+  label="Probe / setting"
+  columns={[{ title: "Question it answers", tone: "blue" }, { title: "If it fails", tone: "red" }]}
+  rows={[
+    ["readinessProbe", "Can this pod take traffic now?", "Removed from the Service, keeps running"],
+    ["livenessProbe", "Is the process stuck?", "Container restarted"],
+    ["startupProbe", "Has a slow app finished booting?", "Others wait; restarted if it never boots"],
+    ["requests", "How much does it need? (scheduler uses this)", "Pod stays Pending if no node has room"],
+    ["limits", "Hard ceiling", "CPU throttled; memory: OOMKilled"],
+  ]}
+/>
+
+<Quiz
+  question="Your /health checks the database and you use it as the liveness probe. The database blips for 20 s. What happens?"
+  options={["Nothing, Kubernetes waits", "Every pod restarts at once, making it worse", "Only new requests fail", "The Service switches to a backup"]}
+  answer={1}
+>
+
+Liveness failure = restart, and all pods share the database, so all restart together. Check dependencies in **readiness**; keep **liveness** for "is this process stuck?".
+
+</Quiz>
+
+### More objects you will meet
+
+<FeatureGrid
+  items={[
+    { title: "Job / CronJob", tone: "amber", icon: <Play />, tag: "kind: CronJob", text: "Runs to completion: migrations, backups, reports. CronJob runs it on a schedule." },
+    { title: "StatefulSet", tone: "violet", icon: <Server />, tag: "web-0, web-1, web-2", text: "Pods with stable names and their own volumes. For databases you cannot buy managed." },
+    { title: "DaemonSet", tone: "cyan", icon: <Cpu />, tag: "one per node", text: "One pod on every node: log shippers, monitoring agents, network plugins." },
+    { title: "RBAC", tone: "pink", icon: <KeyRound />, tag: "Role + RoleBinding", text: "Who may do which actions on which objects. Give apps the least they need." },
+    { title: "NetworkPolicy", tone: "red", icon: <Network />, tag: "podSelector + ingress", text: "A firewall between pods. By default every pod can reach every pod." },
+    { title: "Helm / Kustomize", tone: "green", icon: <Package />, tag: "helm install / kubectl apply -k", text: "Package and template YAML. Helm for third-party apps, Kustomize for per-environment patches." },
+  ]}
+/>
+
+## Rolling, blue-green and canary
+
+<RolloutStrategies />
+
+## Reading pod status
+
+Most problems show up first in the STATUS column of `kubectl get pods`. Pick one:
+
+<PodStatusExplorer />
+
+## kubectl cheat sheet
+
+<Compare
+  label="Command"
+  columns={[{ title: "What it does", tone: "k8s", tech: "k8s" }]}
+  rows={[
+    ["kubectl get pods (-o wide)", "List pods (-o wide: with node and IP)"],
+    ["kubectl describe pod POD", "Everything about one pod; read Events at the bottom"],
+    ["kubectl logs POD (--previous)", "The app's output (--previous: from the last crash)"],
+    ["kubectl apply -f FILE", "Create or update objects from YAML"],
+    ["kubectl delete -f FILE", "Delete the objects in that YAML"],
+    ["kubectl exec -it POD -- sh", "Shell inside a pod's container"],
+    ["kubectl port-forward svc/web 8080:80", "Reach a Service from your laptop"],
+    ["kubectl scale deployment web --replicas=5", "Change the number of copies"],
+    ["kubectl rollout status / undo deployment/web", "Watch an update / go back to the previous version"],
+    ["kubectl get events --sort-by=.lastTimestamp", "What just happened in the cluster"],
+  ]}
+/>
+
+## When not to use Kubernetes
+
+- One app or a few on one server: **Compose** is simpler.
+- Nobody on the team will own upgrades, access rules and monitoring.
+- A managed container service does the job: **Cloud Run, AWS ECS/Fargate, Azure Container Apps**.
+- Small, steady traffic: autoscaling buys you nothing.
+
+## Your Kubernetes roadmap
+
+Topics from the [roadmap.sh Kubernetes roadmap](https://roadmap.sh/kubernetes). Ticks stay in your browser.
+
+<RoadmapChecklist only="k8s" />
+
+## DIY walkthrough
+
+You will run the `hits` app from Docker 101 on a real three-node cluster made with **kind** (Kubernetes in Docker), then scale it, kill pods, update it, break it and roll it back.
+
+<Callout kind="warn" title="Windows readers">
+
+Commands assume PowerShell. In PowerShell, plain `curl` is not the real curl, so wherever you see `curl` type `curl.exe`. When a step says to create a file, create it with an editor such as VS Code and save it exactly where the title bar says. Keep the contents exactly as shown: indentation matters in YAML.
+
+</Callout>
+
+### Before you start
+
+You need the `hits` folder and the `hits:1.0` image from the [Docker 101 walkthrough](/tutorials/docker-101#diy-walkthrough), and Docker running. Check:
+
+```bash
+docker image ls hits
+```
+
+You should see `hits` with tag `1.0`. Run every command below from inside the `hits` folder.
+
+### Install kind and kubectl
+
+<Tabs group="os">
+  <Tab label="Windows">
+
+```powershell
+winget install Kubernetes.kind
+winget install -e --id Kubernetes.kubectl
+```
+
+Close and reopen PowerShell so the new commands are on your PATH.
+
+  </Tab>
+  <Tab label="macOS">
+
+```bash
+brew install kind kubectl
+```
+
+  </Tab>
+  <Tab label="Linux">
+
+This downloads the kind binary: the amd64 build (the page has an arm64 variant) and the version number in the address may be newer by the time you read this, so check the [kind quick start](https://kind.sigs.k8s.io/docs/user/quick-start/).
+
+```bash
+curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.33.0/kind-linux-amd64
+chmod +x ./kind
+sudo mv ./kind /usr/local/bin/kind
+```
+
+For `kubectl`, follow the [official Linux guide](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/). `sudo snap install kubectl --classic` is a shortcut if you have snap.
+
+  </Tab>
+</Tabs>
+
+<Steps>
+  <Step title="Check the tools and make a folder" tone="blue" checkpoint="Both commands print a version, and an empty k8s folder now exists inside hits.">
+
+```bash
+kind version
+kubectl version --client
+mkdir k8s
+```
+
+  </Step>
+</Steps>
+
+### Build the cluster and deploy
+
+kind (Kubernetes in Docker) builds a real cluster whose nodes are Docker containers. That is why it is perfect for a laptop, and why, on Windows and macOS, the whole cluster ends up as containers inside Docker Desktop's hidden VM.
+
+```yaml
+# file: hits/k8s/kind.yaml
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+  - role: worker
+  - role: worker
+```
+
+The Redis file runs one Redis and gives it a Service named `redis`. It has no persistent volume, which is a deliberate shortcut and you will see its cost soon.
+
+```yaml
+# file: hits/k8s/redis.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:7-alpine
+          ports:
+            - containerPort: 6379
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+spec:
+  selector:
+    app: redis
+  ports:
+    - port: 6379
+      targetPort: 6379
+```
+
+The web file has four things: a ConfigMap with the Redis address, a Deployment with three copies, probes and resource settings, and a Service that gives them one name. The rolling update settings mean "never remove a working pod before its replacement is ready".
+
+```yaml
+# file: hits/k8s/web.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hits-config
+data:
+  REDIS_URL: redis://redis:6379
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+        - name: web
+          image: hits:1.0
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: hits-config
+          ports:
+            - containerPort: 3000
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+            periodSeconds: 3
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+spec:
+  selector:
+    app: web
+  ports:
+    - port: 80
+      targetPort: 3000
+```
+
+<Steps>
+  <Step title="Create the cluster" tone="cyan" checkpoint="kind prints a few progress lines and ends with a message that you can now use your cluster. kubectl get nodes lists three nodes, all Ready (this can take a minute).">
+
+The first run downloads a large node image, so be patient.
+
+```bash
+kind create cluster --name hits --config k8s/kind.yaml
+kubectl get nodes
+```
+
+  </Step>
+  <Step title="Get your image into the cluster" tone="cyan" checkpoint="kind prints that it loaded the image onto each node.">
+
+The cluster's nodes cannot see the images on your Docker. Normally they would pull from a registry. For a local image, load it into the nodes.
+
+```bash
+kind load docker-image hits:1.0 --name hits
+```
+
+  </Step>
+  <Step title="Apply the desired state" tone="cyan" checkpoint="After a short wait, rollout status says the deployment was successfully rolled out, and kubectl get pods shows three web pods and one redis pod, all Running and 1/1 Ready.">
+
+```bash
+kubectl apply -f k8s/redis.yaml -f k8s/web.yaml
+kubectl get pods --watch
+```
+
+Press Ctrl+C once everything is Running, then:
+
+```bash
+kubectl rollout status deployment/web
+kubectl get pods
+```
+
+  </Step>
+  <Step title="Open a door to the Service" tone="cyan" checkpoint="The port-forward command stays running and prints Forwarding from 127.0.0.1:8081. In a second terminal the curl prints hits with a version of 1.0.">
+
+`port-forward` is a temporary tunnel from your laptop to the Service. It is for debugging, not for production. Run it in one terminal and leave it running, and curl from another.
+
+```bash
+kubectl port-forward service/web 8081:80
+```
+
+```bash
+curl http://localhost:8081
+```
+
+Notice the "served by" name is always the same pod: the tunnel picked one pod when it started. To see the Service spreading load, ask from inside the cluster instead.
+
+```bash
+kubectl exec deploy/web -- wget -T 5 -qO- http://web
+kubectl exec deploy/web -- wget -T 5 -qO- http://web
+kubectl exec deploy/web -- wget -T 5 -qO- http://web
+```
+
+  </Step>
+  <Step title="Scale it" tone="cyan" checkpoint="Five web pods are listed and become Ready within a few seconds. Scaling back to three terminates two.">
+
+```bash
+kubectl scale deployment/web --replicas=5
+kubectl get pods
+kubectl scale deployment/web --replicas=3
+```
+
+  </Step>
+  <Step title="Kill a pod and watch it come back" tone="cyan" checkpoint="The pod you deleted goes Terminating, and a new pod with a different suffix appears right away. The count stays at three.">
+
+Pick any pod name from the list, replace `POD_NAME` with it, and delete it. This is the reconcile loop, live.
+
+```bash
+kubectl get pods -l app=web
+kubectl delete pod POD_NAME
+kubectl get pods -l app=web
+```
+
+  </Step>
+  <Step title="Feel the missing volume" tone="cyan" checkpoint="After the Redis pod is replaced, the counter starts again at 1. The pod's disk went with it.">
+
+Redis here has no persistent storage, so its data lived and died with its pod. Real data needs a PVC (or a managed database).
+
+```bash
+kubectl delete pod -l app=redis
+kubectl rollout status deployment/redis
+kubectl exec deploy/web -- wget -T 5 -qO- http://web
+```
+
+  </Step>
+  <Step title="Roll out version 2.0" tone="cyan" checkpoint="Old pods are replaced gradually. rollout status ends with a success message. Calling the Service now prints version: 2.0.">
+
+Build a second image with a different version baked in, load it, and tell the Deployment to use it.
+
+```bash
+docker build -t hits:2.0 --build-arg VERSION=2.0 .
+kind load docker-image hits:2.0 --name hits
+kubectl set image deployment/web web=hits:2.0
+kubectl rollout status deployment/web
+kubectl exec deploy/web -- wget -T 5 -qO- http://web
+```
+
+If your port-forward from before dropped, that is normal: the pod it was attached to was replaced. Start it again if you want it.
+
+  </Step>
+  <Step title="Break it on purpose" tone="red" checkpoint="One new pod is stuck in ErrImagePull and then ImagePullBackOff, while the three version 2.0 pods keep serving traffic. The events end with a line like 'Back-off pulling image hits:9.9'.">
+
+Point the Deployment at a tag that does not exist. Because we set `maxUnavailable: 0`, Kubernetes refuses to remove a working pod until the new one is ready, so your app stays up.
+
+```bash
+kubectl set image deployment/web web=hits:9.9
+kubectl get pods -l app=web
+kubectl get events --sort-by=.lastTimestamp
+```
+
+Read the output top to bottom. Then ask for details of the broken pod (replace `BAD_POD` with its name). Look at the Events section at the bottom.
+
+```bash
+kubectl describe pod BAD_POD
+```
+
+  </Step>
+  <Step title="Roll back" tone="red" checkpoint="rollout undo reports the rollback and rollout status ends with a success message. The broken pod disappears, and the Service answers with version: 2.0 again.">
+
+```bash
+kubectl rollout undo deployment/web
+kubectl rollout status deployment/web
+kubectl exec deploy/web -- wget -T 5 -qO- http://web
+```
+
+  </Step>
+</Steps>
+
+### Clean up
+
+Stop any `port-forward` terminal with Ctrl+C first.
+
+<Steps>
+  <Step title="Delete the cluster" tone="amber" checkpoint="kind get clusters prints no clusters.">
+
+```bash
+kind delete cluster --name hits
+kind get clusters
+```
+
+  </Step>
+  <Step title="Delete the images" tone="amber" checkpoint="docker images no longer lists hits.">
+
+The kind node image is large. List it, then remove it by the image ID in the first column. Then delete the `hits` folder.
+
+```bash
+docker image rm hits:1.0 hits:2.0
+docker image ls kindest/node
+```
+
+  </Step>
+</Steps>
+
+## Troubleshooting
+
+Check the pod's status first: see [Reading pod status](#reading-pod-status).
+
+<TroubleGroup title="Running on Kubernetes">
+  <Trouble
+    symptom="kubectl exec ... wget times out straight after a rollout"
+    cause="A Service takes a moment to forget a pod that has just left, so one request can be sent to a pod that no longer exists. It clears by itself once the routing rules catch up. The -T 5 in our command is what stops this hanging for two minutes."
+  >
+
+Run the same command again. If every attempt fails, check that the Service has healthy pods behind it.
+
+```bash
+kubectl get endpointslices -l kubernetes.io/service-name=web
+kubectl get pods -l app=web
+```
+
+  </Trouble>
+  <Trouble
+    symptom="The connection to the server localhost:8080 was refused - did you specify the right host or port?"
+    cause="kubectl has no cluster to talk to. Either no cluster exists yet, it was deleted, Docker is stopped (kind nodes are containers), or kubectl points at the wrong context."
+  >
+
+```bash
+docker ps
+kind get clusters
+kubectl config get-contexts
+kubectl config use-context kind-hits
+```
+
+If the cluster is missing, recreate it with the `kind create cluster` step.
+
+  </Trouble>
+  <Trouble
+    symptom="web pod status: ErrImagePull, then ImagePullBackOff"
+    cause="The node tried to download the image and failed. In this tutorial that means the image was never loaded into kind, or the tag is misspelled. 'Back-off' means Kubernetes is waiting longer between tries."
+  >
+
+Read the exact reason in the Events at the bottom of `describe`. Then fix the tag or load the image.
+
+```bash
+kubectl describe pod POD_NAME
+kind load docker-image hits:1.0 --name hits
+```
+
+If `kind load` itself errors, save the image to a file and load that instead.
+
+```bash
+docker save hits:1.0 -o hits.tar
+kind load image-archive hits.tar --name hits
+```
+
+  </Trouble>
+  <Trouble
+    symptom="ErrImageNeverPull"
+    cause="The pod uses imagePullPolicy: Never, so Kubernetes will only use an image already on the node, and it is not there."
+  >
+
+Load the image into the cluster, or switch the policy back to `IfNotPresent` in the YAML and apply again.
+
+```bash
+kind load docker-image hits:1.0 --name hits
+kubectl apply -f k8s/web.yaml
+```
+
+  </Trouble>
+  <Trouble
+    symptom="CrashLoopBackOff"
+    cause="The container starts, exits and is restarted over and over, with growing waits. The cause is inside the app: a crash, a missing setting, or a failed connection."
+  >
+
+Read the logs of the crashed attempt, not the new empty one.
+
+```bash
+kubectl logs POD_NAME --previous
+kubectl describe pod POD_NAME
+```
+
+  </Trouble>
+  <Trouble
+    symptom="Pending, and the event says: 0/3 nodes are available: 3 Insufficient memory"
+    cause="The scheduler cannot find a node with enough free resources to satisfy the pod's requests. On a laptop this is often Docker's memory allowance being too small for three nodes."
+  >
+
+Check what the event says exactly, then lower the requests in the YAML or give Docker more memory (Docker Desktop settings, Resources). Also look for a taint or label mismatch if the event says so.
+
+```bash
+kubectl describe pod POD_NAME
+kubectl describe nodes
+```
+
+  </Trouble>
+  <Trouble
+    symptom="Reason: OOMKilled, Exit Code: 137"
+    cause="The container used more memory than its limit, so the kernel killed it. Exit code 137 means it was killed by a signal."
+  >
+
+Find it in `describe`, then raise the memory limit or fix the memory use.
+
+```bash
+kubectl describe pod POD_NAME
+```
+
+Edit `limits.memory` in `k8s/web.yaml` and apply it again.
+
+  </Trouble>
+  <Trouble
+    symptom="Readiness probe failed: HTTP probe failed with statuscode: 503"
+    cause="The app answered, but with an error, or it was not listening yet. For readiness this only removes the pod from the Service. For liveness, repeated failures restart the container."
+  >
+
+Check the path, the port and the app's logs. The probe has to hit a URL that really exists.
+
+```bash
+kubectl describe pod POD_NAME
+kubectl logs POD_NAME
+```
+
+If the failure says connection refused during start-up, raise `initialDelaySeconds` or add a startup probe.
+
+  </Trouble>
+  <Trouble
+    symptom="error: lost connection to pod"
+    cause="port-forward is attached to one specific pod. When that pod is replaced during a rollout, restart, or crash, the tunnel breaks."
+  >
+
+Run the command again. It picks a pod that exists now.
+
+```bash
+kubectl port-forward service/web 8081:80
+```
+
+  </Trouble>
+  <Trouble
+    symptom="bind: address already in use"
+    cause="An earlier port-forward is still running in another terminal, or another program uses that port."
+  >
+
+Stop the old one with Ctrl+C, or choose another local port such as `8082:80`.
+
+  </Trouble>
+</TroubleGroup>
+
+### A debug routine for any pod that is not running
+
+Whatever the status says, work through the same five checks in order. Most problems show up in the first two.
+
+<Flow
+  steps={[
+    { title: "get pods", note: "What is the status?", tone: "blue", icon: <Eye /> },
+    { title: "describe", note: "Read Events at the bottom", tone: "violet", icon: <Search /> },
+    { title: "logs", note: "What did the app say?", tone: "green", icon: <ScrollText /> },
+    { title: "logs --previous", note: "What did the last crash say?", tone: "amber", icon: <ScrollText /> },
+    { title: "exec", note: "Look inside and test", tone: "pink", icon: <Terminal /> },
+  ]}
+/>
+
+```bash
+kubectl get pods
+kubectl describe pod POD_NAME
+kubectl logs POD_NAME
+kubectl logs POD_NAME --previous
+kubectl exec -it POD_NAME -- sh
+```
+
+<Callout kind="tip">
+
+Modern images (distroless, chainguard) often have no shell, so `exec ... sh` fails. Attach a throwaway debug container that shares the pod's processes instead: `kubectl debug -it POD_NAME --image=busybox --target=CONTAINER_NAME`.
+
+</Callout>
+
+## Next steps and sources
+
+- Add a PersistentVolumeClaim to Redis so the counter survives a pod deletion.
+- Install metrics-server and try a HorizontalPodAutoscaler on `web`.
+- Replace the port-forward with a [Gateway API](https://gateway-api.sigs.k8s.io/) route.
+- Compare all three: [Docker vs Kubernetes vs VM](/tutorials/docker-vs-kubernetes-vs-vm).
+- Official docs: [kubernetes.io/docs/concepts/overview](https://kubernetes.io/docs/concepts/overview/) and [cluster components](https://kubernetes.io/docs/concepts/overview/components/); [kind quick start](https://kind.sigs.k8s.io/docs/user/quick-start/)
+- [roadmap.sh Kubernetes roadmap](https://roadmap.sh/kubernetes)
+- Video this was planned around: [Kubernetes vs Docker](https://www.youtube.com/watch?v=GvbsN5jv-hQ) by NextWork

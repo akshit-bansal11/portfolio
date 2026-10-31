@@ -5,13 +5,17 @@ description: Use when adding or editing a tutorial on this portfolio (/tutorials
 
 # Writing a tutorial
 
-Tutorials are hands-on notes, not blog essays. The reader finishes with something running on their own machine. The first one, `src/content/tutorials/docker-kubernetes-vms.mdx`, is the reference for tone, depth and structure.
+Tutorials are hands-on notes, not blog essays. The reader finishes with something running on their own machine. `src/content/tutorials/docker-101.mdx` is the reference for tone, depth and structure.
 
 ## What the owner asked for
 
 Hold every tutorial to this. Reasons are given so the rule survives later edits.
 
 **Content**
+- One topic per tutorial, aimed at a beginner ("X 101"). Put comparisons between topics in their own tutorial instead of mixing them in.
+- Start with "In one minute" (3-4 bullets), then "Words you need": a `<Glossary>` that explains EVERY term the page uses (host, process, kernel, image...) in everyday words with a "like:" comparison. Never use a term before it has been explained.
+- Simple words, short sentences. If a sentence needs a second technical word to explain the first, rewrite it.
+- Research before writing: roadmap.sh topics come from `kamranahmedse/developer-roadmap`, official docs from `docker/docs` and `kubernetes/website` (clone with `--filter=blob:none --no-checkout`, read files with `git show`). The sites themselves are blocked from cloud sessions; the GitHub repos are not. Verify every fact and version this way.
 - The reader should get the full story without reading much. Points over paragraphs, tables (`Compare`) for any X-vs-Y, a diagram for any mechanism. Paragraphs only for the one sentence of "why". Never say the same thing twice (e.g. a logo card and a TLDR repeating each other).
 - Detailed, typed notes on what is actually useful in today's dev market. No filler, no history lessons, nothing kept only for completeness. If a working developer would not use it, cut it.
 - Detailed but to the point, in simple language. Explain each idea with a real-life reference or example before the jargon.
@@ -26,6 +30,7 @@ Hold every tutorial to this. Reasons are given so the rule survives later edits.
 - Callout kinds: `note`, `insight`, `important`, `tip`, `warn`, `real-world`. Use them to break up long prose.
 - Show the tools' logos (`<Logo tech>` / `<LogoRow>`; react-icons `si`) at the top and at each tool's section.
 - Coloured diagrams, flowcharts, arrows and icons. Diagrams show the real mechanism and are not decoration.
+- Diagrams and flowcharts look hand-drawn, like notes in a notebook: ruled paper, wobbly outlines, handwriting font, sketched arrows. The kit and `Flow` already do this; keep it that way.
 - Draw diagrams in MDX with the HTML kit in `Diagram.tsx`: `Diagram` (canvas + caption), `Group` (titled region, `cols`, `dashed` for boundaries like a VM or network), `Node` (icon or `tech` logo, title, note), `Row` and `Link` (labelled arrow; `dir="right"` inside rows, `"both"` for two-way). Nest Groups to show "runs inside". Do not hand-draw SVG with fixed coordinates: text shrinks or balloons at full width.
 - Code blocks look like a real IDE: title bar, file name, line numbers, syntax colours, copy button.
 - Make it interactive where that teaches something a static picture cannot, such as a simulator the reader can break, a state machine, a step-through or a decision tree. Do not add interaction for show.

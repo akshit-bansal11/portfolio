@@ -10,6 +10,12 @@ const nextConfig: NextConfig = {
     return [
       { source: "/blog", destination: "/#blog", permanent: true },
       { source: "/tutorials", destination: "/#tutorials", permanent: true },
+      // The first tutorial was split into four; its old address goes to the comparison.
+      {
+        source: "/tutorials/docker-kubernetes-vms",
+        destination: "/tutorials/docker-vs-kubernetes-vs-vm",
+        permanent: true,
+      },
     ];
   },
   images: {

@@ -202,58 +202,69 @@ html:has([data-tutorial-article])[data-blog-theme="dark"] {
   overflow-wrap: anywhere;
 }
 
-/* Diagram canvas: a faint dot grid behind the boxes. */
-.tut-canvas {
-  background-image: radial-gradient(var(--blog-rule) 1px, transparent 1px);
-  background-size: 18px 18px;
+/* Diagram paper: ruled lines with a red margin, like a notebook page. */
+.tut-paper {
+  background-image:
+    linear-gradient(
+      to right,
+      transparent 1.4rem,
+      var(--tut-red) 1.4rem,
+      var(--tut-red) calc(1.4rem + 1.5px),
+      transparent calc(1.4rem + 1.5px)
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 31px,
+      var(--blog-rule) 31px,
+      var(--blog-rule) 32px
+    );
 }
 
-/* Diagram arrows: a dashed line and a CSS triangle head (points down by default). */
-.tut-line {
-  background: repeating-linear-gradient(to bottom, currentcolor 0 6px, transparent 6px 10px);
-}
-
-.tut-head {
-  width: 0;
-  height: 0;
-  border-inline: 6px solid transparent;
-  border-top: 9px solid currentcolor;
-}
-
-.tut-head-up {
-  border-top: 0;
-  border-bottom: 9px solid currentcolor;
-}
-
-@media (width >= 48rem) {
-  .tut-across .tut-line {
-    background: repeating-linear-gradient(to right, currentcolor 0 6px, transparent 6px 10px);
-  }
-
-  .tut-across .tut-head {
-    rotate: -90deg;
-  }
-
-  .tut-across .tut-head-up {
-    rotate: -90deg;
-  }
-}
-
-@media screen and (prefers-reduced-motion: no-preference) {
-  .tut-line {
-    background-size: 100% 20px;
-    animation: tut-line-down 0.8s linear infinite;
-  }
-
-  .tut-across .tut-line {
-    background-size: 100% 100%;
+@media (width >= 40rem) {
+  .tut-paper {
+    background-image:
+      linear-gradient(
+        to right,
+        transparent 2.6rem,
+        var(--tut-red) 2.6rem,
+        var(--tut-red) calc(2.6rem + 1.5px),
+        transparent calc(2.6rem + 1.5px)
+      ),
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 31px,
+        var(--blog-rule) 31px,
+        var(--blog-rule) 32px
+      );
   }
 }
 
-@keyframes tut-line-down {
-  to {
-    background-position: 0 10px;
-  }
+/* Hand-drawn outlines: uneven corner radii read as a pen line, not a ruler. */
+.tut-sketch {
+  border-radius: 18px 225px 15px 255px / 255px 15px 225px 18px;
+}
+
+.tut-sketch-alt {
+  border-radius: 255px 15px 225px / 15px 225px 15px 255px;
+}
+
+.tut-sketch:nth-child(even) {
+  rotate: 0.4deg;
+}
+
+.tut-sketch:nth-child(odd) {
+  rotate: -0.3deg;
+}
+
+/* Highlighter-pen stroke behind a word. */
+.tut-marker {
+  background: linear-gradient(
+    transparent 55%,
+    color-mix(in srgb, var(--tone) 30%, transparent) 55%
+  );
+  padding-inline: 0.15em;
 }
 
 /* Glow on coloured boxes in dark mode only (the light value is transparent). */
@@ -276,4 +287,13 @@ html:has([data-tutorial-article])[data-blog-theme="dark"] {
   .tut-term-tip {
     display: none;
   }
+}
+
+/* Sticky notes lean a little, alternately. */
+.tut-note:nth-child(odd) {
+  rotate: -0.8deg;
+}
+
+.tut-note:nth-child(even) {
+  rotate: 0.7deg;
 }
