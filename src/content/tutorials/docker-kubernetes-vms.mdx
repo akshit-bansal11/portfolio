@@ -1,150 +1,210 @@
-import { Box, Boxes, Container, Cpu, Eye, FileCode, Gauge, Hammer, Layers, Package, Play, Rocket, ScrollText, Search, Server, Terminal, UploadCloud } from "lucide-react";
-import ClusterDiagram from "@/components/tutorials/docker-kubernetes-vms/ClusterDiagram";
+import { Activity, Boxes, Brain, Building2, Cloud, Container, Cpu, Database, Eye, FileCode, Folder, Gauge, Globe, Hammer, HardDrive, Home, KeyRound, Laptop, Layers, MemoryStick, Monitor, Network, Package, Play, RefreshCw, Route, ScrollText, Search, Server, Settings, Tag, Terminal, Trash2, UploadCloud, UserCog } from "lucide-react";
 import ClusterSim from "@/components/tutorials/docker-kubernetes-vms/ClusterSim";
 import ContainerLifecycle from "@/components/tutorials/docker-kubernetes-vms/ContainerLifecycle";
 import DecisionTree from "@/components/tutorials/docker-kubernetes-vms/DecisionTree";
-import HypervisorDiagram from "@/components/tutorials/docker-kubernetes-vms/HypervisorDiagram";
 import LayerCacheDemo from "@/components/tutorials/docker-kubernetes-vms/LayerCacheDemo";
 import PodStatusExplorer from "@/components/tutorials/docker-kubernetes-vms/PodStatusExplorer";
-import PortMapDiagram from "@/components/tutorials/docker-kubernetes-vms/PortMapDiagram";
 import RoadmapChecklist from "@/components/tutorials/docker-kubernetes-vms/RoadmapChecklist";
-import ReconcileDiagram from "@/components/tutorials/docker-kubernetes-vms/ReconcileDiagram";
 import RolloutStrategies from "@/components/tutorials/docker-kubernetes-vms/RolloutStrategies";
-import ServiceDiagram from "@/components/tutorials/docker-kubernetes-vms/ServiceDiagram";
-import StackExplorer from "@/components/tutorials/docker-kubernetes-vms/StackExplorer";
-import StorageDiagram from "@/components/tutorials/docker-kubernetes-vms/StorageDiagram";
 
-## TLDR and what you will build
-
-<TLDR>
-  <Takeaway>A VM is a whole pretend computer, with its own OS.</Takeaway>
-  <Takeaway>A container is just an isolated process that shares the host's kernel.</Takeaway>
-  <Takeaway>Docker builds and runs containers on one machine.</Takeaway>
-  <Takeaway>Kubernetes keeps many containers alive across many machines.</Takeaway>
-</TLDR>
+## At a glance
 
 <LogoRow
   techs={["vm", "docker", "k8s"]}
-  notes={["A whole pretend computer", "Package and run one app anywhere", "Keep many containers alive on many machines"]}
+  points={[
+    ["Fakes a whole computer: hardware + its own OS", "Boots in minutes, takes GBs", "Use for a hard wall or a different OS"],
+    ["Packs one app + its files into an image", "Runs it as an isolated process in about a second", "Use to ship any app the same way everywhere"],
+    ["Runs many containers across many machines", "Restarts, scales and updates them for you", "Use when one machine is not enough"],
+  ]}
 />
 
-These three tools get mixed up constantly, because they all answer the same question: how do I run my software somewhere else without it breaking? They answer it at different sizes. A **virtual machine** fakes a whole computer. A **container** fakes only the corner of a computer your app needs. **Kubernetes** does not fake anything. It is the manager that decides which containers run on which machines and replaces them when they die.
+One picture for the whole page:
 
-We will use one picture for the whole tutorial. A VM is an **independent house**: its own plot, its own water tank, its own wiring, and a lot of cost to build. A container is a **flat in an apartment society**: its own front door and meter, but the foundation, the lift and the main plumbing are shared with everyone else in the block. Kubernetes is the **society's building manager**: it decides who gets which flat, notices when a flat has a leak, and sends a replacement tenant the same day.
+<Diagram caption="VM = your own house. Container = a flat in a society. Kubernetes = the society's manager.">
+  <Row>
+    <Group title="Independent house = VM" tone="vm" icon={<Home />}>
+      <Node title="Own plot and foundation" note="its own slice of hardware" tone="vm" icon={<HardDrive />} />
+      <Node title="Own water tank and wiring" note="its own OS and kernel" tone="vm" icon={<Settings />} />
+      <Node title="Slow and costly to build" note="minutes to boot, GBs on disk" tone="vm" icon={<Gauge />} />
+    </Group>
+    <Link dir="right" tone="docker" label="share the base" />
+    <Group title="Flat in a society = container" tone="docker" icon={<Building2 />}>
+      <Node title="Own door and meter" note="namespaces + cgroups" tone="docker" icon={<KeyRound />} />
+      <Node title="Shared foundation and plumbing" note="one shared Linux kernel" tone="docker" icon={<Layers />} />
+      <Node title="Move in today" note="starts in ~1 s, MBs on disk" tone="docker" icon={<Play />} />
+    </Group>
+    <Link dir="right" tone="k8s" label="manage many" />
+    <Group title="Society manager = Kubernetes" tone="k8s" icon={<UserCog />}>
+      <Node title="Decides who gets which flat" note="scheduler places pods" tone="k8s" icon={<Route />} />
+      <Node title="Notices a leak" note="health checks" tone="k8s" icon={<Activity />} />
+      <Node title="New tenant the same day" note="replaces dead pods" tone="k8s" icon={<RefreshCw />} />
+    </Group>
+  </Row>
+</Diagram>
 
-By the end you will have built this yourself, on your own machine:
+<Callout kind="insight">
 
-1. A throwaway virtual machine, to feel what "a whole computer" costs. This part is optional.
-2. A small web app called `hits` that counts page views in Redis, packed into a Docker image and run with Docker Compose.
-3. The same app on a real three-node Kubernetes cluster, where you scale it, kill its pods, roll out a new version, break the rollout on purpose and roll it back.
+They are not rivals. They **stack**: a cloud server is split into VMs, a VM is a Kubernetes node, and the node runs your containers.
 
-What you need:
+</Callout>
 
-- A laptop or desktop with Windows 11, macOS or Linux. Windows 10 and Home editions work for the Docker parts.
-- Roughly 8 GB of RAM (more is nicer) and about 20 GB of free disk. These are my rough suggestions, not hard limits. Running three Kubernetes nodes on top of Docker is the heaviest part.
-- Hardware virtualization switched on in your BIOS or UEFI. Most machines ship with it on.
-- A terminal you are comfortable pasting commands into. Windows commands assume PowerShell.
-- About two to three hours the first time. That is an estimate. Most of the time goes into downloads and into reading what each command printed, which is the point.
+<Diagram caption="How the three sit together in a real cloud setup.">
+  <Group title="Physical server in a data centre" tone="blue" icon={<Server />}>
+    <Group title="VM (a Kubernetes node)" tone="vm" icon={<Monitor />} dashed>
+      <Group title="Kubernetes: kubelet + containerd" tone="k8s" cols={3}>
+        <Node title="web" note="container" tech="docker" tone="docker" />
+        <Node title="web" note="container" tech="docker" tone="docker" />
+        <Node title="redis" note="container" tech="docker" tone="docker" />
+      </Group>
+    </Group>
+  </Group>
+</Diagram>
+
+**What you will build** on your own machine:
+
+1. A throwaway **VM**, to feel what "a whole computer" costs (optional).
+2. A small web app, `hits`, that counts page views in Redis, run with **Docker Compose**.
+3. The same app on a 3-node **Kubernetes** cluster: scale it, kill pods, roll out a version, break it, roll it back.
+
+<Compare
+  label="You need"
+  columns={["Minimum", "Notes"]}
+  rows={[
+    ["OS", "Windows 10/11, macOS or Linux", "Windows commands assume PowerShell"],
+    ["RAM / disk", "8 GB / 20 GB free", "My rough estimate; 3 Kubernetes nodes are the heavy part"],
+    ["CPU", "Virtualization on in BIOS/UEFI", "On by default on most machines"],
+    ["Time", "2 to 3 hours", "Mostly downloads and reading output"],
+  ]}
+/>
 
 <Callout kind="tip" title="How to use this page">
 
-Read sections 2 to 7 once, then do section 8 with a terminal open. Every walkthrough step ends with a green "You should see" box. If your screen does not match it, open section 9 and search for the first line of your error. Pick your operating system in any tab and every other OS tab on the page switches with it.
+Read the concepts once, then do the **DIY walkthrough** with a terminal open. Every step ends with a "You should see" box. If yours differs, search **Troubleshooting** for the first line of your error.
 
 </Callout>
 
 ## The problem all three solve
 
-Two problems keep coming up in a developer's life, and these tools exist because of them.
-
-**Problem one: it works on my machine.** You build a service on your laptop with Node 24 and a recent Redis. You deploy it to a server that has Node 18 from three years ago, or to your teammate's laptop where a global package clashes with yours. The code is identical and the behaviour is not. Everything around the code (the runtime, the libraries, the OS files, the settings) was different. Think of cooking a recipe in your own kitchen versus a hostel kitchen. The recipe is the same. The pans, the gas pressure and the salt are not.
-
-**Problem two: one server, many apps.** A server costs money whether it is busy or idle. You want to pack several apps onto it. But if each app needs different library versions, or one app eats all the memory, or one gets hacked, the others suffer. You want walls between them without buying one machine per app.
-
-Look at how each tool answers:
-
-- A **VM** puts a complete computer inside your computer. The wall is thick: even a hacked guest sees only fake hardware. The price is that every VM carries its own full operating system.
-- A **container** keeps the wall but drops the extra operating system. It packs your app with the files it needs and runs it as an ordinary process that the host kernel fences off. Cheap and fast, with a thinner wall.
-- **Kubernetes** appears when you have fifty containers and ten machines. Nobody can start, watch, restart and reroute that by hand at three in the morning, so you describe what you want and Kubernetes keeps making it true.
-
-<Callout kind="real-world">
-
-Think of a housing society in Pune. The independent bungalows on the edge of town each have their own borewell and generator. The flats in the society share water supply, lift and security, so each flat costs far less to run. And when a pipe bursts in flat 304, nobody phones the plumber individually: the society's facility manager already has a contract and a replacement schedule. Bungalow, flat, facility manager. VM, container, Kubernetes.
-
-</Callout>
-
-One more thing to keep in mind: these are not rivals. In real systems they stack. Your Kubernetes cluster runs containers, and those containers usually run on nodes that are themselves VMs in someone's cloud. Section 4 shows that stack with your own hands.
-
-## Virtual machines
-
-<Logo tech="vm" label className="text-xl" />
-
-A virtual machine is a program that behaves like a computer. It has a virtual CPU, virtual memory, a virtual disk and a virtual network card, and you install a normal operating system into it. That operating system, called the **guest**, believes it owns real hardware. It does not.
-
-The software that makes this trick work is the <Term def="Software that splits one physical machine into many virtual ones and keeps them apart. Examples: KVM, Hyper-V, VMware ESXi.">hypervisor</Term>. It sits between the real hardware and the VMs, hands out slices of CPU, RAM and disk, and makes sure one VM cannot peek into another. It is the house-builder and the land registry: it marks out the plots and makes sure no one builds across a boundary.
-
-There are two kinds, and the difference is only what sits underneath:
-
-- **Type 1 (bare metal)** runs directly on the hardware. There is no ordinary operating system below it. Servers in data centres and the machines that cloud providers rent out work this way, because a missing layer means less waste.
-- **Type 2 (hosted)** is an ordinary program running on your normal Windows, macOS or Linux. VirtualBox and VMware Workstation are examples. Convenient for a laptop, one layer heavier.
-
-<Figure caption="The two kinds of hypervisor. Type 2 adds a complete host operating system between the hardware and the hypervisor.">
-  <HypervisorDiagram />
-</Figure>
-
-### What a guest operating system costs
-
-Every VM boots a full operating system: its own kernel, its own background services, its own memory reservation, its own copy of system files. Start two VMs and you have three operating systems on one machine. That is why a VM usually takes seconds to minutes to boot, why its disk image is measured in gigabytes, and why a laptop struggles with more than a few.
-
-Back to the housing metaphor: an independent house needs its own foundation, its own water tank and its own electrical panel before the first person moves in. It is wonderfully private. It is just not cheap or quick to build.
-
-### Where VMs still win
-
-Containers are popular, but do not write VMs off. They are the right answer when:
-
-- **You need a hard wall.** Each VM runs its own kernel, so a bug in the guest kernel does not hand the attacker the host. This is why cloud providers put different customers on different VMs, not just different containers.
-- **You need a different OS or kernel.** A Windows VM on a Linux host, an older Linux kernel for a vendor tool, or a test across three operating systems on one laptop.
-- **You are running legacy software** that expects a specific old OS version and cannot be moved without risk.
-- **You want the machine underneath everything else.** Almost every managed Kubernetes cluster runs its nodes as VMs. Your containers live in flats, but the building stands on land that a VM carved out.
-
-In short: VMs are not the old way that containers replaced. They are the layer below, and still the right tool when isolation or a different kernel matters more than size.
-
-## Containers
-
-<Logo tech="docker" label className="text-xl" />
-
-<Callout kind="important">
-
-A container is not a small VM. A container is a normal process with blinkers on.
-
-</Callout>
-
-When you run a container, the host's own kernel starts your program like any other program. Then it applies two features that Linux has had for years:
-
-- **Namespaces** limit what the process can *see*. Inside its own namespaces the program sees only its own process list, its own network interfaces, its own filesystem view and its own hostname. It believes it is alone on the machine. This is the front door with your name on it: from inside the flat you cannot see into the neighbour's.
-- **Control groups (cgroups)** limit how much it can *use*: a ceiling on memory, a share of CPU. This is the electricity meter with a cap on it.
-
-A third piece is the filesystem. A container's files come from an **image**, which is a stack of read-only **layers** (base OS files, then your dependencies, then your code), with one thin writable layer added on top when the container runs. Layers are shared between images, so ten images built on the same base store that base once.
-
-And the kernel is **shared**. There is exactly one Linux kernel and every container on the machine uses it. That is the foundation and plumbing of the apartment block. It is why a container starts in about a second and takes megabytes rather than gigabytes. It is also why a container cannot bring its own kernel: a Linux container needs a Linux kernel underneath.
-
-### Under the hood
-
-Three Linux kernel features, plus one standard, are all a container really is. Learn these names: interviewers love them, and every weird container bug traces back to one of them.
-
-<FeatureGrid
-  items={[
-    { title: "Namespaces", tag: "pid, net, mnt, uts, ipc, user", tone: "blue", icon: <Eye />, text: "What a process can see. Each container gets its own process list (its app is PID 1), network stack, mount table and hostname." },
-    { title: "cgroups", tag: "docker run --memory 256m --cpus 0.5", tone: "amber", icon: <Gauge />, text: "How much it can use. Memory, CPU and process-count ceilings. Cross the memory ceiling and the kernel kills it (exit code 137)." },
-    { title: "Union filesystem (OverlayFS)", tag: "docker image history IMAGE", tone: "green", icon: <Layers />, text: "Read-only image layers stacked with one thin writable layer on top. Changing a file copies it up into the writable layer first." },
-    { title: "OCI standards", tag: "image spec + runtime spec", tone: "violet", icon: <FileCode />, text: "The open formats for images and runtimes. An image built by Docker runs on containerd, Podman or Kubernetes unchanged." },
+<Compare
+  label="Problem"
+  columns={[{ title: "What goes wrong", tone: "red" }, { title: "What fixes it", tone: "green" }]}
+  rows={[
+    ["It works on my machine", "Same code, different Node, libraries or OS files on the server, so it behaves differently", "Ship the app together with everything around it: a VM image or a container image"],
+    ["One server, many apps", "Apps clash over library versions, one eats all the RAM, one gets hacked and the rest suffer", "Put walls between apps: VMs (thick walls) or containers (thin, cheap walls)"],
+    ["Many containers, many servers", "Nobody can restart, scale and reroute 50 containers by hand at 3 a.m.", "Describe what you want; Kubernetes keeps making it true"],
   ]}
 />
 
-<Callout kind="insight">
+## Virtual machines
 
-Run `docker run --rm alpine ps` and you see one process: `ps` itself, as PID 1. Same machine, same kernel, but the PID namespace hides everything else. That is the whole trick.
+- A **VM** is software pretending to be a computer: virtual CPU, RAM, disk and network card.
+- You install a normal OS into it, the **guest**. It thinks it owns real hardware.
+- The <Term def="Software that splits one physical machine into many VMs and keeps them apart. Examples: KVM, Hyper-V, VMware ESXi.">hypervisor</Term> hands out slices of the real hardware and keeps VMs apart.
+
+<Diagram caption="Type 1 runs on the bare hardware. Type 2 runs as an app on your normal OS, one layer heavier.">
+  <Row>
+    <Group title="Type 1: bare metal (servers, clouds)" tone="vm">
+      <Row>
+        <Node title="App A" tone="pink" icon={<Package />} />
+        <Node title="App B" tone="pink" icon={<Package />} />
+      </Row>
+      <Row>
+        <Node title="Guest OS" note="own kernel" tone="amber" icon={<Cpu />} />
+        <Node title="Guest OS" note="own kernel" tone="amber" icon={<Cpu />} />
+      </Row>
+      <Node title="Hypervisor" note="KVM, ESXi, Hyper-V" tone="vm" icon={<Layers />} />
+      <Node title="Hardware" tone="blue" icon={<Server />} />
+    </Group>
+    <Link dir="right" tone="vm" label="vs" />
+    <Group title="Type 2: hosted (your laptop)" tone="violet">
+      <Row>
+        <Node title="App A" tone="pink" icon={<Package />} />
+        <Node title="App B" tone="pink" icon={<Package />} />
+      </Row>
+      <Row>
+        <Node title="Guest OS" note="own kernel" tone="amber" icon={<Cpu />} />
+        <Node title="Guest OS" note="own kernel" tone="amber" icon={<Cpu />} />
+      </Row>
+      <Node title="Hypervisor app" note="VirtualBox, VMware Workstation" tone="vm" icon={<Layers />} />
+      <Node title="Host OS" note="Windows, macOS, Linux" tone="green" icon={<Laptop />} />
+      <Node title="Hardware" tone="blue" icon={<Server />} />
+    </Group>
+  </Row>
+</Diagram>
+
+**The cost:** every VM boots a full OS, with its own kernel, services and reserved RAM. Two VMs on a laptop means three operating systems running.
+
+<Compare
+  label="VMs still win when"
+  columns={[{ title: "Why", tone: "vm", tech: "vm" }]}
+  rows={[
+    ["You need a hard security wall", "Each VM has its own kernel. Clouds isolate customers with VMs, not containers."],
+    ["You need another OS or kernel", "Windows on Linux, an old kernel for a vendor tool, testing on 3 OSes"],
+    ["You run legacy software", "It expects one specific old OS and cannot be moved safely"],
+    ["You need the layer underneath", "Almost every managed Kubernetes node is a VM"],
+  ]}
+/>
+
+## Containers
+
+<Callout kind="important">
+
+A container is **not** a small VM. It is a normal process on the host, with blinkers on.
 
 </Callout>
+
+<Diagram caption="The key difference: containers share one kernel instead of each booting their own OS.">
+  <Row>
+    <Group title="Virtual machines" tone="vm" icon={<Monitor />}>
+      <Row>
+        <Node title="App A + libs" tone="pink" icon={<Package />} />
+        <Node title="App B + libs" tone="pink" icon={<Package />} />
+      </Row>
+      <Row>
+        <Node title="Guest OS + kernel" tone="amber" icon={<Cpu />} />
+        <Node title="Guest OS + kernel" tone="amber" icon={<Cpu />} />
+      </Row>
+      <Node title="Hypervisor" tone="vm" icon={<Layers />} />
+      <Node title="Hardware" tone="blue" icon={<Server />} />
+    </Group>
+    <Link dir="right" tone="docker" label="drop the guest OS" />
+    <Group title="Containers" tone="docker" icon={<Container />}>
+      <Row>
+        <Node title="App A + libs" tone="pink" icon={<Package />} />
+        <Node title="App B + libs" tone="pink" icon={<Package />} />
+      </Row>
+      <Node title="Container runtime" note="Docker Engine / containerd" tone="docker" tech="docker" />
+      <Node title="Host OS: ONE shared kernel" tone="amber" icon={<Cpu />} />
+      <Node title="Hardware (or a VM)" tone="blue" icon={<Server />} />
+    </Group>
+  </Row>
+</Diagram>
+
+<Compare
+  columns={[{ title: "Virtual machine", tone: "vm", tech: "vm" }, { title: "Container", tone: "docker", tech: "docker" }]}
+  rows={[
+    ["What is faked", "The hardware", "The OS's view of itself"],
+    ["Own kernel", "Yes, one per VM", "No, shares the host's"],
+    ["Start time", "Seconds to minutes", "About a second"],
+    ["Size", "Gigabytes", "Tens to hundreds of MB"],
+    ["Isolation", "Strong (hardware level)", "Good (kernel is shared)"],
+    ["Different OS inside", "Any OS", "Linux on Linux only"],
+    ["Best for", "Hard isolation, other OS, cloud nodes", "Packaging and shipping apps, CI, microservices"],
+  ]}
+/>
+
+### Under the hood
+
+A container is just three Linux kernel features plus one standard:
+
+<FeatureGrid
+  items={[
+    { title: "Namespaces", tag: "pid, net, mnt, uts, ipc, user", tone: "blue", icon: <Eye />, text: "What it can SEE: its own process list (its app is PID 1), network, filesystem and hostname." },
+    { title: "cgroups", tag: "docker run --memory 256m --cpus 0.5", tone: "amber", icon: <Gauge />, text: "How much it can USE: memory and CPU ceilings. Cross the memory one and it is killed (exit 137)." },
+    { title: "Union filesystem (OverlayFS)", tag: "docker image history IMAGE", tone: "green", icon: <Layers />, text: "Read-only image layers stacked, plus one thin writable layer on top that dies with the container." },
+    { title: "OCI standards", tag: "image spec + runtime spec", tone: "violet", icon: <FileCode />, text: "Open formats: an image built with Docker runs on containerd, Podman or Kubernetes unchanged." },
+  ]}
+/>
 
 <Quiz
   question="Your laptop runs Linux. Can a container on it run a Windows app natively?"
@@ -152,57 +212,52 @@ Run `docker run --rm alpine ps` and you see one process: `ps` itself, as PID 1. 
   answer={1}
 >
 
-A container is a process on the host kernel. A Windows binary needs a Windows kernel, so you would need a VM. This is the clearest line between the two.
+A container is a process on the host kernel. A Windows app needs a Windows kernel, so you need a VM.
 
 </Quiz>
 
-### The link people miss: Docker on Windows and macOS
+### Docker on Windows and macOS
 
-Your Windows or macOS has no Linux kernel, yet Docker runs Linux containers there. How? **Docker Desktop quietly starts a small Linux virtual machine** and runs your containers inside it. On Windows that VM uses WSL 2, which is why Docker's install page asks for it and for hardware virtualization. So on a Windows laptop you really have all three layers stacked: a hypervisor, a Linux VM, and containers in it. Later, kind will add a fourth: Kubernetes nodes that are themselves containers. The walkthrough proves this with one command.
+Windows and macOS have no Linux kernel, so **Docker Desktop quietly runs a small Linux VM** and puts your containers inside it.
 
-Press each layer below. The same layer lights up in all three stacks, so you can see which parts are copied per app and which are shared.
-
-<StackExplorer />
-
-### Comparing the two
-
-<SettingsTable
-  columns={["Question", "Virtual machine", "Container"]}
-  rows={[
-    ["What is virtualised?", "The hardware", "The operating system's view of itself"],
-    ["Has its own kernel?", "Yes, one per VM", "No, shares the host kernel"],
-    ["Typical start time", "Seconds to minutes", "A second or less"],
-    ["Typical size on disk", "Gigabytes", "Tens to hundreds of megabytes"],
-    ["Isolation", "Strong, hardware-level boundary", "Good, but the kernel is shared"],
-    ["Other OS inside?", "Yes, any OS the hypervisor supports", "Only same-kernel userlands, so Linux on Linux"],
-    ["Best for", "Hard isolation, odd OS, legacy, cloud nodes", "Packaging and running apps, microservices, CI"],
-  ]}
-/>
-
-The sizes above are the usual ballpark, not measurements of any specific image. Your own numbers will differ, and the walkthrough lets you measure them.
+<Diagram caption="On a Windows or Mac laptop, all three layers are already stacked.">
+  <Group title="Your laptop: Windows or macOS" tone="blue" icon={<Laptop />}>
+    <Group title="Hidden Linux VM (WSL 2 on Windows)" tone="vm" icon={<Monitor />} dashed>
+      <Node title="Docker Engine" note="runs on the VM's Linux kernel" tech="docker" tone="docker" />
+      <Row>
+        <Node title="web" note="container" tone="docker" icon={<Container />} />
+        <Node title="redis" note="container" tone="docker" icon={<Container />} />
+        <Node title="kind node" note="a Kubernetes node that is itself a container" tone="k8s" tech="k8s" />
+      </Row>
+    </Group>
+  </Group>
+</Diagram>
 
 ## Docker essentials
 
-Docker is the tool that made containers easy. The two words people mix up are **image** and **container**:
-
-- An **image** is the packaged, frozen result: your app, its dependencies and the OS files it needs. It is a class in code, or the written recipe, or the sealed tiffin box.
-- A **container** is a running copy of an image. It is an object created from the class, the dish cooked from the recipe, the opened tiffin. You can start ten containers from one image.
-
-You write a <Term def="A text file of instructions (FROM, COPY, RUN, CMD) that docker build turns into an image.">Dockerfile</Term> (the recipe), run `docker build` to produce an image, and `docker run` to start a container from it. Because the image carries everything, the same image behaves the same on your laptop, on a teammate's laptop and on a server. That is the answer to "works on my machine".
+<Compare
+  columns={[{ title: "Image", tone: "blue" }, { title: "Container", tone: "docker", tech: "docker" }]}
+  rows={[
+    ["What it is", "Frozen package: app + dependencies + OS files", "A running copy of an image"],
+    ["Code analogy", "A class", "An object"],
+    ["Kitchen analogy", "The sealed tiffin box", "The opened tiffin you are eating"],
+    ["Changes?", "Never (read-only layers)", "Yes, in its writable layer"],
+    ["How many", "One", "As many as you start from it"],
+    ["Made by", <code>docker build</code>, <code>docker run</code>],
+  ]}
+/>
 
 <Flow
   steps={[
     { title: "Dockerfile", note: "The recipe you write", tone: "blue", icon: <FileCode /> },
     { title: "docker build", note: "Bakes layers", tone: "violet", icon: <Hammer /> },
-    { title: "Image", note: "hits:1.0, read-only", tone: "docker", icon: <Package /> },
+    { title: "Image", note: "hits:1.0", tone: "docker", icon: <Package /> },
     { title: "docker push", note: "To a registry", tone: "amber", icon: <UploadCloud /> },
     { title: "docker run", note: "Anywhere with Docker", tone: "green", icon: <Play /> },
   ]}
 />
 
 ### A Dockerfile, line by line
-
-This block is for explanation only. The real file you will build is in the walkthrough.
 
 ```dockerfile
 # Annotated example, not the walkthrough file
@@ -216,44 +271,49 @@ EXPOSE 3000
 CMD ["node", "server.js"]
 ```
 
-- `FROM` picks the base image to start from. `alpine` variants are small. Think of it as moving into an already-built flat rather than building walls.
-- `WORKDIR` sets the folder that later lines work in, and creates it if needed.
-- `COPY` brings files from your project folder into the image.
-- `RUN` runs a command while *building* (here, installing packages). Its result is saved into the image.
-- `USER` switches from root to a normal user, so a bug in your app has fewer powers.
-- `EXPOSE` documents the port the app listens on. It does not publish it; you do that when you run.
-- `CMD` is the command that runs when a container *starts*. Use the list form so signals reach your program.
-- `ENV` sets an environment variable that is present both while building and while running. `ARG` exists only while building.
+<Compare
+  label="Instruction"
+  columns={[{ title: "What it does", tone: "blue" }, { title: "When", tone: "amber" }]}
+  rows={[
+    ["FROM", "Base image to start from (alpine = small)", "Build"],
+    ["WORKDIR", "Folder later lines work in (created if missing)", "Build + run"],
+    ["COPY", "Files from your project into the image", "Build"],
+    ["RUN", "Runs a command; the result is saved as a layer", "Build, once"],
+    ["ENV / ARG", "ENV: variable at build and run. ARG: build only", "Build (+ run)"],
+    ["USER", "Switch away from root, so a bug has fewer powers", "Run"],
+    ["EXPOSE", "Documents the port. Does NOT publish it", "Docs only"],
+    ["CMD", "What starts every time a container starts (use list form)", "Run, every start"],
+  ]}
+/>
 
-The classic confusion is `RUN` versus `CMD`. `RUN` happens once, at build time, and its result is frozen into the image (installing packages). `CMD` happens every time a container starts from that image (launching your server). If you put `npm start` in a `RUN` line, the build would sit there running your server forever and never finish.
+<Callout kind="warn">
 
-When you publish a port with `-p 8080:3000`, the number on the **left** is the port on your computer and the number on the **right** is the port inside the container. Mixing them up is the most common reason a freshly started container "does nothing".
+**RUN vs CMD:** `RUN` happens once at build (install packages). `CMD` happens at every start (launch the server). Put `npm start` in a `RUN` and the build never finishes.
+
+</Callout>
 
 ### Layers and the build cache
 
-Every `FROM`, `COPY` and `RUN` line makes a layer. Docker remembers each layer and reuses it if neither the instruction nor anything it reads has changed. Once one layer has to be rebuilt, every layer after it is rebuilt too. This single rule explains why Dockerfile line order matters so much.
-
-The bad habit is `COPY . .` followed by `npm install`: any code edit changes the copied files, so the packages are reinstalled every time. The good habit is to copy only `package.json`, install, and *then* copy your code. Try it:
+- Every `FROM`, `COPY` and `RUN` makes a **layer**, and Docker caches it.
+- If one layer changes, **every layer after it rebuilds**.
+- So: copy `package.json` and install first, copy your code last. Code edits then skip the slow install.
 
 <LayerCacheDemo />
 
 <Quiz
-  question="You change one line in server.js. Which Dockerfile order rebuilds fastest?"
-  options={["COPY . . then RUN npm install", "COPY package*.json, RUN npm install, then COPY . .", "RUN npm install then COPY . .", "Order does not matter, Docker caches everything"]}
+  question="You change one line in server.js. Which order rebuilds fastest?"
+  options={["COPY . . then RUN npm install", "COPY package*.json, RUN npm install, then COPY . .", "RUN npm install then COPY . .", "Order does not matter"]}
   answer={1}
 >
 
-The install layer only depends on `package.json`, so it stays cached. Only the final `COPY . .` layer is rebuilt.
+The install layer only depends on `package.json`, so it stays cached. Only the last `COPY` reruns.
 
 </Quiz>
 
-### Keep junk out: .dockerignore
+### Smaller images: .dockerignore and multi-stage
 
-`COPY . .` copies everything in the folder, including `node_modules` from your machine, your `.git` history and maybe a `.env` full of secrets. A `.dockerignore` file lists what to leave out, and it also stops needless cache misses. Add it to every project.
-
-### Multi-stage builds
-
-Some tools are needed to build the app but not to run it: compilers, test frameworks, dev dependencies. A multi-stage build uses one image to build and a second, clean one to ship, copying across only the finished result.
+- **`.dockerignore`** keeps `node_modules`, `.git` and `.env` out of the build: faster builds, no leaked secrets.
+- **Multi-stage**: build in a fat image, ship only the result in a clean one. No compilers or dev tools in production.
 
 ```dockerfile
 # Illustration only: build in one stage, ship from another
@@ -271,274 +331,307 @@ USER node
 CMD ["node", "dist/server.js"]
 ```
 
-The final image never contains the compiler or the test tools. It is smaller and has less in it for an attacker to use. Our little `hits` app has no build step, so the walkthrough keeps one stage.
-
 ### Storage: volumes and bind mounts
 
-A container's writable layer disappears with the container. For data that must survive (a database), mount storage from outside:
+<Diagram caption="Only the writable layer dies with docker rm.">
+  <Node title="Container" note="writes to /tmp, /data, /app/src" tech="docker" tone="docker" />
+  <Link label="where do the files go?" tone="docker" />
+  <Row>
+    <Group title="Writable layer" tone="red" icon={<Trash2 />}>
+      <Node title="Deleted with the container" note="scratch files only" tone="red" />
+    </Group>
+    <Group title="Named volume" tone="green" icon={<Database />}>
+      <Node title="-v hits-data:/data" note="Docker manages it. Survives rm. For databases" tone="green" />
+    </Group>
+    <Group title="Bind mount" tone="blue" icon={<Folder />}>
+      <Node title="-v ./src:/app/src" note="Your own folder. Live code edits in dev" tone="blue" />
+    </Group>
+  </Row>
+</Diagram>
 
-- A **volume** is storage that Docker manages for you. It outlives the container and is the normal choice for databases. We use one for Redis.
-- A **bind mount** maps a folder from your machine into the container. It is perfect in development (edit code on your laptop, see it inside the container) and a poor choice in production because it ties the container to one machine's folder layout.
+### Networks and ports
 
-<Figure caption="Three places a container can write. Only the writable layer dies with docker rm.">
-  <StorageDiagram />
-</Figure>
+<Diagram caption="Exactly what you build in the walkthrough.">
+  <Row>
+    <Node title="Your browser" note="localhost:8080" tone="blue" icon={<Globe />} />
+    <Link dir="right" label="-p 8080:3000" tone="amber" />
+    <Group title="Compose network hits_default (has DNS)" tone="docker" dashed>
+      <Row>
+        <Node title="web" note="listens on :3000" tone="docker" tech="docker" />
+        <Link dir="right" label="redis://redis:6379" tone="red" />
+        <Node title="redis" note=":6379, no -p" tone="red" icon={<Database />} />
+      </Row>
+      <Node title="volume hits-data" note="Redis data survives restarts" tone="green" icon={<HardDrive />} />
+    </Group>
+  </Row>
+</Diagram>
 
-### Networks and names
+- `-p 8080:3000` reads **host:container**. Forget `-p` and the app runs, but nothing outside Docker reaches it.
+- Containers on the same network find each other **by name** (`redis`), never by IP.
+- Publish only what the outside needs. Redis has no `-p`, and that is a security feature.
 
-Containers on the same user-defined Docker network can reach each other by **name**. If one container is called `cache`, another one can connect to `redis://cache:6379`, with no IP addresses involved. Docker runs a small DNS service for this. It is the society intercom: you dial "flat 304", not the wiring path. Docker Compose builds such a network for you automatically and names each container after its service.
+### Compose, registries and tags
 
-This is exactly the setup you build in the walkthrough:
+- **Compose**: all services, networks and volumes in one `compose.yaml`, started with `docker compose up`. Right for local dev and single-server apps. Not a cluster manager.
+- **Registry**: where images live (Docker Hub, GHCR, ECR, ...).
 
-<Figure caption="The laptop gets in only through the published port. Containers on the same network find each other by name.">
-  <PortMapDiagram />
-</Figure>
+<Diagram caption="Reading an image name.">
+  <Row>
+    <Node title="ghcr.io" note="registry (default: Docker Hub)" tone="amber" icon={<Cloud />} />
+    <Link dir="right" tone="amber" />
+    <Node title="akshit" note="user or org" tone="violet" icon={<UserCog />} />
+    <Link dir="right" tone="violet" />
+    <Node title="hits" note="repository" tone="docker" icon={<Package />} />
+    <Link dir="right" tone="docker" />
+    <Node title=":1.0" note="tag = a movable label" tone="green" icon={<Tag />} />
+  </Row>
+</Diagram>
 
-<Callout kind="note">
+<Callout kind="warn">
 
-`-p 8080:3000` reads **host:container**. Left is the port on your laptop, right is the port the app listens on inside. Forget `-p` and the app runs fine but nothing outside Docker can reach it. Publish only what the outside world needs: Redis above has no `-p`, and that is a security feature.
+`latest` is just a tag, not "the newest". It can point somewhere else tomorrow. Deploy explicit versions or commit hashes.
 
 </Callout>
 
-### Compose: several containers, one file
-
-Real apps are rarely one container. **Docker Compose** describes several services, their networks and their volumes in one `compose.yaml`, and starts them all with `docker compose up`. It is the right tool for local development and for small single-server deployments. It is not a cluster manager, and that gap is where Kubernetes comes in.
-
-### Registries and tags
-
-An image lives in a **registry**: Docker Hub is the default, and clouds and GitHub have their own. An image name looks like `registry/user/name:tag`. The tag is a label, usually a version.
-
-Be careful with `latest`. It is only a tag, and it is not guaranteed to be the newest. It can be moved to point at a different image tomorrow, so the same name can give you different software next week. In real deployments, use an explicit version or a Git commit hash as the tag, and never rely on `latest`.
-
 ### Habits worth having from day one
 
-- Run as a non-root user (`USER`).
-- Start from a small base image, and pin its version in the tag.
-- Never put secrets in an image. Anyone with the image can read every layer. Pass secrets at run time.
-- Add a `HEALTHCHECK` so Docker, Compose and later Kubernetes can tell "running" from "working".
-- Write a `.dockerignore`.
-- Order the Dockerfile from least to most frequently changing.
-- Scan your images for known vulnerabilities. Docker Scout (`docker scout quickview IMAGE`, or the Vulnerabilities tab in Docker Desktop) lists the packages inside an image and flags known problems with suggestions. Other scanners do the same job, and many registries scan on push.
-- Commit your lockfile and use `npm ci` in real projects. The walkthrough uses `npm install` only because it has no lockfile to keep short.
-
-### Tools that make this nicer
-
-Docker Desktop has a window where you can see running containers, read their logs, open a terminal inside one and browse images. It does the same as `docker logs` and `docker exec`, so use whichever you like, but learn the commands because servers have no window. The Docker extension for VS Code adds Dockerfile highlighting and hover help. And once you know what a Dockerfile is for, `docker init` can generate a starter Dockerfile and Compose file for your project. Read what it makes before you trust it.
+<Compare
+  label="Habit"
+  columns={[{ title: "Why", tone: "green" }]}
+  rows={[
+    ["Run as non-root (USER)", "A hacked app gets fewer powers"],
+    ["Small, pinned base image", "Less to download, less to attack, same build every time"],
+    ["No secrets in the image", "Anyone with the image can read every layer. Pass them at run time"],
+    ["Add a HEALTHCHECK", "Lets Docker, Compose and Kubernetes tell running from working"],
+    ["Write a .dockerignore", "Faster builds, nothing private copied in"],
+    ["Least-changing lines first", "Better cache hits, faster rebuilds"],
+    ["Scan images", <span><code>docker scout quickview IMAGE</code> or any scanner: flags known CVEs</span>],
+    ["Lockfile + npm ci", "Same dependency versions everywhere"],
+  ]}
+/>
 
 ### The life of a container
 
-A container is a thing with a lifecycle, not just a process. Press the commands to move one through its states. Notice which are greyed out: you cannot `rm` a running container without `-f`, and `run` is just `create` plus `start`.
+Press the commands. Greyed-out ones are not allowed in the current state.
 
 <ContainerLifecycle />
 
 <Callout kind="insight">
 
-`docker stop` sends SIGTERM and waits 10 seconds before SIGKILL. Kubernetes does the same on every rollout (30 seconds by default). An app that ignores SIGTERM drops in-flight requests on every deploy. Handle it.
+`docker stop` sends SIGTERM, waits 10 s, then kills. Kubernetes does the same on every rollout (30 s by default). Apps that ignore SIGTERM drop requests on every deploy.
 
 </Callout>
 
 ### Command cheat sheet
 
-Images:
-
-<SettingsTable
-  columns={["Command", "What it does"]}
+<Compare
+  label="Command"
+  columns={[{ title: "What it does", tone: "docker", tech: "docker" }]}
   rows={[
-    ["docker build -t name:tag .", "Build an image from the Dockerfile in this folder"],
-    ["docker images", "List images on this machine"],
-    ["docker pull name:tag", "Download an image from a registry"],
-    ["docker tag src dst", "Give an existing image another name or tag"],
-    ["docker push name:tag", "Upload an image to a registry (after docker login)"],
-    ["docker image rm name:tag", "Delete an image"],
-  ]}
-/>
-
-Containers:
-
-<SettingsTable
-  columns={["Command", "What it does"]}
-  rows={[
-    ["docker run -d --name n -p 8080:3000 img", "Start a container in the background and publish a port"],
-    ["docker ps", "List running containers (add -a for stopped ones too)"],
-    ["docker logs -f n", "Show and follow a container's output"],
-    ["docker exec -it n sh", "Open a shell inside a running container"],
-    ["docker stop n", "Ask the container to stop politely"],
-    ["docker rm -f n", "Stop and remove a container"],
-    ["docker inspect n", "Print everything Docker knows about it, as JSON"],
-  ]}
-/>
-
-Compose, volumes and cleanup:
-
-<SettingsTable
-  columns={["Command", "What it does"]}
-  rows={[
-    ["docker compose up -d", "Create and start every service in compose.yaml"],
-    ["docker compose logs -f", "Follow the logs of all services"],
-    ["docker compose down", "Stop and remove containers and the network, keep volumes"],
-    ["docker compose down -v", "Same, and also delete the volumes (your data)"],
-    ["docker volume ls", "List volumes"],
-    ["docker system df", "Show how much disk Docker is using"],
+    ["docker build -t name:tag .", "Build an image from ./Dockerfile"],
+    ["docker images / docker pull / docker push", "List / download / upload images"],
+    ["docker run -d --name n -p 8080:3000 img", "Start in the background, publish a port"],
+    ["docker ps (-a)", "Running containers (-a: stopped too)"],
+    ["docker logs -f n", "Follow a container's output"],
+    ["docker exec -it n sh", "Shell inside a running container"],
+    ["docker stop n / docker rm -f n", "Stop politely / stop and delete"],
+    ["docker inspect n", "Everything Docker knows, as JSON"],
+    ["docker compose up -d / down", "Start / remove all services (volumes kept)"],
+    ["docker compose down -v", "Also delete volumes (your data)"],
+    ["docker system df", "How much disk Docker uses"],
   ]}
 />
 
 ## Kubernetes essentials
 
-<Logo tech="k8s" label className="text-xl" />
-
-Docker alone is perfect for one machine. The trouble starts when the app must survive a machine dying, handle traffic spikes by adding copies, update without downtime and spread across several servers. Doing that with `docker run` over SSH means you become the building manager yourself: tracking which flat is where, restarting things at night, and updating every load-balancer entry by hand. This job is called **orchestration**, and Kubernetes (often written K8s) is the standard tool for it.
-
-Be clear about the split. Docker (or any tool that builds standard images) *packages* the app. Kubernetes *runs and manages* the packages across many machines. They work together, not against each other.
-
-### The cluster, piece by piece
-
-A Kubernetes **cluster** is a group of machines called **nodes**, split into two roles.
-
-<Figure caption="The control plane decides, the worker nodes do. Every node reports back to the API server.">
-  <ClusterDiagram />
-</Figure>
-
-The **control plane** is the brain:
-
-- The **API server** is the front door. Every tool, including `kubectl`, talks to it, and so does every other part of the cluster.
-- **etcd** is the database where the cluster's desired and current state is stored. Lose it without a backup and you lose the cluster's memory.
-- The **scheduler** picks a node for each new pod, based on free memory and CPU and any rules you set.
-- The **controller manager** runs the control loops (more on these below) that keep reality matching what you asked for.
-
-Each **worker node** runs your workload:
-
-- The **kubelet** is the node's agent. It asks the API server what should be running here, starts it and reports back.
-- **kube-proxy** keeps the network rules on the node that make Services work.
-- A **container runtime** actually runs containers. In modern clusters this is **containerd** (or CRI-O), not Docker Engine. Kubernetes removed its built-in Docker support in version 1.24. This does not break your images: images built by `docker build` follow the standard image format, so containerd runs them without complaint.
-
-### Desired state and the reconcile loop
-
-This is the idea that makes Kubernetes feel different. You do not tell it *do these steps*. You tell it *what you want to be true*: "three copies of this app, always". That is the **desired state**. Controllers then run in an endless loop: look at what is actually running, compare with what you asked for, fix any difference, repeat.
-
-<Figure caption="The reconcile loop. It never finishes: it runs for as long as the cluster does.">
-  <ReconcileDiagram />
-</Figure>
-
-<Callout kind="real-world">
-
-A thermostat is a reconcile loop. You set 24 degrees (desired state). It measures the room (actual state). When the room drifts, it switches the AC on or off. You never script "run the AC for ten minutes". Kubernetes treats your apps like the thermostat treats your room.
-
-</Callout>
-
-Here is what happens when you hand Kubernetes a file:
-
-<Flow
-  steps={[
-    { title: "kubectl apply", note: "You send the YAML", tone: "blue", icon: <Terminal /> },
-    { title: "API server", note: "Checks and accepts it", tone: "violet", icon: <Server /> },
-    { title: "etcd", note: "Stores the new desired state", tone: "amber", icon: <Package /> },
-    { title: "Controllers + scheduler", note: "Create pods, pick nodes", tone: "green", icon: <Boxes /> },
-    { title: "kubelet", note: "Starts the containers", tone: "cyan", icon: <Container /> },
-    { title: "Pod running", note: "Status goes back up", tone: "pink", icon: <Rocket /> },
+<Compare
+  label="Job"
+  columns={[{ title: "By hand with docker run + SSH", tone: "red" }, { title: "With Kubernetes", tone: "k8s", tech: "k8s" }]}
+  rows={[
+    ["A server dies", "You notice, SSH elsewhere, restart everything", "Pods are rescheduled on healthy nodes automatically"],
+    ["Traffic spike", "Start more copies by hand, edit the load balancer", "Change a number, or let the autoscaler do it"],
+    ["New version", "Stop, pull, start on every server; downtime", "Rolling update, one pod at a time; rollback in one command"],
+    ["Where does it run", "A spreadsheet of IPs", "The scheduler picks a node with room"],
   ]}
 />
 
+<Callout kind="note">
+
+Docker **packages** the app. Kubernetes **runs and manages** those packages across machines. They work together. (K8s = K + 8 letters + s.)
+
+</Callout>
+
+### The cluster, piece by piece
+
+<Diagram caption="The control plane decides. Worker nodes do the work and report back.">
+  <Group title="Control plane (the brain)" tone="k8s" icon={<Brain />} cols={4}>
+    <Node title="API server" note="the front door; kubectl talks to it" tone="blue" icon={<Terminal />} />
+    <Node title="etcd" note="the memory: desired state" tone="amber" icon={<Database />} />
+    <Node title="Scheduler" note="picks a node for each pod" tone="violet" icon={<Route />} />
+    <Node title="Controllers" note="fix differences, forever" tone="green" icon={<RefreshCw />} />
+  </Group>
+  <Link dir="both" label="kubelets watch for work + report status" tone="k8s" />
+  <Row>
+    <Group title="Worker node 1" tone="cyan" icon={<Server />} cols={2}>
+      <Node title="kubelet" note="node agent" tone="cyan" icon={<UserCog />} />
+      <Node title="kube-proxy" note="Service routing" tone="cyan" icon={<Network />} />
+      <Node title="containerd" note="runtime" tone="docker" tech="docker" />
+      <Node title="Pods" note="web, web" tone="pink" icon={<Boxes />} />
+    </Group>
+    <Group title="Worker node 2" tone="cyan" icon={<Server />} cols={2}>
+      <Node title="kubelet" note="node agent" tone="cyan" icon={<UserCog />} />
+      <Node title="kube-proxy" note="Service routing" tone="cyan" icon={<Network />} />
+      <Node title="containerd" note="runtime" tone="docker" tech="docker" />
+      <Node title="Pods" note="web, redis" tone="pink" icon={<Boxes />} />
+    </Group>
+  </Row>
+</Diagram>
+
+### Desired state and the reconcile loop
+
+You never say "start 3 pods". You say "**there should be** 3 pods", and controllers keep making it true.
+
+<Diagram caption="The loop never finishes. It runs as long as the cluster does.">
+  <Row>
+    <Node title="You apply YAML" note="replicas: 3" tone="blue" icon={<FileCode />} />
+    <Link dir="right" tone="blue" label="saved in etcd" />
+    <Node title="Controller compares" note="want 3, have 2" tone="violet" icon={<Search />} />
+    <Link dir="right" tone="violet" label="difference" />
+    <Node title="Acts" note="creates 1 pod" tone="green" icon={<Play />} />
+    <Link dir="right" tone="green" label="then" />
+    <Node title="Watches again" note="forever" tone="amber" icon={<RefreshCw />} />
+  </Row>
+</Diagram>
+
+Break it yourself: change replicas, delete pods, take nodes down, and read the log.
+
+<ClusterSim />
+
 ### The objects that matter
 
-You write YAML describing **objects**. Learn these ones first.
+<Compare
+  label="Object"
+  columns={[{ title: "What it is", tone: "k8s", tech: "k8s" }, { title: "Society analogy", tone: "violet" }]}
+  rows={[
+    ["Pod", "Smallest unit: 1+ containers sharing an IP. Disposable, gets a new IP when replaced", "A tenant"],
+    ["Deployment", "Keeps N identical pods running, does rolling updates and rollbacks", "\"Always keep 3 flats rented\""],
+    ["Service", "One stable name and IP in front of changing pods, picked by label", "The society's reception number"],
+    ["ConfigMap / Secret", "Settings / passwords outside the image. Secrets are only base64, not encrypted", "The notice board / the locked drawer"],
+    ["Namespace", "A folder for objects, per team or environment", "A wing of the building"],
+    ["PVC", "A request for storage that outlives pods", "A storeroom you rent"],
+    ["HPA", "Adds or removes pods based on CPU (needs requests + metrics-server)", "More guards at festival time"],
+    ["Gateway API", "Routes outside HTTP traffic in. Replaces Ingress for new work (ingress-nginx retired March 2026)", "The main gate"],
+  ]}
+/>
 
-**Pod.** The smallest thing Kubernetes runs: a wrapper around one or more containers that share a network address and storage. Usually it is one container. Pods are **disposable**. Kubernetes does not repair a sick pod, it replaces it, and the replacement gets a new IP address. A pod is a single tenant in a flat: when they leave, a new tenant moves in, with a new phone number.
+<Diagram caption="Clients only know the Service. Pods behind it come and go.">
+  <Row>
+    <Node title="Client pod" note="calls http://web" tone="blue" icon={<Globe />} />
+    <Link dir="right" tone="blue" />
+    <Node title="Service: web" note="stable name + IP, selector app=web" tone="k8s" tech="k8s" />
+    <Link dir="right" tone="k8s" label="load-balances" />
+    <Group title="Pods labelled app=web" tone="pink" icon={<Boxes />}>
+      <Node title="web-7d9f-x2k" note="10.244.1.5" tone="pink" />
+      <Node title="web-7d9f-q8p" note="10.244.2.3" tone="pink" />
+      <Node title="web-7d9f-m1z" note="10.244.1.9 (new, replaced one)" tone="pink" />
+    </Group>
+  </Row>
+</Diagram>
 
-**Deployment (and ReplicaSet).** You almost never create bare pods. You create a Deployment that says "keep three pods of this template running". It manages a ReplicaSet, which counts the copies, and it handles rolling updates by creating a new ReplicaSet and shifting pods across a few at a time. Deployments also keep the previous version around so you can roll back.
+<Compare
+  label="Service type"
+  columns={[{ title: "Reachable from", tone: "k8s" }, { title: "Use for", tone: "green" }]}
+  rows={[
+    ["ClusterIP (default)", "Inside the cluster only", "Service-to-service calls"],
+    ["NodePort", "A port on every node", "Quick tests, bare-metal setups"],
+    ["LoadBalancer", "A real cloud load balancer", "Public traffic on a cloud (costs money)"],
+  ]}
+/>
 
-**Service.** Because pod IPs keep changing, a Service gives a group of pods one stable name and address, and spreads requests across whichever pods are healthy right now. It picks its pods with **labels**: the Service says "send traffic to pods labelled `app=web`".
-
-<Figure caption="Clients know only the Service. Pods can come and go, and their IPs can change, behind it.">
-  <ServiceDiagram />
-</Figure>
-
-Services come in three common kinds. **ClusterIP** (the default) is reachable only inside the cluster. **NodePort** also opens a port on every node. **LoadBalancer** asks your cloud to provision a real external load balancer, and costs real money on a real cloud.
-
-**ConfigMap and Secret.** Configuration lives outside the image so the same image works in every environment. A ConfigMap holds ordinary settings. A Secret holds sensitive values like passwords and tokens. But be honest about it: by default a Secret is only **base64 encoded**, which is a way of writing bytes as text, not encryption. Anyone who can read the Secret can decode it in one command. Real protection needs access rules (RBAC) and, ideally, encryption of etcd at rest or an external secrets system.
-
-**Namespace.** A folder inside the cluster for grouping and separating objects, such as one per team or per environment. Names must be unique only within a namespace.
-
-**Probes.** Kubernetes asks your app how it is doing. A **readiness** probe decides whether a pod receives traffic: while it fails, the pod is taken out of the Service but left running. A **liveness** probe decides whether the container is stuck: if it fails repeatedly, the container is restarted. A **startup** probe gives slow starters extra time before the other two begin. Mixing these up is a classic mistake: a liveness probe that checks the database will restart all your pods when the database blips.
-
-**Requests and limits.** A *request* is what a container needs; the scheduler uses it to decide whether a node has room. A *limit* is the ceiling. Go over the CPU limit and the container is slowed down. Go over the memory limit and it is killed, which you will see as `OOMKilled`. Without requests the scheduler is guessing, and without them autoscaling cannot do its sums.
-
-**HorizontalPodAutoscaler (HPA).** Adds or removes pods based on measured usage, usually CPU as a percentage of the request. It needs a metrics source (the metrics-server add-on) and it only works if you set requests. This is how the cluster absorbs a traffic spike without you waking up.
-
-**PersistentVolumeClaim (PVC).** A pod's own disk dies with it. A PVC is a request for durable storage that outlives pods. Databases need one, and in practice you run databases with a StatefulSet or, more often, buy a managed database instead.
-
-**Getting traffic in: Gateway API.** A Service is internal by default. To expose HTTP routes like `/shop` and `/api` on one public address, Kubernetes has used **Ingress** objects. The popular ingress-nginx controller was retired in March 2026, when its maintenance ended, and the Kubernetes networking group recommends the newer **Gateway API** (or another maintained controller) for new work. Existing Ingress objects are still everywhere in the wild, so you will read them, but write new routing with Gateway API. We do not need either for the walkthrough because `kubectl port-forward` is enough on a laptop.
+<Compare
+  label="Probe / setting"
+  columns={[{ title: "Question it answers", tone: "blue" }, { title: "If it fails", tone: "red" }]}
+  rows={[
+    ["readinessProbe", "Can this pod take traffic now?", "Removed from the Service, keeps running"],
+    ["livenessProbe", "Is the process stuck?", "Container restarted"],
+    ["startupProbe", "Has a slow app finished booting?", "Others wait; restarted if it never boots"],
+    ["requests", "How much does it need? (scheduler uses this)", "Pod stays Pending if no node has room"],
+    ["limits", "Hard ceiling", "CPU throttled; memory: OOMKilled"],
+  ]}
+/>
 
 <Quiz
-  question="Your app's /health checks the database. You use it as the liveness probe. The database blips for 20 seconds. What happens?"
-  options={["Nothing, Kubernetes waits", "Every pod is restarted at once, making the outage worse", "Only new requests fail", "The Service switches to a backup"]}
+  question="Your /health checks the database and you use it as the liveness probe. The database blips for 20 s. What happens?"
+  options={["Nothing, Kubernetes waits", "Every pod restarts at once, making it worse", "Only new requests fail", "The Service switches to a backup"]}
   answer={1}
 >
 
-Liveness failure means restart. All pods share the same database, so they all fail and all restart together. Check dependencies in **readiness** (stop traffic) and keep **liveness** to "is this process stuck?".
+Liveness failure = restart, and all pods share the database, so all restart together. Check dependencies in **readiness**; keep **liveness** for "is this process stuck?".
 
 </Quiz>
 
 ### More objects you will meet
 
-Not needed for the walkthrough, but you will read them in any real repo. Know what each is for.
-
 <FeatureGrid
   items={[
-    { title: "Job / CronJob", tone: "amber", icon: <Play />, tag: "kind: CronJob", text: "Runs a pod to completion instead of forever: migrations, backups, nightly reports. CronJob does it on a schedule." },
-    { title: "StatefulSet", tone: "violet", icon: <Server />, tag: "web-0, web-1, web-2", text: "Like a Deployment, but each pod keeps a stable name and its own volume. For databases and queues you cannot buy managed." },
-    { title: "DaemonSet", tone: "cyan", icon: <Cpu />, tag: "one per node", text: "Exactly one pod on every node. Log shippers, monitoring agents, network plugins." },
-    { title: "RBAC", tone: "pink", icon: <Eye />, tag: "Role + RoleBinding", text: "Who (a user or a ServiceAccount) may do which verbs on which objects. Give apps the least they need." },
-    { title: "NetworkPolicy", tone: "red", icon: <Boxes />, tag: "podSelector + ingress", text: "A firewall between pods. By default every pod can reach every other pod; a policy says \"only web may talk to redis\"." },
-    { title: "Helm / Kustomize", tone: "green", icon: <Package />, tag: "helm install / kubectl apply -k", text: "Templating and packaging for YAML. Helm installs third-party apps as charts; Kustomize patches your own YAML per environment." },
+    { title: "Job / CronJob", tone: "amber", icon: <Play />, tag: "kind: CronJob", text: "Runs to completion: migrations, backups, reports. CronJob runs it on a schedule." },
+    { title: "StatefulSet", tone: "violet", icon: <Server />, tag: "web-0, web-1, web-2", text: "Pods with stable names and their own volumes. For databases you cannot buy managed." },
+    { title: "DaemonSet", tone: "cyan", icon: <Cpu />, tag: "one per node", text: "One pod on every node: log shippers, monitoring agents, network plugins." },
+    { title: "RBAC", tone: "pink", icon: <KeyRound />, tag: "Role + RoleBinding", text: "Who may do which actions on which objects. Give apps the least they need." },
+    { title: "NetworkPolicy", tone: "red", icon: <Network />, tag: "podSelector + ingress", text: "A firewall between pods. By default every pod can reach every pod." },
+    { title: "Helm / Kustomize", tone: "green", icon: <Package />, tag: "helm install / kubectl apply -k", text: "Package and template YAML. Helm for third-party apps, Kustomize for per-environment patches." },
   ]}
 />
 
 ### Rolling, blue-green and canary
 
-Shipping a new version without downtime is half the reason companies run Kubernetes. A Deployment does rolling updates for free. The other two need a little extra (two Deployments, or Gateway API route weights, or a tool like Argo Rollouts). Step through each:
-
 <RolloutStrategies />
-
-### Play with the loop
-
-Below is a toy cluster with three nodes. Change the number of wanted copies, delete a pod, take a node down and watch the controller notice and repair. Take all three nodes down and see what "Pending" means. The log underneath says what the loop decided and why.
-
-<ClusterSim />
 
 ### When not to use Kubernetes
 
-Kubernetes is heavy machinery. It is probably the wrong choice if:
-
-- You run one app, or a few, on one server. Docker Compose is simpler and honest.
-- Your team has nobody who will own the cluster's upgrades, access rules and monitoring.
-- A managed service already does the job: your cloud's container platform (for example AWS ECS or Fargate, Google Cloud Run, Azure Container Apps) takes a container and runs it, scaling included, without you operating nodes.
-- Traffic is small and steady. Autoscaling is wasted on it.
-
-The reasonable path is to start with one machine and Compose, move to a managed container service when you outgrow it, and reach for Kubernetes when you truly need its flexibility or your company already runs it.
+- One app or a few on one server: **Compose** is simpler.
+- Nobody on the team will own upgrades, access rules and monitoring.
+- A managed container service does the job: **Cloud Run, AWS ECS/Fargate, Azure Container Apps**.
+- Small, steady traffic: autoscaling buys you nothing.
 
 ## Which one do I use?
 
-Answer honestly. Most people who think they need Kubernetes need Compose.
-
 <DecisionTree />
+
+<Compare
+  label="Situation"
+  columns={[{ title: "Pick", tone: "green" }]}
+  rows={[
+    ["Different OS, legacy app, hard isolation", <Logo tech="vm" label />],
+    ["One app or a few, one server, small team", <Logo tech="docker" label />],
+    ["Containers in the cloud, no cluster team", "Managed container service"],
+    ["Many services, many machines, self-healing, safe rollouts", <Logo tech="k8s" label />],
+  ]}
+/>
 
 ### What the market expects
 
-I have no survey to quote, so take this as my judgment about where a junior developer should spend the first months, and check it against job posts you actually want.
+My judgment, not a survey. Check it against job posts you want.
 
-- **Learn now:** the Linux command line, Git, Docker and Compose (writing Dockerfiles, reading logs, debugging a container), reading and writing YAML, and the daily `kubectl` commands: `get`, `describe`, `logs`, `apply`, `exec`, `port-forward`, `rollout`. Know what a Pod, Deployment, Service, ConfigMap and Secret are, and why probes and resource limits exist.
-- **Learn on the job:** Helm or Kustomize for templating YAML, Gateway API and cluster networking, RBAC and security policy, GitOps tools, monitoring and logging stacks, cluster upgrades, cloud-specific storage and load balancers. These depend on your employer, so learn them when you meet them.
-- **Skip for now:** building a cluster from scratch by hand, service meshes, writing your own operators, multi-cluster setups, and Docker Swarm (rarely chosen for new work). They are worth learning later, not before the basics are solid.
+<Compare
+  label="When"
+  columns={[{ title: "What", tone: "violet" }]}
+  rows={[
+    ["Learn now", "Linux CLI, Git, Dockerfiles, Compose, debugging containers, YAML, kubectl get/describe/logs/apply/exec/port-forward/rollout, Pod/Deployment/Service/ConfigMap/Secret, probes and limits"],
+    ["Learn on the job", "Helm/Kustomize, Gateway API, RBAC and policies, GitOps (Argo CD, Flux), monitoring and logging, cluster upgrades, cloud storage and load balancers"],
+    ["Skip for now", "Clusters from scratch, service meshes, writing operators, multi-cluster, Docker Swarm"],
+  ]}
+/>
 
 ### Your roadmap
 
-The topic lists below come from the [Docker](https://roadmap.sh/docker) and [Kubernetes](https://roadmap.sh/kubernetes) roadmaps on roadmap.sh, trimmed to what this page covers and what to learn next. Tick them off as you go; the ticks stay in your browser.
+Topics from the [Docker](https://roadmap.sh/docker) and [Kubernetes](https://roadmap.sh/kubernetes) roadmaps on roadmap.sh. Tick them off; the ticks stay in your browser.
 
 <RoadmapChecklist />
 
 ## DIY walkthrough
 
-Time to build it. Every step says what to run and ends with what you should see. If something differs, jump to section 9.
+Time to build it. Every step says what to run and ends with what you should see. If something differs, jump to **Troubleshooting**.
 
 <Callout kind="warn" title="Windows readers">
 
@@ -913,7 +1006,7 @@ docker compose down -v
 
 ### Part 3: Kubernetes on kind
 
-kind (Kubernetes in Docker) builds a real cluster whose nodes are Docker containers. That is why it is perfect for a laptop, and why it is a fourth layer in the stack from section 4.
+kind (Kubernetes in Docker) builds a real cluster whose nodes are Docker containers. That is why it is perfect for a laptop, and why it is a fourth layer in the stack from **At a glance**.
 
 ```yaml
 # file: hits/k8s/kind.yaml
@@ -1103,7 +1196,7 @@ kubectl scale deployment/web --replicas=3
   </Step>
   <Step title="Kill a pod and watch it come back" tone="cyan" checkpoint="The pod you deleted goes Terminating, and a new pod with a different suffix appears right away. The count stays at three.">
 
-Pick any pod name from the list, replace `POD_NAME` with it, and delete it. This is the reconcile loop from section 6, live.
+Pick any pod name from the list, replace `POD_NAME` with it, and delete it. This is the reconcile loop, live.
 
 ```bash
 kubectl get pods -l app=web

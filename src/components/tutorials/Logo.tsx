@@ -47,11 +47,11 @@ export function Logo({ tech, label = false, className }: LogoProps) {
 
 interface LogoRowProps {
   techs: Tech[];
-  /** Short line under each logo, same order as `techs`. */
-  notes?: string[];
+  /** Short bullet points under each logo, same order as `techs`. */
+  points?: string[][];
 }
 
-export function LogoRow({ techs, notes }: LogoRowProps) {
+export function LogoRow({ techs, points }: LogoRowProps) {
   return (
     <ul className="my-8 grid list-none grid-cols-1 gap-3 p-0 sm:grid-cols-3">
       {techs.map((tech, i) => {
@@ -60,13 +60,24 @@ export function LogoRow({ techs, notes }: LogoRowProps) {
           <li
             key={tech}
             data-tone={tone}
-            className="tut-glow flex items-center gap-4 rounded-2xl border-2 border-(--tone) bg-(image:--tone-fill) p-4"
+            className="tut-glow rounded-2xl border-2 border-(--tone) bg-(image:--tone-fill) p-4"
           >
-            <Icon className="h-12 w-12 shrink-0 text-(--tone)" aria-hidden />
-            <div>
-              <p className="text-lg font-bold text-ink">{name}</p>
-              {notes?.[i] && <p className="text-sm leading-snug text-ink-muted">{notes[i]}</p>}
-            </div>
+            <p className="flex items-center gap-3 text-lg font-bold text-ink">
+              <Icon className="h-10 w-10 shrink-0 text-(--tone)" aria-hidden />
+              {name}
+            </p>
+            {points?.[i] && (
+              <ul className="mt-3 list-none space-y-1.5 p-0 text-sm leading-snug text-ink">
+                {points[i].map((point) => (
+                  <li key={point} className="flex gap-2">
+                    <span aria-hidden className="text-(--tone)">
+                      ▸
+                    </span>
+                    {point}
+                  </li>
+                ))}
+              </ul>
+            )}
           </li>
         );
       })}
