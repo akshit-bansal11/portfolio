@@ -1,0 +1,984 @@
+{
+  "name": "NPM",
+  "slug": "npm",
+  "logo": "https://svgl.app/library/npm.svg",
+  "accent": "#CB3837",
+  "description": "Node Package Manager — the default package manager for Node.js",
+  "categories": [
+    {
+      "title": "Init & Config",
+      "commands": [
+        {
+          "command": "npm init",
+          "description": "Interactively create a package.json file"
+        },
+        {
+          "command": "npm init -y",
+          "description": "Create a package.json file with all defaults, skipping prompts"
+        },
+        {
+          "command": "npm init --scope=@myorg",
+          "description": "Initialize a scoped package interactively"
+        },
+        {
+          "command": "npm set init-author-name \"John Doe\"",
+          "description": "Set default author name used during npm init"
+        },
+        {
+          "command": "npm set init-author-email \"john@example.com\"",
+          "description": "Set default author email used during npm init"
+        },
+        {
+          "command": "npm set init-license \"MIT\"",
+          "description": "Set default license used during npm init"
+        },
+        {
+          "command": "npm config set registry https://registry.npmjs.org/",
+          "description": "Set the default npm registry URL"
+        },
+        {
+          "command": "npm config get registry",
+          "description": "Get the currently configured npm registry URL"
+        },
+        {
+          "command": "npm config delete registry",
+          "description": "Remove the registry config key, reverting to default"
+        },
+        {
+          "command": "npm config list",
+          "description": "List all active npm configuration values"
+        },
+        {
+          "command": "npm config list --json",
+          "description": "List all npm config values in JSON format"
+        },
+        {
+          "command": "npm config edit",
+          "description": "Open the global .npmrc file in the default editor"
+        },
+        {
+          "command": "npm config set save-exact true",
+          "description": "Configure npm to save exact versions instead of semver ranges"
+        },
+        {
+          "command": "npm config set save-prefix \"~\"",
+          "description": "Set the default semver prefix used when saving dependencies"
+        },
+        {
+          "command": "npm config set proxy http://proxy.example.com:8080",
+          "description": "Set an HTTP proxy for npm network requests"
+        },
+        {
+          "command": "npm config set https-proxy http://proxy.example.com:8080",
+          "description": "Set an HTTPS proxy for npm network requests"
+        },
+        {
+          "command": "npm config set cache /path/to/cache",
+          "description": "Set a custom directory for the npm cache"
+        }
+      ]
+    },
+    {
+      "title": "Install & Add Packages",
+      "commands": [
+        {
+          "command": "npm install",
+          "description": "Install all dependencies listed in package.json"
+        },
+        {
+          "command": "npm install --production",
+          "description": "Install only production dependencies, skipping devDependencies"
+        },
+        {
+          "command": "npm install --only=dev",
+          "description": "Install only devDependencies"
+        },
+        {
+          "command": "npm install --frozen-lockfile",
+          "description": "Install dependencies without updating package-lock.json"
+        },
+        {
+          "command": "npm install --legacy-peer-deps",
+          "description": "Install packages ignoring peer dependency conflicts"
+        },
+        {
+          "command": "npm install --force",
+          "description": "Force reinstall of all packages, bypassing cache and lock"
+        },
+        {
+          "command": "npm install --ignore-scripts",
+          "description": "Install packages without running any lifecycle scripts"
+        },
+        {
+          "command": "npm install --prefer-offline",
+          "description": "Use cached packages when available, falling back to network"
+        },
+        {
+          "command": "npm install --prefer-online",
+          "description": "Force network fetch even when cached packages are available"
+        },
+        {
+          "command": "npm install express",
+          "description": "Install the latest version of the express package as a dependency"
+        },
+        {
+          "command": "npm install express@4.18.2",
+          "description": "Install a specific version of the express package"
+        },
+        {
+          "command": "npm install express@latest",
+          "description": "Install the latest tagged version of the express package"
+        },
+        {
+          "command": "npm install express@^4.0.0",
+          "description": "Install express at the latest version satisfying the given semver range"
+        },
+        {
+          "command": "npm install express --save",
+          "description": "Install express and explicitly add it to dependencies in package.json"
+        },
+        {
+          "command": "npm install express --save-exact",
+          "description": "Install express and pin the exact version in package.json"
+        },
+        {
+          "command": "npm install typescript --save-dev",
+          "description": "Install typescript as a development dependency"
+        },
+        {
+          "command": "npm install typescript --save-dev --save-exact",
+          "description": "Install an exact version of typescript as a devDependency"
+        },
+        {
+          "command": "npm install lodash --save-optional",
+          "description": "Install lodash as an optional dependency"
+        },
+        {
+          "command": "npm install -g typescript",
+          "description": "Install typescript globally on the system"
+        },
+        {
+          "command": "npm install -g npm@latest",
+          "description": "Update npm itself to the latest version globally"
+        },
+        {
+          "command": "npm install react react-dom",
+          "description": "Install multiple packages simultaneously as dependencies"
+        },
+        {
+          "command": "npm install @types/node --save-dev",
+          "description": "Install a scoped package as a devDependency"
+        },
+        {
+          "command": "npm install git+https://github.com/user/repo.git",
+          "description": "Install a package directly from a GitHub repository URL"
+        },
+        {
+          "command": "npm install github:user/repo",
+          "description": "Install a package from a GitHub shorthand reference"
+        },
+        {
+          "command": "npm install github:user/repo#branch",
+          "description": "Install a package from a specific branch of a GitHub repository"
+        },
+        {
+          "command": "npm install ./path/to/local-package",
+          "description": "Install a package from a local directory path"
+        },
+        {
+          "command": "npm install file:./packages/my-lib",
+          "description": "Install a local package using the file: protocol"
+        },
+        {
+          "command": "npm install https://example.com/package.tgz",
+          "description": "Install a package from a remote tarball URL"
+        },
+        {
+          "command": "npm install --no-save express",
+          "description": "Install express without modifying package.json"
+        },
+        {
+          "command": "npm install --dry-run express",
+          "description": "Simulate installing express without making any actual changes"
+        },
+        {
+          "command": "npm install --verbose express",
+          "description": "Install express with verbose output for debugging"
+        }
+      ]
+    },
+    {
+      "title": "Uninstall & Remove Packages",
+      "commands": [
+        {
+          "command": "npm uninstall express",
+          "description": "Remove express from node_modules and package.json dependencies"
+        },
+        {
+          "command": "npm uninstall express --save",
+          "description": "Remove express from node_modules and explicitly remove from dependencies"
+        },
+        {
+          "command": "npm uninstall typescript --save-dev",
+          "description": "Remove typescript from node_modules and devDependencies"
+        },
+        {
+          "command": "npm uninstall lodash --save-optional",
+          "description": "Remove lodash from node_modules and optionalDependencies"
+        },
+        {
+          "command": "npm uninstall -g typescript",
+          "description": "Remove a globally installed package"
+        },
+        {
+          "command": "npm uninstall --no-save express",
+          "description": "Remove express from node_modules without modifying package.json"
+        },
+        {
+          "command": "npm uninstall react react-dom",
+          "description": "Remove multiple packages simultaneously"
+        }
+      ]
+    },
+    {
+      "title": "Update Packages",
+      "commands": [
+        {
+          "command": "npm update",
+          "description": "Update all packages to the latest version within their semver range"
+        },
+        {
+          "command": "npm update express",
+          "description": "Update express to the latest version within its semver range"
+        },
+        {
+          "command": "npm update --save",
+          "description": "Update all packages and persist updated versions to package.json"
+        },
+        {
+          "command": "npm update -g",
+          "description": "Update all globally installed packages"
+        },
+        {
+          "command": "npm update -g typescript",
+          "description": "Update a specific globally installed package"
+        },
+        {
+          "command": "npm update --depth 2",
+          "description": "Update packages up to 2 levels deep in the dependency tree"
+        }
+      ]
+    },
+    {
+      "title": "Scripts & Execution",
+      "commands": [
+        {
+          "command": "npm run build",
+          "description": "Execute the build script defined in package.json scripts"
+        },
+        {
+          "command": "npm run dev",
+          "description": "Execute the dev script defined in package.json scripts"
+        },
+        {
+          "command": "npm run test",
+          "description": "Execute the test script defined in package.json scripts"
+        },
+        {
+          "command": "npm run lint",
+          "description": "Execute the lint script defined in package.json scripts"
+        },
+        {
+          "command": "npm run format",
+          "description": "Execute the format script defined in package.json scripts"
+        },
+        {
+          "command": "npm run start",
+          "description": "Execute the start script defined in package.json scripts"
+        },
+        {
+          "command": "npm start",
+          "description": "Run the start script shorthand (no run keyword needed)"
+        },
+        {
+          "command": "npm test",
+          "description": "Run the test script shorthand (no run keyword needed)"
+        },
+        {
+          "command": "npm run build -- --watch",
+          "description": "Pass additional arguments to a script after the double-dash separator"
+        },
+        {
+          "command": "npm run build --if-present",
+          "description": "Run the build script only if it exists, without erroring if absent"
+        },
+        {
+          "command": "npm run env",
+          "description": "List environment variables available to scripts at runtime"
+        },
+        {
+          "command": "npm exec tsc",
+          "description": "Execute a locally installed binary from node_modules/.bin"
+        },
+        {
+          "command": "npm exec -- tsc --init",
+          "description": "Execute a local binary with arguments using the double-dash separator"
+        },
+        {
+          "command": "npx create-react-app my-app",
+          "description": "Run a package binary without installing it permanently"
+        },
+        {
+          "command": "npx --yes create-next-app my-app",
+          "description": "Run a package binary, auto-confirming installation prompts"
+        },
+        {
+          "command": "npx --no-install tsc",
+          "description": "Run a local binary only, without fetching from registry if missing"
+        },
+        {
+          "command": "npx -p typescript tsc --init",
+          "description": "Specify a package to install and then run its binary"
+        }
+      ]
+    },
+    {
+      "title": "Workspaces",
+      "commands": [
+        {
+          "command": "npm install --workspaces",
+          "description": "Install dependencies for all workspaces in a monorepo"
+        },
+        {
+          "command": "npm install --workspace=packages/app",
+          "description": "Install dependencies for a specific workspace by path"
+        },
+        {
+          "command": "npm run build --workspaces",
+          "description": "Run the build script across all workspaces"
+        },
+        {
+          "command": "npm run build --workspace=packages/app",
+          "description": "Run the build script in a specific workspace"
+        },
+        {
+          "command": "npm run test --workspaces --if-present",
+          "description": "Run test script across all workspaces only where it exists"
+        },
+        {
+          "command": "npm install lodash --workspace=packages/app",
+          "description": "Install a package into a specific workspace"
+        },
+        {
+          "command": "npm exec --workspace=packages/app -- tsc",
+          "description": "Execute a binary in the context of a specific workspace"
+        },
+        {
+          "command": "npm pkg get name --workspaces",
+          "description": "Get the name field from package.json for all workspaces"
+        }
+      ]
+    },
+    {
+      "title": "Publish & Registry",
+      "commands": [
+        {
+          "command": "npm publish",
+          "description": "Publish the current package to the npm registry"
+        },
+        {
+          "command": "npm publish --access public",
+          "description": "Publish a scoped package publicly to the npm registry"
+        },
+        {
+          "command": "npm publish --access restricted",
+          "description": "Publish a package as restricted (private)"
+        },
+        {
+          "command": "npm publish --tag beta",
+          "description": "Publish the package under a custom dist-tag instead of latest"
+        },
+        {
+          "command": "npm publish --dry-run",
+          "description": "Simulate publishing without uploading anything to the registry"
+        },
+        {
+          "command": "npm publish --otp 123456",
+          "description": "Publish using a one-time password for 2FA-enabled accounts"
+        },
+        {
+          "command": "npm unpublish my-package@1.0.0",
+          "description": "Remove a specific version of a package from the registry"
+        },
+        {
+          "command": "npm unpublish my-package --force",
+          "description": "Force-remove an entire package from the registry"
+        },
+        {
+          "command": "npm deprecate my-package@1.0.0 \"Use v2 instead\"",
+          "description": "Mark a specific package version as deprecated with a message"
+        },
+        {
+          "command": "npm dist-tag add my-package@1.0.0 stable",
+          "description": "Add a dist-tag pointing to a specific version"
+        },
+        {
+          "command": "npm dist-tag rm my-package beta",
+          "description": "Remove a dist-tag from a package"
+        },
+        {
+          "command": "npm dist-tag ls my-package",
+          "description": "List all dist-tags for a package"
+        },
+        {
+          "command": "npm pack",
+          "description": "Create a .tgz tarball of the current package without publishing"
+        },
+        {
+          "command": "npm pack --dry-run",
+          "description": "List files that would be included in the tarball without creating it"
+        }
+      ]
+    },
+    {
+      "title": "Authentication",
+      "commands": [
+        {
+          "command": "npm login",
+          "description": "Log in to the npm registry interactively"
+        },
+        {
+          "command": "npm login --registry https://registry.npmjs.org/",
+          "description": "Log in to a specific npm registry"
+        },
+        {
+          "command": "npm login --scope=@myorg",
+          "description": "Associate a scope with a specific registry and log in"
+        },
+        {
+          "command": "npm logout",
+          "description": "Log out from the npm registry, removing auth tokens"
+        },
+        {
+          "command": "npm logout --registry https://registry.npmjs.org/",
+          "description": "Log out from a specific registry"
+        },
+        {
+          "command": "npm whoami",
+          "description": "Display the currently authenticated npm username"
+        },
+        {
+          "command": "npm whoami --registry https://registry.npmjs.org/",
+          "description": "Display the authenticated username for a specific registry"
+        },
+        {
+          "command": "npm token list",
+          "description": "List all authentication tokens for the current account"
+        },
+        {
+          "command": "npm token create",
+          "description": "Create a new authentication token"
+        },
+        {
+          "command": "npm token create --read-only",
+          "description": "Create a read-only authentication token"
+        },
+        {
+          "command": "npm token create --cidr 192.168.1.0/24",
+          "description": "Create a token restricted to a specific CIDR IP range"
+        },
+        {
+          "command": "npm token revoke abc123",
+          "description": "Revoke a specific authentication token by its ID or value"
+        }
+      ]
+    },
+    {
+      "title": "Info & Search",
+      "commands": [
+        {
+          "command": "npm info express",
+          "description": "Display metadata for the express package from the registry"
+        },
+        {
+          "command": "npm info express version",
+          "description": "Display only the latest version of express"
+        },
+        {
+          "command": "npm info express versions",
+          "description": "List all published versions of express"
+        },
+        {
+          "command": "npm info express dependencies",
+          "description": "Display the dependencies of the latest express version"
+        },
+        {
+          "command": "npm info express --json",
+          "description": "Display full package metadata in JSON format"
+        },
+        {
+          "command": "npm view express",
+          "description": "Alias for npm info — display registry metadata for a package"
+        },
+        {
+          "command": "npm view express@4.18.2 dependencies",
+          "description": "Show dependencies for a specific version of express"
+        },
+        {
+          "command": "npm search lodash",
+          "description": "Search the npm registry for packages matching a keyword"
+        },
+        {
+          "command": "npm search lodash --json",
+          "description": "Search the npm registry and return results as JSON"
+        },
+        {
+          "command": "npm search --searchlimit 20 lodash",
+          "description": "Search npm with a limit on the number of results returned"
+        },
+        {
+          "command": "npm docs express",
+          "description": "Open the documentation homepage for the express package in a browser"
+        },
+        {
+          "command": "npm repo express",
+          "description": "Open the repository URL for the express package in a browser"
+        },
+        {
+          "command": "npm bugs express",
+          "description": "Open the issue tracker for the express package in a browser"
+        },
+        {
+          "command": "npm home express",
+          "description": "Open the homepage of the express package in a browser"
+        }
+      ]
+    },
+    {
+      "title": "Listing & Dependency Tree",
+      "commands": [
+        {
+          "command": "npm list",
+          "description": "List installed packages and their dependency tree in the current project"
+        },
+        {
+          "command": "npm list --depth=0",
+          "description": "List only top-level installed packages without sub-dependencies"
+        },
+        {
+          "command": "npm list --depth=1",
+          "description": "List installed packages up to one level of sub-dependencies"
+        },
+        {
+          "command": "npm list --json",
+          "description": "Output the installed dependency tree in JSON format"
+        },
+        {
+          "command": "npm list --production",
+          "description": "List only production dependencies in the tree"
+        },
+        {
+          "command": "npm list --dev",
+          "description": "List only development dependencies in the tree"
+        },
+        {
+          "command": "npm list express",
+          "description": "Check if express is installed and show its resolved version"
+        },
+        {
+          "command": "npm list -g",
+          "description": "List all globally installed packages"
+        },
+        {
+          "command": "npm list -g --depth=0",
+          "description": "List top-level globally installed packages only"
+        },
+        {
+          "command": "npm list --all",
+          "description": "List the full dependency tree including all nested dependencies"
+        },
+        {
+          "command": "npm list --link",
+          "description": "List only symlinked packages in node_modules"
+        }
+      ]
+    },
+    {
+      "title": "Audit & Security",
+      "commands": [
+        {
+          "command": "npm audit",
+          "description": "Scan installed dependencies for known security vulnerabilities"
+        },
+        {
+          "command": "npm audit --json",
+          "description": "Output vulnerability audit results as JSON"
+        },
+        {
+          "command": "npm audit --production",
+          "description": "Audit only production dependencies for vulnerabilities"
+        },
+        {
+          "command": "npm audit --audit-level=critical",
+          "description": "Exit with error only if critical severity vulnerabilities are found"
+        },
+        {
+          "command": "npm audit --audit-level=high",
+          "description": "Exit with error if high or critical severity vulnerabilities are found"
+        },
+        {
+          "command": "npm audit --audit-level=moderate",
+          "description": "Exit with error if moderate or higher severity vulnerabilities are found"
+        },
+        {
+          "command": "npm audit fix",
+          "description": "Automatically fix vulnerabilities by updating affected packages"
+        },
+        {
+          "command": "npm audit fix --force",
+          "description": "Force fix vulnerabilities even if it requires breaking semver changes"
+        },
+        {
+          "command": "npm audit fix --dry-run",
+          "description": "Simulate audit fixes without applying any changes"
+        },
+        {
+          "command": "npm audit fix --package-lock-only",
+          "description": "Fix vulnerabilities in package-lock.json only without touching node_modules"
+        }
+      ]
+    },
+    {
+      "title": "Versioning",
+      "commands": [
+        {
+          "command": "npm version patch",
+          "description": "Increment the patch version in package.json and create a git tag"
+        },
+        {
+          "command": "npm version minor",
+          "description": "Increment the minor version in package.json and create a git tag"
+        },
+        {
+          "command": "npm version major",
+          "description": "Increment the major version in package.json and create a git tag"
+        },
+        {
+          "command": "npm version prepatch",
+          "description": "Increment to the next prepatch prerelease version"
+        },
+        {
+          "command": "npm version preminor",
+          "description": "Increment to the next preminor prerelease version"
+        },
+        {
+          "command": "npm version premajor",
+          "description": "Increment to the next premajor prerelease version"
+        },
+        {
+          "command": "npm version prerelease",
+          "description": "Increment the prerelease number of the current version"
+        },
+        {
+          "command": "npm version prerelease --preid=alpha",
+          "description": "Increment the prerelease version with a custom identifier like alpha"
+        },
+        {
+          "command": "npm version 2.0.0",
+          "description": "Set an explicit version number in package.json"
+        },
+        {
+          "command": "npm version patch --no-git-tag-version",
+          "description": "Increment the patch version without creating a git commit or tag"
+        },
+        {
+          "command": "npm version patch -m \"chore: release v%s\"",
+          "description": "Increment patch version and use a custom git commit message"
+        }
+      ]
+    },
+    {
+      "title": "Cache",
+      "commands": [
+        {
+          "command": "npm cache clean --force",
+          "description": "Clear the entire npm cache directory"
+        },
+        {
+          "command": "npm cache verify",
+          "description": "Verify the integrity and consistency of the npm cache"
+        },
+        {
+          "command": "npm cache ls",
+          "description": "List cached packages stored in the npm cache directory"
+        }
+      ]
+    },
+    {
+      "title": "Linking",
+      "commands": [
+        {
+          "command": "npm link",
+          "description": "Create a global symlink for the current package for local development"
+        },
+        {
+          "command": "npm link my-package",
+          "description": "Link a globally symlinked package into the current project"
+        },
+        {
+          "command": "npm unlink my-package",
+          "description": "Remove a previously linked package from the current project"
+        },
+        {
+          "command": "npm unlink",
+          "description": "Remove the global symlink created for the current package"
+        }
+      ]
+    },
+    {
+      "title": "Outdated & Doctor",
+      "commands": [
+        {
+          "command": "npm outdated",
+          "description": "Check which installed packages have newer versions available"
+        },
+        {
+          "command": "npm outdated --json",
+          "description": "Output outdated package information as JSON"
+        },
+        {
+          "command": "npm outdated --depth=0",
+          "description": "Check outdated status for top-level packages only"
+        },
+        {
+          "command": "npm outdated -g",
+          "description": "Check for outdated globally installed packages"
+        },
+        {
+          "command": "npm doctor",
+          "description": "Run a set of environment checks to verify npm is configured correctly"
+        }
+      ]
+    },
+    {
+      "title": "Package.json Management",
+      "commands": [
+        {
+          "command": "npm pkg get name",
+          "description": "Read the name field from the current package.json"
+        },
+        {
+          "command": "npm pkg get version",
+          "description": "Read the version field from the current package.json"
+        },
+        {
+          "command": "npm pkg get scripts",
+          "description": "Read all scripts defined in the current package.json"
+        },
+        {
+          "command": "npm pkg set name=\"my-app\"",
+          "description": "Set the name field in package.json"
+        },
+        {
+          "command": "npm pkg set version=\"1.0.0\"",
+          "description": "Set the version field in package.json"
+        },
+        {
+          "command": "npm pkg set scripts.build=\"tsc\"",
+          "description": "Add or update a script entry in package.json"
+        },
+        {
+          "command": "npm pkg set engines.node=\">=18.0.0\"",
+          "description": "Set the minimum required Node.js version in package.json"
+        },
+        {
+          "command": "npm pkg delete scripts.build",
+          "description": "Remove a specific key from package.json"
+        }
+      ]
+    },
+    {
+      "title": "CI & Environment",
+      "commands": [
+        {
+          "command": "npm ci",
+          "description": "Install dependencies strictly from package-lock.json for reproducible CI builds"
+        },
+        {
+          "command": "npm ci --production",
+          "description": "Install only production dependencies from package-lock.json"
+        },
+        {
+          "command": "npm ci --ignore-scripts",
+          "description": "Install from lockfile without running lifecycle scripts"
+        },
+        {
+          "command": "npm ci --silent",
+          "description": "Install from lockfile suppressing all output except errors"
+        },
+        {
+          "command": "npm ci --prefer-offline",
+          "description": "Install from lockfile using cache where possible"
+        }
+      ]
+    },
+    {
+      "title": "Organization & Teams",
+      "commands": [
+        {
+          "command": "npm org set my-org username developer",
+          "description": "Add a user to an npm organization with the developer role"
+        },
+        {
+          "command": "npm org set my-org username admin",
+          "description": "Add a user to an npm organization with the admin role"
+        },
+        {
+          "command": "npm org rm my-org username",
+          "description": "Remove a user from an npm organization"
+        },
+        {
+          "command": "npm org ls my-org",
+          "description": "List all members of an npm organization"
+        },
+        {
+          "command": "npm team create my-org:frontend",
+          "description": "Create a new team within an npm organization"
+        },
+        {
+          "command": "npm team destroy my-org:frontend",
+          "description": "Delete a team from an npm organization"
+        },
+        {
+          "command": "npm team add my-org:frontend username",
+          "description": "Add a user to a specific team within an organization"
+        },
+        {
+          "command": "npm team rm my-org:frontend username",
+          "description": "Remove a user from a specific team within an organization"
+        },
+        {
+          "command": "npm team ls my-org",
+          "description": "List all teams within an npm organization"
+        },
+        {
+          "command": "npm team ls my-org:frontend",
+          "description": "List all members of a specific team within an organization"
+        },
+        {
+          "command": "npm access public my-package",
+          "description": "Set a package's access level to public"
+        },
+        {
+          "command": "npm access restricted my-package",
+          "description": "Set a package's access level to restricted (private)"
+        },
+        {
+          "command": "npm access grant read-only my-org:frontend my-package",
+          "description": "Grant read-only access to a team for a specific package"
+        },
+        {
+          "command": "npm access grant read-write my-org:frontend my-package",
+          "description": "Grant read-write access to a team for a specific package"
+        },
+        {
+          "command": "npm access revoke my-org:frontend my-package",
+          "description": "Revoke a team's access to a specific package"
+        },
+        {
+          "command": "npm access ls-packages my-org",
+          "description": "List all packages accessible to an organization"
+        },
+        {
+          "command": "npm access ls-collaborators my-package",
+          "description": "List all collaborators with access to a specific package"
+        }
+      ]
+    },
+    {
+      "title": "Miscellaneous",
+      "commands": [
+        {
+          "command": "npm root",
+          "description": "Print the path to the local node_modules directory"
+        },
+        {
+          "command": "npm root -g",
+          "description": "Print the path to the global node_modules directory"
+        },
+        {
+          "command": "npm bin",
+          "description": "Print the path to the local .bin executables directory"
+        },
+        {
+          "command": "npm bin -g",
+          "description": "Print the path to the global bin executables directory"
+        },
+        {
+          "command": "npm prefix",
+          "description": "Print the nearest parent directory containing a package.json"
+        },
+        {
+          "command": "npm prefix -g",
+          "description": "Print the global npm prefix directory"
+        },
+        {
+          "command": "npm rebuild",
+          "description": "Rebuild all native addons for the current Node.js version"
+        },
+        {
+          "command": "npm rebuild bcrypt",
+          "description": "Rebuild a specific native addon package"
+        },
+        {
+          "command": "npm dedupe",
+          "description": "Reduce duplication in the dependency tree by flattening shared packages"
+        },
+        {
+          "command": "npm prune",
+          "description": "Remove packages from node_modules that are not listed in package.json"
+        },
+        {
+          "command": "npm prune --production",
+          "description": "Remove devDependency packages not needed in production"
+        },
+        {
+          "command": "npm shrinkwrap",
+          "description": "Lock down dependency versions by generating an npm-shrinkwrap.json file"
+        },
+        {
+          "command": "npm fund",
+          "description": "Display funding information for installed packages"
+        },
+        {
+          "command": "npm fund express",
+          "description": "Display funding information for a specific package"
+        },
+        {
+          "command": "npm explain express",
+          "description": "Explain why a package is installed and which packages depend on it"
+        },
+        {
+          "command": "npm explain express --json",
+          "description": "Output the dependency explanation for a package as JSON"
+        },
+        {
+          "command": "npm completion",
+          "description": "Output a shell completion script for npm commands"
+        },
+        {
+          "command": "npm help install",
+          "description": "Open the documentation page for the npm install command"
+        },
+        {
+          "command": "npm help-search publish",
+          "description": "Search npm help documentation for pages related to a keyword"
+        },
+        {
+          "command": "npm --version",
+          "description": "Display the currently installed version of npm"
+        }
+      ]
+    }
+  ]
+}

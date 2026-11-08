@@ -1,0 +1,914 @@
+{
+  "name": "PNPM",
+  "slug": "pnpm",
+  "logo": "https://svgl.app/library/pnpm_dark.svg",
+  "accent": "#F69220",
+  "description": "Fast, disk space efficient package manager for Node.js",
+  "categories": [
+    {
+      "title": "Init & Config",
+      "commands": [
+        {
+          "command": "pnpm init",
+          "description": "Create a package.json file with all defaults in the current directory"
+        },
+        {
+          "command": "pnpm config set registry https://registry.npmjs.org/",
+          "description": "Set the default npm registry URL for pnpm"
+        },
+        {
+          "command": "pnpm config get registry",
+          "description": "Get the currently configured registry URL"
+        },
+        {
+          "command": "pnpm config delete registry",
+          "description": "Remove the registry config key, reverting to default"
+        },
+        {
+          "command": "pnpm config list",
+          "description": "List all active pnpm configuration values"
+        },
+        {
+          "command": "pnpm config list --json",
+          "description": "List all pnpm config values in JSON format"
+        },
+        {
+          "command": "pnpm config set save-exact true",
+          "description": "Configure pnpm to save exact versions instead of semver ranges"
+        },
+        {
+          "command": "pnpm config set store-dir /path/to/store",
+          "description": "Set a custom directory for the pnpm content-addressable store"
+        },
+        {
+          "command": "pnpm config set global-dir /path/to/global",
+          "description": "Set the directory for globally installed packages"
+        },
+        {
+          "command": "pnpm config set global-bin-dir /usr/local/bin",
+          "description": "Set the directory where global package binaries are linked"
+        },
+        {
+          "command": "pnpm config set shamefully-hoist true",
+          "description": "Hoist all dependencies to node_modules root for maximum compatibility"
+        },
+        {
+          "command": "pnpm config set hoist-pattern *",
+          "description": "Set a glob pattern for which packages to hoist to the root node_modules"
+        },
+        {
+          "command": "pnpm config set public-hoist-pattern *eslint*",
+          "description": "Set a pattern for packages to hoist to the root for tooling access"
+        },
+        {
+          "command": "pnpm config set node-linker hoisted",
+          "description": "Set the node linker strategy to hoisted for compatibility with npm layout"
+        },
+        {
+          "command": "pnpm config set node-linker isolated",
+          "description": "Set the node linker strategy to isolated for strict dependency isolation"
+        },
+        {
+          "command": "pnpm config set auto-install-peers true",
+          "description": "Automatically install missing peer dependencies"
+        },
+        {
+          "command": "pnpm config set strict-peer-dependencies false",
+          "description": "Disable errors on missing or incompatible peer dependencies"
+        },
+        {
+          "command": "pnpm config set prefer-frozen-lockfile true",
+          "description": "Always use the lockfile as-is without attempting updates"
+        },
+        {
+          "command": "pnpm config set proxy http://proxy.example.com:8080",
+          "description": "Set an HTTP proxy for pnpm network requests"
+        },
+        {
+          "command": "pnpm config set https-proxy http://proxy.example.com:8080",
+          "description": "Set an HTTPS proxy for pnpm network requests"
+        }
+      ]
+    },
+    {
+      "title": "Install & Add Packages",
+      "commands": [
+        {
+          "command": "pnpm install",
+          "description": "Install all dependencies listed in package.json using the lockfile"
+        },
+        {
+          "command": "pnpm install --prod",
+          "description": "Install only production dependencies, skipping devDependencies"
+        },
+        {
+          "command": "pnpm install --dev",
+          "description": "Install only devDependencies"
+        },
+        {
+          "command": "pnpm install --frozen-lockfile",
+          "description": "Install dependencies without updating the lockfile, failing if out of sync"
+        },
+        {
+          "command": "pnpm install --no-frozen-lockfile",
+          "description": "Install dependencies and allow updating the lockfile if needed"
+        },
+        {
+          "command": "pnpm install --force",
+          "description": "Force reinstall all packages, bypassing the store cache"
+        },
+        {
+          "command": "pnpm install --ignore-scripts",
+          "description": "Install packages without running any lifecycle scripts"
+        },
+        {
+          "command": "pnpm install --prefer-offline",
+          "description": "Use cached packages when available, falling back to network"
+        },
+        {
+          "command": "pnpm install --offline",
+          "description": "Install using only the local store, failing if any package is missing"
+        },
+        {
+          "command": "pnpm install --shamefully-hoist",
+          "description": "Hoist all packages to root node_modules for this install"
+        },
+        {
+          "command": "pnpm install --resolution-only",
+          "description": "Update the lockfile without installing anything into node_modules"
+        },
+        {
+          "command": "pnpm install --lockfile-only",
+          "description": "Update pnpm-lock.yaml only without touching node_modules"
+        },
+        {
+          "command": "pnpm install --fix-lockfile",
+          "description": "Fix broken lockfile entries without a full reinstall"
+        },
+        {
+          "command": "pnpm install --reporter=silent",
+          "description": "Install dependencies suppressing all output except errors"
+        },
+        {
+          "command": "pnpm install --reporter=append-only",
+          "description": "Install with append-only progress output suitable for CI logs"
+        },
+        {
+          "command": "pnpm add express",
+          "description": "Install the latest version of express as a production dependency"
+        },
+        {
+          "command": "pnpm add express@4.18.2",
+          "description": "Install a specific version of express as a production dependency"
+        },
+        {
+          "command": "pnpm add express@latest",
+          "description": "Install the latest tagged version of express"
+        },
+        {
+          "command": "pnpm add express@^4.0.0",
+          "description": "Install express at the latest version matching the given semver range"
+        },
+        {
+          "command": "pnpm add express --save-exact",
+          "description": "Install express and pin the exact version in package.json"
+        },
+        {
+          "command": "pnpm add typescript --save-dev",
+          "description": "Install typescript as a development dependency"
+        },
+        {
+          "command": "pnpm add typescript --save-dev --save-exact",
+          "description": "Install an exact version of typescript as a devDependency"
+        },
+        {
+          "command": "pnpm add lodash --save-optional",
+          "description": "Install lodash as an optional dependency"
+        },
+        {
+          "command": "pnpm add lodash --save-peer",
+          "description": "Install lodash as a peer dependency"
+        },
+        {
+          "command": "pnpm add -g typescript",
+          "description": "Install typescript globally"
+        },
+        {
+          "command": "pnpm add -g pnpm@latest",
+          "description": "Update pnpm itself to the latest version globally"
+        },
+        {
+          "command": "pnpm add react react-dom",
+          "description": "Install multiple packages simultaneously as production dependencies"
+        },
+        {
+          "command": "pnpm add @types/node --save-dev",
+          "description": "Install a scoped package as a devDependency"
+        },
+        {
+          "command": "pnpm add git+https://github.com/user/repo.git",
+          "description": "Install a package directly from a GitHub repository URL"
+        },
+        {
+          "command": "pnpm add github:user/repo",
+          "description": "Install a package from a GitHub shorthand reference"
+        },
+        {
+          "command": "pnpm add github:user/repo#branch",
+          "description": "Install a package from a specific branch of a GitHub repository"
+        },
+        {
+          "command": "pnpm add ./path/to/local-package",
+          "description": "Install a package from a local directory path"
+        },
+        {
+          "command": "pnpm add file:./packages/my-lib",
+          "description": "Install a local package using the file: protocol"
+        },
+        {
+          "command": "pnpm add https://example.com/package.tgz",
+          "description": "Install a package from a remote tarball URL"
+        }
+      ]
+    },
+    {
+      "title": "Remove Packages",
+      "commands": [
+        {
+          "command": "pnpm remove express",
+          "description": "Remove express from node_modules and package.json dependencies"
+        },
+        {
+          "command": "pnpm remove typescript --save-dev",
+          "description": "Remove typescript from node_modules and devDependencies"
+        },
+        {
+          "command": "pnpm remove lodash --save-optional",
+          "description": "Remove lodash from node_modules and optionalDependencies"
+        },
+        {
+          "command": "pnpm remove -g typescript",
+          "description": "Remove a globally installed package"
+        },
+        {
+          "command": "pnpm remove react react-dom",
+          "description": "Remove multiple packages simultaneously"
+        }
+      ]
+    },
+    {
+      "title": "Update Packages",
+      "commands": [
+        {
+          "command": "pnpm update",
+          "description": "Update all packages to the latest version within their semver range"
+        },
+        {
+          "command": "pnpm update express",
+          "description": "Update express to the latest version within its semver range"
+        },
+        {
+          "command": "pnpm update --latest",
+          "description": "Update all packages to the absolute latest version, ignoring semver ranges"
+        },
+        {
+          "command": "pnpm update express --latest",
+          "description": "Update express to the absolute latest version ignoring semver range"
+        },
+        {
+          "command": "pnpm update --dev",
+          "description": "Update only devDependencies within their semver ranges"
+        },
+        {
+          "command": "pnpm update --prod",
+          "description": "Update only production dependencies within their semver ranges"
+        },
+        {
+          "command": "pnpm update --global",
+          "description": "Update all globally installed packages"
+        },
+        {
+          "command": "pnpm update --global typescript",
+          "description": "Update a specific globally installed package"
+        },
+        {
+          "command": "pnpm update --recursive",
+          "description": "Update packages in all workspace projects"
+        },
+        {
+          "command": "pnpm update --recursive --latest",
+          "description": "Update all packages to latest across all workspace projects"
+        },
+        {
+          "command": "pnpm update --interactive",
+          "description": "Interactively select which packages to update"
+        },
+        {
+          "command": "pnpm update --interactive --latest",
+          "description": "Interactively select packages to update to their latest versions"
+        }
+      ]
+    },
+    {
+      "title": "Scripts & Execution",
+      "commands": [
+        {
+          "command": "pnpm run build",
+          "description": "Execute the build script defined in package.json"
+        },
+        {
+          "command": "pnpm run dev",
+          "description": "Execute the dev script defined in package.json"
+        },
+        {
+          "command": "pnpm run test",
+          "description": "Execute the test script defined in package.json"
+        },
+        {
+          "command": "pnpm run lint",
+          "description": "Execute the lint script defined in package.json"
+        },
+        {
+          "command": "pnpm run start",
+          "description": "Execute the start script defined in package.json"
+        },
+        {
+          "command": "pnpm start",
+          "description": "Run the start script shorthand"
+        },
+        {
+          "command": "pnpm test",
+          "description": "Run the test script shorthand"
+        },
+        {
+          "command": "pnpm build",
+          "description": "Run the build script shorthand if no pnpm subcommand conflicts"
+        },
+        {
+          "command": "pnpm run build -- --watch",
+          "description": "Pass additional arguments to a script after the double-dash separator"
+        },
+        {
+          "command": "pnpm run build --if-present",
+          "description": "Run the build script only if it exists, without erroring if absent"
+        },
+        {
+          "command": "pnpm run --parallel test",
+          "description": "Run the test script in all workspace packages in parallel"
+        },
+        {
+          "command": "pnpm run --stream build",
+          "description": "Run the build script in workspaces and stream output with package prefix"
+        },
+        {
+          "command": "pnpm run --sequential build",
+          "description": "Run the build script in all workspace packages sequentially"
+        },
+        {
+          "command": "pnpm run --filter @myorg/app build",
+          "description": "Run the build script only in a specific filtered workspace package"
+        },
+        {
+          "command": "pnpm exec tsc",
+          "description": "Execute a locally installed binary from node_modules/.bin"
+        },
+        {
+          "command": "pnpm exec -- tsc --init",
+          "description": "Execute a local binary with additional arguments"
+        },
+        {
+          "command": "pnpm dlx create-react-app my-app",
+          "description": "Fetch and execute a package binary without installing it permanently"
+        },
+        {
+          "command": "pnpm dlx --package=typescript tsc --init",
+          "description": "Specify the package to fetch and then run its binary"
+        },
+        {
+          "command": "pnpm dlx create-next-app@latest my-app",
+          "description": "Fetch and run a specific version of a package binary"
+        }
+      ]
+    },
+    {
+      "title": "Workspaces",
+      "commands": [
+        {
+          "command": "pnpm install --recursive",
+          "description": "Install dependencies for all packages in the workspace"
+        },
+        {
+          "command": "pnpm add lodash --filter @myorg/app",
+          "description": "Add a dependency to a specific filtered workspace package"
+        },
+        {
+          "command": "pnpm add lodash --workspace",
+          "description": "Add a dependency referencing another package within the workspace"
+        },
+        {
+          "command": "pnpm run build --recursive",
+          "description": "Run the build script in all workspace packages respecting dependency order"
+        },
+        {
+          "command": "pnpm run build --filter @myorg/app",
+          "description": "Run the build script in a specific workspace package"
+        },
+        {
+          "command": "pnpm run build --filter @myorg/app...",
+          "description": "Run build in a package and all packages that depend on it"
+        },
+        {
+          "command": "pnpm run build --filter ...@myorg/app",
+          "description": "Run build in a package and all its dependencies"
+        },
+        {
+          "command": "pnpm run test --filter ./packages/**",
+          "description": "Run test script in all packages matching a glob path pattern"
+        },
+        {
+          "command": "pnpm run test --filter @myorg/* --parallel",
+          "description": "Run test in all scoped packages in parallel"
+        },
+        {
+          "command": "pnpm run build --filter {packages/**}",
+          "description": "Run build in all packages within a specific directory using brace glob"
+        },
+        {
+          "command": "pnpm run build --filter \"[origin/main]\"",
+          "description": "Run build only in packages changed since the origin/main branch"
+        },
+        {
+          "command": "pnpm list --recursive",
+          "description": "List installed packages across all workspace projects"
+        },
+        {
+          "command": "pnpm outdated --recursive",
+          "description": "Check for outdated packages across all workspace projects"
+        },
+        {
+          "command": "pnpm publish --recursive",
+          "description": "Publish all changed workspace packages to the registry"
+        },
+        {
+          "command": "pnpm exec --recursive -- tsc --noEmit",
+          "description": "Execute a binary in all workspace packages"
+        }
+      ]
+    },
+    {
+      "title": "Publish & Registry",
+      "commands": [
+        {
+          "command": "pnpm publish",
+          "description": "Publish the current package to the npm registry"
+        },
+        {
+          "command": "pnpm publish --access public",
+          "description": "Publish a scoped package publicly to the npm registry"
+        },
+        {
+          "command": "pnpm publish --access restricted",
+          "description": "Publish a package as restricted (private)"
+        },
+        {
+          "command": "pnpm publish --tag beta",
+          "description": "Publish the package under a custom dist-tag instead of latest"
+        },
+        {
+          "command": "pnpm publish --dry-run",
+          "description": "Simulate publishing without uploading anything to the registry"
+        },
+        {
+          "command": "pnpm publish --otp 123456",
+          "description": "Publish using a one-time password for 2FA-enabled accounts"
+        },
+        {
+          "command": "pnpm publish --no-git-checks",
+          "description": "Publish without verifying a clean git state or branch"
+        },
+        {
+          "command": "pnpm publish --recursive",
+          "description": "Publish all workspace packages that have changed"
+        },
+        {
+          "command": "pnpm pack",
+          "description": "Create a .tgz tarball of the current package without publishing"
+        },
+        {
+          "command": "pnpm pack --dry-run",
+          "description": "List files that would be included in the tarball without creating it"
+        }
+      ]
+    },
+    {
+      "title": "Authentication",
+      "commands": [
+        {
+          "command": "pnpm login",
+          "description": "Log in to the npm registry interactively"
+        },
+        {
+          "command": "pnpm login --registry https://registry.npmjs.org/",
+          "description": "Log in to a specific npm registry"
+        },
+        {
+          "command": "pnpm login --scope=@myorg",
+          "description": "Associate a scope with a specific registry and log in"
+        },
+        {
+          "command": "pnpm logout",
+          "description": "Log out from the npm registry, removing stored auth tokens"
+        },
+        {
+          "command": "pnpm logout --registry https://registry.npmjs.org/",
+          "description": "Log out from a specific registry"
+        },
+        {
+          "command": "pnpm whoami",
+          "description": "Display the currently authenticated npm username"
+        },
+        {
+          "command": "pnpm whoami --registry https://registry.npmjs.org/",
+          "description": "Display the authenticated username for a specific registry"
+        }
+      ]
+    },
+    {
+      "title": "Info & Search",
+      "commands": [
+        {
+          "command": "pnpm info express",
+          "description": "Display metadata for the express package from the registry"
+        },
+        {
+          "command": "pnpm info express version",
+          "description": "Display only the latest version of express"
+        },
+        {
+          "command": "pnpm info express versions",
+          "description": "List all published versions of express"
+        },
+        {
+          "command": "pnpm info express dependencies",
+          "description": "Display the dependencies of the latest express version"
+        },
+        {
+          "command": "pnpm info express --json",
+          "description": "Display full package metadata as JSON"
+        },
+        {
+          "command": "pnpm info express@4.18.2 dependencies",
+          "description": "Show dependencies for a specific version of express"
+        }
+      ]
+    },
+    {
+      "title": "Listing & Dependency Tree",
+      "commands": [
+        {
+          "command": "pnpm list",
+          "description": "List installed packages and their dependency tree in the current project"
+        },
+        {
+          "command": "pnpm list --depth=0",
+          "description": "List only top-level installed packages without sub-dependencies"
+        },
+        {
+          "command": "pnpm list --depth=1",
+          "description": "List installed packages up to one level of sub-dependencies"
+        },
+        {
+          "command": "pnpm list --json",
+          "description": "Output the installed dependency tree in JSON format"
+        },
+        {
+          "command": "pnpm list --prod",
+          "description": "List only production dependencies in the tree"
+        },
+        {
+          "command": "pnpm list --dev",
+          "description": "List only development dependencies in the tree"
+        },
+        {
+          "command": "pnpm list express",
+          "description": "Check if express is installed and show its resolved version"
+        },
+        {
+          "command": "pnpm list --global",
+          "description": "List all globally installed packages"
+        },
+        {
+          "command": "pnpm list --global --depth=0",
+          "description": "List top-level globally installed packages only"
+        },
+        {
+          "command": "pnpm list --recursive",
+          "description": "List packages across all workspace projects"
+        },
+        {
+          "command": "pnpm list --recursive --depth=0",
+          "description": "List top-level packages across all workspace projects"
+        },
+        {
+          "command": "pnpm why express",
+          "description": "Explain why express is installed and which packages depend on it"
+        },
+        {
+          "command": "pnpm why express --recursive",
+          "description": "Explain why express is installed across all workspace projects"
+        },
+        {
+          "command": "pnpm why express --json",
+          "description": "Output the dependency explanation for express as JSON"
+        }
+      ]
+    },
+    {
+      "title": "Audit & Security",
+      "commands": [
+        {
+          "command": "pnpm audit",
+          "description": "Scan installed dependencies for known security vulnerabilities"
+        },
+        {
+          "command": "pnpm audit --json",
+          "description": "Output vulnerability audit results as JSON"
+        },
+        {
+          "command": "pnpm audit --prod",
+          "description": "Audit only production dependencies for vulnerabilities"
+        },
+        {
+          "command": "pnpm audit --dev",
+          "description": "Audit only devDependencies for vulnerabilities"
+        },
+        {
+          "command": "pnpm audit --audit-level=critical",
+          "description": "Exit with error only if critical severity vulnerabilities are found"
+        },
+        {
+          "command": "pnpm audit --audit-level=high",
+          "description": "Exit with error if high or critical severity vulnerabilities are found"
+        },
+        {
+          "command": "pnpm audit --audit-level=moderate",
+          "description": "Exit with error if moderate or higher severity vulnerabilities are found"
+        },
+        {
+          "command": "pnpm audit fix",
+          "description": "Automatically fix vulnerabilities by updating affected packages"
+        },
+        {
+          "command": "pnpm audit fix --force",
+          "description": "Force fix vulnerabilities even if it requires breaking semver changes"
+        }
+      ]
+    },
+    {
+      "title": "Versioning",
+      "commands": [
+        {
+          "command": "pnpm version patch",
+          "description": "Increment the patch version in package.json and create a git tag"
+        },
+        {
+          "command": "pnpm version minor",
+          "description": "Increment the minor version in package.json and create a git tag"
+        },
+        {
+          "command": "pnpm version major",
+          "description": "Increment the major version in package.json and create a git tag"
+        },
+        {
+          "command": "pnpm version prepatch",
+          "description": "Increment to the next prepatch prerelease version"
+        },
+        {
+          "command": "pnpm version preminor",
+          "description": "Increment to the next preminor prerelease version"
+        },
+        {
+          "command": "pnpm version premajor",
+          "description": "Increment to the next premajor prerelease version"
+        },
+        {
+          "command": "pnpm version prerelease",
+          "description": "Increment the prerelease number of the current version"
+        },
+        {
+          "command": "pnpm version prerelease --preid=alpha",
+          "description": "Increment the prerelease version with a custom alpha identifier"
+        },
+        {
+          "command": "pnpm version prerelease --preid=beta",
+          "description": "Increment the prerelease version with a custom beta identifier"
+        },
+        {
+          "command": "pnpm version 2.0.0",
+          "description": "Set an explicit version number in package.json"
+        },
+        {
+          "command": "pnpm version patch --no-git-tag-version",
+          "description": "Increment patch version without creating a git commit or tag"
+        },
+        {
+          "command": "pnpm version patch -m \"chore: release v%s\"",
+          "description": "Increment patch version with a custom git commit message"
+        }
+      ]
+    },
+    {
+      "title": "Store Management",
+      "commands": [
+        {
+          "command": "pnpm store path",
+          "description": "Print the path to the current pnpm content-addressable store"
+        },
+        {
+          "command": "pnpm store status",
+          "description": "Check the integrity of packages currently in the store"
+        },
+        {
+          "command": "pnpm store add express",
+          "description": "Add a package to the store without linking it to any project"
+        },
+        {
+          "command": "pnpm store add express@4.18.2",
+          "description": "Add a specific version of a package to the store"
+        },
+        {
+          "command": "pnpm store prune",
+          "description": "Remove unreferenced packages from the content-addressable store"
+        }
+      ]
+    },
+    {
+      "title": "Outdated",
+      "commands": [
+        {
+          "command": "pnpm outdated",
+          "description": "Check which installed packages have newer versions available"
+        },
+        {
+          "command": "pnpm outdated --json",
+          "description": "Output outdated package information as JSON"
+        },
+        {
+          "command": "pnpm outdated --long",
+          "description": "Show extended information including package links in outdated output"
+        },
+        {
+          "command": "pnpm outdated --dev",
+          "description": "Check outdated status for devDependencies only"
+        },
+        {
+          "command": "pnpm outdated --prod",
+          "description": "Check outdated status for production dependencies only"
+        },
+        {
+          "command": "pnpm outdated --global",
+          "description": "Check for outdated globally installed packages"
+        },
+        {
+          "command": "pnpm outdated --recursive",
+          "description": "Check for outdated packages across all workspace projects"
+        }
+      ]
+    },
+    {
+      "title": "Linking",
+      "commands": [
+        {
+          "command": "pnpm link --global",
+          "description": "Create a global symlink for the current package for local development"
+        },
+        {
+          "command": "pnpm link --global my-package",
+          "description": "Link a globally registered package into the current project"
+        },
+        {
+          "command": "pnpm link ./path/to/local-package",
+          "description": "Link a local directory as a dependency in the current project"
+        },
+        {
+          "command": "pnpm unlink",
+          "description": "Remove all symlinks created for the current project"
+        },
+        {
+          "command": "pnpm unlink --global my-package",
+          "description": "Remove a globally linked package"
+        }
+      ]
+    },
+    {
+      "title": "Patching",
+      "commands": [
+        {
+          "command": "pnpm patch express",
+          "description": "Prepare a package for patching by extracting it to a temporary directory"
+        },
+        {
+          "command": "pnpm patch express@4.18.2",
+          "description": "Prepare a specific version of a package for patching"
+        },
+        {
+          "command": "pnpm patch-commit /tmp/express",
+          "description": "Generate and save a patch file from a modified temporary package directory"
+        },
+        {
+          "command": "pnpm patch-remove express",
+          "description": "Remove a previously applied patch for a package"
+        }
+      ]
+    },
+    {
+      "title": "Miscellaneous",
+      "commands": [
+        {
+          "command": "pnpm root",
+          "description": "Print the path to the local node_modules directory"
+        },
+        {
+          "command": "pnpm root --global",
+          "description": "Print the path to the global node_modules directory"
+        },
+        {
+          "command": "pnpm bin",
+          "description": "Print the path to the local .bin executables directory"
+        },
+        {
+          "command": "pnpm bin --global",
+          "description": "Print the path to the global bin executables directory"
+        },
+        {
+          "command": "pnpm rebuild",
+          "description": "Rebuild all native addons for the current Node.js version"
+        },
+        {
+          "command": "pnpm rebuild bcrypt",
+          "description": "Rebuild a specific native addon package"
+        },
+        {
+          "command": "pnpm dedupe",
+          "description": "Reduce duplication in the lockfile by resolving shared package versions"
+        },
+        {
+          "command": "pnpm dedupe --check",
+          "description": "Check if deduplication is possible without modifying the lockfile"
+        },
+        {
+          "command": "pnpm prune",
+          "description": "Remove extraneous packages from node_modules not in package.json"
+        },
+        {
+          "command": "pnpm prune --prod",
+          "description": "Remove devDependency packages from node_modules for production"
+        },
+        {
+          "command": "pnpm fund",
+          "description": "Display funding information for all installed packages"
+        },
+        {
+          "command": "pnpm doctor",
+          "description": "Run environment checks to verify pnpm is configured correctly"
+        },
+        {
+          "command": "pnpm --version",
+          "description": "Display the currently installed version of pnpm"
+        },
+        {
+          "command": "pnpm env use --global lts",
+          "description": "Install and use the latest LTS version of Node.js globally via pnpm"
+        },
+        {
+          "command": "pnpm env use --global 20",
+          "description": "Install and use Node.js version 20 globally via pnpm"
+        },
+        {
+          "command": "pnpm env use --global latest",
+          "description": "Install and use the latest Node.js version globally via pnpm"
+        },
+        {
+          "command": "pnpm env list",
+          "description": "List all Node.js versions installed via pnpm"
+        },
+        {
+          "command": "pnpm env list --remote",
+          "description": "List available Node.js versions from the remote registry"
+        },
+        {
+          "command": "pnpm env remove --global 18",
+          "description": "Remove a specific Node.js version installed via pnpm"
+        },
+        {
+          "command": "pnpm licenses list",
+          "description": "List the licenses of all installed dependencies"
+        },
+        {
+          "command": "pnpm licenses list --json",
+          "description": "Output license information for all installed dependencies as JSON"
+        }
+      ]
+    }
+  ]
+}

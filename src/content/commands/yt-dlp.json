@@ -1,0 +1,179 @@
+{
+  "name": "Yt Dlp",
+  "slug": "yt-dlp",
+  "logo": "https://media-server.akshitbansal.me/api/images/logos/non-svgl/yt-dlp-dark.svg",
+  "accent": "#d01500",
+  "description": "feature-rich command-line audio/video downloader with support for thousands of sites.",
+  "categories": [
+    {
+      "title": "Basic Usage",
+      "commands": [
+        {
+          "command": "yt-dlp <URL>",
+          "description": "Download video from URL"
+        },
+        {
+          "command": "yt-dlp -o \"%(title)s.%(ext)s\" <URL>",
+          "description": "Custom output filename"
+        },
+        {
+          "command": "yt-dlp -P <path> <URL>",
+          "description": "Download to specific folder"
+        }
+      ]
+    },
+    {
+      "title": "Format Selection",
+      "commands": [
+        {
+          "command": "yt-dlp -F <URL>",
+          "description": "List all available formats"
+        },
+        {
+          "command": "yt-dlp -f <format> <URL>",
+          "description": "Download specific format"
+        },
+        {
+          "command": "yt-dlp -f \"best\" <URL>",
+          "description": "Download best quality"
+        },
+        {
+          "command": "yt-dlp -f \"bv*+ba/b\" <URL>",
+          "description": "Best video + audio merge"
+        }
+      ]
+    },
+    {
+      "title": "Audio Extraction",
+      "commands": [
+        {
+          "command": "yt-dlp -x <URL>",
+          "description": "Extract audio only"
+        },
+        {
+          "command": "yt-dlp -x --audio-format mp3 <URL>",
+          "description": "Convert to MP3"
+        },
+        {
+          "command": "yt-dlp -x --audio-quality 0 <URL>",
+          "description": "Best audio quality"
+        }
+      ]
+    },
+    {
+      "title": "Subtitles",
+      "commands": [
+        {
+          "command": "yt-dlp --write-subs <URL>",
+          "description": "Download subtitles"
+        },
+        {
+          "command": "yt-dlp --write-auto-subs <URL>",
+          "description": "Download auto-generated subtitles"
+        },
+        {
+          "command": "yt-dlp --sub-lang en <URL>",
+          "description": "Download English subtitles"
+        }
+      ]
+    },
+    {
+      "title": "Playlist",
+      "commands": [
+        {
+          "command": "yt-dlp <playlist_url>",
+          "description": "Download full playlist"
+        },
+        {
+          "command": "yt-dlp --playlist-start 5 <URL>",
+          "description": "Start from item 5"
+        },
+        {
+          "command": "yt-dlp --playlist-end 10 <URL>",
+          "description": "End at item 10"
+        }
+      ]
+    },
+    {
+      "title": "Download Control",
+      "commands": [
+        {
+          "command": "yt-dlp -r 1M <URL>",
+          "description": "Limit download speed"
+        },
+        {
+          "command": "yt-dlp --retries 10 <URL>",
+          "description": "Retry failed downloads"
+        },
+        {
+          "command": "yt-dlp --fragment-retries 10 <URL>",
+          "description": "Retry fragments"
+        }
+      ]
+    },
+    {
+      "title": "Authentication",
+      "commands": [
+        {
+          "command": "yt-dlp -u <user> -p <pass> <URL>",
+          "description": "Login with credentials"
+        },
+        {
+          "command": "yt-dlp --cookies <file> <URL>",
+          "description": "Use cookies file"
+        }
+      ]
+    },
+    {
+      "title": "Metadata & Thumbnails",
+      "commands": [
+        {
+          "command": "yt-dlp --write-thumbnail <URL>",
+          "description": "Download thumbnail"
+        },
+        {
+          "command": "yt-dlp --embed-thumbnail <URL>",
+          "description": "Embed thumbnail"
+        },
+        {
+          "command": "yt-dlp --add-metadata <URL>",
+          "description": "Add metadata to file"
+        }
+      ]
+    },
+    {
+      "title": "Search",
+      "commands": [
+        {
+          "command": "yt-dlp \"ytsearch:query\"",
+          "description": "Search YouTube"
+        },
+        {
+          "command": "yt-dlp \"ytsearch10:query\"",
+          "description": "Download top 10 results"
+        }
+      ]
+    },
+    {
+      "title": "Advanced",
+      "commands": [
+        {
+          "command": "yt-dlp --proxy <url> <URL>",
+          "description": "Use proxy"
+        },
+        {
+          "command": "yt-dlp --geo-bypass <URL>",
+          "description": "Bypass geo restrictions"
+        },
+        {
+          "command": "yt-dlp --exec \"<cmd>\" <URL>",
+          "description": "Run command after download"
+        },
+        {
+          "command": "yt-dlp --config-location <path>",
+          "description": "Use custom config file"
+        }
+      ]
+    }
+  ]
+}

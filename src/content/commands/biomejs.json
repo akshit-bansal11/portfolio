@@ -1,0 +1,167 @@
+{
+  "name": "Biome",
+  "slug": "biome",
+  "logo": "https://svgl.app/library/biomejs.svg",
+  "accent": "#60a5fa",
+  "description": "One toolchain for your web project",
+  "categories": [
+    {
+      "title": "Core Workflows",
+      "commands": [
+        {
+          "command": "biome check <path>",
+          "description": "Run the formatter, linter, and import sorting on the specified paths"
+        },
+        {
+          "command": "biome check --write <path>",
+          "description": "Run checks and automatically apply safe fixes, formatting, and import sorting"
+        },
+        {
+          "command": "biome check --unsafe <path>",
+          "description": "Run checks and automatically apply both safe and unsafe fixes"
+        },
+        {
+          "command": "biome ci <path>",
+          "description": "Run checks for CI environments, failing the build if any files require changes"
+        },
+        {
+          "command": "biome format <path>",
+          "description": "Run only the formatter on the specified paths, printing results to standard output"
+        },
+        {
+          "command": "biome format --write <path>",
+          "description": "Run the formatter and write the formatted code directly to the files"
+        },
+        {
+          "command": "biome lint <path>",
+          "description": "Run only the linter on the specified paths"
+        },
+        {
+          "command": "biome lint --write <path>",
+          "description": "Run the linter and automatically apply safe code fixes"
+        },
+        {
+          "command": "biome lint --unsafe <path>",
+          "description": "Run the linter and automatically apply both safe and unsafe code fixes"
+        }
+      ]
+    },
+    {
+      "title": "Project & Configuration",
+      "commands": [
+        {
+          "command": "biome init",
+          "description": "Bootstraps a new biome.json configuration file in the current directory"
+        },
+        {
+          "command": "biome migrate",
+          "description": "Update the Biome configuration file to match the latest schema version"
+        },
+        {
+          "command": "biome migrate prettier",
+          "description": "Migrate existing Prettier configuration (.prettierrc, .prettierignore) to Biome"
+        },
+        {
+          "command": "biome migrate eslint",
+          "description": "Migrate existing ESLint configuration to Biome"
+        },
+        {
+          "command": "biome check --config-path=<dir>",
+          "description": "Run checks using a biome.json configuration file located in a specific directory"
+        }
+      ]
+    },
+    {
+      "title": "Version Control & Git",
+      "commands": [
+        {
+          "command": "biome check --staged",
+          "description": "Run checks only on files that are staged in the version control system"
+        },
+        {
+          "command": "biome check --changed",
+          "description": "Run checks only on files that have changed in the working tree"
+        },
+        {
+          "command": "biome check --since=<ref>",
+          "description": "Run checks only on files changed since the specified Git reference (e.g., main)"
+        },
+        {
+          "command": "biome check --vcs-client-kind=<git>",
+          "description": "Explicitly specify the version control client to use for integration"
+        }
+      ]
+    },
+    {
+      "title": "Information & Diagnostics",
+      "commands": [
+        {
+          "command": "biome explain <rule>",
+          "description": "Print detailed documentation and examples for a specific lint rule (e.g., noVar)"
+        },
+        {
+          "command": "biome --version",
+          "description": "Print the installed Biome version"
+        },
+        {
+          "command": "biome --help",
+          "description": "Print the global help message and a list of all available commands"
+        },
+        {
+          "command": "biome check --max-diagnostics=<number>",
+          "description": "Cap the maximum number of diagnostics displayed in the terminal"
+        },
+        {
+          "command": "biome check --diagnostics-level=<info|warn|error>",
+          "description": "Filter the output to only show diagnostics of the specified severity or higher"
+        },
+        {
+          "command": "biome check --reporter=<json|summary|github>",
+          "description": "Change the format of the output diagnostics (e.g., for GitHub Actions)"
+        },
+        {
+          "command": "biome check --colors=<off|force>",
+          "description": "Force or disable colorized output in the terminal"
+        }
+      ]
+    },
+    {
+      "title": "File Handling & Execution",
+      "commands": [
+        {
+          "command": "biome format --stdin-file-path=<file>",
+          "description": "Format code passed via standard input, pretending it has the specified file name/extension"
+        },
+        {
+          "command": "biome check --ignore-unknown",
+          "description": "Ignore files with unknown extensions instead of throwing an error"
+        },
+        {
+          "command": "biome check --no-errors-on-unmatched",
+          "description": "Do not exit with a non-zero error code if no files were matched by the path"
+        },
+        {
+          "command": "biome check --files-max-size=<size>",
+          "description": "Set the maximum allowed size for a file to be processed (in bytes)"
+        }
+      ]
+    },
+    {
+      "title": "Daemon & Server",
+      "commands": [
+        {
+          "command": "biome start",
+          "description": "Start the Biome daemon server in the background for faster subsequent executions"
+        },
+        {
+          "command": "biome stop",
+          "description": "Stop the running Biome daemon server"
+        },
+        {
+          "command": "biome lsp-proxy",
+          "description": "Start the Biome Language Server Protocol (LSP) proxy for editor integrations"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1730 @@
+{
+  "name": "CMD",
+  "slug": "cmd",
+  "logo": "https://svgl.app/library/windows.svg",
+  "accent": "#0078D4",
+  "description": "Windows Command Prompt shell interpreter",
+  "categories": [
+    {
+      "title": "Navigation & File System",
+      "commands": [
+        {
+          "command": "cd",
+          "description": "Print the current working directory path"
+        },
+        {
+          "command": "cd <directory>",
+          "description": "Change the current working directory"
+        },
+        {
+          "command": "cd ..",
+          "description": "Move up one level to the parent directory"
+        },
+        {
+          "command": "cd \\",
+          "description": "Navigate to the root of the current drive"
+        },
+        {
+          "command": "cd /d <drive>:\\<path>",
+          "description": "Change both the drive and directory at the same time"
+        },
+        {
+          "command": "<drive>:",
+          "description": "Switch to a different drive (e.g., D:)"
+        },
+        {
+          "command": "dir",
+          "description": "List all files and folders in the current directory"
+        },
+        {
+          "command": "dir /a",
+          "description": "List all files including hidden and system files"
+        },
+        {
+          "command": "dir /a:h",
+          "description": "List only hidden files"
+        },
+        {
+          "command": "dir /a:d",
+          "description": "List only directories"
+        },
+        {
+          "command": "dir /s",
+          "description": "List all files in the directory and all subdirectories"
+        },
+        {
+          "command": "dir /b",
+          "description": "Display only file and folder names in bare format"
+        },
+        {
+          "command": "dir /o:n",
+          "description": "List files sorted alphabetically by name"
+        },
+        {
+          "command": "dir /o:s",
+          "description": "List files sorted by size"
+        },
+        {
+          "command": "dir /o:d",
+          "description": "List files sorted by date"
+        },
+        {
+          "command": "dir /o:-d",
+          "description": "List files sorted by date in reverse order"
+        },
+        {
+          "command": "dir /p",
+          "description": "List files one page at a time"
+        },
+        {
+          "command": "dir /w",
+          "description": "List files in wide format using multiple columns"
+        },
+        {
+          "command": "dir <pattern>",
+          "description": "List files matching a specific pattern (e.g., dir *.txt)"
+        },
+        {
+          "command": "dir /s /b <pattern>",
+          "description": "Recursively search and list files matching a pattern"
+        },
+        {
+          "command": "pushd <path>",
+          "description": "Save the current directory and navigate to a new path"
+        },
+        {
+          "command": "popd",
+          "description": "Return to the directory saved by pushd"
+        },
+        {
+          "command": "tree",
+          "description": "Display the directory structure as an ASCII tree"
+        },
+        {
+          "command": "tree /f",
+          "description": "Display the directory tree including file names"
+        },
+        {
+          "command": "tree /a",
+          "description": "Display the tree using ASCII characters instead of graphic ones"
+        }
+      ]
+    },
+    {
+      "title": "File & Directory Operations",
+      "commands": [
+        {
+          "command": "mkdir <directory>",
+          "description": "Create a new directory"
+        },
+        {
+          "command": "md <directory>",
+          "description": "Alias for mkdir, creates a new directory"
+        },
+        {
+          "command": "mkdir <path\\subpath>",
+          "description": "Create a directory and all required parent directories"
+        },
+        {
+          "command": "rmdir <directory>",
+          "description": "Remove an empty directory"
+        },
+        {
+          "command": "rd <directory>",
+          "description": "Alias for rmdir, removes an empty directory"
+        },
+        {
+          "command": "rmdir /s <directory>",
+          "description": "Recursively delete a directory and all its contents"
+        },
+        {
+          "command": "rmdir /s /q <directory>",
+          "description": "Quietly delete a directory and all its contents without prompting"
+        },
+        {
+          "command": "del <file>",
+          "description": "Delete a file"
+        },
+        {
+          "command": "del /f <file>",
+          "description": "Forcefully delete a read-only file"
+        },
+        {
+          "command": "del /q <file>",
+          "description": "Delete a file without asking for confirmation"
+        },
+        {
+          "command": "del /s <pattern>",
+          "description": "Delete matching files in all subdirectories"
+        },
+        {
+          "command": "del /f /q /s <pattern>",
+          "description": "Force-delete files recursively without prompting"
+        },
+        {
+          "command": "erase <file>",
+          "description": "Alias for del, deletes a file"
+        },
+        {
+          "command": "copy <source> <destination>",
+          "description": "Copy a file to a destination"
+        },
+        {
+          "command": "copy /y <source> <destination>",
+          "description": "Copy a file without prompting to confirm overwrite"
+        },
+        {
+          "command": "copy /b <source> <destination>",
+          "description": "Copy a file in binary mode"
+        },
+        {
+          "command": "copy <file1>+<file2> <destination>",
+          "description": "Concatenate multiple files into one destination file"
+        },
+        {
+          "command": "xcopy <source> <destination>",
+          "description": "Copy files and directory trees"
+        },
+        {
+          "command": "xcopy <source> <destination> /e",
+          "description": "Copy all subdirectories including empty ones"
+        },
+        {
+          "command": "xcopy <source> <destination> /s",
+          "description": "Copy subdirectories excluding empty directories"
+        },
+        {
+          "command": "xcopy <source> <destination> /h",
+          "description": "Copy hidden and system files"
+        },
+        {
+          "command": "xcopy <source> <destination> /y",
+          "description": "Copy without prompting to overwrite destination files"
+        },
+        {
+          "command": "xcopy <source> <destination> /q",
+          "description": "Copy quietly without displaying file names"
+        },
+        {
+          "command": "xcopy <source> <destination> /i",
+          "description": "Assume destination is a directory if it does not exist"
+        },
+        {
+          "command": "xcopy <source> <destination> /exclude:<file>",
+          "description": "Copy excluding files listed in an exclusion file"
+        },
+        {
+          "command": "robocopy <source> <destination>",
+          "description": "Robust file copy for Windows with advanced options"
+        },
+        {
+          "command": "robocopy <source> <destination> /e",
+          "description": "Copy all subdirectories including empty ones"
+        },
+        {
+          "command": "robocopy <source> <destination> /s",
+          "description": "Copy all subdirectories excluding empty ones"
+        },
+        {
+          "command": "robocopy <source> <destination> /mir",
+          "description": "Mirror the source to destination, deleting extra files"
+        },
+        {
+          "command": "robocopy <source> <destination> /move",
+          "description": "Move files and directories, deleting them from source"
+        },
+        {
+          "command": "robocopy <source> <destination> /z",
+          "description": "Copy in restartable mode for interrupted transfers"
+        },
+        {
+          "command": "robocopy <source> <destination> /xf <file>",
+          "description": "Exclude specific files during robocopy"
+        },
+        {
+          "command": "robocopy <source> <destination> /xd <dir>",
+          "description": "Exclude specific directories during robocopy"
+        },
+        {
+          "command": "robocopy <source> <destination> /log:<file>",
+          "description": "Write robocopy output to a log file"
+        },
+        {
+          "command": "move <source> <destination>",
+          "description": "Move or rename a file or directory"
+        },
+        {
+          "command": "move /y <source> <destination>",
+          "description": "Move a file without prompting to overwrite"
+        },
+        {
+          "command": "ren <oldname> <newname>",
+          "description": "Rename a file or directory"
+        },
+        {
+          "command": "rename <oldname> <newname>",
+          "description": "Alias for ren, renames a file or directory"
+        },
+        {
+          "command": "type nul > <file>",
+          "description": "Create a new empty file"
+        },
+        {
+          "command": "echo. > <file>",
+          "description": "Create a new file with a single blank line"
+        },
+        {
+          "command": "mklink <link> <target>",
+          "description": "Create a symbolic link to a file"
+        },
+        {
+          "command": "mklink /d <link> <target>",
+          "description": "Create a symbolic link to a directory"
+        },
+        {
+          "command": "mklink /h <link> <target>",
+          "description": "Create a hard link to a file"
+        },
+        {
+          "command": "mklink /j <link> <target>",
+          "description": "Create a directory junction (soft link for directories)"
+        },
+        {
+          "command": "attrib <file>",
+          "description": "Display the attributes of a file"
+        },
+        {
+          "command": "attrib +h <file>",
+          "description": "Set a file as hidden"
+        },
+        {
+          "command": "attrib -h <file>",
+          "description": "Remove the hidden attribute from a file"
+        },
+        {
+          "command": "attrib +r <file>",
+          "description": "Set a file as read-only"
+        },
+        {
+          "command": "attrib -r <file>",
+          "description": "Remove the read-only attribute from a file"
+        },
+        {
+          "command": "attrib +s <file>",
+          "description": "Set the system attribute on a file"
+        },
+        {
+          "command": "attrib /s /d <pattern>",
+          "description": "Apply attribute changes recursively to subdirectories"
+        },
+        {
+          "command": "compact /c <file>",
+          "description": "Compress a file using NTFS compression"
+        },
+        {
+          "command": "compact /u <file>",
+          "description": "Uncompress a file using NTFS compression"
+        }
+      ]
+    },
+    {
+      "title": "File Viewing & Content",
+      "commands": [
+        {
+          "command": "type <file>",
+          "description": "Display the contents of a text file"
+        },
+        {
+          "command": "type <file> | more",
+          "description": "Display file contents one page at a time"
+        },
+        {
+          "command": "more <file>",
+          "description": "Display file contents one screen at a time"
+        },
+        {
+          "command": "more /e <file>",
+          "description": "Display file contents with extended features enabled"
+        },
+        {
+          "command": "find \"<string>\" <file>",
+          "description": "Search for a specific string in a file"
+        },
+        {
+          "command": "find /i \"<string>\" <file>",
+          "description": "Search for a string case-insensitively"
+        },
+        {
+          "command": "find /n \"<string>\" <file>",
+          "description": "Search for a string and show matching line numbers"
+        },
+        {
+          "command": "find /v \"<string>\" <file>",
+          "description": "Print lines that do NOT contain the string"
+        },
+        {
+          "command": "find /c \"<string>\" <file>",
+          "description": "Count the number of lines containing the string"
+        },
+        {
+          "command": "findstr <pattern> <file>",
+          "description": "Search for a pattern or string in a file"
+        },
+        {
+          "command": "findstr /i <pattern> <file>",
+          "description": "Search for a pattern case-insensitively"
+        },
+        {
+          "command": "findstr /r <pattern> <file>",
+          "description": "Search using a regular expression pattern"
+        },
+        {
+          "command": "findstr /s <pattern> <path>",
+          "description": "Recursively search files in the current and subdirectories"
+        },
+        {
+          "command": "findstr /n <pattern> <file>",
+          "description": "Show the line numbers of matching lines"
+        },
+        {
+          "command": "findstr /v <pattern> <file>",
+          "description": "Print lines that do NOT match the pattern"
+        },
+        {
+          "command": "findstr /l <string> <file>",
+          "description": "Search for a literal string instead of a regex"
+        },
+        {
+          "command": "findstr /c:\"<string>\" <file>",
+          "description": "Search for an exact literal string with spaces"
+        },
+        {
+          "command": "findstr /m <pattern> <files>",
+          "description": "Print only the names of files containing matches"
+        },
+        {
+          "command": "comp <file1> <file2>",
+          "description": "Compare the contents of two files"
+        },
+        {
+          "command": "fc <file1> <file2>",
+          "description": "Compare two files and display the differences"
+        },
+        {
+          "command": "fc /b <file1> <file2>",
+          "description": "Compare two files in binary mode"
+        },
+        {
+          "command": "fc /i <file1> <file2>",
+          "description": "Compare two files ignoring case differences"
+        },
+        {
+          "command": "fc /n <file1> <file2>",
+          "description": "Compare text files and display line numbers with differences"
+        }
+      ]
+    },
+    {
+      "title": "System Information",
+      "commands": [
+        {
+          "command": "systeminfo",
+          "description": "Display detailed Windows configuration information"
+        },
+        {
+          "command": "systeminfo | findstr /b /c:\"OS\"",
+          "description": "Display only OS information from systeminfo"
+        },
+        {
+          "command": "ver",
+          "description": "Display the current Windows version"
+        },
+        {
+          "command": "hostname",
+          "description": "Display the name of the current computer"
+        },
+        {
+          "command": "whoami",
+          "description": "Display the current domain and username"
+        },
+        {
+          "command": "whoami /all",
+          "description": "Display current user, groups, and privileges"
+        },
+        {
+          "command": "whoami /groups",
+          "description": "Display the groups the current user belongs to"
+        },
+        {
+          "command": "whoami /priv",
+          "description": "Display the privileges of the current user"
+        },
+        {
+          "command": "date",
+          "description": "Display or set the current date"
+        },
+        {
+          "command": "date /t",
+          "description": "Display the current date without prompting to change it"
+        },
+        {
+          "command": "time",
+          "description": "Display or set the current time"
+        },
+        {
+          "command": "time /t",
+          "description": "Display the current time without prompting to change it"
+        },
+        {
+          "command": "set",
+          "description": "Display all environment variables in the current session"
+        },
+        {
+          "command": "set <variable>",
+          "description": "Display the value of a specific environment variable"
+        },
+        {
+          "command": "set <variable>=<value>",
+          "description": "Set an environment variable for the current session"
+        },
+        {
+          "command": "setx <variable> <value>",
+          "description": "Permanently set an environment variable for the user"
+        },
+        {
+          "command": "setx <variable> <value> /m",
+          "description": "Permanently set an environment variable system-wide"
+        },
+        {
+          "command": "echo %<variable>%",
+          "description": "Display the value of an environment variable"
+        },
+        {
+          "command": "echo %USERNAME%",
+          "description": "Display the current logged-in username"
+        },
+        {
+          "command": "echo %COMPUTERNAME%",
+          "description": "Display the computer name"
+        },
+        {
+          "command": "echo %OS%",
+          "description": "Display the operating system name"
+        },
+        {
+          "command": "echo %PROCESSOR_ARCHITECTURE%",
+          "description": "Display the processor architecture"
+        },
+        {
+          "command": "echo %USERPROFILE%",
+          "description": "Display the path to the current user's profile directory"
+        },
+        {
+          "command": "echo %TEMP%",
+          "description": "Display the path to the temporary files directory"
+        },
+        {
+          "command": "echo %PATH%",
+          "description": "Display the current system PATH"
+        },
+        {
+          "command": "wmic os get caption",
+          "description": "Display the operating system name via WMI"
+        },
+        {
+          "command": "wmic os get version",
+          "description": "Display the operating system version via WMI"
+        },
+        {
+          "command": "wmic cpu get name",
+          "description": "Display the CPU name via WMI"
+        },
+        {
+          "command": "wmic memorychip get capacity",
+          "description": "Display the RAM capacity of each module via WMI"
+        },
+        {
+          "command": "wmic diskdrive get model,size",
+          "description": "Display disk drive models and sizes via WMI"
+        },
+        {
+          "command": "wmic bios get serialnumber",
+          "description": "Display the system BIOS serial number via WMI"
+        },
+        {
+          "command": "wmic product get name",
+          "description": "List all installed software products via WMI"
+        },
+        {
+          "command": "wmic process list brief",
+          "description": "List all running processes with basic info via WMI"
+        },
+        {
+          "command": "wmic service list brief",
+          "description": "List all Windows services with brief info via WMI"
+        },
+        {
+          "command": "msinfo32",
+          "description": "Open the System Information graphical tool"
+        }
+      ]
+    },
+    {
+      "title": "Process Management",
+      "commands": [
+        {
+          "command": "tasklist",
+          "description": "List all currently running processes"
+        },
+        {
+          "command": "tasklist /fi \"IMAGENAME eq <name>\"",
+          "description": "Filter processes by executable name"
+        },
+        {
+          "command": "tasklist /fi \"STATUS eq running\"",
+          "description": "List only processes with a running status"
+        },
+        {
+          "command": "tasklist /fi \"PID eq <pid>\"",
+          "description": "List a specific process by its PID"
+        },
+        {
+          "command": "tasklist /svc",
+          "description": "List processes along with their hosted services"
+        },
+        {
+          "command": "tasklist /v",
+          "description": "List processes with verbose details"
+        },
+        {
+          "command": "tasklist /m",
+          "description": "List processes along with DLLs they have loaded"
+        },
+        {
+          "command": "tasklist /fo csv",
+          "description": "List processes in CSV output format"
+        },
+        {
+          "command": "tasklist /fo table",
+          "description": "List processes in formatted table output"
+        },
+        {
+          "command": "taskkill /im <name>",
+          "description": "Terminate a process by its executable name"
+        },
+        {
+          "command": "taskkill /pid <pid>",
+          "description": "Terminate a process by its PID"
+        },
+        {
+          "command": "taskkill /im <name> /f",
+          "description": "Forcefully terminate a process by name"
+        },
+        {
+          "command": "taskkill /pid <pid> /f",
+          "description": "Forcefully terminate a process by PID"
+        },
+        {
+          "command": "taskkill /im <name> /t",
+          "description": "Terminate a process and all its child processes"
+        },
+        {
+          "command": "taskkill /f /im <name> /t",
+          "description": "Forcefully terminate a process tree"
+        },
+        {
+          "command": "start <program>",
+          "description": "Start a new program or command in a new window"
+        },
+        {
+          "command": "start \"<title>\" <program>",
+          "description": "Start a program in a new window with a custom title"
+        },
+        {
+          "command": "start /wait <program>",
+          "description": "Start a program and wait for it to finish"
+        },
+        {
+          "command": "start /min <program>",
+          "description": "Start a program in a minimized window"
+        },
+        {
+          "command": "start /max <program>",
+          "description": "Start a program in a maximized window"
+        },
+        {
+          "command": "start /b <program>",
+          "description": "Start a program in the background without a new window"
+        },
+        {
+          "command": "timeout /t <seconds>",
+          "description": "Pause execution for a specified number of seconds"
+        },
+        {
+          "command": "timeout /t <seconds> /nobreak",
+          "description": "Pause without allowing keyboard interruption"
+        },
+        {
+          "command": "ping -n 1 127.0.0.1 > nul && <command>",
+          "description": "Delay a command by using a ping as a timer"
+        }
+      ]
+    },
+    {
+      "title": "Network",
+      "commands": [
+        {
+          "command": "ping <host>",
+          "description": "Send ICMP echo requests to test connectivity to a host"
+        },
+        {
+          "command": "ping <host> -n <count>",
+          "description": "Send a specified number of ping packets to a host"
+        },
+        {
+          "command": "ping <host> -t",
+          "description": "Ping a host continuously until stopped manually"
+        },
+        {
+          "command": "ping <host> -l <size>",
+          "description": "Ping with a specified packet size"
+        },
+        {
+          "command": "ping <host> -4",
+          "description": "Force ping to use IPv4"
+        },
+        {
+          "command": "ping <host> -6",
+          "description": "Force ping to use IPv6"
+        },
+        {
+          "command": "ping <host> -a",
+          "description": "Resolve the hostname from an IP address when pinging"
+        },
+        {
+          "command": "ipconfig",
+          "description": "Display IP configuration for all network adapters"
+        },
+        {
+          "command": "ipconfig /all",
+          "description": "Display full IP configuration details for all adapters"
+        },
+        {
+          "command": "ipconfig /release",
+          "description": "Release the DHCP IP address for all adapters"
+        },
+        {
+          "command": "ipconfig /renew",
+          "description": "Renew the DHCP IP address for all adapters"
+        },
+        {
+          "command": "ipconfig /flushdns",
+          "description": "Flush and reset the DNS resolver cache"
+        },
+        {
+          "command": "ipconfig /displaydns",
+          "description": "Display the contents of the DNS resolver cache"
+        },
+        {
+          "command": "ipconfig /registerdns",
+          "description": "Refresh DHCP leases and re-register DNS names"
+        },
+        {
+          "command": "nslookup <domain>",
+          "description": "Query DNS to find the IP address of a domain"
+        },
+        {
+          "command": "nslookup <domain> <dns-server>",
+          "description": "Query a specific DNS server for a domain"
+        },
+        {
+          "command": "nslookup -type=<type> <domain>",
+          "description": "Query a specific DNS record type"
+        },
+        {
+          "command": "tracert <host>",
+          "description": "Trace the network route packets take to a host"
+        },
+        {
+          "command": "tracert -d <host>",
+          "description": "Trace route without resolving hostnames"
+        },
+        {
+          "command": "tracert -h <hops> <host>",
+          "description": "Trace route with a maximum number of hops"
+        },
+        {
+          "command": "pathping <host>",
+          "description": "Trace a route and measure packet loss at each hop"
+        },
+        {
+          "command": "netstat",
+          "description": "Display active network connections and listening ports"
+        },
+        {
+          "command": "netstat -a",
+          "description": "Display all active connections and listening ports"
+        },
+        {
+          "command": "netstat -n",
+          "description": "Display connections with numeric IP addresses and ports"
+        },
+        {
+          "command": "netstat -an",
+          "description": "Display all connections with numeric addresses"
+        },
+        {
+          "command": "netstat -b",
+          "description": "Display the executable involved in each connection"
+        },
+        {
+          "command": "netstat -o",
+          "description": "Display process IDs associated with each connection"
+        },
+        {
+          "command": "netstat -ano",
+          "description": "Display all connections with addresses and PIDs numerically"
+        },
+        {
+          "command": "netstat -r",
+          "description": "Display the routing table"
+        },
+        {
+          "command": "netstat -e",
+          "description": "Display Ethernet statistics"
+        },
+        {
+          "command": "netstat -s",
+          "description": "Display per-protocol statistics"
+        },
+        {
+          "command": "netstat -p <protocol>",
+          "description": "Display connections for a specific protocol"
+        },
+        {
+          "command": "net view",
+          "description": "Display a list of computers in the current network"
+        },
+        {
+          "command": "net view \\\\<computer>",
+          "description": "List shared resources on a specific computer"
+        },
+        {
+          "command": "net use",
+          "description": "List all current network connections and mapped drives"
+        },
+        {
+          "command": "net use <drive>: \\\\<host>\\<share>",
+          "description": "Map a network share to a drive letter"
+        },
+        {
+          "command": "net use <drive>: /delete",
+          "description": "Disconnect a mapped network drive"
+        },
+        {
+          "command": "net share",
+          "description": "Display all shared resources on the local computer"
+        },
+        {
+          "command": "net share <name>=<path>",
+          "description": "Create a new network share"
+        },
+        {
+          "command": "net share <name> /delete",
+          "description": "Delete an existing network share"
+        },
+        {
+          "command": "arp -a",
+          "description": "Display the ARP cache showing IP-to-MAC mappings"
+        },
+        {
+          "command": "arp -d <ip>",
+          "description": "Delete a specific entry from the ARP cache"
+        },
+        {
+          "command": "arp -s <ip> <mac>",
+          "description": "Add a static ARP entry"
+        },
+        {
+          "command": "route print",
+          "description": "Display the full routing table"
+        },
+        {
+          "command": "route add <destination> mask <mask> <gateway>",
+          "description": "Add a new route to the routing table"
+        },
+        {
+          "command": "route delete <destination>",
+          "description": "Delete a route from the routing table"
+        },
+        {
+          "command": "netsh wlan show profiles",
+          "description": "List all saved Wi-Fi profiles"
+        },
+        {
+          "command": "netsh wlan show profile name=\"<ssid>\" key=clear",
+          "description": "Display a Wi-Fi profile including the saved password"
+        },
+        {
+          "command": "netsh wlan connect name=\"<ssid>\"",
+          "description": "Connect to a saved Wi-Fi network"
+        },
+        {
+          "command": "netsh wlan disconnect",
+          "description": "Disconnect from the current Wi-Fi network"
+        },
+        {
+          "command": "netsh interface ip set address <adapter> static <ip> <mask> <gateway>",
+          "description": "Set a static IP address on a network adapter"
+        },
+        {
+          "command": "netsh interface ip set address <adapter> dhcp",
+          "description": "Set a network adapter to use DHCP"
+        },
+        {
+          "command": "netsh advfirewall set allprofiles state on",
+          "description": "Enable Windows Firewall for all profiles"
+        },
+        {
+          "command": "netsh advfirewall set allprofiles state off",
+          "description": "Disable Windows Firewall for all profiles"
+        },
+        {
+          "command": "netsh advfirewall firewall add rule name=\"<n>\" protocol=TCP dir=in localport=<port> action=allow",
+          "description": "Add a firewall rule to allow inbound TCP traffic on a port"
+        },
+        {
+          "command": "netsh advfirewall firewall delete rule name=\"<n>\"",
+          "description": "Delete a specific firewall rule by name"
+        },
+        {
+          "command": "ftp <host>",
+          "description": "Open an FTP connection to a remote host"
+        },
+        {
+          "command": "curl <url>",
+          "description": "Transfer data from a URL (available in Windows 10+)"
+        },
+        {
+          "command": "curl -o <file> <url>",
+          "description": "Download a URL and save it to a file"
+        }
+      ]
+    },
+    {
+      "title": "User & Account Management",
+      "commands": [
+        {
+          "command": "net user",
+          "description": "List all local user accounts"
+        },
+        {
+          "command": "net user <username>",
+          "description": "Display detailed information about a specific user account"
+        },
+        {
+          "command": "net user <username> <password> /add",
+          "description": "Create a new local user account with a password"
+        },
+        {
+          "command": "net user <username> /delete",
+          "description": "Delete a local user account"
+        },
+        {
+          "command": "net user <username> <password>",
+          "description": "Change the password for a local user account"
+        },
+        {
+          "command": "net user <username> /active:yes",
+          "description": "Enable a disabled user account"
+        },
+        {
+          "command": "net user <username> /active:no",
+          "description": "Disable a user account"
+        },
+        {
+          "command": "net user <username> /passwordreq:yes",
+          "description": "Require a password for a user account"
+        },
+        {
+          "command": "net user <username> /expires:<date>",
+          "description": "Set an expiration date for a user account"
+        },
+        {
+          "command": "net localgroup",
+          "description": "List all local groups"
+        },
+        {
+          "command": "net localgroup <group>",
+          "description": "Display members of a specific local group"
+        },
+        {
+          "command": "net localgroup <group> <user> /add",
+          "description": "Add a user to a local group"
+        },
+        {
+          "command": "net localgroup <group> <user> /delete",
+          "description": "Remove a user from a local group"
+        },
+        {
+          "command": "net localgroup <group> /add",
+          "description": "Create a new local group"
+        },
+        {
+          "command": "net localgroup <group> /delete",
+          "description": "Delete a local group"
+        },
+        {
+          "command": "runas /user:<domain>\\<user> <command>",
+          "description": "Run a command as a different user"
+        },
+        {
+          "command": "runas /user:Administrator <command>",
+          "description": "Run a command as the Administrator user"
+        },
+        {
+          "command": "net accounts",
+          "description": "Display password and logon policy for the local computer"
+        },
+        {
+          "command": "net accounts /maxpwage:<days>",
+          "description": "Set the maximum password age in days"
+        },
+        {
+          "command": "net accounts /minpwlen:<length>",
+          "description": "Set the minimum password length"
+        }
+      ]
+    },
+    {
+      "title": "Services Management",
+      "commands": [
+        {
+          "command": "sc query",
+          "description": "List the status of all services"
+        },
+        {
+          "command": "sc query <service>",
+          "description": "Display the status of a specific service"
+        },
+        {
+          "command": "sc query type= all",
+          "description": "List all services and drivers"
+        },
+        {
+          "command": "sc query state= all",
+          "description": "List all services regardless of their state"
+        },
+        {
+          "command": "sc start <service>",
+          "description": "Start a service"
+        },
+        {
+          "command": "sc stop <service>",
+          "description": "Stop a running service"
+        },
+        {
+          "command": "sc pause <service>",
+          "description": "Pause a running service"
+        },
+        {
+          "command": "sc continue <service>",
+          "description": "Resume a paused service"
+        },
+        {
+          "command": "sc config <service> start= auto",
+          "description": "Set a service to start automatically"
+        },
+        {
+          "command": "sc config <service> start= demand",
+          "description": "Set a service to start manually"
+        },
+        {
+          "command": "sc config <service> start= disabled",
+          "description": "Disable a service from starting"
+        },
+        {
+          "command": "sc create <service> binPath= \"<path>\"",
+          "description": "Create a new service with a binary path"
+        },
+        {
+          "command": "sc delete <service>",
+          "description": "Mark a service for deletion"
+        },
+        {
+          "command": "sc description <service> \"<desc>\"",
+          "description": "Set a description for a service"
+        },
+        {
+          "command": "net start",
+          "description": "List all currently running services"
+        },
+        {
+          "command": "net start <service>",
+          "description": "Start a Windows service by name"
+        },
+        {
+          "command": "net stop <service>",
+          "description": "Stop a Windows service by name"
+        },
+        {
+          "command": "net pause <service>",
+          "description": "Pause a running service"
+        },
+        {
+          "command": "net continue <service>",
+          "description": "Continue a paused service"
+        }
+      ]
+    },
+    {
+      "title": "Disk & Storage",
+      "commands": [
+        {
+          "command": "diskpart",
+          "description": "Open the interactive disk partitioning tool"
+        },
+        {
+          "command": "chkdsk",
+          "description": "Check the current drive for errors"
+        },
+        {
+          "command": "chkdsk <drive>:",
+          "description": "Check a specific drive for file system errors"
+        },
+        {
+          "command": "chkdsk <drive>: /f",
+          "description": "Check and fix file system errors on a drive"
+        },
+        {
+          "command": "chkdsk <drive>: /r",
+          "description": "Locate bad sectors and recover readable data"
+        },
+        {
+          "command": "chkdsk <drive>: /x",
+          "description": "Force dismount before checking (use with /f)"
+        },
+        {
+          "command": "format <drive>:",
+          "description": "Format a disk drive"
+        },
+        {
+          "command": "format <drive>: /fs:NTFS",
+          "description": "Format a drive with the NTFS file system"
+        },
+        {
+          "command": "format <drive>: /fs:FAT32",
+          "description": "Format a drive with the FAT32 file system"
+        },
+        {
+          "command": "format <drive>: /q",
+          "description": "Quick format a drive"
+        },
+        {
+          "command": "label <drive>: <name>",
+          "description": "Set or change the volume label of a drive"
+        },
+        {
+          "command": "vol <drive>:",
+          "description": "Display the volume label and serial number of a drive"
+        },
+        {
+          "command": "fsutil volume diskfree <drive>:",
+          "description": "Display free and total disk space for a drive"
+        },
+        {
+          "command": "fsutil file createnew <file> <size>",
+          "description": "Create a new file of a specified size in bytes"
+        },
+        {
+          "command": "subst <drive>: <path>",
+          "description": "Assign a drive letter to a folder path"
+        },
+        {
+          "command": "subst <drive>: /d",
+          "description": "Remove a substituted drive letter"
+        },
+        {
+          "command": "subst",
+          "description": "List all current drive substitutions"
+        },
+        {
+          "command": "defrag <drive>: /u /v",
+          "description": "Defragment a drive with progress reporting"
+        },
+        {
+          "command": "defrag <drive>: /a",
+          "description": "Analyze a drive without defragmenting"
+        }
+      ]
+    },
+    {
+      "title": "Batch Scripting",
+      "commands": [
+        {
+          "command": "@echo off",
+          "description": "Turn off command echoing for the rest of the script"
+        },
+        {
+          "command": "echo <message>",
+          "description": "Print a message to the console"
+        },
+        {
+          "command": "echo.",
+          "description": "Print a blank line to the console"
+        },
+        {
+          "command": "echo %<variable>%",
+          "description": "Print the value of a variable"
+        },
+        {
+          "command": "set <variable>=<value>",
+          "description": "Set a variable in the current batch session"
+        },
+        {
+          "command": "set /p <variable>=<prompt>",
+          "description": "Prompt the user to input a value for a variable"
+        },
+        {
+          "command": "set /a <variable>=<expression>",
+          "description": "Evaluate an arithmetic expression and store the result"
+        },
+        {
+          "command": "if <condition> <command>",
+          "description": "Execute a command if a condition is true"
+        },
+        {
+          "command": "if exist <file> <command>",
+          "description": "Execute a command if a file exists"
+        },
+        {
+          "command": "if not exist <file> <command>",
+          "description": "Execute a command if a file does not exist"
+        },
+        {
+          "command": "if %<variable>%==<value> <command>",
+          "description": "Execute a command if a variable equals a value"
+        },
+        {
+          "command": "if /i %<variable>%==<value> <command>",
+          "description": "Case-insensitive comparison of a variable to a value"
+        },
+        {
+          "command": "if %errorlevel%==0 <command>",
+          "description": "Execute a command if the previous command succeeded"
+        },
+        {
+          "command": "if defined <variable> <command>",
+          "description": "Execute a command if a variable is defined"
+        },
+        {
+          "command": "if not defined <variable> <command>",
+          "description": "Execute a command if a variable is not defined"
+        },
+        {
+          "command": "if <n1> gtr <n2> <command>",
+          "description": "Execute a command if n1 is greater than n2"
+        },
+        {
+          "command": "if <n1> lss <n2> <command>",
+          "description": "Execute a command if n1 is less than n2"
+        },
+        {
+          "command": "if <n1> equ <n2> <command>",
+          "description": "Execute a command if n1 equals n2"
+        },
+        {
+          "command": "if <n1> neq <n2> <command>",
+          "description": "Execute a command if n1 does not equal n2"
+        },
+        {
+          "command": "for %i in (<set>) do <command>",
+          "description": "Loop through a set of values"
+        },
+        {
+          "command": "for /l %i in (<start>,<step>,<end>) do <command>",
+          "description": "Numeric for loop from start to end with step increment"
+        },
+        {
+          "command": "for /f %i in (<file>) do <command>",
+          "description": "Loop through each line of a file"
+        },
+        {
+          "command": "for /f \"tokens=*\" %i in ('<command>') do <cmd>",
+          "description": "Loop through the output of a command"
+        },
+        {
+          "command": "for /r <path> %i in (<pattern>) do <command>",
+          "description": "Recursively loop through files matching a pattern"
+        },
+        {
+          "command": "for /d %i in (<pattern>) do <command>",
+          "description": "Loop through matching directories only"
+        },
+        {
+          "command": "goto <label>",
+          "description": "Jump script execution to a labelled section"
+        },
+        {
+          "command": ":<label>",
+          "description": "Define a label to jump to with goto"
+        },
+        {
+          "command": "call <script>.bat",
+          "description": "Call and run another batch script"
+        },
+        {
+          "command": "call :<subroutine>",
+          "description": "Call a subroutine defined in the same batch file"
+        },
+        {
+          "command": "exit /b <code>",
+          "description": "Exit the current batch script with an exit code"
+        },
+        {
+          "command": "exit <code>",
+          "description": "Exit the command prompt session with an exit code"
+        },
+        {
+          "command": "%~1",
+          "description": "Get the first argument passed to the script, removing quotes"
+        },
+        {
+          "command": "%~dp0",
+          "description": "Get the drive and path of the batch file itself"
+        },
+        {
+          "command": "%~f1",
+          "description": "Get the fully qualified path of the first argument"
+        },
+        {
+          "command": "%~n1",
+          "description": "Get the filename without extension from the first argument"
+        },
+        {
+          "command": "%~x1",
+          "description": "Get the file extension from the first argument"
+        },
+        {
+          "command": "pause",
+          "description": "Pause execution and wait for the user to press a key"
+        },
+        {
+          "command": "choice /c <chars> /m <message>",
+          "description": "Prompt the user to press one of a set of characters"
+        },
+        {
+          "command": "setlocal",
+          "description": "Begin local environment changes in a script"
+        },
+        {
+          "command": "endlocal",
+          "description": "End local environment changes and restore original environment"
+        },
+        {
+          "command": "setlocal enabledelayedexpansion",
+          "description": "Enable delayed variable expansion using !variable! syntax"
+        },
+        {
+          "command": "enableextensions",
+          "description": "Enable command extensions for enhanced batch features"
+        },
+        {
+          "command": "rem <comment>",
+          "description": "Add a comment to a batch script (not executed)"
+        },
+        {
+          "command": ":: <comment>",
+          "description": "Add a comment using the double-colon syntax"
+        }
+      ]
+    },
+    {
+      "title": "Redirection & Pipelines",
+      "commands": [
+        {
+          "command": "<command> > <file>",
+          "description": "Redirect command output to a file, overwriting it"
+        },
+        {
+          "command": "<command> >> <file>",
+          "description": "Redirect command output and append it to a file"
+        },
+        {
+          "command": "<command> < <file>",
+          "description": "Use a file as standard input for a command"
+        },
+        {
+          "command": "<command> 2> <file>",
+          "description": "Redirect error output to a file"
+        },
+        {
+          "command": "<command> 2>> <file>",
+          "description": "Append error output to a file"
+        },
+        {
+          "command": "<command> 2>&1",
+          "description": "Redirect stderr to the same destination as stdout"
+        },
+        {
+          "command": "<command> > <file> 2>&1",
+          "description": "Redirect both stdout and stderr to a file"
+        },
+        {
+          "command": "<command> > nul",
+          "description": "Discard standard output"
+        },
+        {
+          "command": "<command> > nul 2>&1",
+          "description": "Discard both standard output and error output"
+        },
+        {
+          "command": "<command1> | <command2>",
+          "description": "Pipe the output of command1 as input to command2"
+        },
+        {
+          "command": "<command1> && <command2>",
+          "description": "Run command2 only if command1 succeeds"
+        },
+        {
+          "command": "<command1> || <command2>",
+          "description": "Run command2 only if command1 fails"
+        },
+        {
+          "command": "<command1> & <command2>",
+          "description": "Run command1 then command2 unconditionally"
+        },
+        {
+          "command": "<command> | clip",
+          "description": "Pipe the output of a command to the clipboard"
+        },
+        {
+          "command": "<command> | more",
+          "description": "Pipe output through the more pager"
+        },
+        {
+          "command": "<command> | find \"<string>\"",
+          "description": "Pipe output and filter for a specific string"
+        },
+        {
+          "command": "<command> | findstr \"<pattern>\"",
+          "description": "Pipe output and filter using a pattern or regex"
+        },
+        {
+          "command": "<command> | sort",
+          "description": "Pipe output and sort it alphabetically"
+        },
+        {
+          "command": "<command> | sort /r",
+          "description": "Pipe output and sort it in reverse order"
+        }
+      ]
+    },
+    {
+      "title": "System Administration",
+      "commands": [
+        {
+          "command": "shutdown /s",
+          "description": "Shut down the local computer"
+        },
+        {
+          "command": "shutdown /s /t <seconds>",
+          "description": "Shut down the computer after a specified delay"
+        },
+        {
+          "command": "shutdown /r",
+          "description": "Restart the local computer"
+        },
+        {
+          "command": "shutdown /h",
+          "description": "Hibernate the local computer"
+        },
+        {
+          "command": "shutdown /l",
+          "description": "Log off the current user"
+        },
+        {
+          "command": "shutdown /a",
+          "description": "Abort a pending shutdown"
+        },
+        {
+          "command": "shutdown /m \\\\<computer> /s",
+          "description": "Remotely shut down another computer"
+        },
+        {
+          "command": "shutdown /r /o",
+          "description": "Restart into the Advanced Boot Options menu"
+        },
+        {
+          "command": "gpupdate",
+          "description": "Refresh Group Policy settings"
+        },
+        {
+          "command": "gpupdate /force",
+          "description": "Force a full refresh of all Group Policy settings"
+        },
+        {
+          "command": "gpresult /r",
+          "description": "Display the Resultant Set of Policy for the current user"
+        },
+        {
+          "command": "gpresult /h <file>.html",
+          "description": "Generate an HTML Group Policy report"
+        },
+        {
+          "command": "sfc /scannow",
+          "description": "Scan and repair protected Windows system files"
+        },
+        {
+          "command": "sfc /verifyonly",
+          "description": "Scan system files for integrity without repairing"
+        },
+        {
+          "command": "dism /online /cleanup-image /restorehealth",
+          "description": "Scan and repair the Windows image using DISM"
+        },
+        {
+          "command": "dism /online /cleanup-image /scanhealth",
+          "description": "Scan the Windows image for corruption"
+        },
+        {
+          "command": "dism /online /cleanup-image /checkhealth",
+          "description": "Check if the Windows image is flagged as corrupted"
+        },
+        {
+          "command": "reg query <key>",
+          "description": "Query and display registry key values"
+        },
+        {
+          "command": "reg query <key> /v <valuename>",
+          "description": "Query a specific registry value"
+        },
+        {
+          "command": "reg add <key> /v <name> /t <type> /d <data>",
+          "description": "Add or update a registry value"
+        },
+        {
+          "command": "reg delete <key> /v <valuename>",
+          "description": "Delete a specific registry value"
+        },
+        {
+          "command": "reg delete <key>",
+          "description": "Delete a registry key and all its values"
+        },
+        {
+          "command": "reg export <key> <file>.reg",
+          "description": "Export a registry key to a .reg file"
+        },
+        {
+          "command": "reg import <file>.reg",
+          "description": "Import a .reg file into the registry"
+        },
+        {
+          "command": "reg copy <source> <destination>",
+          "description": "Copy a registry key and all its subkeys to another location"
+        },
+        {
+          "command": "regedit",
+          "description": "Open the graphical Registry Editor"
+        },
+        {
+          "command": "msconfig",
+          "description": "Open the System Configuration tool"
+        },
+        {
+          "command": "eventvwr",
+          "description": "Open the Event Viewer"
+        },
+        {
+          "command": "devmgmt.msc",
+          "description": "Open the Device Manager"
+        },
+        {
+          "command": "services.msc",
+          "description": "Open the Services management console"
+        },
+        {
+          "command": "compmgmt.msc",
+          "description": "Open the Computer Management console"
+        },
+        {
+          "command": "diskmgmt.msc",
+          "description": "Open the Disk Management console"
+        },
+        {
+          "command": "taskschd.msc",
+          "description": "Open the Task Scheduler"
+        },
+        {
+          "command": "control",
+          "description": "Open the Control Panel"
+        },
+        {
+          "command": "control <applet>",
+          "description": "Open a specific Control Panel applet"
+        },
+        {
+          "command": "wuauclt /detectnow",
+          "description": "Force Windows Update to check for updates immediately"
+        },
+        {
+          "command": "bcdedit",
+          "description": "Display and manage the boot configuration data"
+        },
+        {
+          "command": "bcdedit /enum",
+          "description": "List all boot entries in the boot configuration"
+        }
+      ]
+    },
+    {
+      "title": "Miscellaneous",
+      "commands": [
+        {
+          "command": "cls",
+          "description": "Clear the command prompt screen"
+        },
+        {
+          "command": "help",
+          "description": "Display a list of built-in CMD commands with brief descriptions"
+        },
+        {
+          "command": "help <command>",
+          "description": "Display help documentation for a specific command"
+        },
+        {
+          "command": "<command> /?",
+          "description": "Display help and usage information for any command"
+        },
+        {
+          "command": "color <attr>",
+          "description": "Change the foreground and background colors of the console"
+        },
+        {
+          "command": "color 0a",
+          "description": "Set black background with green text"
+        },
+        {
+          "command": "title <text>",
+          "description": "Set the title of the current command prompt window"
+        },
+        {
+          "command": "prompt <text>",
+          "description": "Change the command prompt text"
+        },
+        {
+          "command": "prompt $P$G",
+          "description": "Reset the prompt to show current directory and >"
+        },
+        {
+          "command": "mode con cols=<n> lines=<n>",
+          "description": "Set the console window size in columns and lines"
+        },
+        {
+          "command": "doskey <alias>=<command>",
+          "description": "Create a command alias (macro) in CMD"
+        },
+        {
+          "command": "doskey /history",
+          "description": "Display the command history for the current session"
+        },
+        {
+          "command": "doskey /macros",
+          "description": "List all currently defined macros"
+        },
+        {
+          "command": "clip",
+          "description": "Copy stdin or piped output to the Windows clipboard"
+        },
+        {
+          "command": "sort",
+          "description": "Sort the lines of input alphabetically"
+        },
+        {
+          "command": "sort /r",
+          "description": "Sort the lines of input in reverse order"
+        },
+        {
+          "command": "sort /+<n>",
+          "description": "Sort starting from character position <n>"
+        },
+        {
+          "command": "assoc",
+          "description": "Display all file extension associations"
+        },
+        {
+          "command": "assoc .<ext>",
+          "description": "Display the file type associated with an extension"
+        },
+        {
+          "command": "assoc .<ext>=<filetype>",
+          "description": "Associate a file extension with a file type"
+        },
+        {
+          "command": "ftype",
+          "description": "Display all file type open commands"
+        },
+        {
+          "command": "ftype <filetype>",
+          "description": "Display the open command for a specific file type"
+        },
+        {
+          "command": "ftype <filetype>=<command>",
+          "description": "Set the open command for a file type"
+        },
+        {
+          "command": "where <command>",
+          "description": "Find the location of an executable in the PATH"
+        },
+        {
+          "command": "certutil -hashfile <file> MD5",
+          "description": "Compute the MD5 hash of a file"
+        },
+        {
+          "command": "certutil -hashfile <file> SHA256",
+          "description": "Compute the SHA256 hash of a file"
+        },
+        {
+          "command": "certutil -encode <infile> <outfile>",
+          "description": "Base64-encode a file"
+        },
+        {
+          "command": "certutil -decode <infile> <outfile>",
+          "description": "Base64-decode a file"
+        },
+        {
+          "command": "cipher /e <file>",
+          "description": "Encrypt a file using NTFS EFS encryption"
+        },
+        {
+          "command": "cipher /d <file>",
+          "description": "Decrypt an EFS-encrypted file"
+        },
+        {
+          "command": "cipher /w:<path>",
+          "description": "Securely wipe free space on a drive"
+        },
+        {
+          "command": "fc /b <file1> <file2>",
+          "description": "Compare two files byte by byte"
+        },
+        {
+          "command": "powercfg /batteryreport",
+          "description": "Generate a detailed battery usage report"
+        },
+        {
+          "command": "powercfg /energy",
+          "description": "Analyze power usage and generate an energy report"
+        },
+        {
+          "command": "powercfg /list",
+          "description": "List all available power plans"
+        },
+        {
+          "command": "powercfg /setactive <scheme>",
+          "description": "Set the active power plan"
+        }
+      ]
+    }
+  ]
+}

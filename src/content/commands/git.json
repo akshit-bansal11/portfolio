@@ -1,0 +1,2037 @@
+{
+  "name": "Git",
+  "slug": "git",
+  "logo": "https://svgl.app/library/git.svg",
+  "accent": "#F05032",
+  "description": "Distributed version control system",
+  "categories": [
+    {
+      "title": "Setup & Config",
+      "commands": [
+        {
+          "command": "git init",
+          "description": "Initialize a new, empty Git repository in the current directory"
+        },
+        {
+          "command": "git init <directory>",
+          "description": "Create a new directory and initialize a Git repository within it"
+        },
+        {
+          "command": "git init --bare",
+          "description": "Initialize a bare repository without a working directory"
+        },
+        {
+          "command": "git init --bare <directory>",
+          "description": "Create a new bare repository in the specified directory"
+        },
+        {
+          "command": "git init -b <branch-name>",
+          "description": "Initialize a repository with a custom initial branch name"
+        },
+        {
+          "command": "git init --initial-branch=<branch-name>",
+          "description": "Initialize a repository, explicitly setting the starting branch"
+        },
+        {
+          "command": "git clone <url>",
+          "description": "Clone a remote repository to your local machine"
+        },
+        {
+          "command": "git clone <url> <directory>",
+          "description": "Clone a remote repository into a specific target directory"
+        },
+        {
+          "command": "git clone --depth 1 <url>",
+          "description": "Perform a shallow clone downloading only the latest commits"
+        },
+        {
+          "command": "git clone --branch <branch> <url>",
+          "description": "Clone a repository and checkout a specific branch immediately"
+        },
+        {
+          "command": "git clone --single-branch <url>",
+          "description": "Clone a repository fetching only the history of the default branch"
+        },
+        {
+          "command": "git clone --no-single-branch <url>",
+          "description": "Clone fetching history for all branches"
+        },
+        {
+          "command": "git clone --recurse-submodules <url>",
+          "description": "Clone a repository and automatically initialize/update its submodules"
+        },
+        {
+          "command": "git clone --bare <url>",
+          "description": "Clone a repository as a bare repository without a working tree"
+        },
+        {
+          "command": "git clone --mirror <url>",
+          "description": "Create a mirror clone suitable for backup or migrating servers"
+        },
+        {
+          "command": "git clone --quiet <url>",
+          "description": "Clone a repository silently without showing progress output"
+        },
+        {
+          "command": "git clone --verbose <url>",
+          "description": "Clone a repository displaying detailed debug output"
+        },
+        {
+          "command": "git clone --origin <name> <url>",
+          "description": "Clone and use a custom name instead of 'origin' for the remote"
+        },
+        {
+          "command": "git clone --depth 1 --branch <branch> <url>",
+          "description": "Shallow clone only the latest commit of a specific branch"
+        },
+        {
+          "command": "git clone --depth 1 --single-branch --branch <branch> <url>",
+          "description": "Shallow clone strictly isolated to a single branch"
+        },
+        {
+          "command": "git config --list",
+          "description": "List all Git configuration settings applied in the current scope"
+        },
+        {
+          "command": "git config --global --list",
+          "description": "List global Git configuration settings for the current user"
+        },
+        {
+          "command": "git config --local --list",
+          "description": "List configuration settings specific to the current repository"
+        },
+        {
+          "command": "git config --system --list",
+          "description": "List system-wide Git configuration settings"
+        },
+        {
+          "command": "git config <key>",
+          "description": "Read the value of a specific Git configuration key"
+        },
+        {
+          "command": "git config --global <key>",
+          "description": "Read the value of a global Git configuration key"
+        },
+        {
+          "command": "git config <key> <value>",
+          "description": "Set a specific configuration key to a value in the local repo"
+        },
+        {
+          "command": "git config --global <key> <value>",
+          "description": "Set a global Git configuration key to a value"
+        },
+        {
+          "command": "git config --global user.name \"<name>\"",
+          "description": "Set the default author name for your commits globally"
+        },
+        {
+          "command": "git config --global user.email \"<email>\"",
+          "description": "Set the default author email for your commits globally"
+        },
+        {
+          "command": "git config --global core.editor <editor>",
+          "description": "Set the default text editor for Git commands globally"
+        },
+        {
+          "command": "git config --global init.defaultBranch <name>",
+          "description": "Set the default branch name for newly initialized repositories"
+        },
+        {
+          "command": "git config --global pull.rebase true",
+          "description": "Configure Git to rebase by default when pulling changes"
+        },
+        {
+          "command": "git config --global push.default current",
+          "description": "Set Git to push only the current branch to its remote counterpart"
+        },
+        {
+          "command": "git config --global alias.<alias> <command>",
+          "description": "Create a global shortcut alias for a Git command"
+        },
+        {
+          "command": "git config --unset <key>",
+          "description": "Remove a specific configuration key from the local repository"
+        },
+        {
+          "command": "git config --global --unset <key>",
+          "description": "Remove a global configuration key"
+        },
+        {
+          "command": "git config --edit",
+          "description": "Open the local Git configuration file in the default editor"
+        },
+        {
+          "command": "git config --global --edit",
+          "description": "Open the global Git configuration file in the default editor"
+        },
+        {
+          "command": "git config --add <key> <value>",
+          "description": "Add a value to a multi-valued configuration key"
+        },
+        {
+          "command": "git config --get-all <key>",
+          "description": "Get all values assigned to a multi-valued configuration key"
+        },
+        {
+          "command": "git clone <file> <directory>",
+          "description": "Clone a local repository path into a new directory"
+        }
+      ]
+    },
+    {
+      "title": "Staging & Snapshots",
+      "commands": [
+        {
+          "command": "git add <file>",
+          "description": "Stage a specific file's changes for the next commit"
+        },
+        {
+          "command": "git add .",
+          "description": "Stage all new and modified files in the current directory"
+        },
+        {
+          "command": "git add -A",
+          "description": "Stage all changes, including deletions, across the entire working tree"
+        },
+        {
+          "command": "git add --all",
+          "description": "Stage everything: modifications, new files, and deletions"
+        },
+        {
+          "command": "git add -p",
+          "description": "Interactively stage specific chunks (hunks) of changes"
+        },
+        {
+          "command": "git add --patch",
+          "description": "Interactively choose which parts of files to stage"
+        },
+        {
+          "command": "git add -u",
+          "description": "Stage modifications and deletions, but ignore new untracked files"
+        },
+        {
+          "command": "git add --update",
+          "description": "Update the index just for files that are already tracked"
+        },
+        {
+          "command": "git add -n",
+          "description": "Dry run: show what files would be staged without actually staging them"
+        },
+        {
+          "command": "git add --dry-run",
+          "description": "Simulate adding files to preview changes"
+        },
+        {
+          "command": "git add -f <file>",
+          "description": "Force add a file that is otherwise ignored by .gitignore"
+        },
+        {
+          "command": "git add --force <file>",
+          "description": "Forcefully stage an ignored file"
+        },
+        {
+          "command": "git add -i",
+          "description": "Open the interactive staging prompt menu"
+        },
+        {
+          "command": "git add --interactive",
+          "description": "Start an interactive session to manage the staging area"
+        },
+        {
+          "command": "git add -e",
+          "description": "Open the diff in an editor to manually edit what gets staged"
+        },
+        {
+          "command": "git add --edit",
+          "description": "Manually edit the patch file before staging it"
+        },
+        {
+          "command": "git add *.js",
+          "description": "Stage all files matching a specific extension (e.g., .js)"
+        },
+        {
+          "command": "git add <dir>/",
+          "description": "Stage all modified and new files within a specific directory"
+        },
+        {
+          "command": "git commit",
+          "description": "Create a commit containing staged changes, opening the editor for a message"
+        },
+        {
+          "command": "git commit -m \"<message>\"",
+          "description": "Create a commit with a single-line message"
+        },
+        {
+          "command": "git commit -a",
+          "description": "Automatically stage all modified tracked files and open editor to commit"
+        },
+        {
+          "command": "git commit -am \"<message>\"",
+          "description": "Automatically stage modified tracked files and commit with a message"
+        },
+        {
+          "command": "git commit --amend",
+          "description": "Combine staged changes with the previous commit and edit the message"
+        },
+        {
+          "command": "git commit --amend -m \"<message>\"",
+          "description": "Combine staged changes with previous commit and replace the message"
+        },
+        {
+          "command": "git commit --amend --no-edit",
+          "description": "Add staged changes to the previous commit without altering its message"
+        },
+        {
+          "command": "git commit -m \"<message>\" --allow-empty",
+          "description": "Create a commit even if there are no staged changes"
+        },
+        {
+          "command": "git commit --no-verify -m \"<message>\"",
+          "description": "Commit while bypassing pre-commit and commit-msg hooks"
+        },
+        {
+          "command": "git commit -S -m \"<message>\"",
+          "description": "Create a GPG-signed commit"
+        },
+        {
+          "command": "git commit --gpg-sign -m \"<message>\"",
+          "description": "Force GPG signature for the commit"
+        },
+        {
+          "command": "git commit --author=\"<name> <email>\" -m \"<message>\"",
+          "description": "Commit with a custom overridden author name and email"
+        },
+        {
+          "command": "git commit --date=\"<date>\" -m \"<message>\"",
+          "description": "Commit specifying a custom timestamp"
+        },
+        {
+          "command": "git commit -v",
+          "description": "Open editor with the diff of what is being committed visible"
+        },
+        {
+          "command": "git commit --verbose",
+          "description": "Show the full unified diff in the commit message editor"
+        },
+        {
+          "command": "git commit -q",
+          "description": "Commit quietly, suppressing standard summary output"
+        },
+        {
+          "command": "git commit --quiet",
+          "description": "Commit with minimal output to console"
+        },
+        {
+          "command": "git commit -m \"<message>\" -m \"<body>\"",
+          "description": "Commit with a subject line and a separate body paragraph"
+        },
+        {
+          "command": "git commit --squash <commit>",
+          "description": "Create a commit marked to be squashed into a specific older commit"
+        },
+        {
+          "command": "git commit --fixup <commit>",
+          "description": "Create a commit meant to invisibly fix an older commit during rebase"
+        },
+        {
+          "command": "git status",
+          "description": "Show the state of the working directory and staging area"
+        },
+        {
+          "command": "git status -s",
+          "description": "Show status in a concise short format"
+        },
+        {
+          "command": "git status --short",
+          "description": "Display shortened status output"
+        },
+        {
+          "command": "git status -b",
+          "description": "Show current branch tracking info alongside short status"
+        },
+        {
+          "command": "git status --branch",
+          "description": "Include branch tracking information in the output"
+        },
+        {
+          "command": "git status -sb",
+          "description": "Show concise short status alongside branch info"
+        },
+        {
+          "command": "git status --porcelain",
+          "description": "Output machine-readable status meant for parsing by scripts"
+        },
+        {
+          "command": "git status -u",
+          "description": "Show untracked files explicitly in the output"
+        },
+        {
+          "command": "git status --untracked-files=all",
+          "description": "List untracked files and untracked directories contents individually"
+        },
+        {
+          "command": "git status --ignored",
+          "description": "Show status and also list ignored files"
+        },
+        {
+          "command": "git status --ahead-behind",
+          "description": "Calculate and display how far ahead or behind the remote branch is"
+        },
+        {
+          "command": "git diff",
+          "description": "Show unstaged changes in the working directory"
+        },
+        {
+          "command": "git diff <file>",
+          "description": "Show unstaged changes for a specific file"
+        },
+        {
+          "command": "git diff --staged",
+          "description": "Show changes that are currently staged for the next commit"
+        },
+        {
+          "command": "git diff --cached",
+          "description": "Alias for --staged, showing changes ready to be committed"
+        },
+        {
+          "command": "git diff HEAD",
+          "description": "Show all changes (staged and unstaged) since the last commit"
+        },
+        {
+          "command": "git diff HEAD~1",
+          "description": "Show changes between the working tree and the previous commit"
+        },
+        {
+          "command": "git diff <branch1> <branch2>",
+          "description": "Show the differences between two branches"
+        },
+        {
+          "command": "git diff <commit1> <commit2>",
+          "description": "Show the differences between two specific commits"
+        },
+        {
+          "command": "git diff --stat",
+          "description": "Show a summary of lines added/removed instead of the full diff"
+        },
+        {
+          "command": "git diff --name-only",
+          "description": "Output only the names of the files that changed"
+        },
+        {
+          "command": "git diff --name-status",
+          "description": "Output filenames and their modification status (Added, Modified, etc.)"
+        },
+        {
+          "command": "git diff --word-diff",
+          "description": "Show differences at the word level instead of line-by-line"
+        },
+        {
+          "command": "git diff --color",
+          "description": "Force colored output for diffs"
+        },
+        {
+          "command": "git diff --no-color",
+          "description": "Disable colored output for diffs"
+        },
+        {
+          "command": "git diff -U<n>",
+          "description": "Generate diffs with <n> lines of context"
+        },
+        {
+          "command": "git diff --unified=<n>",
+          "description": "Set the number of unified diff context lines"
+        },
+        {
+          "command": "git diff --ignore-space-change",
+          "description": "Ignore changes in amount of whitespace"
+        },
+        {
+          "command": "git diff -w",
+          "description": "Completely ignore all whitespace when comparing lines"
+        },
+        {
+          "command": "git diff --ignore-all-space",
+          "description": "Ignore whitespace differences completely"
+        },
+        {
+          "command": "git diff --diff-filter=<filter>",
+          "description": "Filter diffs by file state (e.g., A for added, D for deleted)"
+        },
+        {
+          "command": "git diff HEAD --name-only",
+          "description": "List names of all files changed since the last commit"
+        },
+        {
+          "command": "git diff --staged --stat",
+          "description": "Show a summary of the changes staged for the next commit"
+        },
+        {
+          "command": "git stash",
+          "description": "Temporarily save unstaged and staged changes in a stack"
+        },
+        {
+          "command": "git stash push",
+          "description": "Explicitly push current changes onto the stash stack"
+        },
+        {
+          "command": "git stash push -m \"<message>\"",
+          "description": "Stash current changes with a specific descriptive message"
+        },
+        {
+          "command": "git stash push -u",
+          "description": "Stash tracked file changes along with untracked files"
+        },
+        {
+          "command": "git stash push --include-untracked",
+          "description": "Include untracked files when stashing changes"
+        },
+        {
+          "command": "git stash push -a",
+          "description": "Stash all changes, including untracked and ignored files"
+        },
+        {
+          "command": "git stash push --all",
+          "description": "Stash literally everything in the working directory"
+        },
+        {
+          "command": "git stash push -p",
+          "description": "Interactively select chunks to stash"
+        },
+        {
+          "command": "git stash push --patch",
+          "description": "Pick specific hunks of changes to stash interactively"
+        },
+        {
+          "command": "git stash push -- <file>",
+          "description": "Stash only changes made to a specific file"
+        },
+        {
+          "command": "git stash pop",
+          "description": "Apply the most recent stash and remove it from the stash stack"
+        },
+        {
+          "command": "git stash pop stash@{<n>}",
+          "description": "Apply and remove a specific stash index from the stack"
+        },
+        {
+          "command": "git stash apply",
+          "description": "Apply the most recent stash without removing it from the stack"
+        },
+        {
+          "command": "git stash apply stash@{<n>}",
+          "description": "Apply a specific stash without dropping it"
+        },
+        {
+          "command": "git stash drop",
+          "description": "Discard the most recent stash from the stack entirely"
+        },
+        {
+          "command": "git stash drop stash@{<n>}",
+          "description": "Discard a specific stash index permanently"
+        },
+        {
+          "command": "git stash clear",
+          "description": "Delete all stashed entries simultaneously"
+        },
+        {
+          "command": "git stash list",
+          "description": "List all currently saved stashes"
+        },
+        {
+          "command": "git stash show",
+          "description": "Show the summary diff of the most recent stash"
+        },
+        {
+          "command": "git stash show stash@{<n>}",
+          "description": "Show the summary diff for a specific stash index"
+        },
+        {
+          "command": "git stash show -p",
+          "description": "Show the full patch diff of the most recent stash"
+        },
+        {
+          "command": "git stash show -p stash@{<n>}",
+          "description": "Show the full patch diff for a specific stash index"
+        },
+        {
+          "command": "git stash branch <branch>",
+          "description": "Create a new branch and apply the most recent stash to it"
+        },
+        {
+          "command": "git stash branch <branch> stash@{<n>}",
+          "description": "Create a new branch and apply a specific stash to it"
+        },
+        {
+          "command": "git rm <file>",
+          "description": "Remove a file from the working tree and stage the deletion"
+        },
+        {
+          "command": "git rm -r <directory>",
+          "description": "Recursively remove a directory and stage the deletions"
+        },
+        {
+          "command": "git rm --cached <file>",
+          "description": "Stop tracking a file but keep it in the working directory"
+        },
+        {
+          "command": "git rm --cached -r <directory>",
+          "description": "Stop tracking a directory but leave the files locally"
+        },
+        {
+          "command": "git rm -f <file>",
+          "description": "Forcefully remove a file from tracking and the working tree"
+        },
+        {
+          "command": "git rm --force <file>",
+          "description": "Force delete a file ignoring local modifications"
+        },
+        {
+          "command": "git rm -n <file>",
+          "description": "Dry run: test file removal without actually deleting it"
+        },
+        {
+          "command": "git rm --dry-run <file>",
+          "description": "Simulate removing a file"
+        },
+        {
+          "command": "git rm -q <file>",
+          "description": "Remove a file quietly without output"
+        },
+        {
+          "command": "git commit --no-verify",
+          "description": "Commit changes bypassing Git hooks"
+        }
+      ]
+    },
+    {
+      "title": "Branching & Merging",
+      "commands": [
+        {
+          "command": "git branch",
+          "description": "List all local branches"
+        },
+        {
+          "command": "git branch <name>",
+          "description": "Create a new branch at the current commit but stay on current branch"
+        },
+        {
+          "command": "git branch -a",
+          "description": "List all local and remote-tracking branches"
+        },
+        {
+          "command": "git branch --all",
+          "description": "Display every branch known to the repository locally and remotely"
+        },
+        {
+          "command": "git branch -r",
+          "description": "List only remote-tracking branches"
+        },
+        {
+          "command": "git branch --remotes",
+          "description": "Display branches fetched from remotes"
+        },
+        {
+          "command": "git branch -d <name>",
+          "description": "Safely delete a local branch if it has been merged"
+        },
+        {
+          "command": "git branch --delete <name>",
+          "description": "Delete a branch, aborting if unmerged changes exist"
+        },
+        {
+          "command": "git branch -D <name>",
+          "description": "Forcefully delete a local branch, losing unmerged changes"
+        },
+        {
+          "command": "git branch -m <new-name>",
+          "description": "Rename the current branch"
+        },
+        {
+          "command": "git branch -m <old-name> <new-name>",
+          "description": "Rename a specific branch"
+        },
+        {
+          "command": "git branch --move <old-name> <new-name>",
+          "description": "Rename a branch locally"
+        },
+        {
+          "command": "git branch -c <new-name>",
+          "description": "Copy the current branch to a new branch name"
+        },
+        {
+          "command": "git branch --copy <new-name>",
+          "description": "Duplicate a branch"
+        },
+        {
+          "command": "git branch -v",
+          "description": "List branches along with their latest commit hashes and subjects"
+        },
+        {
+          "command": "git branch --verbose",
+          "description": "Show more info for each branch in the list"
+        },
+        {
+          "command": "git branch -vv",
+          "description": "List branches with commit hashes, subjects, and remote tracking status"
+        },
+        {
+          "command": "git branch --merged",
+          "description": "List branches that have been merged into the current branch"
+        },
+        {
+          "command": "git branch --no-merged",
+          "description": "List branches containing unmerged work"
+        },
+        {
+          "command": "git branch --contains <commit>",
+          "description": "List only branches that contain a specific commit"
+        },
+        {
+          "command": "git branch -u <upstream>",
+          "description": "Set the upstream tracking branch for the current branch"
+        },
+        {
+          "command": "git branch --set-upstream-to=<upstream>",
+          "description": "Link current branch to a remote upstream branch"
+        },
+        {
+          "command": "git branch --unset-upstream",
+          "description": "Remove the upstream tracking link for the current branch"
+        },
+        {
+          "command": "git branch -f <name> <commit>",
+          "description": "Forcefully reset an existing branch pointer to a specific commit"
+        },
+        {
+          "command": "git branch --list",
+          "description": "Explicitly list branches (default behavior of git branch)"
+        },
+        {
+          "command": "git branch --list \"<pattern>\"",
+          "description": "List branches matching a specific glob pattern"
+        },
+        {
+          "command": "git checkout <branch>",
+          "description": "Switch the working directory to the specified branch"
+        },
+        {
+          "command": "git checkout -b <new-branch>",
+          "description": "Create a new branch and immediately switch to it"
+        },
+        {
+          "command": "git checkout -B <new-branch>",
+          "description": "Create a new branch or forcefully reset it if it exists, then switch"
+        },
+        {
+          "command": "git checkout -b <new-branch> <start-point>",
+          "description": "Create a new branch starting at a specific commit and switch to it"
+        },
+        {
+          "command": "git checkout --track <remote>/<branch>",
+          "description": "Create a local branch tracking a remote branch and switch to it"
+        },
+        {
+          "command": "git checkout -t <remote>/<branch>",
+          "description": "Shorthand to checkout and track a remote branch locally"
+        },
+        {
+          "command": "git checkout -- <file>",
+          "description": "Discard unstaged changes to a specific file, restoring from index"
+        },
+        {
+          "command": "git checkout HEAD -- <file>",
+          "description": "Discard all local changes to a file, restoring it from HEAD"
+        },
+        {
+          "command": "git checkout <commit> -- <file>",
+          "description": "Restore a specific file to its state in an older commit"
+        },
+        {
+          "command": "git checkout -",
+          "description": "Switch back to the previous branch you were on"
+        },
+        {
+          "command": "git checkout --orphan <new-branch>",
+          "description": "Create a new branch with no commit history"
+        },
+        {
+          "command": "git checkout --detach",
+          "description": "Checkout HEAD directly, leaving branch context (detached HEAD)"
+        },
+        {
+          "command": "git checkout <commit>",
+          "description": "Checkout a specific commit, resulting in a detached HEAD"
+        },
+        {
+          "command": "git checkout <tag>",
+          "description": "Checkout a specific tag, resulting in a detached HEAD"
+        },
+        {
+          "command": "git switch <branch>",
+          "description": "Switch working directory to an existing branch"
+        },
+        {
+          "command": "git switch -c <new-branch>",
+          "description": "Create a new branch and switch to it (modern alternative to checkout -b)"
+        },
+        {
+          "command": "git switch -C <new-branch>",
+          "description": "Force create or reset a branch and switch to it"
+        },
+        {
+          "command": "git switch -c <new-branch> <start-point>",
+          "description": "Create a new branch from a start point and switch"
+        },
+        {
+          "command": "git switch --track <remote>/<branch>",
+          "description": "Switch to a new local branch tracking a remote one"
+        },
+        {
+          "command": "git switch --detach <commit>",
+          "description": "Switch to a commit in detached HEAD mode"
+        },
+        {
+          "command": "git switch --orphan <new-branch>",
+          "description": "Switch to a new, history-less orphan branch"
+        },
+        {
+          "command": "git switch -",
+          "description": "Switch to the previously checked out branch"
+        },
+        {
+          "command": "git switch --guess",
+          "description": "Guess remote branch to track if local branch doesn't exist"
+        },
+        {
+          "command": "git merge <branch>",
+          "description": "Merge the specified branch into the current active branch"
+        },
+        {
+          "command": "git merge --no-ff <branch>",
+          "description": "Force a merge commit even if a fast-forward is possible"
+        },
+        {
+          "command": "git merge --ff-only <branch>",
+          "description": "Merge only if a fast-forward is possible, otherwise abort"
+        },
+        {
+          "command": "git merge --squash <branch>",
+          "description": "Stage the incoming branch's changes as a single commit, without merging history"
+        },
+        {
+          "command": "git merge --abort",
+          "description": "Cancel an active merge process and restore the pre-merge state"
+        },
+        {
+          "command": "git merge --continue",
+          "description": "Resume the merge process after resolving conflicts"
+        },
+        {
+          "command": "git merge -m \"<message>\" <branch>",
+          "description": "Merge a branch and specify the merge commit message"
+        },
+        {
+          "command": "git merge --strategy=<strategy> <branch>",
+          "description": "Use a specific merge strategy (e.g., recursive, octopus)"
+        },
+        {
+          "command": "git merge -X <option> <branch>",
+          "description": "Pass strategy-specific options (e.g., -X theirs) during merge"
+        },
+        {
+          "command": "git merge --allow-unrelated-histories <branch>",
+          "description": "Merge a branch that does not share a common ancestor"
+        },
+        {
+          "command": "git merge --no-commit <branch>",
+          "description": "Perform the merge but stop before creating the final commit"
+        },
+        {
+          "command": "git merge --stat <branch>",
+          "description": "Show a diffstat at the end of the merge process"
+        },
+        {
+          "command": "git merge --no-stat <branch>",
+          "description": "Suppress the diffstat output at the end of a merge"
+        },
+        {
+          "command": "git merge --log <branch>",
+          "description": "Populate the merge commit message with shortlogs from merged commits"
+        },
+        {
+          "command": "git merge --no-ff -m \"<message>\" <branch>",
+          "description": "Force a merge commit with a custom message"
+        },
+        {
+          "command": "git rebase <branch>",
+          "description": "Reapply current branch's commits on top of another branch"
+        },
+        {
+          "command": "git rebase -i HEAD~<n>",
+          "description": "Open an interactive rebase editor for the last <n> commits"
+        },
+        {
+          "command": "git rebase -i <commit>",
+          "description": "Start an interactive rebase beginning from a specific commit"
+        },
+        {
+          "command": "git rebase --onto <newbase> <oldbase> <branch>",
+          "description": "Transplant a range of commits from oldbase to newbase"
+        },
+        {
+          "command": "git rebase --abort",
+          "description": "Cancel an in-progress rebase and revert to original state"
+        },
+        {
+          "command": "git rebase --continue",
+          "description": "Resume rebasing after resolving conflicts"
+        },
+        {
+          "command": "git rebase --skip",
+          "description": "Skip the current patch that is causing a conflict during rebase"
+        },
+        {
+          "command": "git rebase --autosquash",
+          "description": "Automatically squash commits marked with 'fixup!' or 'squash!'"
+        },
+        {
+          "command": "git rebase --autostash",
+          "description": "Automatically stash and pop uncommitted changes around the rebase"
+        },
+        {
+          "command": "git rebase -x <command>",
+          "description": "Execute a shell command after applying each commit during rebase"
+        },
+        {
+          "command": "git rebase --exec <command>",
+          "description": "Run a test/command at every step of the rebase"
+        },
+        {
+          "command": "git rebase --rebase-merges",
+          "description": "Attempt to preserve merge commits during the rebase process"
+        },
+        {
+          "command": "git rebase --preserve-merges",
+          "description": "Deprecated: Re-create merge commits during rebase"
+        },
+        {
+          "command": "git rebase -i --autosquash HEAD~<n>",
+          "description": "Interactively rebase and auto-process fixup commits"
+        },
+        {
+          "command": "git rebase --onto <newbase> <oldbase>",
+          "description": "Rebase the current branch onto a new base excluding old base history"
+        },
+        {
+          "command": "git cherry-pick <commit>",
+          "description": "Copy a specific commit from another branch to the current branch"
+        },
+        {
+          "command": "git cherry-pick <commit1> <commit2>",
+          "description": "Cherry-pick two specific disconnected commits"
+        },
+        {
+          "command": "git cherry-pick <commit1>..<commit2>",
+          "description": "Cherry-pick a continuous range of commits"
+        },
+        {
+          "command": "git cherry-pick -x <commit>",
+          "description": "Cherry-pick and append a 'cherry picked from' note to the message"
+        },
+        {
+          "command": "git cherry-pick -n <commit>",
+          "description": "Apply the commit's changes to the working tree without committing"
+        },
+        {
+          "command": "git cherry-pick --no-commit <commit>",
+          "description": "Stage the cherry-picked changes but do not create a commit"
+        },
+        {
+          "command": "git cherry-pick --edit <commit>",
+          "description": "Cherry-pick and open an editor to edit the commit message"
+        },
+        {
+          "command": "git cherry-pick -e <commit>",
+          "description": "Allow editing the commit message before completing cherry-pick"
+        },
+        {
+          "command": "git cherry-pick --abort",
+          "description": "Cancel an in-progress cherry-pick sequence"
+        },
+        {
+          "command": "git cherry-pick --continue",
+          "description": "Resume a cherry-pick sequence after resolving conflicts"
+        },
+        {
+          "command": "git cherry-pick --skip",
+          "description": "Skip the current conflicting commit in a cherry-pick sequence"
+        },
+        {
+          "command": "git cherry-pick -s <commit>",
+          "description": "Add a Signed-off-by trailer to the cherry-picked commit"
+        },
+        {
+          "command": "git cherry-pick --signoff <commit>",
+          "description": "Sign off on the cherry-picked commit"
+        },
+        {
+          "command": "git cherry-pick --strategy=<strategy> <commit>",
+          "description": "Use a specific merge strategy when cherry-picking"
+        }
+      ]
+    },
+    {
+      "title": "Remote",
+      "commands": [
+        {
+          "command": "git push",
+          "description": "Push local commits to the default tracked remote branch"
+        },
+        {
+          "command": "git push <remote> <branch>",
+          "description": "Push a specific local branch to a specific remote"
+        },
+        {
+          "command": "git push origin main",
+          "description": "Push the local main branch to the origin remote"
+        },
+        {
+          "command": "git push origin HEAD",
+          "description": "Push the current branch to a branch of the same name on origin"
+        },
+        {
+          "command": "git push -u <remote> <branch>",
+          "description": "Push and set the remote branch as the default upstream tracking branch"
+        },
+        {
+          "command": "git push --set-upstream <remote> <branch>",
+          "description": "Explicitly link local branch to remote upon pushing"
+        },
+        {
+          "command": "git push -f",
+          "description": "Force push changes, potentially overwriting remote history"
+        },
+        {
+          "command": "git push --force",
+          "description": "Forcefully overwrite the remote branch with local history"
+        },
+        {
+          "command": "git push --force-with-lease",
+          "description": "Force push safely, aborting if remote has unseen changes"
+        },
+        {
+          "command": "git push --force-with-lease=<refname>:<expect>",
+          "description": "Force push requiring the remote ref to hold a specific expected value"
+        },
+        {
+          "command": "git push --all",
+          "description": "Push all local branches to the remote"
+        },
+        {
+          "command": "git push --follow-tags",
+          "description": "Push commits and automatically push any annotated tags attached to them"
+        },
+        {
+          "command": "git push --no-verify",
+          "description": "Push changes bypassing the pre-push git hook"
+        },
+        {
+          "command": "git push --dry-run",
+          "description": "Simulate a push to see what would be updated without transferring data"
+        },
+        {
+          "command": "git push -d <remote> <branch>",
+          "description": "Delete a branch on the remote repository"
+        },
+        {
+          "command": "git push --delete <remote> <branch>",
+          "description": "Explicitly delete a remote branch"
+        },
+        {
+          "command": "git push <remote> :<branch>",
+          "description": "Push an empty ref to a remote branch, effectively deleting it"
+        },
+        {
+          "command": "git push <remote> <local-branch>:<remote-branch>",
+          "description": "Push a local branch to a remote branch with a different name"
+        },
+        {
+          "command": "git push -u origin main --force-with-lease",
+          "description": "Safely force push main and set upstream tracking"
+        },
+        {
+          "command": "git push origin --delete <branch>",
+          "description": "Delete a specific branch on the origin remote"
+        },
+        {
+          "command": "git push -u origin HEAD",
+          "description": "Push current branch to origin and link them"
+        },
+        {
+          "command": "git pull",
+          "description": "Fetch changes from remote and merge them into the current branch"
+        },
+        {
+          "command": "git pull <remote> <branch>",
+          "description": "Pull from a specific remote and branch"
+        },
+        {
+          "command": "git pull --rebase",
+          "description": "Fetch changes and rebase local commits on top of the remote changes"
+        },
+        {
+          "command": "git pull --no-rebase",
+          "description": "Fetch and forcefully create a merge commit instead of rebasing"
+        },
+        {
+          "command": "git pull --ff-only",
+          "description": "Abort the pull if a fast-forward merge is not possible"
+        },
+        {
+          "command": "git pull --no-ff",
+          "description": "Create a merge commit even if fast-forward is possible"
+        },
+        {
+          "command": "git pull --squash",
+          "description": "Fetch and squash remote changes into the working tree without committing"
+        },
+        {
+          "command": "git pull --all",
+          "description": "Fetch all remotes and merge tracked branch"
+        },
+        {
+          "command": "git pull --depth <depth>",
+          "description": "Pull changes while limiting the historical depth of the fetch"
+        },
+        {
+          "command": "git pull --autostash",
+          "description": "Automatically stash and pop changes to allow pulling cleanly"
+        },
+        {
+          "command": "git pull --no-commit",
+          "description": "Pull and merge changes, but do not auto-commit the result"
+        },
+        {
+          "command": "git pull origin main",
+          "description": "Pull changes specifically from the origin main branch"
+        },
+        {
+          "command": "git pull --rebase origin main",
+          "description": "Rebase local changes on top of origin's main branch"
+        },
+        {
+          "command": "git fetch",
+          "description": "Download new data from the default remote without merging"
+        },
+        {
+          "command": "git fetch <remote>",
+          "description": "Download new data from a specific remote repository"
+        },
+        {
+          "command": "git fetch --all",
+          "description": "Download new data from all configured remote repositories"
+        },
+        {
+          "command": "git fetch --prune",
+          "description": "Fetch data and remove local refs to remote branches that were deleted"
+        },
+        {
+          "command": "git fetch -p",
+          "description": "Shorthand for fetching and pruning stale remote-tracking branches"
+        },
+        {
+          "command": "git fetch --tags",
+          "description": "Fetch all tags from the remote repository"
+        },
+        {
+          "command": "git fetch --no-tags",
+          "description": "Fetch branch data without downloading any tags"
+        },
+        {
+          "command": "git fetch --depth <depth>",
+          "description": "Fetch with a shallow history limit"
+        },
+        {
+          "command": "git fetch --unshallow",
+          "description": "Convert a shallow repository to a complete repository by fetching all history"
+        },
+        {
+          "command": "git fetch --dry-run",
+          "description": "Show what would be fetched without actually downloading anything"
+        },
+        {
+          "command": "git fetch <remote> <branch>",
+          "description": "Fetch a specific branch from a remote"
+        },
+        {
+          "command": "git fetch --all --prune",
+          "description": "Fetch from all remotes and clean up deleted branches"
+        },
+        {
+          "command": "git fetch origin",
+          "description": "Download data specifically from the origin remote"
+        },
+        {
+          "command": "git fetch origin main",
+          "description": "Download data just for the main branch on origin"
+        },
+        {
+          "command": "git remote",
+          "description": "List the short names of configured remote repositories"
+        },
+        {
+          "command": "git remote -v",
+          "description": "List remote repositories along with their fetch and push URLs"
+        },
+        {
+          "command": "git remote --verbose",
+          "description": "Display detailed remote repository information"
+        },
+        {
+          "command": "git remote add <name> <url>",
+          "description": "Add a new remote repository connection"
+        },
+        {
+          "command": "git remote add origin <url>",
+          "description": "Add a new remote specifically named 'origin'"
+        },
+        {
+          "command": "git remote remove <name>",
+          "description": "Delete a remote repository connection"
+        },
+        {
+          "command": "git remote rm <name>",
+          "description": "Shorthand to remove a remote connection"
+        },
+        {
+          "command": "git remote rename <old> <new>",
+          "description": "Rename an existing remote connection"
+        },
+        {
+          "command": "git remote show <name>",
+          "description": "Show detailed tracking and branch info for a specific remote"
+        },
+        {
+          "command": "git remote show origin",
+          "description": "Display tracking info for the origin remote"
+        },
+        {
+          "command": "git remote set-url <name> <url>",
+          "description": "Change the URL of an existing remote"
+        },
+        {
+          "command": "git remote set-url origin <url>",
+          "description": "Update the URL for the origin remote"
+        },
+        {
+          "command": "git remote get-url <name>",
+          "description": "Print the current URL of a specific remote"
+        },
+        {
+          "command": "git remote prune <name>",
+          "description": "Delete stale remote-tracking branches for a specific remote"
+        },
+        {
+          "command": "git remote update",
+          "description": "Fetch updates from all remotes (similar to fetch --all)"
+        },
+        {
+          "command": "git remote set-url --add <name> <url>",
+          "description": "Add a secondary push URL to a remote"
+        },
+        {
+          "command": "git remote set-url --delete <name> <url>",
+          "description": "Remove a specific secondary URL from a remote"
+        },
+        {
+          "command": "git push origin <tag>",
+          "description": "Push a specific local tag to the origin remote"
+        },
+        {
+          "command": "git push origin --delete <tag>",
+          "description": "Delete a specific tag on the remote repository"
+        },
+        {
+          "command": "git push origin refs/notes/commits",
+          "description": "Push git notes to the origin remote"
+        },
+        {
+          "command": "git fetch origin refs/notes/commits:refs/notes/commits",
+          "description": "Fetch git notes from the origin remote"
+        }
+      ]
+    },
+    {
+      "title": "Inspection & History",
+      "commands": [
+        {
+          "command": "git log",
+          "description": "Show the commit history for the current branch"
+        },
+        {
+          "command": "git log --oneline",
+          "description": "Show commit history condensed to one line per commit"
+        },
+        {
+          "command": "git log --graph",
+          "description": "Display an ASCII graph of the branch and merge history"
+        },
+        {
+          "command": "git log --all",
+          "description": "Show the commit history for all branches and refs"
+        },
+        {
+          "command": "git log --decorate",
+          "description": "Show branch names and tags pointing to commits in the log"
+        },
+        {
+          "command": "git log --oneline --graph --all --decorate",
+          "description": "Show a colorful, condensed, graphical view of all repo history"
+        },
+        {
+          "command": "git log -n <number>",
+          "description": "Limit the log output to a specific number of commits"
+        },
+        {
+          "command": "git log -<number>",
+          "description": "Shorthand to limit the log output to <number> commits"
+        },
+        {
+          "command": "git log --author=\"<name>\"",
+          "description": "Filter the commit log by a specific author's name"
+        },
+        {
+          "command": "git log --since=\"<date>\"",
+          "description": "Show commits more recent than a specific date"
+        },
+        {
+          "command": "git log --until=\"<date>\"",
+          "description": "Show commits older than a specific date"
+        },
+        {
+          "command": "git log --grep=\"<pattern>\"",
+          "description": "Filter commits by a specific keyword in the commit message"
+        },
+        {
+          "command": "git log -p",
+          "description": "Show the full patch/diff for each commit in the history"
+        },
+        {
+          "command": "git log --patch",
+          "description": "Display the inline diffs introduced by every commit"
+        },
+        {
+          "command": "git log --stat",
+          "description": "Show file additions and deletions statistics for each commit"
+        },
+        {
+          "command": "git log --shortstat",
+          "description": "Show only the summary line of changes for each commit"
+        },
+        {
+          "command": "git log --name-only",
+          "description": "List only the names of the files changed in each commit"
+        },
+        {
+          "command": "git log --name-status",
+          "description": "List changed files alongside their modification status (A/M/D)"
+        },
+        {
+          "command": "git log --follow <file>",
+          "description": "Show the history of a file, tracking past renames"
+        },
+        {
+          "command": "git log -- <file>",
+          "description": "Show only the commits that modified a specific file"
+        },
+        {
+          "command": "git log --merges",
+          "description": "Show only merge commits in the log output"
+        },
+        {
+          "command": "git log --no-merges",
+          "description": "Exclude all merge commits from the log output"
+        },
+        {
+          "command": "git log --first-parent",
+          "description": "Follow only the first parent of merge commits, simplifying history"
+        },
+        {
+          "command": "git log --pretty=format:\"<format>\"",
+          "description": "Customize the visual output format of the commit log"
+        },
+        {
+          "command": "git log --format=\"<format>\"",
+          "description": "Shorthand to set a custom string format for commit logs"
+        },
+        {
+          "command": "git log --abbrev-commit",
+          "description": "Show shortened SHA-1 hash strings in the log"
+        },
+        {
+          "command": "git log --relative-date",
+          "description": "Display dates relative to now (e.g., '2 hours ago')"
+        },
+        {
+          "command": "git log <branch>",
+          "description": "Show the commit history for a specific branch"
+        },
+        {
+          "command": "git log <branch1>..<branch2>",
+          "description": "Show commits on branch2 that are not on branch1"
+        },
+        {
+          "command": "git log --oneline --graph --all",
+          "description": "Show a condensed graphical history of all branches"
+        },
+        {
+          "command": "git log --oneline -n 10",
+          "description": "Show the last 10 commits concisely"
+        },
+        {
+          "command": "git log --since=\"2 weeks ago\"",
+          "description": "Show history strictly from the last two weeks"
+        },
+        {
+          "command": "git show",
+          "description": "Show the patch diff and message of the most recent commit"
+        },
+        {
+          "command": "git show <commit>",
+          "description": "Show the details and diff of a specific commit"
+        },
+        {
+          "command": "git show HEAD",
+          "description": "Show details for the current HEAD commit"
+        },
+        {
+          "command": "git show HEAD~<n>",
+          "description": "Show details for the <n>th commit prior to HEAD"
+        },
+        {
+          "command": "git show <tag>",
+          "description": "Display information about a specific annotated tag"
+        },
+        {
+          "command": "git show <branch>",
+          "description": "Show the latest commit on a specific branch"
+        },
+        {
+          "command": "git show <commit>:<file>",
+          "description": "Output the raw contents of a file as it existed in a specific commit"
+        },
+        {
+          "command": "git show --stat <commit>",
+          "description": "Show only the file statistics for a specific commit"
+        },
+        {
+          "command": "git show --name-only <commit>",
+          "description": "List the files altered in a specific commit"
+        },
+        {
+          "command": "git show --oneline <commit>",
+          "description": "Show a condensed summary of a specific commit"
+        },
+        {
+          "command": "git show --format=\"<format>\" <commit>",
+          "description": "Display a commit using a customized text format"
+        },
+        {
+          "command": "git blame <file>",
+          "description": "Annotate each line of a file with its last modifying commit and author"
+        },
+        {
+          "command": "git blame -L <start>,<end> <file>",
+          "description": "Annotate only a specific line range within a file"
+        },
+        {
+          "command": "git blame -L <start>,+<n> <file>",
+          "description": "Annotate starting at a line and extending <n> lines down"
+        },
+        {
+          "command": "git blame -w <file>",
+          "description": "Ignore whitespace-only changes when determining line authorship"
+        },
+        {
+          "command": "git blame -C <file>",
+          "description": "Detect lines moved or copied from other files in the same commit"
+        },
+        {
+          "command": "git blame -M <file>",
+          "description": "Detect lines moved or copied within the same file"
+        },
+        {
+          "command": "git blame --since=<date> <file>",
+          "description": "Annotate lines modified only after a specific date"
+        },
+        {
+          "command": "git blame --ignore-rev <commit> <file>",
+          "description": "Ignore a specific formatting commit when assigning blame"
+        },
+        {
+          "command": "git blame -e <file>",
+          "description": "Show the author's email address instead of their username"
+        },
+        {
+          "command": "git blame -n <file>",
+          "description": "Show the original line number instead of the current one"
+        },
+        {
+          "command": "git reflog",
+          "description": "Show a log of all recent local HEAD movements and operations"
+        },
+        {
+          "command": "git reflog show",
+          "description": "Display the standard reference log for HEAD"
+        },
+        {
+          "command": "git reflog show <branch>",
+          "description": "Show the reference log specifically for a local branch"
+        },
+        {
+          "command": "git reflog show HEAD",
+          "description": "Explicitly view the HEAD reference log"
+        },
+        {
+          "command": "git reflog expire",
+          "description": "Prune old entries from the reflog"
+        },
+        {
+          "command": "git reflog expire --expire=<time>",
+          "description": "Prune reflog entries older than a specified time"
+        },
+        {
+          "command": "git reflog expire --all",
+          "description": "Prune old entries across all reference logs"
+        },
+        {
+          "command": "git reflog delete <ref>",
+          "description": "Delete a specific entry from the reflog"
+        },
+        {
+          "command": "git reflog --oneline",
+          "description": "Display the reflog in a concise one-line format"
+        },
+        {
+          "command": "git shortlog",
+          "description": "Group commit subjects by author name"
+        },
+        {
+          "command": "git shortlog -s",
+          "description": "Provide a clean count of total commits per author"
+        },
+        {
+          "command": "git shortlog -n",
+          "description": "Sort the shortlog output by number of commits instead of alphabetically"
+        },
+        {
+          "command": "git shortlog -sn",
+          "description": "Show a ranked tally of commit counts per author"
+        },
+        {
+          "command": "git shortlog -e",
+          "description": "Include the author's email address in the output"
+        },
+        {
+          "command": "git shortlog --email",
+          "description": "Show emails alongside author names in the summary"
+        },
+        {
+          "command": "git shortlog -sne",
+          "description": "Show a sorted tally of commits with author emails included"
+        },
+        {
+          "command": "git shortlog --since=<date>",
+          "description": "Summarize commits made strictly after a specific date"
+        },
+        {
+          "command": "git shortlog <commit1>..<commit2>",
+          "description": "Summarize authors and commits within a specific revision range"
+        }
+      ]
+    },
+    {
+      "title": "Undoing Changes",
+      "commands": [
+        {
+          "command": "git restore <file>",
+          "description": "Discard unstaged local changes in a file"
+        },
+        {
+          "command": "git restore .",
+          "description": "Discard all unstaged changes in the current directory"
+        },
+        {
+          "command": "git restore --staged <file>",
+          "description": "Unstage a file, keeping the changes in the working directory"
+        },
+        {
+          "command": "git restore --staged .",
+          "description": "Unstage all files in the current directory"
+        },
+        {
+          "command": "git restore --source=<commit> <file>",
+          "description": "Restore a file's state to match a specific older commit"
+        },
+        {
+          "command": "git restore --worktree <file>",
+          "description": "Explicitly restore a file in the working tree"
+        },
+        {
+          "command": "git restore -s <commit> <file>",
+          "description": "Shorthand to pull a file version from a specific commit"
+        },
+        {
+          "command": "git reset",
+          "description": "Unstage all files while preserving their changes in the working directory"
+        },
+        {
+          "command": "git reset <file>",
+          "description": "Remove a specific file from the staging area"
+        },
+        {
+          "command": "git reset HEAD <file>",
+          "description": "Unstage a file, keeping local modifications intact"
+        },
+        {
+          "command": "git reset --soft HEAD~1",
+          "description": "Undo the last commit but keep changes staged and in the working directory"
+        },
+        {
+          "command": "git reset --mixed HEAD~1",
+          "description": "Undo the last commit and unstage changes, keeping them in the working tree"
+        },
+        {
+          "command": "git reset --hard HEAD~1",
+          "description": "Permanently undo the last commit and destroy all local changes"
+        },
+        {
+          "command": "git reset --soft <commit>",
+          "description": "Move HEAD to a commit, leaving index and working tree untouched"
+        },
+        {
+          "command": "git reset --mixed <commit>",
+          "description": "Move HEAD to a commit and unstage, but preserve working tree"
+        },
+        {
+          "command": "git reset --hard <commit>",
+          "description": "Force reset HEAD to a commit and forcefully overwrite working tree"
+        },
+        {
+          "command": "git reset HEAD",
+          "description": "Unstage all files currently added to the index"
+        },
+        {
+          "command": "git reset HEAD~<n>",
+          "description": "Undo the last <n> commits, leaving changes unstaged"
+        },
+        {
+          "command": "git reset --hard HEAD",
+          "description": "Destroy all unstaged and staged changes, resetting to the last commit"
+        },
+        {
+          "command": "git reset --keep <commit>",
+          "description": "Reset HEAD but keep local modifications that don't conflict"
+        },
+        {
+          "command": "git reset --merge <commit>",
+          "description": "Reset HEAD and abort a conflicted merge attempt safely"
+        },
+        {
+          "command": "git revert <commit>",
+          "description": "Generate a new commit that applies the inverse of a specific commit"
+        },
+        {
+          "command": "git revert HEAD",
+          "description": "Create a new commit undoing the changes of the last commit"
+        },
+        {
+          "command": "git revert HEAD~<n>",
+          "description": "Revert the changes introduced by the <n>th previous commit"
+        },
+        {
+          "command": "git revert --no-commit <commit>",
+          "description": "Apply the inverse of a commit to the working tree without committing"
+        },
+        {
+          "command": "git revert -n <commit>",
+          "description": "Stage reverted changes but wait for manual commit"
+        },
+        {
+          "command": "git revert --no-edit <commit>",
+          "description": "Revert a commit and automatically use the default revert message"
+        },
+        {
+          "command": "git revert --mainline <n> <commit>",
+          "description": "Revert a merge commit by specifying which parent mainline to keep"
+        },
+        {
+          "command": "git revert -m <n> <commit>",
+          "description": "Shorthand for reverting a merge commit along a specific parent"
+        },
+        {
+          "command": "git revert <commit>..<commit>",
+          "description": "Revert a continuous sequence of commits"
+        },
+        {
+          "command": "git revert --abort",
+          "description": "Cancel an active revert process and return to the previous state"
+        },
+        {
+          "command": "git revert --continue",
+          "description": "Resume the revert process after resolving file conflicts"
+        },
+        {
+          "command": "git clean -f",
+          "description": "Forcefully remove all untracked files from the working directory"
+        },
+        {
+          "command": "git clean -fd",
+          "description": "Remove all untracked files and untracked directories"
+        },
+        {
+          "command": "git clean -fx",
+          "description": "Remove untracked files, including those ignored by .gitignore"
+        },
+        {
+          "command": "git clean -fX",
+          "description": "Remove only files that are explicitly ignored by .gitignore"
+        },
+        {
+          "command": "git clean -fdx",
+          "description": "Nuke working tree: remove all untracked/ignored files and directories"
+        },
+        {
+          "command": "git clean -n",
+          "description": "Perform a dry run to see which untracked files would be deleted"
+        },
+        {
+          "command": "git clean --dry-run",
+          "description": "Preview untracked file deletion safely"
+        },
+        {
+          "command": "git clean -i",
+          "description": "Interactively choose which untracked files to delete"
+        },
+        {
+          "command": "git clean -q",
+          "description": "Remove untracked files quietly without console output"
+        },
+        {
+          "command": "git clean -e <pattern>",
+          "description": "Clean untracked files but explicitly exempt files matching a pattern"
+        },
+        {
+          "command": "git clean -f -- <path>",
+          "description": "Remove untracked files strictly within a specific path/directory"
+        }
+      ]
+    },
+    {
+      "title": "Tags",
+      "commands": [
+        {
+          "command": "git push --tags",
+          "description": "Push all local tags to the remote repository"
+        },
+        {
+          "command": "git tag",
+          "description": "List all tags in the local repository"
+        },
+        {
+          "command": "git tag <name>",
+          "description": "Create a lightweight tag at the current HEAD commit"
+        },
+        {
+          "command": "git tag <name> <commit>",
+          "description": "Create a lightweight tag pointing to a specific older commit"
+        },
+        {
+          "command": "git tag -a <name> -m \"<message>\"",
+          "description": "Create an annotated tag with a specific message"
+        },
+        {
+          "command": "git tag -a <name> <commit> -m \"<message>\"",
+          "description": "Create an annotated tag at a specific commit"
+        },
+        {
+          "command": "git tag -s <name> -m \"<message>\"",
+          "description": "Create a cryptographically GPG-signed annotated tag"
+        },
+        {
+          "command": "git tag -d <name>",
+          "description": "Delete a specific tag from the local repository"
+        },
+        {
+          "command": "git tag --delete <name>",
+          "description": "Explicitly delete a local tag"
+        },
+        {
+          "command": "git tag -l",
+          "description": "List local tags (same as standard git tag)"
+        },
+        {
+          "command": "git tag --list",
+          "description": "List local tags explicitly"
+        },
+        {
+          "command": "git tag -l \"<pattern>\"",
+          "description": "List tags matching a specific glob wildcard pattern"
+        },
+        {
+          "command": "git tag --contains <commit>",
+          "description": "List only the tags that include a specific commit in their history"
+        },
+        {
+          "command": "git tag --sort=version:refname",
+          "description": "List tags sorted intelligently by semantic version numbers"
+        },
+        {
+          "command": "git tag -f <name> <commit>",
+          "description": "Forcefully overwrite an existing tag to point to a new commit"
+        },
+        {
+          "command": "git push origin --tags",
+          "description": "Push all local tags explicitly to the origin remote"
+        }
+      ]
+    },
+    {
+      "title": "Submodules",
+      "commands": [
+        {
+          "command": "git submodule add <url>",
+          "description": "Add a new external repository as a submodule"
+        },
+        {
+          "command": "git submodule add <url> <path>",
+          "description": "Add a submodule and place it in a specific local path"
+        },
+        {
+          "command": "git submodule init",
+          "description": "Initialize submodules recorded in the index"
+        },
+        {
+          "command": "git submodule update",
+          "description": "Update the registered submodules to match what the superproject expects"
+        },
+        {
+          "command": "git submodule update --init",
+          "description": "Initialize and update submodules in a single step"
+        },
+        {
+          "command": "git submodule update --init --recursive",
+          "description": "Initialize and update submodules, including nested submodules"
+        },
+        {
+          "command": "git submodule update --remote",
+          "description": "Update submodules to the latest commit on their remote tracking branch"
+        },
+        {
+          "command": "git submodule update --remote --merge",
+          "description": "Fetch remote submodule changes and merge them into the local submodule"
+        },
+        {
+          "command": "git submodule update --remote --rebase",
+          "description": "Fetch remote submodule changes and rebase local changes on top"
+        },
+        {
+          "command": "git submodule status",
+          "description": "Show the status, commit hash, and path of all submodules"
+        },
+        {
+          "command": "git submodule foreach <command>",
+          "description": "Execute a specific shell command inside every submodule"
+        },
+        {
+          "command": "git submodule foreach --recursive <command>",
+          "description": "Execute a command inside all submodules and nested submodules"
+        },
+        {
+          "command": "git submodule deinit <path>",
+          "description": "Unregister a submodule, removing its local configuration"
+        },
+        {
+          "command": "git submodule deinit --all",
+          "description": "Unregister all submodules from the local repository"
+        },
+        {
+          "command": "git submodule sync",
+          "description": "Synchronize submodule URLs from .gitmodules to the local config"
+        },
+        {
+          "command": "git submodule sync --recursive",
+          "description": "Synchronize submodule URLs for all nested submodules"
+        }
+      ]
+    },
+    {
+      "title": "Worktree",
+      "commands": [
+        {
+          "command": "git worktree add <path>",
+          "description": "Create a new working tree linked to the repo in a separate directory"
+        },
+        {
+          "command": "git worktree add <path> <branch>",
+          "description": "Create a new working tree and checkout a specific branch into it"
+        },
+        {
+          "command": "git worktree add -b <new-branch> <path>",
+          "description": "Create a new branch and checkout into a new separate working tree"
+        },
+        {
+          "command": "git worktree add -b <new-branch> <path> <commit>",
+          "description": "Create a new branch from a commit and open in a new working tree"
+        },
+        {
+          "command": "git worktree add --detach <path>",
+          "description": "Create a new working tree checked out in a detached HEAD state"
+        },
+        {
+          "command": "git worktree list",
+          "description": "List all active worktrees linked to the current repository"
+        },
+        {
+          "command": "git worktree list --porcelain",
+          "description": "List worktrees in a machine-readable format"
+        },
+        {
+          "command": "git worktree prune",
+          "description": "Clean up administrative files for deleted or moved worktrees"
+        },
+        {
+          "command": "git worktree remove <path>",
+          "description": "Safely delete a working tree and its associated data"
+        },
+        {
+          "command": "git worktree remove --force <path>",
+          "description": "Force delete a working tree, ignoring uncommitted changes"
+        },
+        {
+          "command": "git worktree lock <path>",
+          "description": "Lock a worktree to prevent it from being automatically pruned"
+        },
+        {
+          "command": "git worktree unlock <path>",
+          "description": "Unlock a previously locked worktree"
+        },
+        {
+          "command": "git worktree move <path> <new-path>",
+          "description": "Move an existing working tree to a new directory path"
+        }
+      ]
+    },
+    {
+      "title": "Bisect",
+      "commands": [
+        {
+          "command": "git bisect start",
+          "description": "Initiate a binary search session to track down a bug"
+        },
+        {
+          "command": "git bisect good <commit>",
+          "description": "Mark a specific older commit as 'good' (bug-free)"
+        },
+        {
+          "command": "git bisect bad <commit>",
+          "description": "Mark a specific newer commit as 'bad' (containing the bug)"
+        },
+        {
+          "command": "git bisect good",
+          "description": "Mark the currently checked-out commit as 'good'"
+        },
+        {
+          "command": "git bisect bad",
+          "description": "Mark the currently checked-out commit as 'bad'"
+        },
+        {
+          "command": "git bisect skip",
+          "description": "Skip the current commit if it cannot be tested (e.g., won't compile)"
+        },
+        {
+          "command": "git bisect reset",
+          "description": "End the bisect session and return to the original branch"
+        },
+        {
+          "command": "git bisect run <script>",
+          "description": "Automate bisecting using a script that returns 0 for good, non-zero for bad"
+        },
+        {
+          "command": "git bisect log",
+          "description": "View the history of good/bad markings in the current bisect session"
+        },
+        {
+          "command": "git bisect visualize",
+          "description": "Show the remaining suspect commits in a graphical interface or log"
+        },
+        {
+          "command": "git bisect start <bad> <good>",
+          "description": "Start bisect and immediately provide the known bad and good bounds"
+        }
+      ]
+    },
+    {
+      "title": "Sparse Checkout",
+      "commands": [
+        {
+          "command": "git sparse-checkout init",
+          "description": "Enable sparse checkout to only load parts of the repository"
+        },
+        {
+          "command": "git sparse-checkout init --cone",
+          "description": "Enable cone-mode sparse checkout for faster performance with directories"
+        },
+        {
+          "command": "git sparse-checkout set <pattern>",
+          "description": "Define the exact patterns or directories to include in the working tree"
+        },
+        {
+          "command": "git sparse-checkout add <pattern>",
+          "description": "Add additional directories or patterns to the existing sparse checkout"
+        },
+        {
+          "command": "git sparse-checkout list",
+          "description": "List the current patterns determining the sparse checkout"
+        },
+        {
+          "command": "git sparse-checkout disable",
+          "description": "Turn off sparse checkout and repopulate the entire working tree"
+        },
+        {
+          "command": "git sparse-checkout reapply",
+          "description": "Reapply the sparse checkout rules to the current working tree"
+        }
+      ]
+    },
+    {
+      "title": "Notes",
+      "commands": [
+        {
+          "command": "git notes add -m \"<message>\" <commit>",
+          "description": "Attach a textual note to a specific commit without altering its hash"
+        },
+        {
+          "command": "git notes show <commit>",
+          "description": "View the note attached to a specific commit"
+        },
+        {
+          "command": "git notes edit <commit>",
+          "description": "Modify an existing note on a specific commit interactively"
+        },
+        {
+          "command": "git notes remove <commit>",
+          "description": "Delete the note attached to a specific commit"
+        },
+        {
+          "command": "git notes list",
+          "description": "List all notes currently existing in the repository"
+        },
+        {
+          "command": "git notes append -m \"<message>\" <commit>",
+          "description": "Add new text to an existing note on a commit"
+        }
+      ]
+    }
+  ]
+}

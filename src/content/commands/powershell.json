@@ -1,0 +1,1495 @@
+{
+  "name": "PowerShell",
+  "slug": "powershell",
+  "logo": "https://svgl.app/library/powershell.svg",
+  "accent": "#012456",
+  "description": "Cross-platform task automation and configuration management shell",
+  "categories": [
+    {
+      "title": "Navigation & File System",
+      "commands": [
+        {
+          "command": "Get-Location",
+          "description": "Print the current working directory path"
+        },
+        {
+          "command": "pwd",
+          "description": "Alias for Get-Location, prints the current directory"
+        },
+        {
+          "command": "Set-Location <path>",
+          "description": "Change the current working directory"
+        },
+        {
+          "command": "cd <path>",
+          "description": "Alias for Set-Location, change the current directory"
+        },
+        {
+          "command": "cd ..",
+          "description": "Move up one level to the parent directory"
+        },
+        {
+          "command": "cd ~",
+          "description": "Navigate to the current user's home directory"
+        },
+        {
+          "command": "cd -",
+          "description": "Switch to the previously visited directory"
+        },
+        {
+          "command": "Push-Location <path>",
+          "description": "Save the current location and change to a new path"
+        },
+        {
+          "command": "Pop-Location",
+          "description": "Return to the directory saved by Push-Location"
+        },
+        {
+          "command": "Get-ChildItem",
+          "description": "List files and directories in the current location"
+        },
+        {
+          "command": "ls",
+          "description": "Alias for Get-ChildItem, list directory contents"
+        },
+        {
+          "command": "dir",
+          "description": "Alias for Get-ChildItem, list directory contents"
+        },
+        {
+          "command": "Get-ChildItem -Force",
+          "description": "List all items including hidden files and system files"
+        },
+        {
+          "command": "Get-ChildItem -Recurse",
+          "description": "List all files and folders recursively"
+        },
+        {
+          "command": "Get-ChildItem -Filter <pattern>",
+          "description": "List items matching a specific filter pattern"
+        },
+        {
+          "command": "Get-ChildItem -Name",
+          "description": "List only the names of files and directories"
+        },
+        {
+          "command": "Get-ChildItem -File",
+          "description": "List only files, excluding directories"
+        },
+        {
+          "command": "Get-ChildItem -Directory",
+          "description": "List only directories, excluding files"
+        },
+        {
+          "command": "Get-ChildItem | Sort-Object Length",
+          "description": "List files sorted by file size"
+        },
+        {
+          "command": "Get-ChildItem | Sort-Object LastWriteTime",
+          "description": "List files sorted by last modified time"
+        }
+      ]
+    },
+    {
+      "title": "File & Directory Operations",
+      "commands": [
+        {
+          "command": "New-Item <name> -ItemType File",
+          "description": "Create a new empty file"
+        },
+        {
+          "command": "New-Item <name> -ItemType Directory",
+          "description": "Create a new directory"
+        },
+        {
+          "command": "mkdir <name>",
+          "description": "Create a new directory (alias/function)"
+        },
+        {
+          "command": "New-Item -Path <path> -ItemType Directory -Force",
+          "description": "Create nested directories, creating parents as needed"
+        },
+        {
+          "command": "Remove-Item <path>",
+          "description": "Delete a file or empty directory"
+        },
+        {
+          "command": "Remove-Item <path> -Recurse",
+          "description": "Recursively delete a directory and all its contents"
+        },
+        {
+          "command": "Remove-Item <path> -Force",
+          "description": "Forcefully delete a file without prompting"
+        },
+        {
+          "command": "Remove-Item <path> -Recurse -Force",
+          "description": "Forcefully and recursively delete a directory"
+        },
+        {
+          "command": "Remove-Item <path> -Confirm",
+          "description": "Delete a file with a confirmation prompt"
+        },
+        {
+          "command": "Copy-Item <source> <destination>",
+          "description": "Copy a file or directory to a new location"
+        },
+        {
+          "command": "Copy-Item <source> <destination> -Recurse",
+          "description": "Recursively copy a directory and its contents"
+        },
+        {
+          "command": "Copy-Item <source> <destination> -Force",
+          "description": "Copy a file, overwriting the destination if it exists"
+        },
+        {
+          "command": "Copy-Item <source> <destination> -PassThru",
+          "description": "Copy an item and return the new item object"
+        },
+        {
+          "command": "Move-Item <source> <destination>",
+          "description": "Move or rename a file or directory"
+        },
+        {
+          "command": "Move-Item <source> <destination> -Force",
+          "description": "Forcefully move a file, overwriting the destination"
+        },
+        {
+          "command": "Rename-Item <path> <newname>",
+          "description": "Rename a file or directory"
+        },
+        {
+          "command": "Test-Path <path>",
+          "description": "Check if a file, directory, or registry key exists"
+        },
+        {
+          "command": "Test-Path <path> -PathType Leaf",
+          "description": "Check if a path is a file"
+        },
+        {
+          "command": "Test-Path <path> -PathType Container",
+          "description": "Check if a path is a directory"
+        },
+        {
+          "command": "Join-Path <parent> <child>",
+          "description": "Combine path components into a single path string"
+        },
+        {
+          "command": "Split-Path <path>",
+          "description": "Return the parent directory of a path"
+        },
+        {
+          "command": "Split-Path <path> -Leaf",
+          "description": "Return only the filename from a path"
+        },
+        {
+          "command": "Resolve-Path <path>",
+          "description": "Resolve a path to its absolute form"
+        },
+        {
+          "command": "New-Item -ItemType SymbolicLink -Path <link> -Target <target>",
+          "description": "Create a symbolic link pointing to a target"
+        },
+        {
+          "command": "New-Item -ItemType HardLink -Path <link> -Target <target>",
+          "description": "Create a hard link to a file"
+        },
+        {
+          "command": "Get-Item <path>",
+          "description": "Get a file or directory object at a specified path"
+        },
+        {
+          "command": "Get-ItemProperty <path>",
+          "description": "Get the properties of an item at a specified path"
+        }
+      ]
+    },
+    {
+      "title": "File Viewing & Content",
+      "commands": [
+        {
+          "command": "Get-Content <file>",
+          "description": "Read and display the contents of a file"
+        },
+        {
+          "command": "cat <file>",
+          "description": "Alias for Get-Content, reads a file's contents"
+        },
+        {
+          "command": "Get-Content <file> -TotalCount <n>",
+          "description": "Read only the first <n> lines of a file"
+        },
+        {
+          "command": "Get-Content <file> -Tail <n>",
+          "description": "Read only the last <n> lines of a file"
+        },
+        {
+          "command": "Get-Content <file> -Wait",
+          "description": "Follow a file for new content in real-time"
+        },
+        {
+          "command": "Get-Content <file> -Encoding UTF8",
+          "description": "Read a file using a specific character encoding"
+        },
+        {
+          "command": "Get-Content <file> -Raw",
+          "description": "Read a file as a single string instead of line by line"
+        },
+        {
+          "command": "Set-Content <file> <value>",
+          "description": "Write content to a file, replacing existing content"
+        },
+        {
+          "command": "Add-Content <file> <value>",
+          "description": "Append content to the end of a file"
+        },
+        {
+          "command": "Clear-Content <file>",
+          "description": "Delete the contents of a file without deleting the file"
+        },
+        {
+          "command": "Out-File <file>",
+          "description": "Send output to a file (pipeline-friendly Set-Content)"
+        },
+        {
+          "command": "Out-File <file> -Append",
+          "description": "Append pipeline output to a file"
+        },
+        {
+          "command": "\"<text>\" | Out-File <file>",
+          "description": "Write a string to a file via the pipeline"
+        },
+        {
+          "command": "More <file>",
+          "description": "Display file content one page at a time"
+        },
+        {
+          "command": "Invoke-Item <file>",
+          "description": "Open a file with its default associated application"
+        },
+        {
+          "command": "notepad <file>",
+          "description": "Open a file in Notepad"
+        },
+        {
+          "command": "code <file>",
+          "description": "Open a file in Visual Studio Code"
+        },
+        {
+          "command": "Get-Content <file> | Measure-Object -Line",
+          "description": "Count the number of lines in a file"
+        },
+        {
+          "command": "Get-Content <file> | Measure-Object -Word",
+          "description": "Count the number of words in a file"
+        },
+        {
+          "command": "Get-Content <file> | Measure-Object -Character",
+          "description": "Count the number of characters in a file"
+        }
+      ]
+    },
+    {
+      "title": "Search & Filter",
+      "commands": [
+        {
+          "command": "Get-ChildItem -Recurse -Filter <pattern>",
+          "description": "Recursively search for files matching a name pattern"
+        },
+        {
+          "command": "Get-ChildItem -Recurse -Include <pattern>",
+          "description": "Recursively include only files matching a pattern"
+        },
+        {
+          "command": "Get-ChildItem -Recurse -Exclude <pattern>",
+          "description": "Recursively list items excluding files matching a pattern"
+        },
+        {
+          "command": "Select-String <pattern> <file>",
+          "description": "Search for a text pattern in a file"
+        },
+        {
+          "command": "Select-String -Pattern <pattern> -Path <file>",
+          "description": "Search for a regex pattern in a file"
+        },
+        {
+          "command": "Select-String -Pattern <pattern> -Path <path> -Recurse",
+          "description": "Recursively search for a pattern in all files under a path"
+        },
+        {
+          "command": "Select-String -CaseSensitive <pattern> <file>",
+          "description": "Search for a pattern with case-sensitive matching"
+        },
+        {
+          "command": "Select-String -NotMatch <pattern> <file>",
+          "description": "Print lines that do NOT match the pattern"
+        },
+        {
+          "command": "Select-String -List <pattern> <file>",
+          "description": "Print only the names of files that contain matches"
+        },
+        {
+          "command": "Select-String <pattern> <file> | Select-Object LineNumber",
+          "description": "Display line numbers of matching results"
+        },
+        {
+          "command": "Where-Object { $_ -like '<pattern>' }",
+          "description": "Filter pipeline objects using a wildcard pattern"
+        },
+        {
+          "command": "Where-Object { $_ -match '<regex>' }",
+          "description": "Filter pipeline objects using a regular expression"
+        },
+        {
+          "command": "Where-Object { $_ -eq '<value>' }",
+          "description": "Filter pipeline objects by exact equality"
+        },
+        {
+          "command": "Where-Object { $_ -ne '<value>' }",
+          "description": "Filter pipeline objects by non-equality"
+        },
+        {
+          "command": "Where-Object { $_ -gt <value> }",
+          "description": "Filter pipeline objects greater than a value"
+        },
+        {
+          "command": "Where-Object { $_ -lt <value> }",
+          "description": "Filter pipeline objects less than a value"
+        },
+        {
+          "command": "Where-Object { $_ -contains '<value>' }",
+          "description": "Filter pipeline objects that contain a specific value"
+        },
+        {
+          "command": "Find-Module <pattern>",
+          "description": "Search for modules in PowerShell Gallery"
+        },
+        {
+          "command": "Get-Command <pattern>",
+          "description": "Search for commands matching a name pattern"
+        },
+        {
+          "command": "Get-Command -Verb <verb>",
+          "description": "Find all commands with a specific verb"
+        },
+        {
+          "command": "Get-Command -Noun <noun>",
+          "description": "Find all commands with a specific noun"
+        },
+        {
+          "command": "Get-Command -Module <module>",
+          "description": "List all commands from a specific module"
+        }
+      ]
+    },
+    {
+      "title": "Text Processing & Output Formatting",
+      "commands": [
+        {
+          "command": "Write-Output <text>",
+          "description": "Write text to the standard output stream"
+        },
+        {
+          "command": "Write-Host <text>",
+          "description": "Write text directly to the console"
+        },
+        {
+          "command": "Write-Host <text> -ForegroundColor <color>",
+          "description": "Write colored text to the console"
+        },
+        {
+          "command": "Write-Warning <text>",
+          "description": "Write a warning message to the warning stream"
+        },
+        {
+          "command": "Write-Error <text>",
+          "description": "Write an error message to the error stream"
+        },
+        {
+          "command": "Write-Verbose <text>",
+          "description": "Write a verbose message (visible only with -Verbose)"
+        },
+        {
+          "command": "Write-Debug <text>",
+          "description": "Write a debug message (visible only with -Debug)"
+        },
+        {
+          "command": "Write-Information <text>",
+          "description": "Write informational output to the information stream"
+        },
+        {
+          "command": "Format-List",
+          "description": "Display properties as a list, one property per line"
+        },
+        {
+          "command": "Format-Table",
+          "description": "Display output as a formatted table"
+        },
+        {
+          "command": "Format-Table -AutoSize",
+          "description": "Display a table with auto-adjusted column widths"
+        },
+        {
+          "command": "Format-Table -Property <prop1>,<prop2>",
+          "description": "Display only specific properties in a table"
+        },
+        {
+          "command": "Format-Wide",
+          "description": "Display values in a wide, multi-column layout"
+        },
+        {
+          "command": "Out-GridView",
+          "description": "Display output in an interactive graphical grid view"
+        },
+        {
+          "command": "Out-GridView -PassThru",
+          "description": "Display a grid view and return selected rows to the pipeline"
+        },
+        {
+          "command": "ConvertTo-Json",
+          "description": "Convert an object to a JSON-formatted string"
+        },
+        {
+          "command": "ConvertTo-Json -Depth <n>",
+          "description": "Convert an object to JSON with a specified nesting depth"
+        },
+        {
+          "command": "ConvertFrom-Json <string>",
+          "description": "Convert a JSON string into a PowerShell object"
+        },
+        {
+          "command": "ConvertTo-Csv",
+          "description": "Convert an object to a CSV-formatted string"
+        },
+        {
+          "command": "ConvertFrom-Csv",
+          "description": "Convert CSV data to PowerShell objects"
+        },
+        {
+          "command": "ConvertTo-Html",
+          "description": "Convert an object to an HTML representation"
+        },
+        {
+          "command": "ConvertTo-Xml",
+          "description": "Convert an object to an XML representation"
+        },
+        {
+          "command": "Export-Csv <file>",
+          "description": "Export pipeline objects to a CSV file"
+        },
+        {
+          "command": "Import-Csv <file>",
+          "description": "Import a CSV file and create objects from its rows"
+        },
+        {
+          "command": "Export-Clixml <file>",
+          "description": "Export objects to an XML file preserving type information"
+        },
+        {
+          "command": "Import-Clixml <file>",
+          "description": "Import objects from a Clixml file"
+        },
+        {
+          "command": "Select-Object -Property <props>",
+          "description": "Select specific properties of objects from the pipeline"
+        },
+        {
+          "command": "Select-Object -First <n>",
+          "description": "Select only the first <n> objects from the pipeline"
+        },
+        {
+          "command": "Select-Object -Last <n>",
+          "description": "Select only the last <n> objects from the pipeline"
+        },
+        {
+          "command": "Select-Object -Unique",
+          "description": "Select only unique objects from the pipeline"
+        },
+        {
+          "command": "Select-Object -ExpandProperty <prop>",
+          "description": "Extract the value of a single property from objects"
+        },
+        {
+          "command": "Sort-Object",
+          "description": "Sort objects in the pipeline"
+        },
+        {
+          "command": "Sort-Object -Property <prop>",
+          "description": "Sort objects by a specific property"
+        },
+        {
+          "command": "Sort-Object -Descending",
+          "description": "Sort objects in descending order"
+        },
+        {
+          "command": "Sort-Object -Unique",
+          "description": "Sort objects and remove duplicates"
+        },
+        {
+          "command": "Group-Object -Property <prop>",
+          "description": "Group objects by the value of a specified property"
+        },
+        {
+          "command": "Measure-Object",
+          "description": "Calculate numeric statistics on pipeline objects"
+        },
+        {
+          "command": "Measure-Object -Sum",
+          "description": "Calculate the sum of a property across pipeline objects"
+        },
+        {
+          "command": "Measure-Object -Average",
+          "description": "Calculate the average of a property"
+        },
+        {
+          "command": "Measure-Object -Maximum",
+          "description": "Find the maximum value of a property"
+        },
+        {
+          "command": "Measure-Object -Minimum",
+          "description": "Find the minimum value of a property"
+        },
+        {
+          "command": "Tee-Object <file>",
+          "description": "Send pipeline output to a file and continue the pipeline"
+        }
+      ]
+    },
+    {
+      "title": "Process Management",
+      "commands": [
+        {
+          "command": "Get-Process",
+          "description": "List all currently running processes"
+        },
+        {
+          "command": "Get-Process <name>",
+          "description": "Get information about processes matching a name"
+        },
+        {
+          "command": "Get-Process -Id <pid>",
+          "description": "Get information about a process by its ID"
+        },
+        {
+          "command": "Get-Process | Sort-Object CPU -Descending",
+          "description": "List processes sorted by CPU usage"
+        },
+        {
+          "command": "Get-Process | Sort-Object WorkingSet -Descending",
+          "description": "List processes sorted by memory usage"
+        },
+        {
+          "command": "Start-Process <program>",
+          "description": "Start a new process"
+        },
+        {
+          "command": "Start-Process <program> -ArgumentList <args>",
+          "description": "Start a process with specific arguments"
+        },
+        {
+          "command": "Start-Process <program> -Wait",
+          "description": "Start a process and wait for it to finish"
+        },
+        {
+          "command": "Start-Process <program> -Verb RunAs",
+          "description": "Start a process with elevated administrator privileges"
+        },
+        {
+          "command": "Start-Process <program> -WindowStyle Hidden",
+          "description": "Start a process without showing a window"
+        },
+        {
+          "command": "Start-Process <program> -RedirectStandardOutput <file>",
+          "description": "Start a process and redirect its output to a file"
+        },
+        {
+          "command": "Stop-Process <name>",
+          "description": "Stop all processes with the specified name"
+        },
+        {
+          "command": "Stop-Process -Id <pid>",
+          "description": "Stop a specific process by its ID"
+        },
+        {
+          "command": "Stop-Process <name> -Force",
+          "description": "Forcefully terminate a process"
+        },
+        {
+          "command": "Wait-Process <name>",
+          "description": "Wait for a process to finish before continuing"
+        },
+        {
+          "command": "Wait-Process -Id <pid> -Timeout <seconds>",
+          "description": "Wait for a process up to a specified timeout"
+        },
+        {
+          "command": "Get-Job",
+          "description": "Get all background jobs in the current session"
+        },
+        {
+          "command": "Start-Job -ScriptBlock { <commands> }",
+          "description": "Start a command as a background job"
+        },
+        {
+          "command": "Start-Job -FilePath <script>",
+          "description": "Run a script file as a background job"
+        },
+        {
+          "command": "Receive-Job <job>",
+          "description": "Get the output from a background job"
+        },
+        {
+          "command": "Wait-Job <job>",
+          "description": "Wait for a background job to complete"
+        },
+        {
+          "command": "Stop-Job <job>",
+          "description": "Stop a background job"
+        },
+        {
+          "command": "Remove-Job <job>",
+          "description": "Delete a background job and its results"
+        },
+        {
+          "command": "Invoke-Command -ScriptBlock { <commands> }",
+          "description": "Run commands in a local or remote script block"
+        },
+        {
+          "command": "Invoke-Command -ComputerName <host> -ScriptBlock { <cmds> }",
+          "description": "Run commands on a remote computer"
+        },
+        {
+          "command": "Start-Sleep <seconds>",
+          "description": "Pause script execution for a specified number of seconds"
+        },
+        {
+          "command": "Start-Sleep -Milliseconds <ms>",
+          "description": "Pause script execution for a specified number of milliseconds"
+        }
+      ]
+    },
+    {
+      "title": "System Information",
+      "commands": [
+        {
+          "command": "Get-Host",
+          "description": "Get information about the current PowerShell host"
+        },
+        {
+          "command": "$PSVersionTable",
+          "description": "Display the PowerShell version and related information"
+        },
+        {
+          "command": "Get-ComputerInfo",
+          "description": "Get comprehensive system and operating system information"
+        },
+        {
+          "command": "Get-ComputerInfo -Property <prop>",
+          "description": "Get a specific system information property"
+        },
+        {
+          "command": "Get-WmiObject Win32_OperatingSystem",
+          "description": "Get operating system information via WMI"
+        },
+        {
+          "command": "Get-WmiObject Win32_ComputerSystem",
+          "description": "Get computer system hardware information via WMI"
+        },
+        {
+          "command": "Get-WmiObject Win32_Processor",
+          "description": "Get CPU information via WMI"
+        },
+        {
+          "command": "Get-WmiObject Win32_PhysicalMemory",
+          "description": "Get RAM module information via WMI"
+        },
+        {
+          "command": "Get-WmiObject Win32_DiskDrive",
+          "description": "Get physical disk drive information via WMI"
+        },
+        {
+          "command": "Get-PSDrive",
+          "description": "List all PowerShell drives including file system, registry, and more"
+        },
+        {
+          "command": "Get-PSDrive -PSProvider FileSystem",
+          "description": "List only file system drives"
+        },
+        {
+          "command": "Get-Volume",
+          "description": "Get information about disk volumes"
+        },
+        {
+          "command": "Get-Disk",
+          "description": "Get information about physical disks"
+        },
+        {
+          "command": "Get-Partition",
+          "description": "Get information about disk partitions"
+        },
+        {
+          "command": "Get-Date",
+          "description": "Get the current date and time"
+        },
+        {
+          "command": "Get-Date -Format \"yyyy-MM-dd\"",
+          "description": "Get the current date formatted as YYYY-MM-DD"
+        },
+        {
+          "command": "Get-Date -Format \"HH:mm:ss\"",
+          "description": "Get the current time formatted as HH:MM:SS"
+        },
+        {
+          "command": "[System.DateTime]::UtcNow",
+          "description": "Get the current UTC date and time"
+        },
+        {
+          "command": "Get-TimeZone",
+          "description": "Get the current system time zone"
+        },
+        {
+          "command": "Get-TimeZone -ListAvailable",
+          "description": "List all available time zones"
+        },
+        {
+          "command": "Get-UICulture",
+          "description": "Get the current UI culture setting"
+        },
+        {
+          "command": "Get-Culture",
+          "description": "Get the current regional and culture settings"
+        },
+        {
+          "command": "$env:COMPUTERNAME",
+          "description": "Get the name of the current computer"
+        },
+        {
+          "command": "$env:USERNAME",
+          "description": "Get the current logged-in username"
+        },
+        {
+          "command": "$env:USERPROFILE",
+          "description": "Get the path to the current user's profile directory"
+        },
+        {
+          "command": "$env:TEMP",
+          "description": "Get the path to the temporary files directory"
+        },
+        {
+          "command": "$env:PATH",
+          "description": "Get the system PATH environment variable"
+        },
+        {
+          "command": "Get-ChildItem Env:",
+          "description": "List all environment variables"
+        },
+        {
+          "command": "$env:<variable>",
+          "description": "Get the value of a specific environment variable"
+        },
+        {
+          "command": "$env:<variable> = <value>",
+          "description": "Set an environment variable for the current session"
+        },
+        {
+          "command": "[System.Environment]::GetEnvironmentVariable(<name>, <scope>)",
+          "description": "Get an environment variable from a specific scope"
+        },
+        {
+          "command": "[System.Environment]::SetEnvironmentVariable(<n>, <v>, <scope>)",
+          "description": "Set an environment variable persistently at a specified scope"
+        },
+        {
+          "command": "Get-HotFix",
+          "description": "Get a list of installed Windows updates and hotfixes"
+        },
+        {
+          "command": "Get-Uptime",
+          "description": "Get the system uptime"
+        }
+      ]
+    },
+    {
+      "title": "Network",
+      "commands": [
+        {
+          "command": "Test-Connection <host>",
+          "description": "Send ICMP ping requests to test connectivity to a host"
+        },
+        {
+          "command": "Test-Connection <host> -Count <n>",
+          "description": "Send exactly <n> ping packets to a host"
+        },
+        {
+          "command": "Test-Connection <host> -Quiet",
+          "description": "Ping a host and return only true or false"
+        },
+        {
+          "command": "Test-NetConnection <host>",
+          "description": "Test a network connection and display diagnostic info"
+        },
+        {
+          "command": "Test-NetConnection <host> -Port <port>",
+          "description": "Test if a specific TCP port is open on a host"
+        },
+        {
+          "command": "Test-NetConnection <host> -TraceRoute",
+          "description": "Trace the route to a remote host"
+        },
+        {
+          "command": "Resolve-DnsName <domain>",
+          "description": "Perform a DNS query for a domain name"
+        },
+        {
+          "command": "Resolve-DnsName <domain> -Type <type>",
+          "description": "Perform a DNS query for a specific record type"
+        },
+        {
+          "command": "Get-NetAdapter",
+          "description": "Get all network adapter properties"
+        },
+        {
+          "command": "Get-NetAdapter | Where-Object Status -eq 'Up'",
+          "description": "List only active network adapters"
+        },
+        {
+          "command": "Get-NetIPAddress",
+          "description": "Get all IP address configurations"
+        },
+        {
+          "command": "Get-NetIPAddress -AddressFamily IPv4",
+          "description": "Get all IPv4 address configurations"
+        },
+        {
+          "command": "Get-NetIPConfiguration",
+          "description": "Get comprehensive IP configuration for all adapters"
+        },
+        {
+          "command": "Get-NetRoute",
+          "description": "Get all entries in the IP routing table"
+        },
+        {
+          "command": "Get-NetTCPConnection",
+          "description": "Get all current TCP connections"
+        },
+        {
+          "command": "Get-NetTCPConnection -State Listen",
+          "description": "List all listening TCP ports"
+        },
+        {
+          "command": "Get-NetTCPConnection -LocalPort <port>",
+          "description": "Get TCP connections on a specific local port"
+        },
+        {
+          "command": "Get-NetUDPEndpoint",
+          "description": "Get all current UDP endpoints"
+        },
+        {
+          "command": "Invoke-WebRequest <url>",
+          "description": "Download content from a URL"
+        },
+        {
+          "command": "Invoke-WebRequest <url> -OutFile <file>",
+          "description": "Download a URL and save it to a file"
+        },
+        {
+          "command": "Invoke-WebRequest <url> -Method POST -Body <data>",
+          "description": "Send a POST request with data to a URL"
+        },
+        {
+          "command": "Invoke-WebRequest <url> -Headers @{<key>=<value>}",
+          "description": "Send a request with custom HTTP headers"
+        },
+        {
+          "command": "Invoke-WebRequest <url> -Credential <cred>",
+          "description": "Send a request with authentication credentials"
+        },
+        {
+          "command": "Invoke-RestMethod <url>",
+          "description": "Send an HTTP request to a REST API endpoint"
+        },
+        {
+          "command": "Invoke-RestMethod <url> -Method GET",
+          "description": "Send a GET request to a REST API"
+        },
+        {
+          "command": "Invoke-RestMethod <url> -Method POST -Body <json> -ContentType 'application/json'",
+          "description": "Send a JSON POST request to a REST API"
+        },
+        {
+          "command": "Invoke-RestMethod <url> -Headers @{Authorization='Bearer <token>'}",
+          "description": "Send an authenticated API request with a bearer token"
+        },
+        {
+          "command": "New-NetFirewallRule -DisplayName <name> -Direction Inbound -Port <port> -Protocol TCP -Action Allow",
+          "description": "Create a new inbound firewall rule"
+        },
+        {
+          "command": "Get-NetFirewallRule",
+          "description": "Get all firewall rules"
+        },
+        {
+          "command": "Enable-NetFirewallRule -DisplayName <name>",
+          "description": "Enable a firewall rule by display name"
+        },
+        {
+          "command": "Disable-NetFirewallRule -DisplayName <name>",
+          "description": "Disable a firewall rule"
+        },
+        {
+          "command": "Remove-NetFirewallRule -DisplayName <name>",
+          "description": "Delete a firewall rule"
+        }
+      ]
+    },
+    {
+      "title": "Registry",
+      "commands": [
+        {
+          "command": "Get-Item HKLM:\\<path>",
+          "description": "Get a registry key object"
+        },
+        {
+          "command": "Get-ChildItem HKLM:\\<path>",
+          "description": "List subkeys and values under a registry key"
+        },
+        {
+          "command": "Get-ItemProperty HKLM:\\<path>",
+          "description": "Get the values of a registry key"
+        },
+        {
+          "command": "Get-ItemProperty HKLM:\\<path> -Name <valuename>",
+          "description": "Get a specific registry value"
+        },
+        {
+          "command": "New-Item HKLM:\\<path>",
+          "description": "Create a new registry key"
+        },
+        {
+          "command": "New-ItemProperty HKLM:\\<path> -Name <n> -Value <v> -PropertyType <type>",
+          "description": "Create a new registry value in a key"
+        },
+        {
+          "command": "Set-ItemProperty HKLM:\\<path> -Name <n> -Value <v>",
+          "description": "Set or update a registry value"
+        },
+        {
+          "command": "Remove-Item HKLM:\\<path>",
+          "description": "Delete a registry key"
+        },
+        {
+          "command": "Remove-Item HKLM:\\<path> -Recurse",
+          "description": "Delete a registry key and all its subkeys"
+        },
+        {
+          "command": "Remove-ItemProperty HKLM:\\<path> -Name <n>",
+          "description": "Delete a specific registry value"
+        },
+        {
+          "command": "Test-Path HKLM:\\<path>",
+          "description": "Check if a registry key exists"
+        },
+        {
+          "command": "Copy-Item HKLM:\\<source> HKLM:\\<dest>",
+          "description": "Copy a registry key to another location"
+        }
+      ]
+    },
+    {
+      "title": "Module & Package Management",
+      "commands": [
+        {
+          "command": "Get-Module",
+          "description": "List all modules imported in the current session"
+        },
+        {
+          "command": "Get-Module -ListAvailable",
+          "description": "List all modules installed and available to import"
+        },
+        {
+          "command": "Import-Module <module>",
+          "description": "Import a module into the current session"
+        },
+        {
+          "command": "Import-Module <module> -Force",
+          "description": "Forcefully reimport a module, refreshing it"
+        },
+        {
+          "command": "Remove-Module <module>",
+          "description": "Remove an imported module from the current session"
+        },
+        {
+          "command": "Install-Module <module>",
+          "description": "Download and install a module from PowerShell Gallery"
+        },
+        {
+          "command": "Install-Module <module> -Scope CurrentUser",
+          "description": "Install a module for the current user only"
+        },
+        {
+          "command": "Install-Module <module> -Force",
+          "description": "Force install a module, reinstalling if already present"
+        },
+        {
+          "command": "Update-Module <module>",
+          "description": "Update an installed module to its latest version"
+        },
+        {
+          "command": "Update-Module",
+          "description": "Update all installed modules to their latest versions"
+        },
+        {
+          "command": "Uninstall-Module <module>",
+          "description": "Uninstall an installed module"
+        },
+        {
+          "command": "Find-Module <keyword>",
+          "description": "Search for a module in PowerShell Gallery"
+        },
+        {
+          "command": "Find-Module <keyword> -Repository PSGallery",
+          "description": "Search for a module specifically in the PSGallery repository"
+        },
+        {
+          "command": "Get-InstalledModule",
+          "description": "List all modules installed from a repository"
+        },
+        {
+          "command": "Register-PSRepository",
+          "description": "Register a new PowerShell module repository"
+        },
+        {
+          "command": "Get-PSRepository",
+          "description": "List all registered PowerShell repositories"
+        },
+        {
+          "command": "Set-PSRepository -Name PSGallery -InstallationPolicy Trusted",
+          "description": "Mark PSGallery as a trusted installation source"
+        },
+        {
+          "command": "Save-Module <module> -Path <path>",
+          "description": "Download a module to a folder without installing it"
+        }
+      ]
+    },
+    {
+      "title": "Permissions & Security",
+      "commands": [
+        {
+          "command": "Get-Acl <path>",
+          "description": "Get the access control list (permissions) of a file or directory"
+        },
+        {
+          "command": "Set-Acl <path> -AclObject <acl>",
+          "description": "Apply an access control list to a file or directory"
+        },
+        {
+          "command": "Get-Acl <path> | Format-List",
+          "description": "Display detailed ACL information for a path"
+        },
+        {
+          "command": "Get-ExecutionPolicy",
+          "description": "Get the current PowerShell script execution policy"
+        },
+        {
+          "command": "Get-ExecutionPolicy -List",
+          "description": "List execution policies for all scopes"
+        },
+        {
+          "command": "Set-ExecutionPolicy RemoteSigned",
+          "description": "Allow local scripts and signed remote scripts to run"
+        },
+        {
+          "command": "Set-ExecutionPolicy Unrestricted",
+          "description": "Allow all scripts to run without restriction"
+        },
+        {
+          "command": "Set-ExecutionPolicy Restricted",
+          "description": "Prevent all scripts from running"
+        },
+        {
+          "command": "Set-ExecutionPolicy -Scope CurrentUser RemoteSigned",
+          "description": "Set the execution policy for the current user only"
+        },
+        {
+          "command": "Get-LocalUser",
+          "description": "Get all local user accounts"
+        },
+        {
+          "command": "New-LocalUser -Name <n> -Password <p>",
+          "description": "Create a new local user account"
+        },
+        {
+          "command": "Remove-LocalUser <name>",
+          "description": "Delete a local user account"
+        },
+        {
+          "command": "Get-LocalGroup",
+          "description": "List all local groups"
+        },
+        {
+          "command": "Add-LocalGroupMember -Group <g> -Member <m>",
+          "description": "Add a user to a local group"
+        },
+        {
+          "command": "Remove-LocalGroupMember -Group <g> -Member <m>",
+          "description": "Remove a user from a local group"
+        },
+        {
+          "command": "Get-LocalGroupMember -Group <group>",
+          "description": "List members of a local group"
+        },
+        {
+          "command": "ConvertTo-SecureString <text> -AsPlainText -Force",
+          "description": "Convert a plain text string to a SecureString"
+        },
+        {
+          "command": "Get-Credential",
+          "description": "Prompt for credentials and return a credential object"
+        },
+        {
+          "command": "Get-AuthenticodeSignature <file>",
+          "description": "Get the digital signature information of a file"
+        },
+        {
+          "command": "Set-AuthenticodeSignature <file> <cert>",
+          "description": "Add a digital signature to a script or file"
+        }
+      ]
+    },
+    {
+      "title": "Services & Events",
+      "commands": [
+        {
+          "command": "Get-Service",
+          "description": "Get the status of all Windows services"
+        },
+        {
+          "command": "Get-Service <name>",
+          "description": "Get the status of a specific service"
+        },
+        {
+          "command": "Get-Service | Where-Object Status -eq 'Running'",
+          "description": "Get only services that are currently running"
+        },
+        {
+          "command": "Start-Service <name>",
+          "description": "Start a Windows service"
+        },
+        {
+          "command": "Stop-Service <name>",
+          "description": "Stop a running Windows service"
+        },
+        {
+          "command": "Restart-Service <name>",
+          "description": "Restart a Windows service"
+        },
+        {
+          "command": "Suspend-Service <name>",
+          "description": "Pause a running Windows service"
+        },
+        {
+          "command": "Resume-Service <name>",
+          "description": "Resume a suspended Windows service"
+        },
+        {
+          "command": "Set-Service <name> -StartupType Automatic",
+          "description": "Configure a service to start automatically"
+        },
+        {
+          "command": "Set-Service <name> -StartupType Disabled",
+          "description": "Disable a service from starting"
+        },
+        {
+          "command": "New-Service -Name <n> -BinaryPathName <path>",
+          "description": "Create a new Windows service"
+        },
+        {
+          "command": "Remove-Service <name>",
+          "description": "Delete a Windows service"
+        },
+        {
+          "command": "Get-EventLog -LogName <log>",
+          "description": "Read entries from a Windows event log"
+        },
+        {
+          "command": "Get-EventLog -LogName System -Newest <n>",
+          "description": "Get the most recent entries from the System event log"
+        },
+        {
+          "command": "Get-EventLog -LogName Application -EntryType Error",
+          "description": "Get error entries from the Application event log"
+        },
+        {
+          "command": "Get-WinEvent -LogName <log>",
+          "description": "Get events from a Windows event log (modern approach)"
+        },
+        {
+          "command": "Get-WinEvent -FilterHashtable @{LogName='System';Level=2}",
+          "description": "Get error-level events from the System log"
+        },
+        {
+          "command": "Clear-EventLog -LogName <log>",
+          "description": "Clear all entries from an event log"
+        },
+        {
+          "command": "New-EventLog -LogName <n> -Source <s>",
+          "description": "Create a new event log with a specific source"
+        },
+        {
+          "command": "Write-EventLog -LogName <log> -Source <s> -EventId <id> -Message <msg>",
+          "description": "Write a custom event to an event log"
+        }
+      ]
+    },
+    {
+      "title": "Scripting & Automation",
+      "commands": [
+        {
+          "command": "powershell -File <script>.ps1",
+          "description": "Execute a PowerShell script file"
+        },
+        {
+          "command": "powershell -Command \"<command>\"",
+          "description": "Execute a PowerShell command string directly"
+        },
+        {
+          "command": "& '<script>.ps1'",
+          "description": "Run a script file using the call operator"
+        },
+        {
+          "command": ". '.\\<script>.ps1'",
+          "description": "Dot-source a script to run it in the current scope"
+        },
+        {
+          "command": "$variable = <value>",
+          "description": "Assign a value to a variable"
+        },
+        {
+          "command": "[string]$variable = <value>",
+          "description": "Declare a strongly-typed string variable"
+        },
+        {
+          "command": "[int]$variable = <value>",
+          "description": "Declare a strongly-typed integer variable"
+        },
+        {
+          "command": "[bool]$variable = $true",
+          "description": "Declare a boolean variable"
+        },
+        {
+          "command": "$array = @(<items>)",
+          "description": "Create an array"
+        },
+        {
+          "command": "$hash = @{<key>=<value>}",
+          "description": "Create a hashtable (dictionary)"
+        },
+        {
+          "command": "if (<condition>) { ... } else { ... }",
+          "description": "If-else conditional block"
+        },
+        {
+          "command": "if (<condition>) { ... } elseif (<cond>) { ... } else { ... }",
+          "description": "If-elseif-else conditional block"
+        },
+        {
+          "command": "switch (<variable>) { <value> { ... } }",
+          "description": "Switch statement for matching multiple conditions"
+        },
+        {
+          "command": "foreach ($item in $collection) { ... }",
+          "description": "Loop through each item in a collection"
+        },
+        {
+          "command": "for ($i=0; $i -lt $n; $i++) { ... }",
+          "description": "C-style for loop"
+        },
+        {
+          "command": "while (<condition>) { ... }",
+          "description": "Execute a block while a condition is true"
+        },
+        {
+          "command": "do { ... } while (<condition>)",
+          "description": "Execute a block at least once, then repeat while condition is true"
+        },
+        {
+          "command": "do { ... } until (<condition>)",
+          "description": "Execute a block until a condition becomes true"
+        },
+        {
+          "command": "break",
+          "description": "Exit a loop immediately"
+        },
+        {
+          "command": "continue",
+          "description": "Skip the current iteration and continue to the next"
+        },
+        {
+          "command": "return <value>",
+          "description": "Return a value from a function"
+        },
+        {
+          "command": "function <Name> { param(<params>) ... }",
+          "description": "Define a reusable function with parameters"
+        },
+        {
+          "command": "function <Name> { [CmdletBinding()] param() begin{} process{} end{} }",
+          "description": "Define an advanced function with pipeline support"
+        },
+        {
+          "command": "try { ... } catch { ... } finally { ... }",
+          "description": "Structured error handling with try-catch-finally"
+        },
+        {
+          "command": "$ErrorActionPreference = 'Stop'",
+          "description": "Set errors to terminate as exceptions globally"
+        },
+        {
+          "command": "trap { ... }",
+          "description": "Define a trap to handle terminating errors"
+        },
+        {
+          "command": "throw <message>",
+          "description": "Throw a terminating error with a custom message"
+        },
+        {
+          "command": "$Error[0]",
+          "description": "Access the most recent error that occurred"
+        },
+        {
+          "command": "Invoke-Expression <string>",
+          "description": "Evaluate and run a string as a PowerShell expression"
+        },
+        {
+          "command": "& { <scriptblock> }",
+          "description": "Invoke a script block directly"
+        },
+        {
+          "command": "param(<parameter>)",
+          "description": "Define parameters for a script or function"
+        },
+        {
+          "command": "[Parameter(Mandatory=$true)]",
+          "description": "Mark a parameter as required"
+        },
+        {
+          "command": "[ValidateSet(<values>)]",
+          "description": "Restrict a parameter to a set of allowed values"
+        },
+        {
+          "command": "[ValidateRange(<min>, <max>)]",
+          "description": "Restrict a numeric parameter to a valid range"
+        },
+        {
+          "command": "Measure-Command { <expression> }",
+          "description": "Measure how long a command or expression takes to run"
+        },
+        {
+          "command": "Register-ScheduledTask",
+          "description": "Register a new scheduled task in Task Scheduler"
+        },
+        {
+          "command": "Get-ScheduledTask",
+          "description": "Get all scheduled tasks"
+        },
+        {
+          "command": "Start-ScheduledTask -TaskName <name>",
+          "description": "Manually run a scheduled task"
+        },
+        {
+          "command": "Unregister-ScheduledTask -TaskName <name>",
+          "description": "Delete a scheduled task"
+        }
+      ]
+    },
+    {
+      "title": "Help & Discovery",
+      "commands": [
+        {
+          "command": "Get-Help <command>",
+          "description": "Display help documentation for a command"
+        },
+        {
+          "command": "Get-Help <command> -Full",
+          "description": "Display complete help documentation including all parameters"
+        },
+        {
+          "command": "Get-Help <command> -Examples",
+          "description": "Display usage examples for a command"
+        },
+        {
+          "command": "Get-Help <command> -Online",
+          "description": "Open the online documentation for a command in a browser"
+        },
+        {
+          "command": "Get-Help <command> -Parameter <param>",
+          "description": "Get help for a specific parameter of a command"
+        },
+        {
+          "command": "Update-Help",
+          "description": "Download and update the local help documentation"
+        },
+        {
+          "command": "Get-Command",
+          "description": "List all available PowerShell commands"
+        },
+        {
+          "command": "Get-Command *<keyword>*",
+          "description": "Find commands whose name contains a keyword"
+        },
+        {
+          "command": "Get-Alias",
+          "description": "List all defined aliases"
+        },
+        {
+          "command": "Get-Alias <alias>",
+          "description": "Find the command that an alias points to"
+        },
+        {
+          "command": "New-Alias <alias> <command>",
+          "description": "Create a new alias for a command"
+        },
+        {
+          "command": "Set-Alias <alias> <command>",
+          "description": "Create or update an alias"
+        },
+        {
+          "command": "Remove-Alias <alias>",
+          "description": "Remove a defined alias"
+        },
+        {
+          "command": "Get-Member",
+          "description": "Display the properties and methods of a pipeline object"
+        },
+        {
+          "command": "<object> | Get-Member",
+          "description": "Explore what properties and methods an object has"
+        },
+        {
+          "command": "Get-PSDrive",
+          "description": "List all accessible PowerShell drives"
+        },
+        {
+          "command": "Get-PSProvider",
+          "description": "List all available PowerShell providers"
+        },
+        {
+          "command": "Show-Command",
+          "description": "Display a graphical interface to help build a command"
+        },
+        {
+          "command": "Clear-Host",
+          "description": "Clear the PowerShell console screen"
+        },
+        {
+          "command": "cls",
+          "description": "Alias for Clear-Host, clears the console"
+        },
+        {
+          "command": "Exit",
+          "description": "Exit the current PowerShell session"
+        }
+      ]
+    }
+  ]
+}
