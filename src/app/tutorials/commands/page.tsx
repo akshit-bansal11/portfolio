@@ -51,9 +51,7 @@ export default function CommandsIndexPage() {
               <Card className="h-full border-rule bg-paper-raised text-ink transition-colors hover:border-pen dark:border-rule dark:bg-paper-raised dark:text-ink">
                 <CardHeader>
                   <ToolLogo logo={tool.logo} size={48} />
-                  <h2 className="text-xl leading-none font-semibold tracking-tight">
-                    {tool.name}
-                  </h2>
+                  <h2 className="text-xl leading-none font-semibold tracking-tight">{tool.name}</h2>
                   <CardDescription className="text-ink-muted dark:text-ink-muted">
                     {tool.description}
                   </CardDescription>
