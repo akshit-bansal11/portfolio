@@ -100,7 +100,7 @@ export default function CommandReference({ tool }: { tool: CommandTool }) {
                       <code className="min-w-0 flex-1 overflow-x-auto py-2.5 font-mono text-[0.85rem] whitespace-pre">
                         {command.command}
                       </code>
-                      <CopyButton code={command.command} />
+                      <CopyButton code={command.command} label={`Copy ${command.command}`} />
                     </div>
                     <p className="mt-3 text-ink-muted">{command.description}</p>
                     {command.flags && command.flags.length > 0 && (
@@ -122,7 +122,10 @@ export default function CommandReference({ tool }: { tool: CommandTool }) {
                         <pre className="min-w-0 flex-1 overflow-x-auto py-2.5 font-mono text-[0.85rem]">
                           <code>{command.example}</code>
                         </pre>
-                        <CopyButton code={command.example} />
+                        <CopyButton
+                          code={command.example}
+                          label={`Copy example for ${command.command}`}
+                        />
                       </div>
                     )}
                   </li>
