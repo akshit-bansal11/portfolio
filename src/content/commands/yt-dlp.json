@@ -1,7 +1,7 @@
 {
   "name": "Yt Dlp",
   "slug": "yt-dlp",
-  "logo": "https://media-server.akshitbansal.me/api/images/logos/non-svgl/yt-dlp-dark.svg",
+  "logo": "/icons/commands/yt-dlp.svg",
   "accent": "#d01500",
   "description": "feature-rich command-line audio/video downloader with support for thousands of sites.",
   "categories": [
