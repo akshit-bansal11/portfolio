@@ -4,6 +4,7 @@
  */
 
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { commandTools, countCommands, totalCommandCount } from "@/data/commands";
@@ -30,7 +31,7 @@ export default function CommandsIndexPage() {
             >
               <Card className="h-full border-rule bg-paper-raised text-ink transition-colors hover:border-pen dark:border-rule dark:bg-paper-raised dark:text-ink">
                 <CardHeader>
-                  <img src={tool.logo} alt="" width={40} height={40} className="h-10 w-10" />
+                  <Image unoptimized src={tool.logo} alt="" width={40} height={40} className="h-10 w-10" />
                   <CardTitle className="text-xl">{tool.name}</CardTitle>
                   <CardDescription className="text-ink-muted dark:text-ink-muted">
                     {tool.description}

@@ -5,6 +5,7 @@
  */
 
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import ThemeToggle from "@/components/blog/ThemeToggle";
 import CommandReference from "@/components/commands/CommandReference";
@@ -44,15 +45,12 @@ export default async function ToolPage({ params }: ToolPageProps) {
         <ThemeToggle />
       </div>
       <header className="mb-8 flex flex-wrap items-center gap-4">
-        <img src={tool.logo} alt="" width={56} height={56} className="h-14 w-14" />
+        <Image unoptimized src={tool.logo} alt="" width={56} height={56} className="h-14 w-14" />
         <div className="min-w-0">
           <h1 className="text-4xl font-semibold text-ink">{tool.name} commands</h1>
           <p className="mt-1 text-ink-muted">{tool.description}</p>
         </div>
-        <Badge
-          variant="outline"
-          className="border-rule text-ink dark:border-rule dark:text-ink"
-        >
+        <Badge variant="outline" className="border-rule text-ink dark:border-rule dark:text-ink">
           {countCommands(tool)} commands
         </Badge>
       </header>
