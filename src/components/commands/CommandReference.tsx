@@ -7,7 +7,7 @@
 
 "use client";
 
-import { useMemo, useState } from "react";
+import { useDeferredValue, useMemo, useState } from "react";
 import CategoryNav from "@/components/commands/CategoryNav";
 import CopyButton from "@/components/tutorials/CopyButton";
 import type { CommandTool, ToolCommand } from "@/data/commands";
@@ -22,7 +22,8 @@ function haystack(command: ToolCommand): string {
 
 export default function CommandReference({ tool }: { tool: CommandTool }) {
   const [query, setQuery] = useState("");
-  const needle = query.trim().toLowerCase();
+  const deferredQuery = useDeferredValue(query);
+  const needle = deferredQuery.trim().toLowerCase();
 
   const categories = useMemo(
     () =>

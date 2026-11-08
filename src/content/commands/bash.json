@@ -1,7 +1,7 @@
 {
   "name": "Bash",
   "slug": "bash",
-  "logo": "https://svgl.app/library/bash_dark.svg",
+  "logo": "https://svgl.app/library/bash.svg",
   "accent": "#ffffff",
   "description": "Unix shell and command language",
   "categories": [

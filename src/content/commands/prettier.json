@@ -1,7 +1,7 @@
 {
   "name": "Prettier",
   "slug": "prettier",
-  "logo": "https://svgl.app/library/prettier-icon-light.svg",
+  "logo": "https://svgl.app/library/prettier-icon-dark.svg",
   "accent": "#e94560",
   "description": "Opinionated code formatter supporting multiple languages",
   "categories": [

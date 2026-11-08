@@ -4,11 +4,13 @@
  * tool in src/data/commands.ts; the interactive part lives in CommandReference.
  */
 
+import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
-import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import ThemeToggle from "@/components/blog/ThemeToggle";
 import CommandReference from "@/components/commands/CommandReference";
+import ToolLogo from "@/components/commands/ToolLogo";
 import { Badge } from "@/components/ui/badge";
 import { commandTools, countCommands, getCommandTool } from "@/data/commands";
 
@@ -27,10 +29,15 @@ export async function generateMetadata({ params }: ToolPageProps): Promise<Metad
   const tool = getCommandTool(slug);
   if (!tool) return {};
 
+  const title = `${tool.name} commands`;
+  const description = `${tool.description}. ${countCommands(tool)} ${tool.name} commands, with descriptions and copy buttons.`;
+  const url = `/tutorials/commands/${tool.slug}`;
   return {
-    title: `${tool.name} commands`,
-    description: `${tool.description}. ${countCommands(tool)} ${tool.name} commands with descriptions and copy buttons.`,
-    alternates: { canonical: `/tutorials/commands/${tool.slug}` },
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: { type: "website", title, description, url },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 
@@ -41,11 +48,21 @@ export default async function ToolPage({ params }: ToolPageProps) {
 
   return (
     <main className="mx-auto max-w-[78rem] px-4 pt-24 pb-28 sm:px-6 md:pt-28">
-      <div className="mb-6 flex flex-wrap items-start justify-end gap-3">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+        <Link
+          href="/tutorials/commands"
+          className="group inline-flex items-center gap-2 text-sm text-ink-muted transition-colors hover:text-ink"
+        >
+          <ArrowLeft
+            className="h-4 w-4 transition-transform group-hover:-translate-x-1"
+            aria-hidden
+          />
+          All commands
+        </Link>
         <ThemeToggle />
       </div>
       <header className="mb-8 flex flex-wrap items-center gap-4">
-        <Image unoptimized src={tool.logo} alt="" width={56} height={56} className="h-14 w-14" />
+        <ToolLogo logo={tool.logo} size={64} />
         <div className="min-w-0">
           <h1 className="text-4xl font-semibold text-ink">{tool.name} commands</h1>
           <p className="mt-1 text-ink-muted">{tool.description}</p>

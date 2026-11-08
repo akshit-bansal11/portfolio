@@ -8,6 +8,7 @@
 
 /* Raw palette, light. */
 html {
+  --cmd-logo-chip: #fffdf8;
   --tut-blue: #1d4ed8;
   --tut-violet: #6d28d9;
   --tut-green: #15803d;

@@ -51,7 +51,7 @@ export default function CategoryNav({ categories }: { categories: NavCategory[] 
             <li key={category.id} className="shrink-0">
               <a
                 href={`#${category.id}`}
-                aria-current={current ? "true" : undefined}
+                aria-current={current ? "location" : undefined}
                 className={cn(
                   "flex min-h-11 items-center justify-between gap-3 rounded-md border px-3 py-1.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pen",
                   current
