@@ -1,9 +1,9 @@
 # Tutorial smoke test: rebuilds the files published in
-# src/content/tutorials/docker-kubernetes-vms.mdx (every code block whose first line is
+# src/content/tutorials/docker-101.mdx and kubernetes-101.mdx (every code block whose first line is
 # "# file: x" or "// file: x") and runs the walkthrough's commands against them, so the text
 # readers copy is what gets tested.
 #
-# What this does NOT exercise: Multipass (Part 1), the Windows and macOS installers, Docker
+# What this does NOT exercise: Multipass (vm-101 and the comparison DIY), the Windows and macOS installers, Docker
 # Desktop, WSL, PowerShell syntax, and the Linux install script. It runs on one Ubuntu
 # runner with a preinstalled Docker, kind and kubectl.
 # CI-only additions to the published commands: retry/timeout flags, and checks (grep) on the
@@ -46,7 +46,9 @@ jobs:
           node - <<'JS'
           const fs = require("node:fs");
           const path = require("node:path");
-          const mdx = fs.readFileSync("src/content/tutorials/docker-kubernetes-vms.mdx", "utf8");
+          const mdx = ["docker-101", "kubernetes-101"]
+            .map((slug) => fs.readFileSync(`src/content/tutorials/${slug}.mdx`, "utf8"))
+            .join("\n");
           const out = path.resolve(process.env.RUNNER_TEMP, "tutorial");
           const seen = new Set();
           for (const [, body] of mdx.matchAll(/^```[^\n]*\n([\s\S]*?)^```/gm)) {

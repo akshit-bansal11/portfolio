@@ -1,0 +1,312 @@
+import { Activity, Boxes, Building2, Container, Cpu, Gauge, GraduationCap, HardDrive, Home, KeyRound, Laptop, Layers, Monitor, Package, Play, RefreshCw, Route, Server, Settings, Terminal, UserCog } from "lucide-react";
+import DecisionTree from "@/components/tutorials/infra/DecisionTree";
+
+## In one minute
+
+<LogoRow
+  techs={["vm", "docker", "k8s"]}
+  points={[
+    ["A whole computer made of software, with its own OS", "Boots in seconds to minutes, takes GBs", "Use for a hard wall or a different OS"],
+    ["Packs one app and its files into an image", "Runs it as a walled-off process in about a second", "Use to ship any app the same way everywhere"],
+    ["Runs many containers across many machines", "Restarts, scales and updates them for you", "Use when one machine is not enough"],
+  ]}
+/>
+
+<Callout kind="important">
+
+They are **not** rivals. They stack: a cloud server is split into VMs, a VM becomes a Kubernetes node, and the node runs your containers.
+
+</Callout>
+
+New to any of them? Each has its own beginner tutorial: [VM 101](/tutorials/vm-101), [Docker 101](/tutorials/docker-101), [Kubernetes 101](/tutorials/kubernetes-101).
+
+## Words you need
+
+<Glossary
+  items={[
+    { term: "Bare metal", means: "One operating system running straight on a physical machine, with nothing virtual in between.", like: "owning a whole plot of land" },
+    { term: "Kernel", means: "The core of an operating system: it runs every program and controls the hardware.", like: "the foundation and plumbing of a building" },
+    { term: "Virtual machine (VM)", means: "A pretend computer with its own OS and kernel, running on a real one.", like: "an independent house" },
+    { term: "Container", means: "An app running as a walled-off process that shares the host's kernel.", like: "a flat in an apartment block" },
+    { term: "Orchestration", means: "Automatically starting, placing, healing, scaling and updating many containers on many machines.", like: "the society manager running all the flats" },
+    { term: "Node", means: "One machine (often a VM) in a Kubernetes cluster.", like: "one building in the society" },
+  ]}
+/>
+
+## One picture for all three
+
+<Diagram caption="VM = your own house. Container = a flat in a society. Kubernetes = the society's manager.">
+  <Row>
+    <Group title="Independent house = VM" tone="vm" icon={<Home />}>
+      <Node title="Own plot and foundation" note="its own slice of hardware" tone="vm" icon={<HardDrive />} />
+      <Node title="Own water tank and wiring" note="its own OS and kernel" tone="vm" icon={<Settings />} />
+      <Node title="Slow and costly to build" note="minutes to boot, GBs on disk" tone="vm" icon={<Gauge />} />
+    </Group>
+    <Link dir="right" tone="docker" label="share the base" />
+    <Group title="Flat in a society = container" tone="docker" icon={<Building2 />}>
+      <Node title="Own door and meter" note="namespaces + cgroups" tone="docker" icon={<KeyRound />} />
+      <Node title="Shared foundation and plumbing" note="one shared Linux kernel" tone="docker" icon={<Layers />} />
+      <Node title="Move in today" note="starts in ~1 s, MBs on disk" tone="docker" icon={<Play />} />
+    </Group>
+    <Link dir="right" tone="k8s" label="manage many" />
+    <Group title="Society manager = Kubernetes" tone="k8s" icon={<UserCog />}>
+      <Node title="Decides who gets which flat" note="scheduler places pods" tone="k8s" icon={<Route />} />
+      <Node title="Notices a leak" note="health checks" tone="k8s" icon={<Activity />} />
+      <Node title="New tenant the same day" note="replaces dead pods" tone="k8s" icon={<RefreshCw />} />
+    </Group>
+  </Row>
+</Diagram>
+
+## How they fit together
+
+<Diagram caption="How the three sit together in a real cloud setup.">
+  <Group title="Physical server in a data centre" tone="blue" icon={<Server />}>
+    <Group title="VM (a Kubernetes node)" tone="vm" icon={<Monitor />} dashed>
+      <Group title="Kubernetes: kubelet + containerd" tone="k8s" cols={3}>
+        <Node title="web" note="container" tech="docker" tone="docker" />
+        <Node title="web" note="container" tech="docker" tone="docker" />
+        <Node title="redis" note="container" tech="docker" tone="docker" />
+      </Group>
+    </Group>
+  </Group>
+</Diagram>
+
+## VM vs container
+
+<Diagram caption="The key difference: containers share one kernel instead of each booting their own OS.">
+  <Row>
+    <Group title="Virtual machines" tone="vm" icon={<Monitor />}>
+      <Row>
+        <Node title="App A + libs" tone="pink" icon={<Package />} />
+        <Node title="App B + libs" tone="pink" icon={<Package />} />
+      </Row>
+      <Row>
+        <Node title="Guest OS + kernel" tone="amber" icon={<Cpu />} />
+        <Node title="Guest OS + kernel" tone="amber" icon={<Cpu />} />
+      </Row>
+      <Node title="Hypervisor" tone="vm" icon={<Layers />} />
+      <Node title="Hardware" tone="blue" icon={<Server />} />
+    </Group>
+    <Link dir="right" tone="docker" label="drop the guest OS" />
+    <Group title="Containers" tone="docker" icon={<Container />}>
+      <Row>
+        <Node title="App A + libs" tone="pink" icon={<Package />} />
+        <Node title="App B + libs" tone="pink" icon={<Package />} />
+      </Row>
+      <Node title="Container runtime" note="Docker Engine / containerd" tone="docker" tech="docker" />
+      <Node title="Host OS: ONE shared kernel" tone="amber" icon={<Cpu />} />
+      <Node title="Hardware (or a VM)" tone="blue" icon={<Server />} />
+    </Group>
+  </Row>
+</Diagram>
+
+<Compare
+  columns={[{ title: "Virtual machine", tone: "vm", tech: "vm" }, { title: "Container", tone: "docker", tech: "docker" }]}
+  rows={[
+    ["What is faked", "The hardware", "The OS's view of itself"],
+    ["Own kernel", "Yes, one per VM", "No, shares the host's"],
+    ["Start time", "Seconds to minutes", "About a second"],
+    ["Size", "Gigabytes", "Tens to hundreds of MB"],
+    ["Isolation", "Strong (hardware level)", "Good (kernel is shared)"],
+    ["Different OS inside", "Any OS", "Linux on Linux only"],
+    ["Best for", "Hard isolation, other OS, cloud nodes", "Packaging and shipping apps, CI, microservices"],
+  ]}
+/>
+
+## Docker vs Kubernetes
+
+<Compare
+  columns={[{ title: "Docker", tone: "docker", tech: "docker" }, { title: "Kubernetes", tone: "k8s", tech: "k8s" }]}
+  rows={[
+    ["Main job", "Build images and run containers", "Run and manage containers across many machines"],
+    ["Works on", "One machine", "A cluster of machines (nodes)"],
+    ["You describe", "A Dockerfile (how to build) and a compose.yaml (what to run)", "YAML manifests (what should exist)"],
+    ["If a container dies", "Restarted only if you set a restart policy, on the same machine", "Replaced automatically, on another node if needed"],
+    ["Scaling", "By hand: start more containers", "Change replicas, or autoscale"],
+    ["Updates", "Stop old, start new", "Rolling updates and one-command rollback"],
+    ["Learn it", "First", "After Docker"],
+  ]}
+/>
+
+<Callout kind="note" title="Does Kubernetes still use Docker?">
+
+Not directly. Since Kubernetes v1.24 (2022), nodes run containers through a runtime such as **containerd** or **CRI-O**, not through Docker Engine. Images you build with Docker still run fine, because both follow the same open **OCI** image standard. So: build with Docker, run anywhere.
+
+</Callout>
+
+## Docker Compose vs Kubernetes
+
+<Compare
+  columns={[{ title: "Docker Compose", tone: "docker" }, { title: "Kubernetes", tone: "k8s" }]}
+  rows={[
+    ["Machines", "One", "Many"],
+    ["File", "One compose.yaml", "Several YAML manifests"],
+    ["Self-healing across machines", "No", "Yes"],
+    ["Learning curve", "An afternoon", "Weeks to be comfortable"],
+    ["Great for", "Local development, small single-server apps", "Production systems with many services and real traffic"],
+  ]}
+/>
+
+## All four side by side
+
+<Compare
+  columns={[
+    { title: "Bare metal", tone: "blue" },
+    { title: "VM", tone: "vm", tech: "vm" },
+    { title: "Container", tone: "docker", tech: "docker" },
+    { title: "Kubernetes", tone: "k8s", tech: "k8s" },
+  ]}
+  rows={[
+    ["What you get", "A physical machine", "A pretend computer", "A walled-off process", "A manager for many containers"],
+    ["Own kernel", "Yes", "Yes, one per VM", "No, shares the host's", "No (runs containers)"],
+    ["Start time", "Minutes (boot)", "Seconds to minutes", "About a second", "Seconds per pod"],
+    ["Size", "The whole disk", "Gigabytes", "Megabytes", "Depends on the containers"],
+    ["Isolation", "Physical", "Strong", "Good", "Good, plus policies"],
+    ["Typical use", "Big databases, special hardware", "Cloud servers, other OSes", "Packaging and shipping apps", "Running many services in production"],
+  ]}
+/>
+
+## Common mix-ups
+
+- **"A container is a lightweight VM."** No. A VM boots its own OS; a container is a process on the host's kernel.
+- **"Kubernetes replaces Docker."** No. Docker builds images; Kubernetes runs them on a cluster.
+- **"Containers are always safer than VMs."** No. VMs have the stronger wall, because each has its own kernel.
+- **"Docker on my Mac runs without a VM."** No. Docker Desktop runs a hidden Linux VM, because macOS has no Linux kernel.
+- **"Every project needs Kubernetes."** No. One server and Docker Compose run a lot of real products.
+
+## Which one do I use?
+
+<DecisionTree />
+
+<Compare
+  label="Situation"
+  columns={[{ title: "Pick", tone: "green" }]}
+  rows={[
+    ["Different OS, legacy app, hard isolation", <Logo tech="vm" label />],
+    ["One app or a few, one server, small team", <Logo tech="docker" label />],
+    ["Containers in the cloud, no team to run a cluster", "A managed container service (Cloud Run, AWS ECS/Fargate, Azure Container Apps)"],
+    ["Many services, many machines, self-healing, safe rollouts", <Logo tech="k8s" label />],
+  ]}
+/>
+
+## What to learn, in order
+
+<Flow
+  steps={[
+    { title: "Linux basics", note: "terminal, files, processes", tone: "blue", icon: <Terminal /> },
+    { title: "VM 101", note: "what an OS and kernel are", tone: "vm", icon: <Monitor /> },
+    { title: "Docker 101", note: "images, containers, Compose", tone: "docker", icon: <Container /> },
+    { title: "Kubernetes 101", note: "pods, Deployments, Services", tone: "k8s", icon: <Boxes /> },
+    { title: "A cloud", note: "managed Kubernetes or containers", tone: "green", icon: <GraduationCap /> },
+  ]}
+/>
+
+### What the market expects
+
+My judgment, not a survey. Check it against job posts you want.
+
+<Compare
+  label="When"
+  columns={[{ title: "What", tone: "violet" }]}
+  rows={[
+    ["Learn now", "Linux CLI, Git, Dockerfiles, Compose, debugging containers, YAML, kubectl get/describe/logs/apply/exec/port-forward/rollout, Pod/Deployment/Service/ConfigMap/Secret, probes and limits"],
+    ["Learn on the job", "Helm/Kustomize, Gateway API, RBAC and policies, GitOps (Argo CD, Flux), monitoring and logging, cluster upgrades, cloud storage and load balancers"],
+    ["Skip for now", "Clusters from scratch, service meshes, writing operators, multi-cluster, Docker Swarm"],
+  ]}
+/>
+
+## DIY: see the difference yourself
+
+Two short experiments: how fast each one starts, and whose kernel it uses. You need **Docker** (see [Docker 101](/tutorials/docker-101#install-docker)) and **Multipass** (see [VM 101](/tutorials/vm-101#diy-walkthrough)).
+
+<Callout kind="warn" title="Windows readers">
+
+Commands assume PowerShell. In PowerShell, plain `curl` is not the real curl, so wherever you see `curl` type `curl.exe`. When a step says to create a file, create it with an editor such as VS Code and save it exactly where the title bar says. Keep the contents exactly as shown: indentation matters in YAML.
+
+</Callout>
+
+<Steps>
+  <Step title="Time a container" tone="docker" checkpoint="It prints hello. The first run includes downloading the small alpine image; run it again and it usually finishes in about a second.">
+
+<Tabs group="os">
+  <Tab label="Windows">
+
+```powershell
+Measure-Command { docker run --rm alpine echo hello }
+```
+
+  </Tab>
+  <Tab label="macOS">
+
+```bash
+time docker run --rm alpine echo hello
+```
+
+  </Tab>
+  <Tab label="Linux">
+
+```bash
+time docker run --rm alpine echo hello
+```
+
+  </Tab>
+</Tabs>
+
+  </Step>
+  <Step title="Time a VM" tone="vm" checkpoint="It takes clearly longer than the container, even after the first download, because a whole OS boots.">
+
+<Tabs group="os">
+  <Tab label="Windows">
+
+```powershell
+Measure-Command { multipass launch --name cmp-vm --cpus 1 --memory 1G --disk 5G }
+```
+
+  </Tab>
+  <Tab label="macOS">
+
+```bash
+time multipass launch --name cmp-vm --cpus 1 --memory 1G --disk 5G
+```
+
+  </Tab>
+  <Tab label="Linux">
+
+```bash
+time multipass launch --name cmp-vm --cpus 1 --memory 1G --disk 5G
+```
+
+  </Tab>
+</Tabs>
+
+  </Step>
+  <Step title="Whose kernel is it?" tone="amber" checkpoint="The VM prints its own Ubuntu kernel version. The container prints the kernel it is sharing: your own on Linux, or Docker Desktop's hidden VM on Windows and macOS.">
+
+```bash
+multipass exec cmp-vm -- uname -r
+docker run --rm alpine uname -r
+```
+
+On Linux or macOS, also run plain `uname -r` to see your own machine's kernel. On Linux it matches the container's line.
+
+  </Step>
+  <Step title="Clean up" tone="red" checkpoint="multipass list no longer shows cmp-vm.">
+
+```bash
+multipass delete cmp-vm --purge
+docker image rm alpine
+multipass list
+```
+
+  </Step>
+</Steps>
+
+If a command fails, the fixes are in the troubleshooting sections of [VM 101](/tutorials/vm-101#troubleshooting) and [Docker 101](/tutorials/docker-101#troubleshooting).
+
+## Sources
+
+- Docker docs, "What is a container?": [docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-container](https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-container/)
+- Kubernetes overview: [kubernetes.io/docs/concepts/overview](https://kubernetes.io/docs/concepts/overview/)
+- Dockershim removal: [kubernetes.io/blog/2022/02/17/dockershim-faq](https://kubernetes.io/blog/2022/02/17/dockershim-faq/)
+- [roadmap.sh Docker](https://roadmap.sh/docker) and [Kubernetes](https://roadmap.sh/kubernetes) roadmaps
+- Videos this was planned around: [Docker vs virtual machines](https://www.youtube.com/watch?v=a1M_thDTqmU) by IBM Technology, [Kubernetes vs Docker](https://www.youtube.com/watch?v=GvbsN5jv-hQ) by NextWork

@@ -1,0 +1,836 @@
+import { Box, Cloud, Container, Cpu, Database, Eye, FileCode, Folder, Gauge, Globe, Hammer, HardDrive, KeyRound, Laptop, Layers, Monitor, Package, Play, Server, Tag, Terminal, Trash2, UploadCloud, UserCog, XCircle } from "lucide-react";
+import ContainerLifecycle from "@/components/tutorials/infra/ContainerLifecycle";
+import LayerCacheDemo from "@/components/tutorials/infra/LayerCacheDemo";
+import RoadmapChecklist from "@/components/tutorials/infra/RoadmapChecklist";
+
+## In one minute
+
+<Logo tech="docker" label className="text-2xl" />
+
+- **Docker** packs your app and everything it needs into one bundle called an **image**.
+- Running an image gives you a **container**: your app, walled off from the rest of the computer.
+- The same image runs the same way on your laptop, a teammate's laptop and a server.
+- It starts in about a second, because no extra operating system has to boot.
+
+## Words you need
+
+<Glossary
+  items={[
+    { term: "Program", means: "A file of instructions sitting on the disk, doing nothing yet. node, python and Chrome are programs.", like: "a recipe written in a book" },
+    { term: "Process", means: "A program that is running right now, using CPU and memory. One program can run as many processes at once.", like: "a dish being cooked from that recipe" },
+    { term: "Kernel", means: "The core of the operating system. It starts every process and decides what each one may see and use.", like: "the kitchen manager who hands out stoves and ingredients" },
+    { term: "Host", means: "The computer Docker runs on: your laptop or a server.", like: "the kitchen itself" },
+    { term: "Image", means: "A read-only bundle: your app plus everything it needs (runtime, libraries, files, settings). It never changes once built.", like: "a sealed, packed lunchbox" },
+    { term: "Container", means: "A running copy of an image. It is a process on the host with walls around it, so it sees only its own files.", like: "the lunchbox opened and being eaten" },
+    { term: "Dockerfile", means: "A text file of steps that tells Docker how to build an image.", like: "the recipe card for packing the lunchbox" },
+    { term: "Registry", means: "An online store of images. Docker Hub is the default one.", like: "an app store, but for images" },
+    { term: "Tag", means: "A label on an image, usually its version: node:24-alpine, hits:1.0.", like: "the edition printed on a book" },
+    { term: "Port", means: "A numbered door into a computer for network traffic. Web servers often listen on 80, 443 or 3000.", like: "a flat number in a building" },
+    { term: "Volume", means: "Storage kept outside the container, so data survives when the container is deleted.", like: "a locker you keep when you change hotel rooms" },
+    { term: "Docker Engine", means: "The background program that builds images and runs containers. The docker command only sends it requests.", like: "the kitchen; the docker command is the waiter taking your order" },
+  ]}
+/>
+
+## Why Docker exists
+
+<Diagram caption="Same code, different surroundings: the classic 'it works on my machine'.">
+  <Row>
+    <Group title="Without Docker" tone="red" icon={<XCircle />}>
+      <Node title="Your laptop" note="Node 24, Redis 7: works" tone="green" icon={<Laptop />} />
+      <Link label="copy only the code" tone="red" />
+      <Node title="The server" note="Node 18, no Redis: crashes" tone="red" icon={<Server />} />
+    </Group>
+    <Group title="With Docker" tone="docker" icon={<Container />}>
+      <Node title="Image" note="code + Node 24 + libraries + settings" tone="docker" icon={<Package />} />
+      <Link label="ship the whole bundle" tone="docker" />
+      <Row>
+        <Node title="Laptop" note="works" tone="green" icon={<Laptop />} />
+        <Node title="Server" note="works" tone="green" icon={<Server />} />
+      </Row>
+    </Group>
+  </Row>
+</Diagram>
+
+<Callout kind="real-world">
+
+Docker's name and logo come from shipping containers. Before them, every cargo was packed differently and every port loaded it differently. One standard box let any ship, crane or truck move anything. A Docker image is that standard box for software: any machine with Docker can run it.
+
+</Callout>
+
+## What a container really is
+
+A container is **not** a small computer. It is an ordinary process on the host, with walls put around it by the kernel.
+
+<Diagram caption="Containers are processes on the same host, sharing its one kernel. The walls decide what each can see and use.">
+  <Group title="Host computer" tone="blue" icon={<Server />}>
+    <Row>
+      <Group title="Container: web" tone="docker" icon={<Box />}>
+        <Node title="node server.js" note="sees only its own files and processes" tone="docker" icon={<Terminal />} />
+      </Group>
+      <Group title="Container: redis" tone="red" icon={<Box />}>
+        <Node title="redis-server" note="has its own network and hostname" tone="red" icon={<Database />} />
+      </Group>
+      <Group title="Normal processes" tone="green" icon={<Monitor />} dashed>
+        <Node title="your browser, editor..." note="no walls" tone="green" />
+      </Group>
+    </Row>
+    <Link dir="both" label="every process asks the same kernel" tone="amber" />
+    <Node title="ONE shared Linux kernel" note="draws the walls, shares CPU and memory" tone="amber" icon={<Cpu />} />
+  </Group>
+</Diagram>
+
+The walls are made of standard Linux features:
+
+<FeatureGrid
+  items={[
+    { title: "Namespaces", tag: "pid, net, mnt, uts, ipc, user", tone: "blue", icon: <Eye />, text: "What it can SEE: its own process list (its app is PID 1), network, filesystem and hostname." },
+    { title: "cgroups", tag: "docker run --memory 256m --cpus 0.5", tone: "amber", icon: <Gauge />, text: "How much it can USE: memory and CPU ceilings. Cross the memory one and it is killed (exit 137)." },
+    { title: "Union filesystem (OverlayFS)", tag: "docker image history IMAGE", tone: "green", icon: <Layers />, text: "Read-only image layers stacked, plus one thin writable layer on top that dies with the container." },
+    { title: "OCI standards", tag: "image spec + runtime spec", tone: "violet", icon: <FileCode />, text: "Open formats: an image built with Docker runs on containerd, Podman or Kubernetes unchanged." },
+  ]}
+/>
+
+<Quiz
+  question="Your laptop runs Linux. Can a container on it run a Windows app natively?"
+  options={["Yes, if the image is a Windows image", "No, containers share the host's Linux kernel", "Yes, with --privileged", "Only with Compose"]}
+  answer={1}
+>
+
+A container is a process on the host kernel. A Windows app needs a Windows kernel, so you need a VM.
+
+</Quiz>
+
+### Docker on Windows and macOS
+
+Windows and macOS have no Linux kernel, so **Docker Desktop quietly runs a small Linux VM** and puts your containers inside it.
+
+<Diagram caption="On a Windows or Mac laptop, all three layers are already stacked.">
+  <Group title="Your laptop: Windows or macOS" tone="blue" icon={<Laptop />}>
+    <Group title="Hidden Linux VM (WSL 2 on Windows)" tone="vm" icon={<Monitor />} dashed>
+      <Node title="Docker Engine" note="runs on the VM's Linux kernel" tech="docker" tone="docker" />
+      <Row>
+        <Node title="web" note="container" tone="docker" icon={<Container />} />
+        <Node title="redis" note="container" tone="docker" icon={<Container />} />
+        <Node title="kind node" note="a Kubernetes node that is itself a container" tone="k8s" tech="k8s" />
+      </Row>
+    </Group>
+  </Group>
+</Diagram>
+
+## Image vs container
+
+<Compare
+  columns={[{ title: "Image", tone: "blue" }, { title: "Container", tone: "docker", tech: "docker" }]}
+  rows={[
+    ["What it is", "Frozen package: app + dependencies + OS files", "A running copy of an image"],
+    ["Code analogy", "A class", "An object"],
+    ["Kitchen analogy", "The sealed tiffin box", "The opened tiffin you are eating"],
+    ["Changes?", "Never (read-only layers)", "Yes, in its writable layer"],
+    ["How many", "One", "As many as you start from it"],
+    ["Made by", <code>docker build</code>, <code>docker run</code>],
+  ]}
+/>
+
+<Flow
+  steps={[
+    { title: "Dockerfile", note: "The recipe you write", tone: "blue", icon: <FileCode /> },
+    { title: "docker build", note: "Bakes layers", tone: "violet", icon: <Hammer /> },
+    { title: "Image", note: "hits:1.0", tone: "docker", icon: <Package /> },
+    { title: "docker push", note: "To a registry", tone: "amber", icon: <UploadCloud /> },
+    { title: "docker run", note: "Anywhere with Docker", tone: "green", icon: <Play /> },
+  ]}
+/>
+
+## How Docker works
+
+<Diagram caption="You type commands; Docker Engine does the work and talks to the registry.">
+  <Row>
+    <Node title="docker CLI" note="what you type: docker build, docker run" tone="blue" icon={<Terminal />} />
+    <Link dir="right" label="sends requests" tone="blue" />
+    <Group title="Docker Engine (on the host)" tone="docker" icon={<Container />}>
+      <Node title="Images" note="stored on your disk" tone="violet" icon={<Package />} />
+      <Node title="Containers" note="running processes" tone="docker" icon={<Box />} />
+    </Group>
+    <Link dir="right" label="pull / push" tone="amber" />
+    <Node title="Registry" note="Docker Hub, GHCR, ECR..." tone="amber" icon={<Cloud />} />
+  </Row>
+</Diagram>
+
+What `docker run nginx` actually does:
+
+<Flow
+  direction="vertical"
+  steps={[
+    { title: "Find the image", note: "is nginx on this computer?", tone: "blue", icon: <Package /> },
+    { title: "Pull it if missing", note: "download its layers from Docker Hub", tone: "amber", icon: <Cloud /> },
+    { title: "Create the container", note: "a thin writable layer on top + its own walls", tone: "violet", icon: <Box /> },
+    { title: "Start the process", note: "runs the image's start command", tone: "green", icon: <Play /> },
+  ]}
+/>
+
+## Dockerfile: the recipe
+
+```dockerfile
+# Annotated example, not the walkthrough file
+FROM node:24-alpine
+WORKDIR /app
+COPY package.json ./
+RUN npm install --omit=dev
+COPY server.js ./
+USER node
+EXPOSE 3000
+CMD ["node", "server.js"]
+```
+
+<Compare
+  label="Instruction"
+  columns={[{ title: "What it does", tone: "blue" }, { title: "When", tone: "amber" }]}
+  rows={[
+    ["FROM", "Base image to start from (alpine = small)", "Build"],
+    ["WORKDIR", "Folder later lines work in (created if missing)", "Build + run"],
+    ["COPY", "Files from your project into the image", "Build"],
+    ["RUN", "Runs a command; the result is saved as a layer", "Build, once"],
+    ["ENV / ARG", "ENV: variable at build and run. ARG: build only", "Build (+ run)"],
+    ["USER", "Switch away from root, so a bug has fewer powers", "Run"],
+    ["EXPOSE", "Documents the port. Does NOT publish it", "Docs only"],
+    ["CMD", "What starts every time a container starts (use list form)", "Run, every start"],
+  ]}
+/>
+
+<Callout kind="warn">
+
+**RUN vs CMD:** `RUN` happens once at build (install packages). `CMD` happens at every start (launch the server). Put `npm start` in a `RUN` and the build never finishes.
+
+</Callout>
+
+### Layers and the build cache
+
+- Every `FROM`, `COPY` and `RUN` makes a **layer**, and Docker caches it.
+- If one layer changes, **every layer after it rebuilds**.
+- So: copy `package.json` and install first, copy your code last. Code edits then skip the slow install.
+
+<LayerCacheDemo />
+
+<Quiz
+  question="You change one line in server.js. Which order rebuilds fastest?"
+  options={["COPY . . then RUN npm install", "COPY package*.json, RUN npm install, then COPY . .", "RUN npm install then COPY . .", "Order does not matter"]}
+  answer={1}
+>
+
+The install layer only depends on `package.json`, so it stays cached. Only the last `COPY` reruns.
+
+</Quiz>
+
+### Smaller images: .dockerignore and multi-stage
+
+- **`.dockerignore`** keeps `node_modules`, `.git` and `.env` out of the build: faster builds, no leaked secrets.
+- **Multi-stage**: build in a fat image, ship only the result in a clean one. No compilers or dev tools in production.
+
+```dockerfile
+# Illustration only: build in one stage, ship from another
+FROM node:24-alpine AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+FROM node:24-alpine
+WORKDIR /app
+COPY --from=build /app/dist ./dist
+USER node
+CMD ["node", "dist/server.js"]
+```
+
+## Storage: volumes and bind mounts
+
+<Diagram caption="Only the writable layer dies with docker rm.">
+  <Node title="Container" note="writes to /tmp, /data, /app/src" tech="docker" tone="docker" />
+  <Link label="where do the files go?" tone="docker" />
+  <Row>
+    <Group title="Writable layer" tone="red" icon={<Trash2 />}>
+      <Node title="Deleted with the container" note="scratch files only" tone="red" />
+    </Group>
+    <Group title="Named volume" tone="green" icon={<Database />}>
+      <Node title="-v hits-data:/data" note="Docker manages it. Survives rm. For databases" tone="green" />
+    </Group>
+    <Group title="Bind mount" tone="blue" icon={<Folder />}>
+      <Node title="-v ./src:/app/src" note="Your own folder. Live code edits in dev" tone="blue" />
+    </Group>
+  </Row>
+</Diagram>
+
+## Networks and ports
+
+<Diagram caption="Exactly what you build in the walkthrough.">
+  <Row>
+    <Node title="Your browser" note="localhost:8080" tone="blue" icon={<Globe />} />
+    <Link dir="right" label="-p 8080:3000" tone="amber" />
+    <Group title="Compose network hits_default (has DNS)" tone="docker" dashed>
+      <Row>
+        <Node title="web" note="listens on :3000" tone="docker" tech="docker" />
+        <Link dir="right" label="redis://redis:6379" tone="red" />
+        <Node title="redis" note=":6379, no -p" tone="red" icon={<Database />} />
+      </Row>
+      <Node title="volume hits-data" note="Redis data survives restarts" tone="green" icon={<HardDrive />} />
+    </Group>
+  </Row>
+</Diagram>
+
+- `-p 8080:3000` reads **host:container**. Forget `-p` and the app runs, but nothing outside Docker reaches it.
+- Containers on the same network find each other **by name** (`redis`), never by IP.
+- Publish only what the outside needs. Redis has no `-p`, and that is a security feature.
+
+## Compose, registries and tags
+
+- **Compose**: all services, networks and volumes in one `compose.yaml`, started with `docker compose up`. Right for local dev and single-server apps. Not a cluster manager.
+- **Registry**: where images live (Docker Hub, GHCR, ECR, ...).
+
+<Diagram caption="Reading an image name.">
+  <Row>
+    <Node title="ghcr.io" note="registry (default: Docker Hub)" tone="amber" icon={<Cloud />} />
+    <Link dir="right" tone="amber" />
+    <Node title="akshit" note="user or org" tone="violet" icon={<UserCog />} />
+    <Link dir="right" tone="violet" />
+    <Node title="hits" note="repository" tone="docker" icon={<Package />} />
+    <Link dir="right" tone="docker" />
+    <Node title=":1.0" note="tag = a movable label" tone="green" icon={<Tag />} />
+  </Row>
+</Diagram>
+
+<Callout kind="warn">
+
+`latest` is just a tag, not "the newest". It can point somewhere else tomorrow. Deploy explicit versions or commit hashes.
+
+</Callout>
+
+## Habits worth having from day one
+
+<Compare
+  label="Habit"
+  columns={[{ title: "Why", tone: "green" }]}
+  rows={[
+    ["Run as non-root (USER)", "A hacked app gets fewer powers"],
+    ["Small, pinned base image", "Less to download, less to attack, same build every time"],
+    ["No secrets in the image", "Anyone with the image can read every layer. Pass them at run time"],
+    ["Add a HEALTHCHECK", "Lets Docker, Compose and Kubernetes tell running from working"],
+    ["Write a .dockerignore", "Faster builds, nothing private copied in"],
+    ["Least-changing lines first", "Better cache hits, faster rebuilds"],
+    ["Scan images", <span><code>docker scout quickview IMAGE</code> or any scanner: flags known CVEs</span>],
+    ["Lockfile + npm ci", "Same dependency versions everywhere"],
+  ]}
+/>
+
+## The life of a container
+
+Press the commands. Greyed-out ones are not allowed in the current state.
+
+<ContainerLifecycle />
+
+<Callout kind="insight">
+
+`docker stop` sends SIGTERM, waits 10 s, then kills. Kubernetes does the same on every rollout (30 s by default). Apps that ignore SIGTERM drop requests on every deploy.
+
+</Callout>
+
+## Command cheat sheet
+
+<Compare
+  label="Command"
+  columns={[{ title: "What it does", tone: "docker", tech: "docker" }]}
+  rows={[
+    ["docker build -t name:tag .", "Build an image from ./Dockerfile"],
+    ["docker images / docker pull / docker push", "List / download / upload images"],
+    ["docker run -d --name n -p 8080:3000 img", "Start in the background, publish a port"],
+    ["docker ps (-a)", "Running containers (-a: stopped too)"],
+    ["docker logs -f n", "Follow a container's output"],
+    ["docker exec -it n sh", "Shell inside a running container"],
+    ["docker stop n / docker rm -f n", "Stop politely / stop and delete"],
+    ["docker inspect n", "Everything Docker knows, as JSON"],
+    ["docker compose up -d / down", "Start / remove all services (volumes kept)"],
+    ["docker compose down -v", "Also delete volumes (your data)"],
+    ["docker system df", "How much disk Docker uses"],
+  ]}
+/>
+
+## Your Docker roadmap
+
+Topics from the [roadmap.sh Docker roadmap](https://roadmap.sh/docker): what this page covers, and what to learn next. Ticks stay in your browser.
+
+<RoadmapChecklist only="docker" />
+
+## DIY walkthrough
+
+You will containerize a tiny web app called `hits` that counts page views in Redis (a small, fast database), run it with plain Docker, then with Docker Compose.
+
+<Callout kind="warn" title="Windows readers">
+
+Commands assume PowerShell. In PowerShell, plain `curl` is not the real curl, so wherever you see `curl` type `curl.exe`. When a step says to create a file, create it with an editor such as VS Code and save it exactly where the title bar says. Keep the contents exactly as shown: indentation matters in YAML.
+
+</Callout>
+
+### Install Docker
+
+<Tabs group="os">
+  <Tab label="Windows">
+
+Docker Desktop on Windows runs on WSL 2 and needs hardware virtualization turned on. Docker's install page lists Windows 21H2 or newer. Check virtualization first: open Task Manager, go to the Performance tab, pick CPU, and look for "Virtualization: Enabled".
+
+Install Docker Desktop from [docs.docker.com/desktop/setup/install/windows-install](https://docs.docker.com/desktop/setup/install/windows-install/) and follow its WSL 2 option. If you work for a company, check Docker's current terms before using Docker Desktop at work.
+
+  </Tab>
+  <Tab label="macOS">
+
+Install Docker Desktop from [docs.docker.com/desktop/setup/install/mac-install](https://docs.docker.com/desktop/setup/install/mac-install/) and start it. Check Docker's current terms if you use it for a company.
+
+  </Tab>
+  <Tab label="Linux">
+
+Docker's own convenience script is the quickest route. Its page says the script is only recommended for testing and development, which is exactly what we are doing. The second block lets you run `docker` without `sudo`.
+
+```bash
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+```
+
+```bash
+sudo groupadd docker
+sudo usermod -aG docker $USER
+newgrp docker
+```
+
+  </Tab>
+</Tabs>
+
+<Steps>
+  <Step title="Check that Docker works" tone="blue" checkpoint="docker version shows both a Client and a Server section. If Server is missing, Docker is not running yet.">
+
+Start Docker Desktop (Windows and macOS) and wait until it says it is running. Then:
+
+```bash
+docker version
+```
+
+  </Step>
+  <Step title="Create the project folder" tone="blue" checkpoint="Your terminal is now inside an empty folder called hits.">
+
+```bash
+mkdir hits
+cd hits
+```
+
+Every file below is named in its title bar, like `hits/server.js`. Create it inside the `hits` folder at that path. Run all commands from inside `hits/`.
+
+  </Step>
+</Steps>
+
+### Build and run hits
+
+First the application files. They are small on purpose.
+
+The app is a tiny web server. `GET /` adds one to a counter stored in Redis and returns it, along with the version and the name of the machine that answered. `GET /healthz` says the process is alive. It also stops cleanly when asked to, which makes rollouts quick later.
+
+```javascript
+// file: hits/server.js
+import { createServer } from "node:http";
+import { hostname } from "node:os";
+import { createClient } from "redis";
+
+const PORT = 3000;
+const VERSION = process.env.VERSION ?? "dev";
+const redis = createClient({ url: process.env.REDIS_URL ?? "redis://localhost:6379" });
+redis.on("error", (err) => console.error("redis error:", err.message));
+await redis.connect();
+
+const server = createServer(async (req, res) => {
+  if (req.url === "/healthz") {
+    res.writeHead(200).end("ok\n");
+    return;
+  }
+  if (req.url !== "/") {
+    res.writeHead(404).end("not found\n");
+    return;
+  }
+  try {
+    const hits = await redis.incr("hits");
+    res.writeHead(200, { "content-type": "text/plain" });
+    res.end(`hits: ${hits}, version: ${VERSION}, served by: ${hostname()}\n`);
+  } catch {
+    res.writeHead(503).end("redis unavailable\n");
+  }
+});
+
+server.listen(PORT, "0.0.0.0", () => console.log(`hits ${VERSION} listening on ${PORT}`));
+
+process.on("SIGTERM", () => {
+  server.close(() => process.exit(0));
+});
+```
+
+```json
+// file: hits/package.json
+{
+  "name": "hits",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "redis": "^5.0.0"
+  }
+}
+```
+
+```dockerfile
+// file: hits/Dockerfile
+FROM node:24-alpine
+ARG VERSION=dev
+ENV VERSION=$VERSION NODE_ENV=production
+WORKDIR /app
+COPY package.json ./
+RUN npm install --omit=dev
+COPY server.js ./
+USER node
+EXPOSE 3000
+HEALTHCHECK --interval=10s --timeout=3s CMD wget -qO- http://127.0.0.1:3000/healthz || exit 1
+CMD ["node", "server.js"]
+```
+
+```text
+# file: hits/.dockerignore
+node_modules
+npm-debug.log
+.git
+.env
+Dockerfile
+compose.yaml
+k8s
+```
+
+<Callout kind="tip">
+
+Real projects commit a lockfile (`package-lock.json`) and install with `npm ci`, which gives the exact same packages every time. This tutorial skips the lockfile so you do not need Node on your machine, and uses `npm install` instead.
+
+</Callout>
+
+```yaml
+# file: hits/compose.yaml
+services:
+  web:
+    build:
+      context: .
+      args:
+        VERSION: "1.0"
+    ports:
+      - "8080:3000"
+    environment:
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      redis:
+        condition: service_healthy
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - hits-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+volumes:
+  hits-data:
+```
+
+<Steps>
+  <Step title="Peek at the shared kernel" tone="green" checkpoint="A kernel version prints. On Windows and macOS it is a Linux kernel, not the one your computer runs: Docker started a hidden Linux VM. On Linux it matches the kernel of your own machine, because nothing was virtualised.">
+
+This pulls a tiny image, runs one command in a container, and removes the container afterwards.
+
+```bash
+docker run --rm alpine uname -r
+```
+
+If you did [VM 101](/tutorials/vm-101), compare it with the kernel line from inside the VM. On a Linux host, compare it with plain `uname -r`. A container does not have a kernel of its own.
+
+  </Step>
+  <Step title="Build the image" tone="green" checkpoint="The build ends without errors, and docker images lists hits with tag 1.0.">
+
+```bash
+docker build -t hits:1.0 --build-arg VERSION=1.0 .
+docker images hits
+```
+
+  </Step>
+  <Step title="Run Redis and the app on one network" tone="green" checkpoint="docker ps lists two running containers, cache and web, and the web one shows 0.0.0.0:8080->3000/tcp.">
+
+A user-defined network gives you name lookup: the app will reach Redis simply as `cache`.
+
+```bash
+docker network create hits-net
+docker run -d --name cache --network hits-net redis:7-alpine
+docker run -d --name web --network hits-net -p 8080:3000 -e REDIS_URL=redis://cache:6379 hits:1.0
+docker ps
+```
+
+  </Step>
+  <Step title="Talk to it" tone="green" checkpoint="The first call prints hits: 1 with version: 1.0 and a short hexadecimal name. Each call raises the number by one. /healthz prints ok.">
+
+```bash
+curl http://localhost:8080
+curl http://localhost:8080
+curl http://localhost:8080/healthz
+```
+
+  </Step>
+  <Step title="Look around inside" tone="green" checkpoint="The logs show the line 'hits 1.0 listening on 3000'. whoami prints node, which proves the app is not running as root, and the last command prints 1.0.">
+
+```bash
+docker logs web
+docker exec web whoami
+docker exec web sh -c 'echo $VERSION'
+```
+
+  </Step>
+  <Step title="Rebuild and watch the cache" tone="green" checkpoint="In the second build output most steps say CACHED. Only the COPY server.js step and later ones run again. Order matters, just like the demo showed.">
+
+Open `hits/server.js`, add a harmless comment line at the bottom and save. Then build again with plain progress output so you can read each step.
+
+```bash
+docker build --progress=plain -t hits:1.0 --build-arg VERSION=1.0 .
+```
+
+  </Step>
+  <Step title="Stop the manual containers and switch to Compose" tone="green" checkpoint="docker compose ps shows web and redis running, and web is healthy. The counter starts again at 1 because this is a fresh Redis.">
+
+We remove the hand-made containers first because Compose wants the same port, 8080. Then one file does the work of all those commands.
+
+```bash
+docker rm -f web cache
+docker network rm hits-net
+docker compose up -d --build --wait
+docker compose ps
+curl http://localhost:8080
+```
+
+  </Step>
+  <Step title="Prove the volume keeps your data" tone="green" checkpoint="After the restart the next call prints 2, continuing from the call you made before, because the volume survived. After down -v and a fresh up, the number is 1 again: you deleted the volume.">
+
+```bash
+docker compose down
+docker compose up -d --wait
+curl http://localhost:8080
+docker compose down -v
+docker compose up -d --wait
+curl http://localhost:8080
+docker compose down -v
+```
+
+  </Step>
+</Steps>
+
+### Clean up
+
+<Callout kind="tip" title="Going on to Kubernetes 101?">
+
+Stop here and keep the `hits` folder and the `hits:1.0` image. Kubernetes 101 reuses them. Run only the first step below.
+
+</Callout>
+
+<Steps>
+  <Step title="Stop the containers" tone="amber" checkpoint="docker ps shows nothing from this tutorial.">
+
+```bash
+docker compose down -v
+docker ps
+```
+
+  </Step>
+  <Step title="Delete the images and the folder" tone="amber" checkpoint="docker images no longer lists hits, hits-web or redis.">
+
+```bash
+docker image rm hits:1.0 hits-web redis:7-alpine alpine
+```
+
+Then delete the `hits` folder from your file manager or terminal.
+
+  </Step>
+</Steps>
+
+<Callout kind="warn">
+
+Avoid `docker system prune -a --volumes` as a shortcut. It deletes every unused image and every unused volume on your machine, including data from other projects.
+
+</Callout>
+
+## Troubleshooting
+
+Click an entry to open it. Match on the key phrase of your error; the wording shifts a little between versions.
+
+<TroubleGroup title="Installing and starting Docker">
+  <Trouble
+    symptom="WslRegisterDistribution failed with error: 0x80370102"
+    cause="Hardware virtualization is turned off in your BIOS or UEFI, or the Windows Virtual Machine Platform feature is off. Docker Desktop on Windows needs both."
+  >
+
+Restart the PC and open the BIOS or UEFI setup (often Del, F2 or F10 at power-on). Find a setting named Intel Virtualization Technology, VT-x, SVM Mode or AMD-V and enable it. Back in Windows, open PowerShell as administrator:
+
+```powershell
+wsl --install
+wsl --update
+```
+
+Restart if asked, then confirm in Task Manager (Performance, CPU) that Virtualization says Enabled.
+
+  </Trouble>
+  <Trouble
+    symptom="Docker Desktop stays on 'Starting...' and never turns green"
+    cause="WSL is missing, outdated or stuck, or another virtualization tool is holding the hypervisor."
+  >
+
+Update WSL, restart it, then restart Docker Desktop.
+
+```powershell
+wsl --update
+wsl --shutdown
+```
+
+If it still hangs, restart Windows. On a company laptop, a security policy may block WSL, so ask IT.
+
+  </Trouble>
+  <Trouble
+    symptom="Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?"
+    cause="The Docker engine is not running. On Windows the text instead mentions a pipe such as dockerDesktopLinuxEngine, with the same meaning."
+  >
+
+Windows and macOS: start Docker Desktop and wait for it to say it is running. Linux:
+
+```bash
+sudo systemctl start docker
+sudo systemctl enable docker
+```
+
+  </Trouble>
+  <Trouble
+    symptom="permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock"
+    cause="On Linux, only root and members of the docker group may use the socket, and your user is not in it."
+  >
+
+Add yourself to the group and refresh your session. The `docker` group effectively grants root powers, so add only people you trust.
+
+```bash
+sudo usermod -aG docker $USER
+newgrp docker
+docker run hello-world
+```
+
+Log out and back in if a new terminal still complains.
+
+  </Trouble>
+</TroubleGroup>
+
+<TroubleGroup title="Building and running with Docker">
+  <Trouble
+    symptom="curl: (56) Recv failure: Connection reset by peer"
+    cause="You were faster than the app. Docker opens the port the moment the container starts, but Node needs a second to boot and connect to Redis. The door is there before anyone is standing behind it."
+  >
+
+Wait a couple of seconds and run `curl` again. If it keeps failing, the app has stopped, so read its logs.
+
+```bash
+docker ps -a
+docker logs web
+```
+
+  </Trouble>
+  <Trouble
+    symptom="Bind for 0.0.0.0:8080 failed: port is already allocated"
+    cause="Something else is using host port 8080. Often it is the hand-made web container from the plain-Docker steps still running when you start Compose, or an old container from a previous attempt."
+  >
+
+Find and remove the owner, or publish on another port such as `-p 8090:3000`.
+
+```bash
+docker ps
+docker rm -f web
+```
+
+  </Trouble>
+  <Trouble
+    symptom="exec format error"
+    cause="The image was built for a different CPU architecture than your machine, for example an amd64-only image on an Apple Silicon (arm64) laptop. The official images in this tutorial support both, so this usually points at a third-party image."
+  >
+
+Check the architecture and ask for the one you need. Docker can emulate amd64 on arm64, more slowly.
+
+```bash
+docker image inspect IMAGE --format "{{.Architecture}}"
+docker run --platform linux/amd64 IMAGE
+```
+
+  </Trouble>
+  <Trouble
+    symptom="no space left on device"
+    cause="Docker's disk (the VM disk on Windows and macOS) is full of old images, stopped containers and build cache."
+  >
+
+See what uses space, then prune. `docker system prune` removes stopped containers, unused networks, dangling images and build cache. It does not remove volumes unless you add `--volumes`, and `-a` also removes every unused image, so read the prompt before saying yes.
+
+```bash
+docker system df
+docker system prune
+```
+
+  </Trouble>
+  <Trouble
+    symptom="toomanyrequests: You have reached your pull rate limit"
+    cause="Docker Hub limits how many images an anonymous or free account may pull in a period, and your network, such as a shared office or college, has used it up."
+  >
+
+Wait and retry, or sign in, which usually gives a higher allowance. Check Docker's current limits on its site.
+
+```bash
+docker login
+```
+
+  </Trouble>
+  <Trouble
+    symptom="connect ECONNREFUSED 127.0.0.1:6379"
+    cause="The app cannot reach Redis. Inside a container, 127.0.0.1 is the container itself, not Redis. This is what you get if REDIS_URL is missing, because the app falls back to localhost."
+  >
+
+Make sure both containers share a network and the URL uses the container name.
+
+```bash
+docker run -d --name web --network hits-net -p 8080:3000 -e REDIS_URL=redis://cache:6379 hits:1.0
+```
+
+With Compose, check that the Redis service is named `redis` and the environment line matches. Some Node versions hide the address and print only AggregateError, so the cause is the same.
+
+  </Trouble>
+  <Trouble
+    symptom="dependency failed to start: container hits-redis-1 is unhealthy"
+    cause="Compose waited for Redis to pass its health check and it never did. Redis may have crashed, or the health check command is wrong."
+  >
+
+Read Redis's own output and fix what it complains about.
+
+```bash
+docker compose logs redis
+docker compose down -v
+docker compose up -d --wait
+```
+
+  </Trouble>
+</TroubleGroup>
+
+## Next steps and sources
+
+- Next: [Kubernetes 101](/tutorials/kubernetes-101), to run this same app on a cluster.
+- Compare all three: [Docker vs Kubernetes vs VM](/tutorials/docker-vs-kubernetes-vs-vm).
+- Official guide: [docs.docker.com/get-started](https://docs.docker.com/get-started/) (the "What is a container?" and "What is an image?" pages are short and good).
+- [roadmap.sh Docker roadmap](https://roadmap.sh/docker)
+- Videos this was planned around: [Docker tutorial](https://www.youtube.com/watch?v=DQdB7wFEygo) by The Coding Sloth, [Docker vs virtual machines](https://www.youtube.com/watch?v=a1M_thDTqmU) by IBM Technology

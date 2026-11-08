@@ -8,14 +8,21 @@
 
 /* Raw palette, light. */
 html {
+  /* Fixed light surface behind command-reference logos, same in both themes. */
   --cmd-logo-chip: #fffdf8;
-  --tut-blue: #1d4ed8;
-  --tut-violet: #6d28d9;
-  --tut-green: #15803d;
-  --tut-amber: #92400e;
-  --tut-pink: #be185d;
-  --tut-cyan: #0e7490;
-  --tut-red: #b91c1c;
+  /* Tutorial palette ("signal"): its own hues, not the blog's. */
+  --tut-blue: #0369a1;
+  --tut-violet: #7c3aed;
+  --tut-green: #047857;
+  --tut-amber: #a15c07;
+  --tut-pink: #c0266d;
+  --tut-cyan: #0f766e;
+  --tut-red: #c2410c;
+  --tut-docker: #0b6bcb;
+  --tut-k8s: #2950b8;
+  --tut-vm: #7c3aed;
+  --tut-term: #b4234f;
+  --tut-glow-amt: 0%;
 
   /* VS Code Light+ feel. */
   --code-bg: #fff;
@@ -33,13 +40,18 @@ html {
 /* Raw palette, dark: the OS asks for it and the reader has not forced light. */
 @media (prefers-color-scheme: dark) {
   html:not([data-blog-theme="light"]) {
-    --tut-blue: #60a5fa;
-    --tut-violet: #a78bfa;
-    --tut-green: #4ade80;
-    --tut-amber: #fbbf24;
-    --tut-pink: #f472b6;
-    --tut-cyan: #22d3ee;
-    --tut-red: #f87171;
+    --tut-blue: #4cc9f0;
+    --tut-violet: #b388ff;
+    --tut-green: #3ddc97;
+    --tut-amber: #ffc857;
+    --tut-pink: #ff6b9d;
+    --tut-cyan: #00e5d4;
+    --tut-red: #ff7a45;
+    --tut-docker: #2496ed;
+    --tut-k8s: #5b8def;
+    --tut-vm: #b388ff;
+    --tut-term: #ffd166;
+    --tut-glow-amt: 32%;
 
     /* VS Code Dark+ feel. */
     --code-bg: #1e1e1e;
@@ -57,13 +69,18 @@ html {
 
 /* Raw palette, dark: the reader picked dark with the theme toggle. */
 html[data-blog-theme="dark"] {
-  --tut-blue: #60a5fa;
-  --tut-violet: #a78bfa;
-  --tut-green: #4ade80;
-  --tut-amber: #fbbf24;
-  --tut-pink: #f472b6;
-  --tut-cyan: #22d3ee;
-  --tut-red: #f87171;
+  --tut-blue: #4cc9f0;
+  --tut-violet: #b388ff;
+  --tut-green: #3ddc97;
+  --tut-amber: #ffc857;
+  --tut-pink: #ff6b9d;
+  --tut-cyan: #00e5d4;
+  --tut-red: #ff7a45;
+  --tut-docker: #2496ed;
+  --tut-k8s: #5b8def;
+  --tut-vm: #b388ff;
+  --tut-term: #ffd166;
+  --tut-glow-amt: 32%;
   --code-bg: #1e1e1e;
   --code-fg: #d4d4d4;
   --code-gutter: #8b8b8b;
@@ -79,7 +96,12 @@ html[data-blog-theme="dark"] {
 /* A tone paints with --tone (borders, icons, bold text) and --tone-soft (fills). */
 [data-tone] {
   --tone: var(--tone-base);
-  --tone-soft: color-mix(in srgb, var(--tone-base) 12%, transparent);
+  --tone-soft: color-mix(in srgb, var(--tone-base) 14%, transparent);
+  --tone-fill: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--tone-base) 22%, transparent),
+    color-mix(in srgb, var(--tone-base) 6%, transparent)
+  );
 }
 
 [data-tone="blue"] {
@@ -110,6 +132,22 @@ html[data-blog-theme="dark"] {
   --tone-base: var(--tut-red);
 }
 
+[data-tone="docker"] {
+  --tone-base: var(--tut-docker);
+}
+
+[data-tone="k8s"] {
+  --tone-base: var(--tut-k8s);
+}
+
+[data-tone="vm"] {
+  --tone-base: var(--tut-vm);
+}
+
+[data-tone="term"] {
+  --tone-base: var(--tut-term);
+}
+
 /* Numbered walkthrough: the badge number comes from a counter. */
 .tut-steps {
   counter-reset: tut-step;
@@ -134,4 +172,130 @@ html[data-blog-theme="dark"] {
   to {
     stroke-dashoffset: -10;
   }
+}
+
+/* Tutorial surface: true white / true black instead of the blog's paper tones. */
+html:has([data-tutorial-article]) {
+  --blog-paper: #fff;
+  --blog-paper-raised: #f5f6f8;
+  --blog-rule: #e3e5ea;
+}
+
+@media (prefers-color-scheme: dark) {
+  html:has([data-tutorial-article]):not([data-blog-theme="light"]) {
+    --blog-paper: #000;
+    --blog-paper-raised: #0e0f12;
+    --blog-rule: #26282e;
+  }
+}
+
+html:has([data-tutorial-article])[data-blog-theme="dark"] {
+  --blog-paper: #000;
+  --blog-paper-raised: #0e0f12;
+  --blog-rule: #26282e;
+}
+
+[data-tutorial-article] figure svg {
+  max-height: 36rem;
+}
+
+/* Long URLs wrap instead of pushing the page sideways on phones. */
+[data-tutorial-article] a {
+  overflow-wrap: anywhere;
+}
+
+/* Diagram paper: ruled lines with a red margin, like a notebook page. */
+.tut-paper {
+  background-image:
+    linear-gradient(
+      to right,
+      transparent 1.4rem,
+      var(--tut-red) 1.4rem,
+      var(--tut-red) calc(1.4rem + 1.5px),
+      transparent calc(1.4rem + 1.5px)
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 31px,
+      var(--blog-rule) 31px,
+      var(--blog-rule) 32px
+    );
+}
+
+@media (width >= 40rem) {
+  .tut-paper {
+    background-image:
+      linear-gradient(
+        to right,
+        transparent 2.6rem,
+        var(--tut-red) 2.6rem,
+        var(--tut-red) calc(2.6rem + 1.5px),
+        transparent calc(2.6rem + 1.5px)
+      ),
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 31px,
+        var(--blog-rule) 31px,
+        var(--blog-rule) 32px
+      );
+  }
+}
+
+/* Hand-drawn outlines: uneven corner radii read as a pen line, not a ruler. */
+.tut-sketch {
+  border-radius: 18px 225px 15px 255px / 255px 15px 225px 18px;
+}
+
+.tut-sketch-alt {
+  border-radius: 255px 15px 225px / 15px 225px 15px 255px;
+}
+
+.tut-sketch:nth-child(even) {
+  rotate: 0.4deg;
+}
+
+.tut-sketch:nth-child(odd) {
+  rotate: -0.3deg;
+}
+
+/* Highlighter-pen stroke behind a word. */
+.tut-marker {
+  background: linear-gradient(
+    transparent 55%,
+    color-mix(in srgb, var(--tone) 30%, transparent) 55%
+  );
+  padding-inline: 0.15em;
+}
+
+/* Glow on coloured boxes in dark mode only (the light value is transparent). */
+.tut-glow {
+  box-shadow: 0 0 18px color-mix(in srgb, var(--tone) var(--tut-glow-amt), transparent);
+}
+
+/* Term tooltip: shown on hover or keyboard focus, never printed. */
+.tut-term-tip {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.tut-term:is(:hover, :focus-visible) .tut-term-tip {
+  visibility: visible;
+  opacity: 1;
+}
+
+@media print {
+  .tut-term-tip {
+    display: none;
+  }
+}
+
+/* Sticky notes lean a little, alternately. */
+.tut-note:nth-child(odd) {
+  rotate: -0.8deg;
+}
+
+.tut-note:nth-child(even) {
+  rotate: 0.7deg;
 }
