@@ -31,7 +31,14 @@ export default function CommandsIndexPage() {
             >
               <Card className="h-full border-rule bg-paper-raised text-ink transition-colors hover:border-pen dark:border-rule dark:bg-paper-raised dark:text-ink">
                 <CardHeader>
-                  <Image unoptimized src={tool.logo} alt="" width={40} height={40} className="h-10 w-10" />
+                  <Image
+                    unoptimized
+                    src={tool.logo}
+                    alt=""
+                    width={40}
+                    height={40}
+                    className="h-10 w-10"
+                  />
                   <CardTitle className="text-xl">{tool.name}</CardTitle>
                   <CardDescription className="text-ink-muted dark:text-ink-muted">
                     {tool.description}
