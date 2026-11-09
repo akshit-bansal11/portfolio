@@ -1,0 +1,3049 @@
+{
+  "name": "GitHub CLI",
+  "slug": "github",
+  "logo": "https://svgl.app/library/github_light.svg",
+  "accent": "#ffffff",
+  "description": "GitHub on the command line",
+  "categories": [
+    {
+      "title": "GitHub Repository",
+      "commands": [
+        {
+          "command": "gh repo clone <repo>",
+          "description": "Clone a repository locally"
+        },
+        {
+          "command": "gh repo clone <owner/repo>",
+          "description": "Clone a specific owner's repository locally"
+        },
+        {
+          "command": "gh repo clone <owner/repo> <directory>",
+          "description": "Clone a repository into a specified directory"
+        },
+        {
+          "command": "gh repo clone <owner/repo> -- --depth 1",
+          "description": "Perform a shallow clone of a repository"
+        },
+        {
+          "command": "gh repo create",
+          "description": "Create a new repository interactively"
+        },
+        {
+          "command": "gh repo create <name>",
+          "description": "Create a new repository with the specified name"
+        },
+        {
+          "command": "gh repo create --public",
+          "description": "Create a new public repository"
+        },
+        {
+          "command": "gh repo create --private",
+          "description": "Create a new private repository"
+        },
+        {
+          "command": "gh repo create --internal",
+          "description": "Create a new internal repository"
+        },
+        {
+          "command": "gh repo create --source .",
+          "description": "Create a repository from the current local directory"
+        },
+        {
+          "command": "gh repo create --push",
+          "description": "Create a repository and push local commits to it"
+        },
+        {
+          "command": "gh repo create --remote <name>",
+          "description": "Create a repository and set a custom remote name"
+        },
+        {
+          "command": "gh repo create --description \"<description>\"",
+          "description": "Create a repository with a specific description"
+        },
+        {
+          "command": "gh repo create --homepage <url>",
+          "description": "Create a repository with a specified homepage URL"
+        },
+        {
+          "command": "gh repo create --team <name>",
+          "description": "Create a repository and grant access to a specific team"
+        },
+        {
+          "command": "gh repo create --disable-issues",
+          "description": "Create a repository with issues disabled"
+        },
+        {
+          "command": "gh repo create --disable-wiki",
+          "description": "Create a repository with the wiki disabled"
+        },
+        {
+          "command": "gh repo create --include-all-branches",
+          "description": "Create a repository and push all local branches"
+        },
+        {
+          "command": "gh repo create --template <repo>",
+          "description": "Create a new repository using an existing template"
+        },
+        {
+          "command": "gh repo create --clone",
+          "description": "Create a repository and immediately clone it locally"
+        },
+        {
+          "command": "gh repo create --gitignore <template>",
+          "description": "Create a repository with a specific gitignore template"
+        },
+        {
+          "command": "gh repo create --license <license>",
+          "description": "Create a repository with a specific open source license"
+        },
+        {
+          "command": "gh repo create <name> --public --source . --push",
+          "description": "Publish the current directory as a new public repository"
+        },
+        {
+          "command": "gh repo create <name> --private --description \"<description>\"",
+          "description": "Create a private repository with a name and description"
+        },
+        {
+          "command": "gh repo create <name> --public --clone",
+          "description": "Create a public repository and clone it locally"
+        },
+        {
+          "command": "gh repo view",
+          "description": "View details of the current repository"
+        },
+        {
+          "command": "gh repo view <owner/repo>",
+          "description": "View details of a specific repository"
+        },
+        {
+          "command": "gh repo view --web",
+          "description": "Open the current repository in the web browser"
+        },
+        {
+          "command": "gh repo view <owner/repo> --web",
+          "description": "Open a specific repository in the web browser"
+        },
+        {
+          "command": "gh repo view --json <fields>",
+          "description": "Output specific repository details in JSON format"
+        },
+        {
+          "command": "gh repo view --json name,description,url",
+          "description": "Output repository name, description, and URL in JSON"
+        },
+        {
+          "command": "gh repo list",
+          "description": "List repositories owned by the authenticated user"
+        },
+        {
+          "command": "gh repo list <owner>",
+          "description": "List repositories owned by a specific user or org"
+        },
+        {
+          "command": "gh repo list --public",
+          "description": "List only public repositories"
+        },
+        {
+          "command": "gh repo list --private",
+          "description": "List only private repositories"
+        },
+        {
+          "command": "gh repo list --fork",
+          "description": "List only forked repositories"
+        },
+        {
+          "command": "gh repo list --source",
+          "description": "List only non-forked (source) repositories"
+        },
+        {
+          "command": "gh repo list --archived",
+          "description": "List only archived repositories"
+        },
+        {
+          "command": "gh repo list --no-archived",
+          "description": "Exclude archived repositories from the list"
+        },
+        {
+          "command": "gh repo list --language <language>",
+          "description": "List repositories filtered by primary language"
+        },
+        {
+          "command": "gh repo list --topic <topic>",
+          "description": "List repositories filtered by a specific topic"
+        },
+        {
+          "command": "gh repo list --limit <number>",
+          "description": "Limit the number of repositories listed"
+        },
+        {
+          "command": "gh repo list --json <fields>",
+          "description": "Output repository list in JSON format with specific fields"
+        },
+        {
+          "command": "gh repo fork",
+          "description": "Fork the current repository"
+        },
+        {
+          "command": "gh repo fork <repo>",
+          "description": "Fork a specific repository"
+        },
+        {
+          "command": "gh repo fork --clone",
+          "description": "Fork a repository and clone it locally"
+        },
+        {
+          "command": "gh repo fork --remote",
+          "description": "Fork and add a remote for the fork"
+        },
+        {
+          "command": "gh repo fork --remote-name <name>",
+          "description": "Fork and set a custom remote name for the fork"
+        },
+        {
+          "command": "gh repo fork --org <org>",
+          "description": "Fork a repository into a specific organization"
+        },
+        {
+          "command": "gh repo fork --fork-name <name>",
+          "description": "Fork a repository and give the fork a new name"
+        },
+        {
+          "command": "gh repo fork <repo> --clone --remote",
+          "description": "Fork, clone locally, and set up remotes automatically"
+        },
+        {
+          "command": "gh repo delete",
+          "description": "Delete the current repository interactively"
+        },
+        {
+          "command": "gh repo delete <owner/repo>",
+          "description": "Delete a specific repository interactively"
+        },
+        {
+          "command": "gh repo delete <owner/repo> --yes",
+          "description": "Delete a repository bypassing the confirmation prompt"
+        },
+        {
+          "command": "gh repo rename",
+          "description": "Rename the current repository interactively"
+        },
+        {
+          "command": "gh repo rename <new-name>",
+          "description": "Rename the current repository to a new name"
+        },
+        {
+          "command": "gh repo rename <new-name> --repo <owner/repo>",
+          "description": "Rename a specific repository to a new name"
+        },
+        {
+          "command": "gh repo rename <new-name> --yes",
+          "description": "Rename the repository bypassing the confirmation prompt"
+        },
+        {
+          "command": "gh repo edit",
+          "description": "Edit repository settings interactively"
+        },
+        {
+          "command": "gh repo edit --description \"<description>\"",
+          "description": "Update the repository's description"
+        },
+        {
+          "command": "gh repo edit --homepage <url>",
+          "description": "Update the repository's homepage URL"
+        },
+        {
+          "command": "gh repo edit --visibility public",
+          "description": "Change the repository visibility to public"
+        },
+        {
+          "command": "gh repo edit --visibility private",
+          "description": "Change the repository visibility to private"
+        },
+        {
+          "command": "gh repo edit --visibility internal",
+          "description": "Change the repository visibility to internal"
+        },
+        {
+          "command": "gh repo edit --enable-issues",
+          "description": "Enable issues for the repository"
+        },
+        {
+          "command": "gh repo edit --disable-issues",
+          "description": "Disable issues for the repository"
+        },
+        {
+          "command": "gh repo edit --enable-wiki",
+          "description": "Enable the wiki for the repository"
+        },
+        {
+          "command": "gh repo edit --disable-wiki",
+          "description": "Disable the wiki for the repository"
+        },
+        {
+          "command": "gh repo edit --enable-discussions",
+          "description": "Enable discussions for the repository"
+        },
+        {
+          "command": "gh repo edit --disable-discussions",
+          "description": "Disable discussions for the repository"
+        },
+        {
+          "command": "gh repo edit --enable-projects",
+          "description": "Enable projects for the repository"
+        },
+        {
+          "command": "gh repo edit --disable-projects",
+          "description": "Disable projects for the repository"
+        },
+        {
+          "command": "gh repo edit --add-topic <topic>",
+          "description": "Add a topic to the repository"
+        },
+        {
+          "command": "gh repo edit --remove-topic <topic>",
+          "description": "Remove a topic from the repository"
+        },
+        {
+          "command": "gh repo edit --default-branch <branch>",
+          "description": "Set the default branch for the repository"
+        },
+        {
+          "command": "gh repo edit --allow-squash-merge",
+          "description": "Allow squash merging for pull requests"
+        },
+        {
+          "command": "gh repo edit --allow-merge-commit",
+          "description": "Allow merge commits for pull requests"
+        },
+        {
+          "command": "gh repo edit --allow-rebase-merge",
+          "description": "Allow rebase merging for pull requests"
+        },
+        {
+          "command": "gh repo edit --delete-branch-on-merge",
+          "description": "Automatically delete head branches after PR merge"
+        },
+        {
+          "command": "gh repo edit --template",
+          "description": "Mark the repository as a template repository"
+        },
+        {
+          "command": "gh repo edit --enable-auto-merge",
+          "description": "Enable auto-merge functionality for PRs"
+        },
+        {
+          "command": "gh repo archive",
+          "description": "Archive the current repository interactively"
+        },
+        {
+          "command": "gh repo archive <owner/repo>",
+          "description": "Archive a specific repository interactively"
+        },
+        {
+          "command": "gh repo archive <owner/repo> --yes",
+          "description": "Archive a repository bypassing the confirmation prompt"
+        },
+        {
+          "command": "gh repo unarchive",
+          "description": "Unarchive the current repository interactively"
+        },
+        {
+          "command": "gh repo unarchive <owner/repo>",
+          "description": "Unarchive a specific repository interactively"
+        },
+        {
+          "command": "gh repo unarchive <owner/repo> --yes",
+          "description": "Unarchive a repository bypassing the confirmation prompt"
+        },
+        {
+          "command": "gh repo sync",
+          "description": "Sync the local repository with its remote parent"
+        },
+        {
+          "command": "gh repo sync <owner/repo>",
+          "description": "Sync a specific repository with its parent"
+        },
+        {
+          "command": "gh repo sync --branch <branch>",
+          "description": "Sync a specific branch of the repository"
+        },
+        {
+          "command": "gh repo sync --force",
+          "description": "Forcefully sync the repository, overwriting local changes"
+        },
+        {
+          "command": "gh repo sync --source <repo>",
+          "description": "Sync the repository from a specific source repository"
+        },
+        {
+          "command": "gh repo deploy-key list",
+          "description": "List deploy keys for the repository"
+        },
+        {
+          "command": "gh repo deploy-key add <key-file>",
+          "description": "Add a new deploy key from a file"
+        },
+        {
+          "command": "gh repo deploy-key add <key-file> --title \"<title>\"",
+          "description": "Add a new deploy key with a specific title"
+        },
+        {
+          "command": "gh repo deploy-key add <key-file> --allow-write",
+          "description": "Add a deploy key with write access enabled"
+        },
+        {
+          "command": "gh repo deploy-key delete <key-id>",
+          "description": "Delete a deploy key by its ID"
+        }
+      ]
+    },
+    {
+      "title": "GitHub Pull Request",
+      "commands": [
+        {
+          "command": "gh pr list",
+          "description": "List open pull requests for the current repository"
+        },
+        {
+          "command": "gh pr list --state open",
+          "description": "List only open pull requests"
+        },
+        {
+          "command": "gh pr list --state closed",
+          "description": "List only closed (unmerged) pull requests"
+        },
+        {
+          "command": "gh pr list --state merged",
+          "description": "List only merged pull requests"
+        },
+        {
+          "command": "gh pr list --state all",
+          "description": "List all pull requests regardless of state"
+        },
+        {
+          "command": "gh pr list --author <username>",
+          "description": "List pull requests created by a specific user"
+        },
+        {
+          "command": "gh pr list --assignee <username>",
+          "description": "List pull requests assigned to a specific user"
+        },
+        {
+          "command": "gh pr list --label <label>",
+          "description": "List pull requests with a specific label"
+        },
+        {
+          "command": "gh pr list --base <branch>",
+          "description": "List pull requests targeting a specific base branch"
+        },
+        {
+          "command": "gh pr list --head <branch>",
+          "description": "List pull requests originating from a specific head branch"
+        },
+        {
+          "command": "gh pr list --limit <number>",
+          "description": "Limit the number of pull requests displayed"
+        },
+        {
+          "command": "gh pr list --search <query>",
+          "description": "List pull requests matching a search query"
+        },
+        {
+          "command": "gh pr list --web",
+          "description": "Open the list of pull requests in the web browser"
+        },
+        {
+          "command": "gh pr list --json <fields>",
+          "description": "Output pull request details in JSON format"
+        },
+        {
+          "command": "gh pr list --template <template>",
+          "description": "Format the PR list output using a Go template"
+        },
+        {
+          "command": "gh pr list --draft",
+          "description": "List only draft pull requests"
+        },
+        {
+          "command": "gh pr list --repo <owner/repo>",
+          "description": "List pull requests for a specific repository"
+        },
+        {
+          "command": "gh pr view",
+          "description": "View details of the pull request for the current branch"
+        },
+        {
+          "command": "gh pr view <number>",
+          "description": "View details of a specific pull request by number"
+        },
+        {
+          "command": "gh pr view <branch>",
+          "description": "View details of a pull request associated with a branch"
+        },
+        {
+          "command": "gh pr view --web",
+          "description": "Open the current branch's PR in the web browser"
+        },
+        {
+          "command": "gh pr view --web <number>",
+          "description": "Open a specific PR in the web browser"
+        },
+        {
+          "command": "gh pr view --json <fields>",
+          "description": "Output specific details of a PR in JSON format"
+        },
+        {
+          "command": "gh pr view --json <fields> --jq <expression>",
+          "description": "Parse PR JSON output using a jq expression"
+        },
+        {
+          "command": "gh pr view --comments",
+          "description": "View the current branch's PR along with its comments"
+        },
+        {
+          "command": "gh pr view <number> --comments",
+          "description": "View a specific PR and its comments"
+        },
+        {
+          "command": "gh pr create",
+          "description": "Create a new pull request interactively"
+        },
+        {
+          "command": "gh pr create --title \"<title>\"",
+          "description": "Create a pull request with a specific title"
+        },
+        {
+          "command": "gh pr create --body \"<body>\"",
+          "description": "Create a pull request with a specific description body"
+        },
+        {
+          "command": "gh pr create --base <branch>",
+          "description": "Create a pull request targeting a specific base branch"
+        },
+        {
+          "command": "gh pr create --head <branch>",
+          "description": "Create a pull request from a specific head branch"
+        },
+        {
+          "command": "gh pr create --draft",
+          "description": "Create a pull request as a draft"
+        },
+        {
+          "command": "gh pr create --web",
+          "description": "Continue creating the pull request in the web browser"
+        },
+        {
+          "command": "gh pr create --fill",
+          "description": "Automatically fill PR title and body from commit info"
+        },
+        {
+          "command": "gh pr create --fill-verbose",
+          "description": "Fill PR title/body using detailed commit messages"
+        },
+        {
+          "command": "gh pr create --reviewer <username>",
+          "description": "Create a PR and request a review from a specific user"
+        },
+        {
+          "command": "gh pr create --assignee <username>",
+          "description": "Create a PR and assign it to a specific user"
+        },
+        {
+          "command": "gh pr create --label <label>",
+          "description": "Create a PR and attach a specific label"
+        },
+        {
+          "command": "gh pr create --milestone <milestone>",
+          "description": "Create a PR and assign it to a milestone"
+        },
+        {
+          "command": "gh pr create --project <project>",
+          "description": "Create a PR and add it to a project board"
+        },
+        {
+          "command": "gh pr create --repo <owner/repo>",
+          "description": "Create a PR in a different repository"
+        },
+        {
+          "command": "gh pr create --base main --head <branch>",
+          "description": "Create a PR from a specific branch targeting main"
+        },
+        {
+          "command": "gh pr create --base main --head <branch> --title \"<title>\"",
+          "description": "Create a titled PR from a specific branch to main"
+        },
+        {
+          "command": "gh pr create --base main --head <branch> --title \"<title>\" --body \"<body>\"",
+          "description": "Create a fully populated PR from a specific branch to main"
+        },
+        {
+          "command": "gh pr create --base main --head <branch> --title \"<title>\" --body \"<body>\" --draft",
+          "description": "Create a fully populated draft PR to main"
+        },
+        {
+          "command": "gh pr create --base main --head <branch> --title \"<title>\" --body \"<body>\" --reviewer <username>",
+          "description": "Create a PR with details and request a reviewer"
+        },
+        {
+          "command": "gh pr create --base main --head <branch> --title \"<title>\" --body \"<body>\" --label <label>",
+          "description": "Create a PR with details and assign a label"
+        },
+        {
+          "command": "gh pr create --base main --head <branch> --title \"<title>\" --body \"<body>\" --assignee <username>",
+          "description": "Create a PR with details and assign a user"
+        },
+        {
+          "command": "gh pr create --base main --head <branch> --title \"<title>\" --body \"<body>\" --reviewer <username> --assignee <username>",
+          "description": "Create a PR with all details, reviewers, and assignees"
+        },
+        {
+          "command": "gh pr create --title \"<title>\" --body-file <file>",
+          "description": "Create a PR reading the body text from a file"
+        },
+        {
+          "command": "gh pr create --fill --draft",
+          "description": "Quickly create a draft PR using commit info"
+        },
+        {
+          "command": "gh pr merge",
+          "description": "Merge the pull request for the current branch interactively"
+        },
+        {
+          "command": "gh pr merge <number>",
+          "description": "Merge a specific pull request interactively"
+        },
+        {
+          "command": "gh pr merge --merge",
+          "description": "Merge the PR using a standard merge commit"
+        },
+        {
+          "command": "gh pr merge --squash",
+          "description": "Merge the PR by squashing commits"
+        },
+        {
+          "command": "gh pr merge --rebase",
+          "description": "Merge the PR by rebasing commits"
+        },
+        {
+          "command": "gh pr merge --delete-branch",
+          "description": "Merge the PR and delete the local and remote branch"
+        },
+        {
+          "command": "gh pr merge --auto",
+          "description": "Enable auto-merge to trigger when requirements are met"
+        },
+        {
+          "command": "gh pr merge --disable-auto",
+          "description": "Disable previously set auto-merge for the PR"
+        },
+        {
+          "command": "gh pr merge <number> --squash --delete-branch",
+          "description": "Squash merge a specific PR and delete its branch"
+        },
+        {
+          "command": "gh pr merge <number> --merge --delete-branch",
+          "description": "Create a merge commit for a PR and delete its branch"
+        },
+        {
+          "command": "gh pr merge <number> --rebase --delete-branch",
+          "description": "Rebase merge a specific PR and delete its branch"
+        },
+        {
+          "command": "gh pr merge --squash --subject \"<title>\" --body \"<body>\"",
+          "description": "Squash merge with a custom commit title and body"
+        },
+        {
+          "command": "gh pr merge --admin",
+          "description": "Merge a PR using administrator privileges to bypass rules"
+        },
+        {
+          "command": "gh pr close",
+          "description": "Close the pull request for the current branch"
+        },
+        {
+          "command": "gh pr close <number>",
+          "description": "Close a specific pull request without merging"
+        },
+        {
+          "command": "gh pr close <number> --comment \"<comment>\"",
+          "description": "Close a PR and leave a closing comment"
+        },
+        {
+          "command": "gh pr close <number> --delete-branch",
+          "description": "Close a PR and delete its associated branch"
+        },
+        {
+          "command": "gh pr close <number> --comment \"<comment>\" --delete-branch",
+          "description": "Close a PR, leave a comment, and delete the branch"
+        },
+        {
+          "command": "gh pr reopen",
+          "description": "Reopen a previously closed pull request for the current branch"
+        },
+        {
+          "command": "gh pr reopen <number>",
+          "description": "Reopen a specific closed pull request"
+        },
+        {
+          "command": "gh pr reopen <number> --comment \"<comment>\"",
+          "description": "Reopen a pull request and add a comment"
+        },
+        {
+          "command": "gh pr checkout",
+          "description": "Checkout the pull request for the current branch"
+        },
+        {
+          "command": "gh pr checkout <number>",
+          "description": "Checkout a specific pull request branch locally"
+        },
+        {
+          "command": "gh pr checkout <number> --branch <name>",
+          "description": "Checkout a PR into a specific new local branch name"
+        },
+        {
+          "command": "gh pr checkout <number> --force",
+          "description": "Force checkout a PR, overwriting local changes"
+        },
+        {
+          "command": "gh pr checkout <number> --detach",
+          "description": "Checkout a PR in a detached HEAD state"
+        },
+        {
+          "command": "gh pr checkout <number> --recurse-submodules",
+          "description": "Checkout a PR and update its submodules"
+        },
+        {
+          "command": "gh pr diff",
+          "description": "View the diff of the PR for the current branch"
+        },
+        {
+          "command": "gh pr diff <number>",
+          "description": "View the code diff for a specific pull request"
+        },
+        {
+          "command": "gh pr diff --patch",
+          "description": "Output the PR diff in patch format"
+        },
+        {
+          "command": "gh pr diff --name-only",
+          "description": "List only the names of files changed in the PR"
+        },
+        {
+          "command": "gh pr diff --color always",
+          "description": "Force colored output for the PR diff"
+        },
+        {
+          "command": "gh pr diff --color never",
+          "description": "Disable colored output for the PR diff"
+        },
+        {
+          "command": "gh pr diff <number> --patch",
+          "description": "Get the diff of a specific PR in patch format"
+        },
+        {
+          "command": "gh pr edit",
+          "description": "Edit details of the current branch's PR interactively"
+        },
+        {
+          "command": "gh pr edit <number>",
+          "description": "Edit a specific pull request interactively"
+        },
+        {
+          "command": "gh pr edit --title \"<title>\"",
+          "description": "Change the title of the pull request"
+        },
+        {
+          "command": "gh pr edit --body \"<body>\"",
+          "description": "Update the description body of the pull request"
+        },
+        {
+          "command": "gh pr edit --base <branch>",
+          "description": "Change the base branch the pull request is targeting"
+        },
+        {
+          "command": "gh pr edit --add-reviewer <username>",
+          "description": "Request a review from a specific user on the PR"
+        },
+        {
+          "command": "gh pr edit --remove-reviewer <username>",
+          "description": "Remove a review request for a specific user"
+        },
+        {
+          "command": "gh pr edit --add-assignee <username>",
+          "description": "Assign the pull request to a specific user"
+        },
+        {
+          "command": "gh pr edit --remove-assignee <username>",
+          "description": "Unassign a specific user from the pull request"
+        },
+        {
+          "command": "gh pr edit --add-label <label>",
+          "description": "Add a label to the pull request"
+        },
+        {
+          "command": "gh pr edit --remove-label <label>",
+          "description": "Remove a label from the pull request"
+        },
+        {
+          "command": "gh pr edit --add-project <project>",
+          "description": "Add the pull request to a specific project"
+        },
+        {
+          "command": "gh pr edit --remove-project <project>",
+          "description": "Remove the pull request from a project"
+        },
+        {
+          "command": "gh pr edit --milestone <milestone>",
+          "description": "Set the milestone for the pull request"
+        },
+        {
+          "command": "gh pr edit --ready",
+          "description": "Mark a draft pull request as ready for review"
+        },
+        {
+          "command": "gh pr edit --draft",
+          "description": "Convert a standard pull request back to a draft"
+        },
+        {
+          "command": "gh pr edit <number> --title \"<title>\" --body \"<body>\"",
+          "description": "Edit the title and body of a specific PR"
+        },
+        {
+          "command": "gh pr edit <number> --add-label <label> --add-reviewer <username>",
+          "description": "Add a label and reviewer to a specific PR"
+        },
+        {
+          "command": "gh pr review",
+          "description": "Add a review to the pull request for the current branch"
+        },
+        {
+          "command": "gh pr review <number>",
+          "description": "Add a review to a specific pull request"
+        },
+        {
+          "command": "gh pr review --approve",
+          "description": "Approve the pull request"
+        },
+        {
+          "command": "gh pr review --request-changes",
+          "description": "Request changes on the pull request"
+        },
+        {
+          "command": "gh pr review --comment",
+          "description": "Submit a general comment review on the pull request"
+        },
+        {
+          "command": "gh pr review --body \"<body>\"",
+          "description": "Submit a review with specific body text"
+        },
+        {
+          "command": "gh pr review <number> --approve",
+          "description": "Approve a specific pull request"
+        },
+        {
+          "command": "gh pr review <number> --request-changes --body \"<body>\"",
+          "description": "Request changes on a specific PR with an explanation"
+        },
+        {
+          "command": "gh pr review <number> --comment --body \"<body>\"",
+          "description": "Leave a review comment on a specific PR"
+        },
+        {
+          "command": "gh pr review <number> --approve --body \"<body>\"",
+          "description": "Approve a specific PR and leave a comment"
+        },
+        {
+          "command": "gh pr checks",
+          "description": "Show CI status for the current branch's PR"
+        },
+        {
+          "command": "gh pr checks <number>",
+          "description": "Show CI status for a specific PR"
+        },
+        {
+          "command": "gh pr checks --watch",
+          "description": "Watch PR checks and wait until they complete"
+        },
+        {
+          "command": "gh pr checks --fail-fast",
+          "description": "Exit the watch process immediately if any check fails"
+        },
+        {
+          "command": "gh pr checks --required",
+          "description": "Show status only for required checks"
+        },
+        {
+          "command": "gh pr checks --interval <seconds>",
+          "description": "Set the refresh interval when watching checks"
+        },
+        {
+          "command": "gh pr checks <number> --watch",
+          "description": "Watch the CI checks for a specific PR"
+        },
+        {
+          "command": "gh pr checks <number> --watch --fail-fast",
+          "description": "Watch checks for a PR and exit quickly on failure"
+        },
+        {
+          "command": "gh pr comment",
+          "description": "Add a comment to the current branch's PR"
+        },
+        {
+          "command": "gh pr comment <number>",
+          "description": "Add a comment to a specific PR interactively"
+        },
+        {
+          "command": "gh pr comment --body \"<comment>\"",
+          "description": "Add a specific comment to the current PR"
+        },
+        {
+          "command": "gh pr comment <number> --body \"<comment>\"",
+          "description": "Add a specific comment text to a specific PR"
+        },
+        {
+          "command": "gh pr comment <number> --body-file <file>",
+          "description": "Add a comment to a PR using the contents of a file"
+        },
+        {
+          "command": "gh pr comment <number> --edit-last",
+          "description": "Edit your last comment on a specific PR"
+        },
+        {
+          "command": "gh pr comment <number> --delete-last",
+          "description": "Delete your last comment on a specific PR"
+        },
+        {
+          "command": "gh pr comment <number> --web",
+          "description": "Open a specific PR in the browser to leave a comment"
+        },
+        {
+          "command": "gh pr ready",
+          "description": "Mark the current draft PR as ready for review"
+        },
+        {
+          "command": "gh pr ready <number>",
+          "description": "Mark a specific draft PR as ready for review"
+        },
+        {
+          "command": "gh pr ready <number> --undo",
+          "description": "Convert a specific PR back to draft status"
+        },
+        {
+          "command": "gh pr lock",
+          "description": "Lock conversation on the current branch's PR"
+        },
+        {
+          "command": "gh pr lock <number>",
+          "description": "Lock conversation on a specific PR"
+        },
+        {
+          "command": "gh pr lock <number> --reason off-topic",
+          "description": "Lock a PR conversation as off-topic"
+        },
+        {
+          "command": "gh pr lock <number> --reason resolved",
+          "description": "Lock a PR conversation because it is resolved"
+        },
+        {
+          "command": "gh pr lock <number> --reason spam",
+          "description": "Lock a PR conversation due to spam"
+        },
+        {
+          "command": "gh pr lock <number> --reason too heated",
+          "description": "Lock a PR conversation because it is too heated"
+        },
+        {
+          "command": "gh pr unlock",
+          "description": "Unlock conversation on the current branch's PR"
+        },
+        {
+          "command": "gh pr unlock <number>",
+          "description": "Unlock conversation on a specific PR"
+        },
+        {
+          "command": "gh project list",
+          "description": "List all projects for the current repository or organization"
+        },
+        {
+          "command": "gh project list --owner <owner>",
+          "description": "List projects for a specific user or organization"
+        },
+        {
+          "command": "gh project list --format json",
+          "description": "List projects and output the result in JSON format"
+        },
+        {
+          "command": "gh project view <number>",
+          "description": "View details of a specific project by number"
+        },
+        {
+          "command": "gh project view <number> --owner <owner>",
+          "description": "View a project owned by a specific user or organization"
+        },
+        {
+          "command": "gh project view <number> --format json",
+          "description": "View details of a specific project in JSON format"
+        },
+        {
+          "command": "gh project create --owner <owner> --title \"<title>\"",
+          "description": "Create a new project for a specific owner with a title"
+        },
+        {
+          "command": "gh project edit <number> --owner <owner> --title \"<title>\"",
+          "description": "Rename or edit the title of an existing project"
+        },
+        {
+          "command": "gh project delete <number> --owner <owner>",
+          "description": "Delete a specific project permanently"
+        },
+        {
+          "command": "gh project copy <number> --source-owner <owner> --target-owner <owner> --title \"<title>\"",
+          "description": "Duplicate a project to a new owner with a new title"
+        },
+        {
+          "command": "gh project close <number> --owner <owner>",
+          "description": "Close a specific project without deleting it"
+        },
+        {
+          "command": "gh project link <number> --owner <owner> --repo <owner/repo>",
+          "description": "Link a project to a specific repository"
+        },
+        {
+          "command": "gh project unlink <number> --owner <owner> --repo <owner/repo>",
+          "description": "Remove a repository link from a project"
+        },
+        {
+          "command": "gh project item-list <number>",
+          "description": "List all items (issues/PRs) within a project"
+        },
+        {
+          "command": "gh project item-list <number> --owner <owner>",
+          "description": "List items in a specific owner's project"
+        },
+        {
+          "command": "gh project item-add <number> --owner <owner> --url <issue-or-pr-url>",
+          "description": "Add an issue or PR to a project using its URL"
+        },
+        {
+          "command": "gh project item-delete <number> --owner <owner> --id <item-id>",
+          "description": "Delete a specific item from a project"
+        },
+        {
+          "command": "gh project item-edit --id <item-id> --field-id <field-id> --project-id <project-id> --text \"<value>\"",
+          "description": "Edit a specific field value for an item in a project"
+        },
+        {
+          "command": "gh project item-archive <number> --owner <owner> --id <item-id>",
+          "description": "Archive an item within a project"
+        },
+        {
+          "command": "gh project field-list <number>",
+          "description": "List all custom fields defined in a project"
+        },
+        {
+          "command": "gh project field-list <number> --owner <owner>",
+          "description": "List fields for a specific owner's project"
+        },
+        {
+          "command": "gh project field-create <number> --owner <owner> --name \"<name>\" --data-type TEXT",
+          "description": "Create a new text field in a project"
+        },
+        {
+          "command": "gh project field-delete <number> --owner <owner> --id <field-id>",
+          "description": "Delete a custom field from a project"
+        },
+        {
+          "command": "gh project column-list <number>",
+          "description": "List all columns (for classic projects)"
+        }
+      ]
+    },
+    {
+      "title": "GitHub Issue",
+      "commands": [
+        {
+          "command": "gh issue list",
+          "description": "List open issues for the current repository"
+        },
+        {
+          "command": "gh issue list --state open",
+          "description": "List only open issues"
+        },
+        {
+          "command": "gh issue list --state closed",
+          "description": "List only closed issues"
+        },
+        {
+          "command": "gh issue list --state all",
+          "description": "List all issues regardless of open/closed state"
+        },
+        {
+          "command": "gh issue list --author <username>",
+          "description": "List issues created by a specific user"
+        },
+        {
+          "command": "gh issue list --assignee <username>",
+          "description": "List issues assigned to a specific user"
+        },
+        {
+          "command": "gh issue list --label <label>",
+          "description": "List issues that have a specific label attached"
+        },
+        {
+          "command": "gh issue list --milestone <milestone>",
+          "description": "List issues assigned to a specific milestone"
+        },
+        {
+          "command": "gh issue list --limit <number>",
+          "description": "Limit the maximum number of issues displayed"
+        },
+        {
+          "command": "gh issue list --search <query>",
+          "description": "Search for issues matching a specific text query"
+        },
+        {
+          "command": "gh issue list --web",
+          "description": "Open the issue list in the web browser"
+        },
+        {
+          "command": "gh issue list --json <fields>",
+          "description": "Output issue details in JSON format"
+        },
+        {
+          "command": "gh issue list --template <template>",
+          "description": "Format the issue list using a custom Go template"
+        },
+        {
+          "command": "gh issue list --mention <username>",
+          "description": "List issues where a specific user is mentioned"
+        },
+        {
+          "command": "gh issue list --repo <owner/repo>",
+          "description": "List issues for a specific repository"
+        },
+        {
+          "command": "gh issue view",
+          "description": "View details of an issue interactively"
+        },
+        {
+          "command": "gh issue view <number>",
+          "description": "View details of a specific issue by number"
+        },
+        {
+          "command": "gh issue view --web",
+          "description": "Open the current issue in the web browser"
+        },
+        {
+          "command": "gh issue view <number> --web",
+          "description": "Open a specific issue in the web browser"
+        },
+        {
+          "command": "gh issue view --json <fields>",
+          "description": "Output specific details of an issue in JSON format"
+        },
+        {
+          "command": "gh issue view --comments",
+          "description": "View an issue along with its comments"
+        },
+        {
+          "command": "gh issue view <number> --comments",
+          "description": "View a specific issue and all of its comments"
+        },
+        {
+          "command": "gh issue create",
+          "description": "Create a new issue interactively"
+        },
+        {
+          "command": "gh issue create --title \"<title>\"",
+          "description": "Create a new issue with a specific title"
+        },
+        {
+          "command": "gh issue create --body \"<body>\"",
+          "description": "Create a new issue with a specific description body"
+        },
+        {
+          "command": "gh issue create --assignee <username>",
+          "description": "Create a new issue and assign it to a user"
+        },
+        {
+          "command": "gh issue create --label <label>",
+          "description": "Create a new issue and add a label to it"
+        },
+        {
+          "command": "gh issue create --milestone <milestone>",
+          "description": "Create a new issue and assign it to a milestone"
+        },
+        {
+          "command": "gh issue create --project <project>",
+          "description": "Create a new issue and add it to a project"
+        },
+        {
+          "command": "gh issue create --web",
+          "description": "Continue creating an issue in the web browser"
+        },
+        {
+          "command": "gh issue create --repo <owner/repo>",
+          "description": "Create an issue in a different repository"
+        },
+        {
+          "command": "gh issue create --title \"<title>\" --body \"<body>\"",
+          "description": "Create an issue instantly with a title and body"
+        },
+        {
+          "command": "gh issue create --title \"<title>\" --body \"<body>\" --label <label>",
+          "description": "Create an issue with a title, body, and label"
+        },
+        {
+          "command": "gh issue create --title \"<title>\" --body \"<body>\" --assignee <username>",
+          "description": "Create an issue with a title, body, and assignee"
+        },
+        {
+          "command": "gh issue create --title \"<title>\" --body \"<body>\" --label <label> --assignee <username>",
+          "description": "Create a fully populated issue with labels and assignee"
+        },
+        {
+          "command": "gh issue create --title \"<title>\" --body-file <file>",
+          "description": "Create an issue reading the body content from a file"
+        },
+        {
+          "command": "gh issue close",
+          "description": "Close an issue interactively"
+        },
+        {
+          "command": "gh issue close <number>",
+          "description": "Close a specific issue by number"
+        },
+        {
+          "command": "gh issue close <number> --comment \"<comment>\"",
+          "description": "Close an issue and leave a closing comment"
+        },
+        {
+          "command": "gh issue close <number> --reason completed",
+          "description": "Close an issue marking it as successfully completed"
+        },
+        {
+          "command": "gh issue close <number> --reason not-planned",
+          "description": "Close an issue marking it as not planned/won't fix"
+        },
+        {
+          "command": "gh issue reopen",
+          "description": "Reopen a closed issue interactively"
+        },
+        {
+          "command": "gh issue reopen <number>",
+          "description": "Reopen a specific closed issue"
+        },
+        {
+          "command": "gh issue reopen <number> --comment \"<comment>\"",
+          "description": "Reopen an issue and add a comment"
+        },
+        {
+          "command": "gh issue edit",
+          "description": "Edit an issue interactively"
+        },
+        {
+          "command": "gh issue edit <number>",
+          "description": "Edit a specific issue interactively"
+        },
+        {
+          "command": "gh issue edit --title \"<title>\"",
+          "description": "Change the title of an issue"
+        },
+        {
+          "command": "gh issue edit --body \"<body>\"",
+          "description": "Change the description body of an issue"
+        },
+        {
+          "command": "gh issue edit --add-assignee <username>",
+          "description": "Assign a user to an existing issue"
+        },
+        {
+          "command": "gh issue edit --remove-assignee <username>",
+          "description": "Unassign a user from an existing issue"
+        },
+        {
+          "command": "gh issue edit --add-label <label>",
+          "description": "Add a new label to an existing issue"
+        },
+        {
+          "command": "gh issue edit --remove-label <label>",
+          "description": "Remove a label from an existing issue"
+        },
+        {
+          "command": "gh issue edit --add-project <project>",
+          "description": "Add an existing issue to a project"
+        },
+        {
+          "command": "gh issue edit --remove-project <project>",
+          "description": "Remove an issue from a project"
+        },
+        {
+          "command": "gh issue edit --milestone <milestone>",
+          "description": "Set or change the milestone for an issue"
+        },
+        {
+          "command": "gh issue edit <number> --title \"<title>\" --body \"<body>\"",
+          "description": "Update both the title and body of a specific issue"
+        },
+        {
+          "command": "gh issue comment",
+          "description": "Add a comment to an issue interactively"
+        },
+        {
+          "command": "gh issue comment <number>",
+          "description": "Add a comment to a specific issue interactively"
+        },
+        {
+          "command": "gh issue comment --body \"<comment>\"",
+          "description": "Submit a comment using the provided text body"
+        },
+        {
+          "command": "gh issue comment <number> --body \"<comment>\"",
+          "description": "Add a specific text comment to a specific issue"
+        },
+        {
+          "command": "gh issue comment <number> --body-file <file>",
+          "description": "Comment on an issue using the contents of a file"
+        },
+        {
+          "command": "gh issue comment <number> --edit-last",
+          "description": "Edit your most recent comment on an issue"
+        },
+        {
+          "command": "gh issue comment <number> --delete-last",
+          "description": "Delete your most recent comment on an issue"
+        },
+        {
+          "command": "gh issue comment <number> --web",
+          "description": "Open an issue in the browser to leave a comment"
+        },
+        {
+          "command": "gh issue delete",
+          "description": "Delete an issue permanently interactively"
+        },
+        {
+          "command": "gh issue delete <number>",
+          "description": "Delete a specific issue permanently"
+        },
+        {
+          "command": "gh issue delete <number> --yes",
+          "description": "Delete an issue bypassing the confirmation prompt"
+        },
+        {
+          "command": "gh issue develop",
+          "description": "Create a branch for an issue interactively"
+        },
+        {
+          "command": "gh issue develop <number>",
+          "description": "Create a linked branch for a specific issue"
+        },
+        {
+          "command": "gh issue develop <number> --name <branch>",
+          "description": "Create a branch for an issue with a specific name"
+        },
+        {
+          "command": "gh issue develop <number> --base <branch>",
+          "description": "Create a branch for an issue originating from a specific base"
+        },
+        {
+          "command": "gh issue develop <number> --checkout",
+          "description": "Create a branch for an issue and check it out locally"
+        },
+        {
+          "command": "gh issue develop <number> --name <branch> --checkout",
+          "description": "Create a named branch for an issue and check it out"
+        },
+        {
+          "command": "gh issue lock",
+          "description": "Lock conversation on an issue interactively"
+        },
+        {
+          "command": "gh issue lock <number>",
+          "description": "Lock conversation on a specific issue"
+        },
+        {
+          "command": "gh issue lock <number> --reason off-topic",
+          "description": "Lock an issue conversation marking it off-topic"
+        },
+        {
+          "command": "gh issue lock <number> --reason resolved",
+          "description": "Lock an issue conversation marking it resolved"
+        },
+        {
+          "command": "gh issue lock <number> --reason spam",
+          "description": "Lock an issue conversation marking it as spam"
+        },
+        {
+          "command": "gh issue unlock",
+          "description": "Unlock conversation on an issue interactively"
+        },
+        {
+          "command": "gh issue unlock <number>",
+          "description": "Unlock conversation on a specific issue"
+        },
+        {
+          "command": "gh issue pin",
+          "description": "Pin an issue to the repository's issue list"
+        },
+        {
+          "command": "gh issue pin <number>",
+          "description": "Pin a specific issue by number"
+        },
+        {
+          "command": "gh issue unpin",
+          "description": "Unpin an issue from the repository's issue list"
+        },
+        {
+          "command": "gh issue unpin <number>",
+          "description": "Unpin a specific issue by number"
+        },
+        {
+          "command": "gh issue transfer",
+          "description": "Transfer an issue to another repository interactively"
+        },
+        {
+          "command": "gh issue transfer <number> <destination-repo>",
+          "description": "Transfer a specific issue to a destination repository"
+        }
+      ]
+    },
+    {
+      "title": "GitHub Workflow & Run",
+      "commands": [
+        {
+          "command": "gh workflow list",
+          "description": "List GitHub Actions workflows in the current repository"
+        },
+        {
+          "command": "gh workflow list --all",
+          "description": "List all workflows, including disabled ones"
+        },
+        {
+          "command": "gh workflow list --repo <owner/repo>",
+          "description": "List workflows for a specific repository"
+        },
+        {
+          "command": "gh workflow list --json <fields>",
+          "description": "Output workflow details in JSON format"
+        },
+        {
+          "command": "gh workflow view",
+          "description": "View details of a workflow interactively"
+        },
+        {
+          "command": "gh workflow view <workflow>",
+          "description": "View details of a specific workflow"
+        },
+        {
+          "command": "gh workflow view --web",
+          "description": "Open a workflow in the web browser"
+        },
+        {
+          "command": "gh workflow view <workflow> --web",
+          "description": "Open a specific workflow in the web browser"
+        },
+        {
+          "command": "gh workflow view --yaml",
+          "description": "View the YAML configuration of a workflow"
+        },
+        {
+          "command": "gh workflow view <workflow> --yaml",
+          "description": "View the YAML file of a specific workflow"
+        },
+        {
+          "command": "gh workflow view --ref <branch>",
+          "description": "View a workflow file as it exists on a specific branch"
+        },
+        {
+          "command": "gh workflow enable",
+          "description": "Enable a disabled workflow interactively"
+        },
+        {
+          "command": "gh workflow enable <workflow>",
+          "description": "Enable a specific disabled workflow"
+        },
+        {
+          "command": "gh workflow disable",
+          "description": "Disable an active workflow interactively"
+        },
+        {
+          "command": "gh workflow disable <workflow>",
+          "description": "Disable a specific active workflow"
+        },
+        {
+          "command": "gh workflow run",
+          "description": "Run a workflow manually interactively"
+        },
+        {
+          "command": "gh workflow run <workflow>",
+          "description": "Trigger a specific workflow manually"
+        },
+        {
+          "command": "gh workflow run <workflow> --ref <branch>",
+          "description": "Trigger a workflow to run on a specific branch"
+        },
+        {
+          "command": "gh workflow run <workflow> --field <key>=<value>",
+          "description": "Run a workflow passing a specific input parameter"
+        },
+        {
+          "command": "gh workflow run <workflow> --raw-field <key>=<value>",
+          "description": "Run a workflow passing raw string input parameters"
+        },
+        {
+          "command": "gh workflow run <workflow> --json",
+          "description": "Run a workflow and accept inputs from a JSON string"
+        },
+        {
+          "command": "gh workflow run <workflow> --ref <branch> --field <key>=<value>",
+          "description": "Run a workflow on a branch with specific inputs"
+        },
+        {
+          "command": "gh run list",
+          "description": "List recent workflow runs for the repository"
+        },
+        {
+          "command": "gh run list --workflow <workflow>",
+          "description": "List runs for a specific workflow"
+        },
+        {
+          "command": "gh run list --branch <branch>",
+          "description": "List workflow runs executed on a specific branch"
+        },
+        {
+          "command": "gh run list --user <username>",
+          "description": "List workflow runs triggered by a specific user"
+        },
+        {
+          "command": "gh run list --status <status>",
+          "description": "List workflow runs matching a specific status (e.g., failed)"
+        },
+        {
+          "command": "gh run list --event <event>",
+          "description": "List workflow runs triggered by a specific event (e.g., push)"
+        },
+        {
+          "command": "gh run list --commit <sha>",
+          "description": "List workflow runs associated with a specific commit"
+        },
+        {
+          "command": "gh run list --limit <number>",
+          "description": "Limit the number of workflow runs returned"
+        },
+        {
+          "command": "gh run list --json <fields>",
+          "description": "Output workflow runs data in JSON format"
+        },
+        {
+          "command": "gh run list --created <date>",
+          "description": "List workflow runs created on or after a specific date"
+        },
+        {
+          "command": "gh run view",
+          "description": "View details of a workflow run interactively"
+        },
+        {
+          "command": "gh run view <run-id>",
+          "description": "View details of a specific workflow run"
+        },
+        {
+          "command": "gh run view --web",
+          "description": "Open a workflow run in the web browser"
+        },
+        {
+          "command": "gh run view <run-id> --web",
+          "description": "Open a specific workflow run in the web browser"
+        },
+        {
+          "command": "gh run view --log",
+          "description": "View the complete log output of a workflow run"
+        },
+        {
+          "command": "gh run view <run-id> --log",
+          "description": "View the logs for a specific workflow run"
+        },
+        {
+          "command": "gh run view --log-failed",
+          "description": "View only the failed log steps of a workflow run"
+        },
+        {
+          "command": "gh run view <run-id> --log-failed",
+          "description": "View failed logs for a specific workflow run"
+        },
+        {
+          "command": "gh run view --exit-status",
+          "description": "Exit with a non-zero status if the run failed"
+        },
+        {
+          "command": "gh run view <run-id> --exit-status",
+          "description": "Check the exit status of a specific workflow run programmatically"
+        },
+        {
+          "command": "gh run view --job <job-id>",
+          "description": "View details for a specific job within a run"
+        },
+        {
+          "command": "gh run view --verbose",
+          "description": "View detailed information about a run's steps"
+        },
+        {
+          "command": "gh run view <run-id> --verbose",
+          "description": "View verbose details for a specific workflow run"
+        },
+        {
+          "command": "gh run watch",
+          "description": "Watch a workflow run's progress interactively"
+        },
+        {
+          "command": "gh run watch <run-id>",
+          "description": "Watch the progress of a specific workflow run"
+        },
+        {
+          "command": "gh run watch --exit-status",
+          "description": "Watch a run and exit with its final status code"
+        },
+        {
+          "command": "gh run watch --interval <seconds>",
+          "description": "Set the polling interval while watching a run"
+        },
+        {
+          "command": "gh run watch <run-id> --exit-status",
+          "description": "Watch a specific run and return its exit code upon completion"
+        },
+        {
+          "command": "gh run rerun",
+          "description": "Re-run a workflow run interactively"
+        },
+        {
+          "command": "gh run rerun <run-id>",
+          "description": "Re-run a specific workflow run completely"
+        },
+        {
+          "command": "gh run rerun --failed-only",
+          "description": "Re-run only the failed jobs in a workflow run"
+        },
+        {
+          "command": "gh run rerun <run-id> --failed-only",
+          "description": "Re-run failed jobs for a specific workflow run"
+        },
+        {
+          "command": "gh run rerun --job <job-id>",
+          "description": "Re-run a specific job within a workflow run"
+        },
+        {
+          "command": "gh run rerun --debug",
+          "description": "Re-run a workflow run with runner debug logging enabled"
+        },
+        {
+          "command": "gh run rerun <run-id> --debug",
+          "description": "Re-run a specific run with debug logging"
+        },
+        {
+          "command": "gh run cancel",
+          "description": "Cancel a workflow run interactively"
+        },
+        {
+          "command": "gh run cancel <run-id>",
+          "description": "Cancel a specific in-progress workflow run"
+        },
+        {
+          "command": "gh run delete",
+          "description": "Delete a workflow run interactively"
+        },
+        {
+          "command": "gh run delete <run-id>",
+          "description": "Delete a specific workflow run permanently"
+        },
+        {
+          "command": "gh run delete <run-id> --yes",
+          "description": "Delete a workflow run bypassing the confirmation prompt"
+        },
+        {
+          "command": "gh run download",
+          "description": "Download artifacts from a workflow run interactively"
+        },
+        {
+          "command": "gh run download <run-id>",
+          "description": "Download all artifacts generated by a specific run"
+        },
+        {
+          "command": "gh run download <run-id> --name <artifact-name>",
+          "description": "Download a specific named artifact from a run"
+        },
+        {
+          "command": "gh run download <run-id> --dir <directory>",
+          "description": "Download a run's artifacts into a specific directory"
+        },
+        {
+          "command": "gh run download <run-id> --pattern <glob>",
+          "description": "Download artifacts matching a glob pattern from a run"
+        }
+      ]
+    },
+    {
+      "title": "GitHub Auth & Config",
+      "commands": [
+        {
+          "command": "gh auth login",
+          "description": "Log in to a GitHub account interactively"
+        },
+        {
+          "command": "gh auth login --web",
+          "description": "Log in to GitHub via the web browser"
+        },
+        {
+          "command": "gh auth login --with-token",
+          "description": "Log in using a personal access token provided via standard input"
+        },
+        {
+          "command": "gh auth login --hostname <hostname>",
+          "description": "Log in to a specific GitHub Enterprise Server instance"
+        },
+        {
+          "command": "gh auth login --scopes <scopes>",
+          "description": "Log in and request specific additional OAuth scopes"
+        },
+        {
+          "command": "gh auth login --git-protocol <protocol>",
+          "description": "Log in and set the preferred Git protocol (ssh or https)"
+        },
+        {
+          "command": "gh auth logout",
+          "description": "Log out of your GitHub account"
+        },
+        {
+          "command": "gh auth logout --hostname <hostname>",
+          "description": "Log out from a specific GitHub Enterprise Server"
+        },
+        {
+          "command": "gh auth status",
+          "description": "Check your current authentication status"
+        },
+        {
+          "command": "gh auth status --hostname <hostname>",
+          "description": "Check auth status for a specific enterprise host"
+        },
+        {
+          "command": "gh auth status --show-token",
+          "description": "Display the active authentication token in the status output"
+        },
+        {
+          "command": "gh auth token",
+          "description": "Print the current authentication token to standard output"
+        },
+        {
+          "command": "gh auth token --hostname <hostname>",
+          "description": "Print the token for a specific enterprise host"
+        },
+        {
+          "command": "gh auth refresh",
+          "description": "Refresh the current authentication session"
+        },
+        {
+          "command": "gh auth refresh --scopes <scopes>",
+          "description": "Refresh auth session to request additional scopes"
+        },
+        {
+          "command": "gh auth refresh --hostname <hostname>",
+          "description": "Refresh auth session for a specific enterprise host"
+        },
+        {
+          "command": "gh auth setup-git",
+          "description": "Configure Git to use GitHub CLI as a credential helper"
+        },
+        {
+          "command": "gh auth setup-git --hostname <hostname>",
+          "description": "Configure Git credential helper for a specific host"
+        },
+        {
+          "command": "gh config list",
+          "description": "List all configured settings for the GitHub CLI"
+        },
+        {
+          "command": "gh config get <key>",
+          "description": "Retrieve the value of a specific configuration key"
+        },
+        {
+          "command": "gh config set <key> <value>",
+          "description": "Set a specific configuration key to a given value"
+        },
+        {
+          "command": "gh config set --host <hostname> <key> <value>",
+          "description": "Set a configuration key for a specific host"
+        },
+        {
+          "command": "gh config set editor <editor>",
+          "description": "Set the default text editor for the GitHub CLI"
+        },
+        {
+          "command": "gh config set browser <browser>",
+          "description": "Set the default web browser for the GitHub CLI"
+        },
+        {
+          "command": "gh config set git_protocol https",
+          "description": "Set HTTPS as the default Git protocol"
+        },
+        {
+          "command": "gh config set git_protocol ssh",
+          "description": "Set SSH as the default Git protocol"
+        },
+        {
+          "command": "gh config set prompt enabled",
+          "description": "Enable interactive prompts for the CLI"
+        },
+        {
+          "command": "gh config set prompt disabled",
+          "description": "Disable interactive prompts for scripting"
+        },
+        {
+          "command": "gh config set pager <pager>",
+          "description": "Set a custom terminal pager for long outputs"
+        }
+      ]
+    },
+    {
+      "title": "GitHub Gist & Release",
+      "commands": [
+        {
+          "command": "gh release list",
+          "description": "List releases for the current repository"
+        },
+        {
+          "command": "gh release list --limit <number>",
+          "description": "Limit the number of releases shown"
+        },
+        {
+          "command": "gh release list --exclude-drafts",
+          "description": "List releases but hide drafts"
+        },
+        {
+          "command": "gh release list --exclude-pre-releases",
+          "description": "List releases but hide pre-releases"
+        },
+        {
+          "command": "gh release list --json <fields>",
+          "description": "Output release list in JSON format"
+        },
+        {
+          "command": "gh release view",
+          "description": "View details of the latest release"
+        },
+        {
+          "command": "gh release view <tag>",
+          "description": "View details of a release by its tag name"
+        },
+        {
+          "command": "gh release view --web",
+          "description": "Open the latest release in the web browser"
+        },
+        {
+          "command": "gh release view <tag> --web",
+          "description": "Open a specific release in the web browser"
+        },
+        {
+          "command": "gh release view --json <fields>",
+          "description": "Output release details in JSON format"
+        },
+        {
+          "command": "gh release create",
+          "description": "Create a new release interactively"
+        },
+        {
+          "command": "gh release create <tag>",
+          "description": "Create a release for a specific tag"
+        },
+        {
+          "command": "gh release create <tag> <files>",
+          "description": "Create a release and upload assets to it"
+        },
+        {
+          "command": "gh release create <tag> --title \"<title>\"",
+          "description": "Create a release with a custom title"
+        },
+        {
+          "command": "gh release create <tag> --notes \"<notes>\"",
+          "description": "Create a release with specific release notes"
+        },
+        {
+          "command": "gh release create <tag> --notes-file <file>",
+          "description": "Create a release using release notes from a file"
+        },
+        {
+          "command": "gh release create <tag> --draft",
+          "description": "Create a release but save it as a draft"
+        },
+        {
+          "command": "gh release create <tag> --prerelease",
+          "description": "Create a release and mark it as a pre-release"
+        },
+        {
+          "command": "gh release create <tag> --latest",
+          "description": "Create a release and explicitly mark it as the latest"
+        },
+        {
+          "command": "gh release create <tag> --target <branch-or-commit>",
+          "description": "Create a release targeting a specific branch or commit"
+        },
+        {
+          "command": "gh release create <tag> --generate-notes",
+          "description": "Create a release and auto-generate notes based on PRs"
+        },
+        {
+          "command": "gh release create <tag> --notes-start-tag <tag>",
+          "description": "Generate notes starting from a previous specific tag"
+        },
+        {
+          "command": "gh release create <tag> --discussion-category <category>",
+          "description": "Create a release and start a discussion in a specific category"
+        },
+        {
+          "command": "gh release create <tag> <files> --title \"<title>\" --notes \"<notes>\"",
+          "description": "Create a complete release with assets, title, and notes"
+        },
+        {
+          "command": "gh release create <tag> <files> --title \"<title>\" --generate-notes",
+          "description": "Create a release with assets and auto-generated notes"
+        },
+        {
+          "command": "gh release create <tag> --draft --prerelease",
+          "description": "Create a draft pre-release"
+        },
+        {
+          "command": "gh release edit",
+          "description": "Edit the latest release interactively"
+        },
+        {
+          "command": "gh release edit <tag>",
+          "description": "Edit a specific release by tag interactively"
+        },
+        {
+          "command": "gh release edit <tag> --title \"<title>\"",
+          "description": "Update the title of an existing release"
+        },
+        {
+          "command": "gh release edit <tag> --notes \"<notes>\"",
+          "description": "Update the release notes of an existing release"
+        },
+        {
+          "command": "gh release edit <tag> --draft",
+          "description": "Convert a published release to a draft"
+        },
+        {
+          "command": "gh release edit <tag> --prerelease",
+          "description": "Convert a published release to a pre-release"
+        },
+        {
+          "command": "gh release edit <tag> --latest",
+          "description": "Set an existing release as the latest release"
+        },
+        {
+          "command": "gh release edit <tag> --draft=false",
+          "description": "Publish a release that is currently a draft"
+        },
+        {
+          "command": "gh release edit <tag> --tag <new-tag>",
+          "description": "Change the tag associated with an existing release"
+        },
+        {
+          "command": "gh release edit <tag> --target <branch-or-commit>",
+          "description": "Change the target commitish for an existing release"
+        },
+        {
+          "command": "gh release delete",
+          "description": "Delete a release interactively"
+        },
+        {
+          "command": "gh release delete <tag>",
+          "description": "Delete a specific release by its tag"
+        },
+        {
+          "command": "gh release delete <tag> --yes",
+          "description": "Delete a release bypassing the confirmation prompt"
+        },
+        {
+          "command": "gh release delete <tag> --cleanup-tag",
+          "description": "Delete a release and its associated git tag"
+        },
+        {
+          "command": "gh release delete <tag> --yes --cleanup-tag",
+          "description": "Force delete a release and its git tag simultaneously"
+        },
+        {
+          "command": "gh release download",
+          "description": "Download assets from the latest release"
+        },
+        {
+          "command": "gh release download",
+          "description": "Download assets from the latest release"
+        },
+        {
+          "command": "gh release download <tag>",
+          "description": "Download assets from a specific tagged release"
+        },
+        {
+          "command": "gh release download --pattern <glob>",
+          "description": "Download latest release assets matching a glob pattern"
+        },
+        {
+          "command": "gh release download <tag> --pattern <glob>",
+          "description": "Download specific release assets matching a pattern"
+        },
+        {
+          "command": "gh release download <tag> --dir <directory>",
+          "description": "Download release assets into a specific directory"
+        },
+        {
+          "command": "gh release download <tag> --archive zip",
+          "description": "Download the release source code as a ZIP archive"
+        },
+        {
+          "command": "gh release download <tag> --archive tar.gz",
+          "description": "Download the release source code as a tarball"
+        },
+        {
+          "command": "gh release download <tag> --pattern <glob> --dir <directory>",
+          "description": "Download matching assets from a release to a specific folder"
+        },
+        {
+          "command": "gh release download --clobber <tag>",
+          "description": "Download assets and overwrite existing files locally"
+        },
+        {
+          "command": "gh release upload",
+          "description": "Upload assets to a release interactively"
+        },
+        {
+          "command": "gh release upload <tag> <files>",
+          "description": "Upload one or more files to a specific release"
+        },
+        {
+          "command": "gh release upload <tag> <files> --clobber",
+          "description": "Upload files to a release, overwriting existing assets of the same name"
+        },
+        {
+          "command": "gh gist list",
+          "description": "List your GitHub gists"
+        },
+        {
+          "command": "gh gist list --limit <number>",
+          "description": "Limit the number of gists displayed"
+        },
+        {
+          "command": "gh gist list --public",
+          "description": "List only your public gists"
+        },
+        {
+          "command": "gh gist list --secret",
+          "description": "List only your secret gists"
+        },
+        {
+          "command": "gh gist view <gist-id>",
+          "description": "View the content of a specific gist"
+        },
+        {
+          "command": "gh gist view <gist-id> --web",
+          "description": "Open a specific gist in the web browser"
+        },
+        {
+          "command": "gh gist view <gist-id> --raw",
+          "description": "Output the raw content of a gist without formatting"
+        },
+        {
+          "command": "gh gist view <gist-id> --filename <file>",
+          "description": "View a specific file from a multi-file gist"
+        },
+        {
+          "command": "gh gist create",
+          "description": "Create a new gist interactively"
+        },
+        {
+          "command": "gh gist create <file>",
+          "description": "Create a new gist from a local file"
+        },
+        {
+          "command": "gh gist create <file1> <file2>",
+          "description": "Create a multi-file gist from local files"
+        },
+        {
+          "command": "gh gist create --public",
+          "description": "Create a public gist (default is secret)"
+        },
+        {
+          "command": "gh gist create --desc \"<description>\"",
+          "description": "Create a gist with a specific description"
+        },
+        {
+          "command": "gh gist create <file> --public --desc \"<description>\"",
+          "description": "Create a described, public gist from a file"
+        },
+        {
+          "command": "gh gist create -",
+          "description": "Create a gist by reading content from standard input"
+        },
+        {
+          "command": "gh gist edit <gist-id>",
+          "description": "Edit an existing gist interactively"
+        },
+        {
+          "command": "gh gist edit <gist-id> --filename <file>",
+          "description": "Edit a specific file within an existing gist"
+        },
+        {
+          "command": "gh gist edit <gist-id> --add <file>",
+          "description": "Add a new file to an existing gist"
+        },
+        {
+          "command": "gh gist edit <gist-id> --remove <file>",
+          "description": "Remove a file from an existing gist"
+        },
+        {
+          "command": "gh gist edit <gist-id> --desc \"<description>\"",
+          "description": "Update the description of an existing gist"
+        },
+        {
+          "command": "gh gist delete <gist-id>",
+          "description": "Delete a gist permanently interactively"
+        },
+        {
+          "command": "gh gist delete <gist-id> --yes",
+          "description": "Delete a gist bypassing the confirmation prompt"
+        },
+        {
+          "command": "gh gist clone <gist-id>",
+          "description": "Clone a gist locally as a git repository"
+        },
+        {
+          "command": "gh gist clone <gist-id> <directory>",
+          "description": "Clone a gist into a specified directory"
+        },
+        {
+          "command": "gh gist rename <gist-id> <old-filename> <new-filename>",
+          "description": "Rename a file within an existing gist"
+        }
+      ]
+    },
+    {
+      "title": "GitHub Secret & Variable",
+      "commands": [
+        {
+          "command": "gh secret list",
+          "description": "List GitHub Actions secrets for the current repository"
+        },
+        {
+          "command": "gh secret list --org <org>",
+          "description": "List secrets for a specific organization"
+        },
+        {
+          "command": "gh secret list --env <environment>",
+          "description": "List secrets for a specific deployment environment"
+        },
+        {
+          "command": "gh secret list --user",
+          "description": "List your personal Codespaces secrets"
+        },
+        {
+          "command": "gh secret list --json <fields>",
+          "description": "Output secrets list in JSON format"
+        },
+        {
+          "command": "gh secret set <name>",
+          "description": "Create or update a secret interactively"
+        },
+        {
+          "command": "gh secret set <name> --body \"<value>\"",
+          "description": "Set a secret with a specific string value"
+        },
+        {
+          "command": "gh secret set <name> --env-file <file>",
+          "description": "Set a secret reading the value from a file"
+        },
+        {
+          "command": "gh secret set <name> --org <org>",
+          "description": "Create an organization-level secret"
+        },
+        {
+          "command": "gh secret set <name> --org <org> --visibility all",
+          "description": "Create an org secret visible to all repositories"
+        },
+        {
+          "command": "gh secret set <name> --org <org> --visibility private",
+          "description": "Create an org secret visible only to private repositories"
+        },
+        {
+          "command": "gh secret set <name> --org <org> --visibility selected",
+          "description": "Create an org secret visible to specific repositories"
+        },
+        {
+          "command": "gh secret set <name> --org <org> --repos <repo1,repo2>",
+          "description": "Create an org secret and assign it to specific repos"
+        },
+        {
+          "command": "gh secret set <name> --env <environment>",
+          "description": "Create an environment-specific secret"
+        },
+        {
+          "command": "gh secret set <name> --user",
+          "description": "Create a personal Codespaces secret"
+        },
+        {
+          "command": "gh secret delete <name>",
+          "description": "Delete a repository secret"
+        },
+        {
+          "command": "gh secret delete <name> --org <org>",
+          "description": "Delete an organization secret"
+        },
+        {
+          "command": "gh secret delete <name> --env <environment>",
+          "description": "Delete an environment secret"
+        },
+        {
+          "command": "gh secret delete <name> --user",
+          "description": "Delete a personal Codespaces secret"
+        },
+        {
+          "command": "gh variable list",
+          "description": "List GitHub Actions variables for the repository"
+        },
+        {
+          "command": "gh variable list --org <org>",
+          "description": "List variables for an organization"
+        },
+        {
+          "command": "gh variable list --env <environment>",
+          "description": "List variables for a specific environment"
+        },
+        {
+          "command": "gh variable list --json <fields>",
+          "description": "Output variables list in JSON format"
+        },
+        {
+          "command": "gh variable set <name>",
+          "description": "Create or update a variable interactively"
+        },
+        {
+          "command": "gh variable set <name> --body \"<value>\"",
+          "description": "Set a variable with a specific string value"
+        },
+        {
+          "command": "gh variable set <name> --org <org>",
+          "description": "Create an organization-level variable"
+        },
+        {
+          "command": "gh variable set <name> --org <org> --visibility all",
+          "description": "Create an org variable visible to all repositories"
+        },
+        {
+          "command": "gh variable set <name> --org <org> --visibility selected",
+          "description": "Create an org variable visible to selected repositories"
+        },
+        {
+          "command": "gh variable set <name> --org <org> --repos <repo1,repo2>",
+          "description": "Create an org variable and specify access for repos"
+        },
+        {
+          "command": "gh variable set <name> --env <environment>",
+          "description": "Create an environment-specific variable"
+        },
+        {
+          "command": "gh variable delete <name>",
+          "description": "Delete a repository variable"
+        },
+        {
+          "command": "gh variable delete <name> --org <org>",
+          "description": "Delete an organization variable"
+        },
+        {
+          "command": "gh variable delete <name> --env <environment>",
+          "description": "Delete an environment variable"
+        }
+      ]
+    },
+    {
+      "title": "GitHub Label & Milestone",
+      "commands": [
+        {
+          "command": "gh label list",
+          "description": "List all labels in the current repository"
+        },
+        {
+          "command": "gh label list --json <fields>",
+          "description": "Output label data in JSON format"
+        },
+        {
+          "command": "gh label list --search <query>",
+          "description": "Search for specific labels by name or description"
+        },
+        {
+          "command": "gh label list --order asc",
+          "description": "Sort the label list in ascending order"
+        },
+        {
+          "command": "gh label list --order desc",
+          "description": "Sort the label list in descending order"
+        },
+        {
+          "command": "gh label list --sort created",
+          "description": "Sort labels by their creation date"
+        },
+        {
+          "command": "gh label list --sort name",
+          "description": "Sort labels alphabetically by name"
+        },
+        {
+          "command": "gh label create <name>",
+          "description": "Create a new label with a random color"
+        },
+        {
+          "command": "gh label create <name> --color <hex>",
+          "description": "Create a new label with a specific hex color"
+        },
+        {
+          "command": "gh label create <name> --description \"<description>\"",
+          "description": "Create a new label with a description"
+        },
+        {
+          "command": "gh label create <name> --force",
+          "description": "Update an existing label if it already exists"
+        },
+        {
+          "command": "gh label create <name> --color <hex> --description \"<description>\"",
+          "description": "Create a fully specified label with color and description"
+        },
+        {
+          "command": "gh label edit <name>",
+          "description": "Edit an existing label interactively"
+        },
+        {
+          "command": "gh label edit <name> --name <new-name>",
+          "description": "Rename an existing label"
+        },
+        {
+          "command": "gh label edit <name> --color <hex>",
+          "description": "Change the hex color of an existing label"
+        },
+        {
+          "command": "gh label edit <name> --description \"<description>\"",
+          "description": "Update the description of an existing label"
+        },
+        {
+          "command": "gh label delete <name>",
+          "description": "Delete a label interactively"
+        },
+        {
+          "command": "gh label delete <name> --yes",
+          "description": "Delete a label bypassing the confirmation prompt"
+        },
+        {
+          "command": "gh label clone <source-repo>",
+          "description": "Copy labels from a different repository into the current one"
+        },
+        {
+          "command": "gh label clone <source-repo> --force",
+          "description": "Copy labels, overwriting matching existing labels"
+        }
+      ]
+    },
+    {
+      "title": "GitHub Search",
+      "commands": [
+        {
+          "command": "gh search repos <query>",
+          "description": "Search for repositories across GitHub"
+        },
+        {
+          "command": "gh search repos <query> --limit <number>",
+          "description": "Limit the number of repository search results"
+        },
+        {
+          "command": "gh search repos <query> --language <language>",
+          "description": "Search repositories written in a specific language"
+        },
+        {
+          "command": "gh search repos <query> --stars >1000",
+          "description": "Search for repositories with more than 1000 stars"
+        },
+        {
+          "command": "gh search repos <query> --owner <owner>",
+          "description": "Search repositories owned by a specific user or org"
+        },
+        {
+          "command": "gh search repos <query> --topic <topic>",
+          "description": "Search repositories tagged with a specific topic"
+        },
+        {
+          "command": "gh search repos <query> --visibility public",
+          "description": "Search only public repositories"
+        },
+        {
+          "command": "gh search repos <query> --json <fields>",
+          "description": "Output repository search results in JSON format"
+        },
+        {
+          "command": "gh search repos <query> --sort stars",
+          "description": "Sort repository search results by star count"
+        },
+        {
+          "command": "gh search repos <query> --order desc",
+          "description": "Display repository search results in descending order"
+        },
+        {
+          "command": "gh search repos <query> --web",
+          "description": "Open the repository search query in the browser"
+        },
+        {
+          "command": "gh search prs <query>",
+          "description": "Search for pull requests globally"
+        },
+        {
+          "command": "gh search prs <query> --limit <number>",
+          "description": "Limit the number of PR search results"
+        },
+        {
+          "command": "gh search prs <query> --state open",
+          "description": "Search only for open pull requests"
+        },
+        {
+          "command": "gh search prs <query> --state closed",
+          "description": "Search only for closed pull requests"
+        },
+        {
+          "command": "gh search prs <query> --author <username>",
+          "description": "Search PRs created by a specific user"
+        },
+        {
+          "command": "gh search prs <query> --repo <owner/repo>",
+          "description": "Search PRs within a specific repository"
+        },
+        {
+          "command": "gh search prs <query> --label <label>",
+          "description": "Search PRs containing a specific label"
+        },
+        {
+          "command": "gh search prs <query> --merged",
+          "description": "Search only for merged pull requests"
+        },
+        {
+          "command": "gh search prs <query> --draft",
+          "description": "Search only for draft pull requests"
+        },
+        {
+          "command": "gh search prs <query> --sort updated",
+          "description": "Sort PR search results by last updated time"
+        },
+        {
+          "command": "gh search prs <query> --json <fields>",
+          "description": "Output PR search results in JSON format"
+        },
+        {
+          "command": "gh search issues <query>",
+          "description": "Search for issues globally"
+        },
+        {
+          "command": "gh search issues <query> --limit <number>",
+          "description": "Limit the number of issue search results"
+        },
+        {
+          "command": "gh search issues <query> --state open",
+          "description": "Search only for open issues"
+        },
+        {
+          "command": "gh search issues <query> --state closed",
+          "description": "Search only for closed issues"
+        },
+        {
+          "command": "gh search issues <query> --author <username>",
+          "description": "Search issues created by a specific user"
+        },
+        {
+          "command": "gh search issues <query> --repo <owner/repo>",
+          "description": "Search issues within a specific repository"
+        },
+        {
+          "command": "gh search issues <query> --label <label>",
+          "description": "Search issues that have a specific label"
+        },
+        {
+          "command": "gh search issues <query> --assignee <username>",
+          "description": "Search issues assigned to a specific user"
+        },
+        {
+          "command": "gh search issues <query> --sort updated",
+          "description": "Sort issue search results by most recently updated"
+        },
+        {
+          "command": "gh search issues <query> --json <fields>",
+          "description": "Output issue search results in JSON format"
+        },
+        {
+          "command": "gh search commits <query>",
+          "description": "Search for commits matching a query"
+        },
+        {
+          "command": "gh search commits <query> --author <username>",
+          "description": "Search commits authored by a specific user"
+        },
+        {
+          "command": "gh search commits <query> --repo <owner/repo>",
+          "description": "Search commits within a specific repository"
+        },
+        {
+          "command": "gh search commits <query> --author-date <date>",
+          "description": "Search commits authored on a specific date"
+        },
+        {
+          "command": "gh search commits <query> --committer-date <date>",
+          "description": "Search commits committed on a specific date"
+        },
+        {
+          "command": "gh search commits <query> --limit <number>",
+          "description": "Limit the number of commit search results"
+        },
+        {
+          "command": "gh search commits <query> --json <fields>",
+          "description": "Output commit search results in JSON format"
+        },
+        {
+          "command": "gh search code <query>",
+          "description": "Search for code snippets globally"
+        },
+        {
+          "command": "gh search code <query> --repo <owner/repo>",
+          "description": "Search code within a specific repository"
+        },
+        {
+          "command": "gh search code <query> --language <language>",
+          "description": "Search code written in a specific language"
+        },
+        {
+          "command": "gh search code <query> --filename <filename>",
+          "description": "Search code matching a specific filename"
+        },
+        {
+          "command": "gh search code <query> --extension <ext>",
+          "description": "Search code matching a specific file extension"
+        },
+        {
+          "command": "gh search code <query> --owner <owner>",
+          "description": "Search code within a specific user's or org's repositories"
+        },
+        {
+          "command": "gh search code <query> --limit <number>",
+          "description": "Limit the number of code search results"
+        },
+        {
+          "command": "gh search code <query> --json <fields>",
+          "description": "Output code search results in JSON format"
+        },
+        {
+          "command": "gh search code <query> --web",
+          "description": "Open the code search results in the browser"
+        }
+      ]
+    },
+    {
+      "title": "GitHub API & Alias",
+      "commands": [
+        {
+          "command": "gh api /repos/{owner}/{repo}/milestones",
+          "description": "Fetch milestones using the GitHub REST API"
+        },
+        {
+          "command": "gh api /repos/{owner}/{repo}/milestones --method POST --field title=\"<title>\"",
+          "description": "Create a new milestone via a POST API request"
+        },
+        {
+          "command": "gh api <endpoint>",
+          "description": "Make a custom GET request to a GitHub API endpoint"
+        },
+        {
+          "command": "gh api <endpoint> --method GET",
+          "description": "Make an explicit GET request to an API endpoint"
+        },
+        {
+          "command": "gh api <endpoint> --method POST",
+          "description": "Make a POST request to an API endpoint"
+        },
+        {
+          "command": "gh api <endpoint> --method PUT",
+          "description": "Make a PUT request to an API endpoint"
+        },
+        {
+          "command": "gh api <endpoint> --method PATCH",
+          "description": "Make a PATCH request to an API endpoint"
+        },
+        {
+          "command": "gh api <endpoint> --method DELETE",
+          "description": "Make a DELETE request to an API endpoint"
+        },
+        {
+          "command": "gh api <endpoint> --field <key>=<value>",
+          "description": "Send a parameter payload with the API request"
+        },
+        {
+          "command": "gh api <endpoint> --raw-field <key>=<value>",
+          "description": "Send a raw string parameter payload with the API request"
+        },
+        {
+          "command": "gh api <endpoint> --header <key>:<value>",
+          "description": "Send a custom HTTP header with the API request"
+        },
+        {
+          "command": "gh api <endpoint> --paginate",
+          "description": "Automatically fetch all pages for a paginated API endpoint"
+        },
+        {
+          "command": "gh api <endpoint> --jq <expression>",
+          "description": "Filter the JSON response using a jq expression"
+        },
+        {
+          "command": "gh api <endpoint> --template <template>",
+          "description": "Format the API response using a Go template"
+        },
+        {
+          "command": "gh api <endpoint> --input <file>",
+          "description": "Send a request body read from a local file"
+        },
+        {
+          "command": "gh api <endpoint> --hostname <hostname>",
+          "description": "Make an API request to a specific GitHub Enterprise server"
+        },
+        {
+          "command": "gh api <endpoint> --include",
+          "description": "Include HTTP response headers in the output"
+        },
+        {
+          "command": "gh api <endpoint> --silent",
+          "description": "Suppress the response body output"
+        },
+        {
+          "command": "gh api <endpoint> --cache <duration>",
+          "description": "Cache the API response for a specified duration"
+        },
+        {
+          "command": "gh api graphql -f query='<query>'",
+          "description": "Make a GitHub GraphQL API query"
+        },
+        {
+          "command": "gh api /user",
+          "description": "Fetch details of the currently authenticated user"
+        },
+        {
+          "command": "gh api /repos/{owner}/{repo}",
+          "description": "Fetch raw details of a specific repository via API"
+        },
+        {
+          "command": "gh api /repos/{owner}/{repo}/issues",
+          "description": "Fetch raw issues data for a repository via API"
+        },
+        {
+          "command": "gh api /repos/{owner}/{repo}/pulls",
+          "description": "Fetch raw pull requests data for a repository via API"
+        },
+        {
+          "command": "gh api <endpoint> --method POST --field <key>=<value> --jq <expression>",
+          "description": "Make a POST request, send fields, and filter response with jq"
+        },
+        {
+          "command": "gh alias list",
+          "description": "List all configured custom aliases for the GitHub CLI"
+        },
+        {
+          "command": "gh alias set <name> <expansion>",
+          "description": "Create a new alias that expands to a specific gh command"
+        },
+        {
+          "command": "gh alias set <name> --shell <expansion>",
+          "description": "Create an alias that executes a shell command"
+        },
+        {
+          "command": "gh alias delete <name>",
+          "description": "Delete a previously configured CLI alias"
+        },
+        {
+          "command": "gh alias import <file>",
+          "description": "Import aliases from a YAML configuration file"
+        },
+        {
+          "command": "gh alias import --clobber <file>",
+          "description": "Import aliases from a file, overwriting existing ones"
+        }
+      ]
+    },
+    {
+      "title": "GitHub Codespace",
+      "commands": [
+        {
+          "command": "gh codespace list",
+          "description": "List your active GitHub Codespaces"
+        },
+        {
+          "command": "gh codespace view",
+          "description": "View details of an active Codespace interactively"
+        },
+        {
+          "command": "gh codespace view --codespace <name>",
+          "description": "View details of a specific Codespace"
+        },
+        {
+          "command": "gh codespace create",
+          "description": "Create a new Codespace interactively"
+        },
+        {
+          "command": "gh codespace create --repo <owner/repo>",
+          "description": "Create a Codespace for a specific repository"
+        },
+        {
+          "command": "gh codespace create --branch <branch>",
+          "description": "Create a Codespace for a specific branch"
+        },
+        {
+          "command": "gh codespace create --machine <type>",
+          "description": "Create a Codespace using a specific machine type (e.g., standardLinux)"
+        },
+        {
+          "command": "gh codespace create --devcontainer-path <path>",
+          "description": "Create a Codespace using a specific devcontainer.json configuration"
+        },
+        {
+          "command": "gh codespace create --repo <owner/repo> --branch <branch>",
+          "description": "Create a Codespace for a specific branch of a specific repository"
+        },
+        {
+          "command": "gh codespace delete",
+          "description": "Delete a Codespace interactively"
+        },
+        {
+          "command": "gh codespace delete --codespace <name>",
+          "description": "Delete a specific Codespace by name"
+        },
+        {
+          "command": "gh codespace delete --all",
+          "description": "Delete all of your active Codespaces"
+        },
+        {
+          "command": "gh codespace delete --days <n>",
+          "description": "Delete Codespaces that have been inactive for N days"
+        },
+        {
+          "command": "gh codespace ssh",
+          "description": "Open an interactive SSH session into a Codespace"
+        },
+        {
+          "command": "gh codespace ssh --codespace <name>",
+          "description": "SSH into a specific named Codespace"
+        },
+        {
+          "command": "gh codespace ssh -- <command>",
+          "description": "Run a specific command over SSH within a Codespace"
+        },
+        {
+          "command": "gh codespace stop",
+          "description": "Stop a running Codespace interactively"
+        },
+        {
+          "command": "gh codespace stop --codespace <name>",
+          "description": "Stop a specific running Codespace"
+        },
+        {
+          "command": "gh codespace edit --codespace <name> --display-name \"<name>\"",
+          "description": "Change the friendly display name of a Codespace"
+        },
+        {
+          "command": "gh codespace edit --codespace <name> --machine <type>",
+          "description": "Change the machine type (hardware) of an existing Codespace"
+        },
+        {
+          "command": "gh codespace ports",
+          "description": "List forwarded ports for an active Codespace"
+        },
+        {
+          "command": "gh codespace ports --codespace <name>",
+          "description": "List ports for a specific active Codespace"
+        },
+        {
+          "command": "gh codespace ports forward <local-port>:<remote-port>",
+          "description": "Forward a local port to a remote port on the Codespace"
+        },
+        {
+          "command": "gh codespace ports visibility <port>:public",
+          "description": "Change the visibility of a Codespace port to public"
+        },
+        {
+          "command": "gh codespace logs",
+          "description": "Tail the logs of a Codespace interactively"
+        },
+        {
+          "command": "gh codespace logs --codespace <name>",
+          "description": "Tail logs for a specific Codespace"
+        },
+        {
+          "command": "gh codespace cp <source> <dest>",
+          "description": "Copy a file between your local machine and a Codespace"
+        },
+        {
+          "command": "gh codespace cp -r <source> <dest>",
+          "description": "Recursively copy a directory to/from a Codespace"
+        },
+        {
+          "command": "gh codespace rebuild",
+          "description": "Rebuild the dev container for a Codespace"
+        },
+        {
+          "command": "gh codespace rebuild --full",
+          "description": "Perform a full rebuild of a Codespace ignoring cache"
+        },
+        {
+          "command": "gh codespace code",
+          "description": "Open a Codespace in Visual Studio Code interactively"
+        },
+        {
+          "command": "gh codespace code --codespace <name>",
+          "description": "Open a specific Codespace in Visual Studio Code"
+        }
+      ]
+    },
+    {
+      "title": "GitHub Cache & Organization",
+      "commands": [
+        {
+          "command": "gh cache list",
+          "description": "List GitHub Actions caches for the repository"
+        },
+        {
+          "command": "gh cache list --key <key>",
+          "description": "List caches matching a specific key"
+        },
+        {
+          "command": "gh cache list --ref <ref>",
+          "description": "List caches associated with a specific branch/ref"
+        },
+        {
+          "command": "gh cache list --limit <number>",
+          "description": "Limit the number of cache entries returned"
+        },
+        {
+          "command": "gh cache list --json <fields>",
+          "description": "Output cache data in JSON format"
+        },
+        {
+          "command": "gh cache delete <id>",
+          "description": "Delete a specific Actions cache by its ID"
+        },
+        {
+          "command": "gh cache delete --all",
+          "description": "Delete all GitHub Actions caches for the repository"
+        },
+        {
+          "command": "gh org list",
+          "description": "List organizations you belong to"
+        },
+        {
+          "command": "gh org list --limit <number>",
+          "description": "Limit the number of organizations listed"
+        },
+        {
+          "command": "gh org list --json <fields>",
+          "description": "Output your organization list in JSON format"
+        }
+      ]
+    },
+    {
+      "title": "GitHub Browse & Status",
+      "commands": [
+        {
+          "command": "gh status",
+          "description": "View status of relevant PRs, issues, and workflow runs"
+        },
+        {
+          "command": "gh status --exclude <owner/repo>",
+          "description": "View dashboard status excluding a specific repository"
+        },
+        {
+          "command": "gh status --org <org>",
+          "description": "View dashboard status scoped to a specific organization"
+        },
+        {
+          "command": "gh browse",
+          "description": "Open the current repository in the web browser"
+        },
+        {
+          "command": "gh browse <number>",
+          "description": "Open a specific issue or PR number in the browser"
+        },
+        {
+          "command": "gh browse <file>",
+          "description": "Open a specific repository file in the web browser"
+        },
+        {
+          "command": "gh browse --branch <branch>",
+          "description": "Open a specific branch of the repository in the browser"
+        },
+        {
+          "command": "gh browse --tag <tag>",
+          "description": "Open a specific tag of the repository in the browser"
+        },
+        {
+          "command": "gh browse --commit <commit>",
+          "description": "Open a specific commit URL in the browser"
+        },
+        {
+          "command": "gh browse --projects",
+          "description": "Open the repository's projects board in the browser"
+        },
+        {
+          "command": "gh browse --wiki",
+          "description": "Open the repository's wiki page in the browser"
+        },
+        {
+          "command": "gh browse --repo <owner/repo>",
+          "description": "Open a different specific repository in the browser"
+        },
+        {
+          "command": "gh browse --no-browser",
+          "description": "Print the URL to the console instead of opening the browser"
+        },
+        {
+          "command": "gh browse --settings",
+          "description": "Open the repository settings page in the browser"
+        },
+        {
+          "command": "gh browse <file> --branch <branch>",
+          "description": "Open a specific file on a specific branch in the browser"
+        }
+      ]
+    },
+    {
+      "title": "GitHub Attestation",
+      "commands": [
+        {
+          "command": "gh attestation verify <file>",
+          "description": "Verify the artifact attestation of a local file"
+        },
+        {
+          "command": "gh attestation verify <file> --repo <owner/repo>",
+          "description": "Verify an artifact file against a specific repository"
+        },
+        {
+          "command": "gh attestation verify <file> --owner <owner>",
+          "description": "Verify an artifact file against a specific owner"
+        },
+        {
+          "command": "gh attestation verify <file> --bundle <bundle>",
+          "description": "Verify an artifact using an explicit sigstore bundle"
+        },
+        {
+          "command": "gh attestation download <subject-digest>",
+          "description": "Download an attestation bundle by subject digest"
+        },
+        {
+          "command": "gh attestation download <subject-digest> --repo <owner/repo>",
+          "description": "Download an attestation bundle from a specific repo"
+        },
+        {
+          "command": "gh attestation download <subject-digest> --predicate-type <type>",
+          "description": "Download an attestation bundle matching a specific predicate type"
+        }
+      ]
+    },
+    {
+      "title": "GitHub Ruleset & Environment",
+      "commands": [
+        {
+          "command": "gh api /repos/{owner}/{repo}/environments",
+          "description": "Fetch all configured deployment environments via API"
+        },
+        {
+          "command": "gh api /repos/{owner}/{repo}/environments/<env-name>",
+          "description": "Fetch details of a specific deployment environment"
+        },
+        {
+          "command": "gh api /repos/{owner}/{repo}/environments/<env-name> --method PUT",
+          "description": "Create or update a deployment environment via API"
+        },
+        {
+          "command": "gh api /repos/{owner}/{repo}/environments/<env-name> --method DELETE",
+          "description": "Delete a deployment environment via API"
+        },
+        {
+          "command": "gh ruleset list",
+          "description": "List rulesets active on the current repository"
+        },
+        {
+          "command": "gh ruleset list --org <org>",
+          "description": "List rulesets configured for a specific organization"
+        },
+        {
+          "command": "gh ruleset list --parents",
+          "description": "List rulesets including those inherited from parents"
+        },
+        {
+          "command": "gh ruleset view <id>",
+          "description": "View details of a specific repository ruleset"
+        },
+        {
+          "command": "gh ruleset view <id> --org <org>",
+          "description": "View details of a specific organization ruleset"
+        },
+        {
+          "command": "gh ruleset view <id> --web",
+          "description": "Open a specific ruleset in the web browser"
+        },
+        {
+          "command": "gh ruleset check <branch>",
+          "description": "Evaluate which rulesets apply to a specific branch"
+        },
+        {
+          "command": "gh ruleset check <branch> --default",
+          "description": "Check rules applied to the default branch"
+        }
+      ]
+    },
+    {
+      "title": "GitHub Extension",
+      "commands": [
+        {
+          "command": "gh extension list",
+          "description": "List all installed GitHub CLI extensions"
+        },
+        {
+          "command": "gh extension install <repo>",
+          "description": "Install an extension from a repository"
+        },
+        {
+          "command": "gh extension install <owner/repo>",
+          "description": "Install a specific extension by owner/repo name"
+        },
+        {
+          "command": "gh extension remove <name>",
+          "description": "Uninstall a specific GitHub CLI extension"
+        },
+        {
+          "command": "gh extension upgrade <name>",
+          "description": "Update a specific extension to its latest version"
+        },
+        {
+          "command": "gh extension upgrade --all",
+          "description": "Update all installed extensions to their latest versions"
+        },
+        {
+          "command": "gh extension exec <name>",
+          "description": "Execute a local or uninstalled extension script"
+        },
+        {
+          "command": "gh extension create <name>",
+          "description": "Scaffold a new GitHub CLI extension project"
+        },
+        {
+          "command": "gh extension browse",
+          "description": "Interactively browse and install available extensions"
+        },
+        {
+          "command": "gh extension search <query>",
+          "description": "Search for available extensions on GitHub"
+        }
+      ]
+    }
+  ]
+}

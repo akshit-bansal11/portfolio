@@ -1,0 +1,465 @@
+{
+  "name": "Prettier",
+  "slug": "prettier",
+  "logo": "https://svgl.app/library/prettier-icon-dark.svg",
+  "accent": "#e94560",
+  "description": "Opinionated code formatter supporting multiple languages",
+  "categories": [
+    {
+      "title": "Formatting Files",
+      "commands": [
+        {
+          "command": "prettier --write .",
+          "description": "Format all supported files in the current directory recursively"
+        },
+        {
+          "command": "prettier --write src",
+          "description": "Format all supported files in the src directory recursively"
+        },
+        {
+          "command": "prettier --write src/index.ts",
+          "description": "Format a single specific file in place"
+        },
+        {
+          "command": "prettier --write \"src/**/*.ts\"",
+          "description": "Format all TypeScript files in src recursively"
+        },
+        {
+          "command": "prettier --write \"src/**/*.{ts,tsx}\"",
+          "description": "Format all TypeScript and TSX files in src recursively"
+        },
+        {
+          "command": "prettier --write \"**/*.{js,jsx,ts,tsx}\"",
+          "description": "Format all JS and TS files across the entire project"
+        },
+        {
+          "command": "prettier --write \"**/*.{js,ts,json,css,md}\"",
+          "description": "Format JS, TS, JSON, CSS, and Markdown files across the project"
+        },
+        {
+          "command": "prettier --write \"src/**\" \"tests/**\"",
+          "description": "Format all files in both src and tests directories"
+        },
+        {
+          "command": "prettier --write . --ignore-path .gitignore",
+          "description": "Format all files using .gitignore as the ignore rule source"
+        },
+        {
+          "command": "prettier --write . --ignore-path .prettierignore",
+          "description": "Format all files using a specific .prettierignore file"
+        },
+        {
+          "command": "prettier --write . --ignore-unknown",
+          "description": "Format supported files, silently skipping unsupported file types"
+        },
+        {
+          "command": "prettier --write . --no-error-on-unmatched-pattern",
+          "description": "Format files without erroring if a glob pattern matches nothing"
+        },
+        {
+          "command": "prettier --write . --log-level=warn",
+          "description": "Format files showing only warnings and errors in output"
+        },
+        {
+          "command": "prettier --write . --log-level=silent",
+          "description": "Format files suppressing all output"
+        },
+        {
+          "command": "prettier --write . --log-level=debug",
+          "description": "Format files with verbose debug output for troubleshooting"
+        }
+      ]
+    },
+    {
+      "title": "Checking Files",
+      "commands": [
+        {
+          "command": "prettier --check .",
+          "description": "Check if all supported files in the current directory are formatted"
+        },
+        {
+          "command": "prettier --check src",
+          "description": "Check if all supported files in the src directory are formatted"
+        },
+        {
+          "command": "prettier --check src/index.ts",
+          "description": "Check if a single specific file is formatted correctly"
+        },
+        {
+          "command": "prettier --check \"src/**/*.ts\"",
+          "description": "Check if all TypeScript files in src are formatted"
+        },
+        {
+          "command": "prettier --check \"**/*.{js,ts,json,css,md}\"",
+          "description": "Check formatting of JS, TS, JSON, CSS, and Markdown files"
+        },
+        {
+          "command": "prettier --check . --ignore-path .gitignore",
+          "description": "Check formatting of files using .gitignore as the ignore source"
+        },
+        {
+          "command": "prettier --check . --ignore-unknown",
+          "description": "Check formatting, silently skipping unsupported file types"
+        },
+        {
+          "command": "prettier --check . --log-level=warn",
+          "description": "Check formatting showing only warnings and errors"
+        }
+      ]
+    },
+    {
+      "title": "Printing & Stdout",
+      "commands": [
+        {
+          "command": "prettier src/index.ts",
+          "description": "Print the formatted output of a file to stdout without writing it"
+        },
+        {
+          "command": "prettier --stdin-filepath src/index.ts",
+          "description": "Format stdin input treating it as the given file path and print to stdout"
+        },
+        {
+          "command": "cat src/index.ts | prettier --stdin-filepath index.ts",
+          "description": "Pipe a file through prettier via stdin and print formatted output"
+        },
+        {
+          "command": "prettier src/index.ts --write=false",
+          "description": "Explicitly print formatted output to stdout without writing to disk"
+        }
+      ]
+    },
+    {
+      "title": "Formatting Options",
+      "commands": [
+        {
+          "command": "prettier --write . --print-width=100",
+          "description": "Format files with a line wrap width of 100 characters"
+        },
+        {
+          "command": "prettier --write . --print-width=120",
+          "description": "Format files with a line wrap width of 120 characters"
+        },
+        {
+          "command": "prettier --write . --tab-width=2",
+          "description": "Format files using 2 spaces per indentation level"
+        },
+        {
+          "command": "prettier --write . --tab-width=4",
+          "description": "Format files using 4 spaces per indentation level"
+        },
+        {
+          "command": "prettier --write . --use-tabs",
+          "description": "Format files indenting with tabs instead of spaces"
+        },
+        {
+          "command": "prettier --write . --no-use-tabs",
+          "description": "Format files indenting with spaces instead of tabs"
+        },
+        {
+          "command": "prettier --write . --single-quote",
+          "description": "Format files using single quotes instead of double quotes"
+        },
+        {
+          "command": "prettier --write . --no-single-quote",
+          "description": "Format files using double quotes instead of single quotes"
+        },
+        {
+          "command": "prettier --write . --jsx-single-quote",
+          "description": "Format JSX attributes using single quotes"
+        },
+        {
+          "command": "prettier --write . --no-jsx-single-quote",
+          "description": "Format JSX attributes using double quotes"
+        },
+        {
+          "command": "prettier --write . --trailing-comma=all",
+          "description": "Add trailing commas wherever valid in ES5 and function parameters"
+        },
+        {
+          "command": "prettier --write . --trailing-comma=es5",
+          "description": "Add trailing commas only where valid in ES5 syntax"
+        },
+        {
+          "command": "prettier --write . --trailing-comma=none",
+          "description": "Remove all trailing commas from formatted output"
+        },
+        {
+          "command": "prettier --write . --no-semi",
+          "description": "Format files omitting semicolons at the end of statements"
+        },
+        {
+          "command": "prettier --write . --semi",
+          "description": "Format files adding semicolons at the end of statements"
+        },
+        {
+          "command": "prettier --write . --bracket-spacing",
+          "description": "Print spaces between brackets in object literals"
+        },
+        {
+          "command": "prettier --write . --no-bracket-spacing",
+          "description": "Omit spaces between brackets in object literals"
+        },
+        {
+          "command": "prettier --write . --bracket-same-line",
+          "description": "Put the closing bracket of multiline JSX elements on the last line"
+        },
+        {
+          "command": "prettier --write . --no-bracket-same-line",
+          "description": "Put the closing bracket of multiline JSX elements on a new line"
+        },
+        {
+          "command": "prettier --write . --arrow-parens=always",
+          "description": "Always include parentheses around arrow function arguments"
+        },
+        {
+          "command": "prettier --write . --arrow-parens=avoid",
+          "description": "Omit parentheses around single arrow function arguments when possible"
+        },
+        {
+          "command": "prettier --write . --prose-wrap=always",
+          "description": "Wrap prose in Markdown and similar files at the print width"
+        },
+        {
+          "command": "prettier --write . --prose-wrap=never",
+          "description": "Do not wrap prose in Markdown files regardless of line length"
+        },
+        {
+          "command": "prettier --write . --prose-wrap=preserve",
+          "description": "Preserve the original wrapping of prose in Markdown files"
+        },
+        {
+          "command": "prettier --write . --html-whitespace-sensitivity=css",
+          "description": "Respect CSS display property for HTML whitespace handling"
+        },
+        {
+          "command": "prettier --write . --html-whitespace-sensitivity=strict",
+          "description": "Treat all whitespace as significant in HTML formatting"
+        },
+        {
+          "command": "prettier --write . --html-whitespace-sensitivity=ignore",
+          "description": "Ignore all whitespace sensitivity in HTML formatting"
+        },
+        {
+          "command": "prettier --write . --vue-indent-script-and-style",
+          "description": "Indent script and style blocks inside Vue single-file components"
+        },
+        {
+          "command": "prettier --write . --no-vue-indent-script-and-style",
+          "description": "Do not indent script and style blocks inside Vue single-file components"
+        },
+        {
+          "command": "prettier --write . --end-of-line=lf",
+          "description": "Format files using LF line endings"
+        },
+        {
+          "command": "prettier --write . --end-of-line=crlf",
+          "description": "Format files using CRLF line endings"
+        },
+        {
+          "command": "prettier --write . --end-of-line=cr",
+          "description": "Format files using CR line endings"
+        },
+        {
+          "command": "prettier --write . --end-of-line=auto",
+          "description": "Maintain existing line endings in each file"
+        },
+        {
+          "command": "prettier --write . --embedded-language-formatting=auto",
+          "description": "Format embedded code blocks in supported languages automatically"
+        },
+        {
+          "command": "prettier --write . --embedded-language-formatting=off",
+          "description": "Disable formatting of embedded code blocks"
+        },
+        {
+          "command": "prettier --write . --single-attribute-per-line",
+          "description": "Enforce one HTML or JSX attribute per line in multiline elements"
+        },
+        {
+          "command": "prettier --write . --experimental-ternaries",
+          "description": "Format ternary expressions using the experimental curious ternary style"
+        }
+      ]
+    },
+    {
+      "title": "Parser & Language",
+      "commands": [
+        {
+          "command": "prettier --write src/index.ts --parser=typescript",
+          "description": "Format a file explicitly using the TypeScript parser"
+        },
+        {
+          "command": "prettier --write src/index.js --parser=babel",
+          "description": "Format a file explicitly using the Babel JavaScript parser"
+        },
+        {
+          "command": "prettier --write src/index.jsx --parser=babel",
+          "description": "Format a JSX file explicitly using the Babel parser"
+        },
+        {
+          "command": "prettier --write src/index.tsx --parser=babel-ts",
+          "description": "Format a TSX file explicitly using the Babel TypeScript parser"
+        },
+        {
+          "command": "prettier --write src/style.css --parser=css",
+          "description": "Format a file explicitly using the CSS parser"
+        },
+        {
+          "command": "prettier --write src/style.scss --parser=scss",
+          "description": "Format a file explicitly using the SCSS parser"
+        },
+        {
+          "command": "prettier --write src/style.less --parser=less",
+          "description": "Format a file explicitly using the Less parser"
+        },
+        {
+          "command": "prettier --write data.json --parser=json",
+          "description": "Format a file explicitly using the JSON parser"
+        },
+        {
+          "command": "prettier --write data.json --parser=json5",
+          "description": "Format a file explicitly using the JSON5 parser"
+        },
+        {
+          "command": "prettier --write README.md --parser=markdown",
+          "description": "Format a file explicitly using the Markdown parser"
+        },
+        {
+          "command": "prettier --write docs/page.mdx --parser=mdx",
+          "description": "Format a file explicitly using the MDX parser"
+        },
+        {
+          "command": "prettier --write index.html --parser=html",
+          "description": "Format a file explicitly using the HTML parser"
+        },
+        {
+          "command": "prettier --write schema.graphql --parser=graphql",
+          "description": "Format a file explicitly using the GraphQL parser"
+        },
+        {
+          "command": "prettier --write .prettierrc --parser=json",
+          "description": "Format a config file without an extension using the JSON parser"
+        },
+        {
+          "command": "prettier --write config.yaml --parser=yaml",
+          "description": "Format a file explicitly using the YAML parser"
+        }
+      ]
+    },
+    {
+      "title": "Configuration",
+      "commands": [
+        {
+          "command": "prettier --write . --config .prettierrc",
+          "description": "Format files using a specific Prettier configuration file"
+        },
+        {
+          "command": "prettier --write . --config prettier.config.js",
+          "description": "Format files using a JavaScript Prettier configuration file"
+        },
+        {
+          "command": "prettier --write . --no-config",
+          "description": "Format files ignoring any discovered configuration files"
+        },
+        {
+          "command": "prettier --write . --config-precedence=prefer-file",
+          "description": "Prefer config file options over CLI options when both are present"
+        },
+        {
+          "command": "prettier --write . --config-precedence=cli-override",
+          "description": "Let CLI options override config file options when both are present"
+        },
+        {
+          "command": "prettier --write . --config-precedence=file-override",
+          "description": "Let config file options override CLI options entirely"
+        },
+        {
+          "command": "prettier --find-config-path src/index.ts",
+          "description": "Print the path to the configuration file resolved for a given file"
+        },
+        {
+          "command": "prettier --write . --editorconfig",
+          "description": "Apply options from .editorconfig when formatting files"
+        },
+        {
+          "command": "prettier --write . --no-editorconfig",
+          "description": "Ignore .editorconfig settings when formatting files"
+        },
+        {
+          "command": "prettier --write . --plugin=prettier-plugin-tailwindcss",
+          "description": "Format files using a specific Prettier plugin"
+        },
+        {
+          "command": "prettier --write . --plugin=@prettier/plugin-php",
+          "description": "Format files using the Prettier PHP plugin"
+        },
+        {
+          "command": "prettier --write . --plugin=prettier-plugin-svelte",
+          "description": "Format files using the Prettier Svelte plugin"
+        }
+      ]
+    },
+    {
+      "title": "Info & Debugging",
+      "commands": [
+        {
+          "command": "prettier --version",
+          "description": "Display the currently installed version of Prettier"
+        },
+        {
+          "command": "prettier --help",
+          "description": "Display help information and all available CLI options"
+        },
+        {
+          "command": "prettier --support-info",
+          "description": "Print a list of all languages and file types Prettier supports"
+        },
+        {
+          "command": "prettier --support-info --json",
+          "description": "Print supported languages and file types as JSON"
+        },
+        {
+          "command": "prettier --file-info src/index.ts",
+          "description": "Show the parser and config that Prettier would use for a given file"
+        },
+        {
+          "command": "prettier --file-info src/index.ts --json",
+          "description": "Show file info for a given file in JSON format"
+        },
+        {
+          "command": "prettier --file-info src/index.ts --ignore-path .prettierignore",
+          "description": "Show file info using a specific ignore file"
+        },
+        {
+          "command": "prettier --check . --log-level=debug",
+          "description": "Check formatting with verbose debug output for troubleshooting"
+        }
+      ]
+    },
+    {
+      "title": "CI & Integration",
+      "commands": [
+        {
+          "command": "prettier --check . --ignore-path .gitignore",
+          "description": "Check formatting in CI using .gitignore as the ignore source"
+        },
+        {
+          "command": "prettier --check \"src/**/*.{ts,tsx,js,jsx}\" --log-level=warn",
+          "description": "Check formatting of source files in CI showing only warnings and errors"
+        },
+        {
+          "command": "prettier --write . --ignore-unknown --log-level=warn",
+          "description": "Format all files in CI skipping unknown types and reducing noise"
+        },
+        {
+          "command": "prettier --check . --no-error-on-unmatched-pattern",
+          "description": "Check formatting without failing if a glob pattern matches no files"
+        },
+        {
+          "command": "prettier --write \"**/*.{ts,tsx,js,jsx,json,css,md}\" --ignore-path .gitignore --log-level=warn",
+          "description": "Format all common file types in CI using gitignore and minimal logging"
+        }
+      ]
+    }
+  ]
+}

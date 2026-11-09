@@ -8,6 +8,9 @@
 
 /* Raw palette, light. */
 html {
+  /* Fixed light surface behind command-reference logos, same in both themes. */
+  --cmd-logo-chip: #fffdf8;
+
   /* Tutorial palette ("signal"): its own hues, not the blog's. */
   --tut-blue: #0369a1;
   --tut-violet: #7c3aed;

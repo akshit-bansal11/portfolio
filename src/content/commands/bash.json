@@ -1,0 +1,2250 @@
+{
+  "name": "Bash",
+  "slug": "bash",
+  "logo": "https://svgl.app/library/bash.svg",
+  "accent": "#ffffff",
+  "description": "Unix shell and command language",
+  "categories": [
+    {
+      "title": "Navigation & File System",
+      "commands": [
+        {
+          "command": "pwd",
+          "description": "Print the full path of the current working directory"
+        },
+        {
+          "command": "ls",
+          "description": "List files and directories in the current directory"
+        },
+        {
+          "command": "ls -l",
+          "description": "List files in long format with permissions, size, and date"
+        },
+        {
+          "command": "ls -a",
+          "description": "List all files including hidden files starting with a dot"
+        },
+        {
+          "command": "ls -la",
+          "description": "List all files including hidden ones in long format"
+        },
+        {
+          "command": "ls -lh",
+          "description": "List files in long format with human-readable file sizes"
+        },
+        {
+          "command": "ls -lt",
+          "description": "List files sorted by modification time, newest first"
+        },
+        {
+          "command": "ls -lS",
+          "description": "List files sorted by size, largest first"
+        },
+        {
+          "command": "ls -R",
+          "description": "Recursively list all files in subdirectories"
+        },
+        {
+          "command": "ls -d */",
+          "description": "List only directories in the current directory"
+        },
+        {
+          "command": "ls --color=auto",
+          "description": "List files with colorized output for file types"
+        },
+        {
+          "command": "cd <directory>",
+          "description": "Change the current working directory to the specified path"
+        },
+        {
+          "command": "cd ..",
+          "description": "Move up one level to the parent directory"
+        },
+        {
+          "command": "cd ~",
+          "description": "Navigate to the current user's home directory"
+        },
+        {
+          "command": "cd -",
+          "description": "Switch back to the previously visited directory"
+        },
+        {
+          "command": "cd /",
+          "description": "Navigate to the root directory of the filesystem"
+        },
+        {
+          "command": "cd ~/Documents",
+          "description": "Navigate to the Documents folder in the home directory"
+        },
+        {
+          "command": "pushd <directory>",
+          "description": "Save current directory and switch to the specified directory"
+        },
+        {
+          "command": "popd",
+          "description": "Return to the directory saved by the last pushd command"
+        },
+        {
+          "command": "dirs",
+          "description": "Display the list of currently remembered directories"
+        },
+        {
+          "command": "tree",
+          "description": "Display directory structure in a visual tree format"
+        },
+        {
+          "command": "tree -L <n>",
+          "description": "Display directory tree limited to <n> levels deep"
+        },
+        {
+          "command": "tree -a",
+          "description": "Display all files including hidden ones in tree format"
+        },
+        {
+          "command": "tree -d",
+          "description": "Display only directories in tree format"
+        }
+      ]
+    },
+    {
+      "title": "File & Directory Operations",
+      "commands": [
+        {
+          "command": "mkdir <directory>",
+          "description": "Create a new directory with the specified name"
+        },
+        {
+          "command": "mkdir -p <path>",
+          "description": "Create nested directories, creating parent directories as needed"
+        },
+        {
+          "command": "mkdir -m <mode> <directory>",
+          "description": "Create a directory with specific permissions"
+        },
+        {
+          "command": "rmdir <directory>",
+          "description": "Remove an empty directory"
+        },
+        {
+          "command": "rmdir -p <path>",
+          "description": "Remove a directory and its empty parent directories"
+        },
+        {
+          "command": "rm <file>",
+          "description": "Delete a file permanently"
+        },
+        {
+          "command": "rm -r <directory>",
+          "description": "Recursively delete a directory and all its contents"
+        },
+        {
+          "command": "rm -f <file>",
+          "description": "Forcefully delete a file without prompting"
+        },
+        {
+          "command": "rm -rf <directory>",
+          "description": "Forcefully and recursively delete a directory without prompting"
+        },
+        {
+          "command": "rm -i <file>",
+          "description": "Delete a file but prompt for confirmation first"
+        },
+        {
+          "command": "rm -v <file>",
+          "description": "Delete a file and print each action verbosely"
+        },
+        {
+          "command": "cp <source> <destination>",
+          "description": "Copy a file from source to destination"
+        },
+        {
+          "command": "cp -r <source> <destination>",
+          "description": "Recursively copy a directory and its contents"
+        },
+        {
+          "command": "cp -p <source> <destination>",
+          "description": "Copy a file preserving its permissions, timestamps, and ownership"
+        },
+        {
+          "command": "cp -i <source> <destination>",
+          "description": "Copy a file but prompt before overwriting existing files"
+        },
+        {
+          "command": "cp -v <source> <destination>",
+          "description": "Copy a file and print each action verbosely"
+        },
+        {
+          "command": "cp -u <source> <destination>",
+          "description": "Copy a file only if source is newer than destination"
+        },
+        {
+          "command": "cp -a <source> <destination>",
+          "description": "Archive copy, preserving all attributes and structure recursively"
+        },
+        {
+          "command": "mv <source> <destination>",
+          "description": "Move or rename a file or directory"
+        },
+        {
+          "command": "mv -i <source> <destination>",
+          "description": "Move a file but prompt before overwriting existing files"
+        },
+        {
+          "command": "mv -f <source> <destination>",
+          "description": "Forcefully move a file without prompting"
+        },
+        {
+          "command": "mv -v <source> <destination>",
+          "description": "Move a file and print each action verbosely"
+        },
+        {
+          "command": "mv -n <source> <destination>",
+          "description": "Move a file but do not overwrite any existing destination"
+        },
+        {
+          "command": "touch <file>",
+          "description": "Create an empty file or update its timestamps"
+        },
+        {
+          "command": "touch -t <timestamp> <file>",
+          "description": "Set a specific timestamp on a file"
+        },
+        {
+          "command": "touch -a <file>",
+          "description": "Update only the access time of a file"
+        },
+        {
+          "command": "touch -m <file>",
+          "description": "Update only the modification time of a file"
+        },
+        {
+          "command": "ln <source> <link>",
+          "description": "Create a hard link to a file"
+        },
+        {
+          "command": "ln -s <source> <link>",
+          "description": "Create a symbolic (soft) link to a file or directory"
+        },
+        {
+          "command": "ln -sf <source> <link>",
+          "description": "Forcefully create a symbolic link, overwriting existing links"
+        },
+        {
+          "command": "readlink <link>",
+          "description": "Print the target path a symbolic link points to"
+        },
+        {
+          "command": "readlink -f <link>",
+          "description": "Print the canonicalized absolute path of a symbolic link"
+        }
+      ]
+    },
+    {
+      "title": "File Viewing & Editing",
+      "commands": [
+        {
+          "command": "cat <file>",
+          "description": "Print the contents of a file to standard output"
+        },
+        {
+          "command": "cat -n <file>",
+          "description": "Print file contents with line numbers"
+        },
+        {
+          "command": "cat -A <file>",
+          "description": "Print file contents showing non-printing characters"
+        },
+        {
+          "command": "cat <file1> <file2>",
+          "description": "Concatenate and print multiple files"
+        },
+        {
+          "command": "cat > <file>",
+          "description": "Create a new file and write from standard input"
+        },
+        {
+          "command": "cat >> <file>",
+          "description": "Append standard input to the end of a file"
+        },
+        {
+          "command": "less <file>",
+          "description": "View file contents with scrollable pagination"
+        },
+        {
+          "command": "less -N <file>",
+          "description": "View file contents with line numbers in less"
+        },
+        {
+          "command": "less +F <file>",
+          "description": "Open a file and follow it for real-time updates"
+        },
+        {
+          "command": "more <file>",
+          "description": "View file contents one screen at a time"
+        },
+        {
+          "command": "head <file>",
+          "description": "Print the first 10 lines of a file"
+        },
+        {
+          "command": "head -n <n> <file>",
+          "description": "Print the first <n> lines of a file"
+        },
+        {
+          "command": "head -c <n> <file>",
+          "description": "Print the first <n> bytes of a file"
+        },
+        {
+          "command": "tail <file>",
+          "description": "Print the last 10 lines of a file"
+        },
+        {
+          "command": "tail -n <n> <file>",
+          "description": "Print the last <n> lines of a file"
+        },
+        {
+          "command": "tail -f <file>",
+          "description": "Follow a file and print new lines as they are appended"
+        },
+        {
+          "command": "tail -F <file>",
+          "description": "Follow a file by name, re-opening if it is rotated"
+        },
+        {
+          "command": "tail -c <n> <file>",
+          "description": "Print the last <n> bytes of a file"
+        },
+        {
+          "command": "nano <file>",
+          "description": "Open a file in the nano terminal text editor"
+        },
+        {
+          "command": "vim <file>",
+          "description": "Open a file in the vim terminal text editor"
+        },
+        {
+          "command": "vi <file>",
+          "description": "Open a file in the vi terminal text editor"
+        },
+        {
+          "command": "gedit <file>",
+          "description": "Open a file in the GNOME graphical text editor"
+        },
+        {
+          "command": "wc <file>",
+          "description": "Count lines, words, and bytes in a file"
+        },
+        {
+          "command": "wc -l <file>",
+          "description": "Count only the number of lines in a file"
+        },
+        {
+          "command": "wc -w <file>",
+          "description": "Count only the number of words in a file"
+        },
+        {
+          "command": "wc -c <file>",
+          "description": "Count only the number of bytes in a file"
+        },
+        {
+          "command": "wc -m <file>",
+          "description": "Count the number of characters in a file"
+        }
+      ]
+    },
+    {
+      "title": "Search & Find",
+      "commands": [
+        {
+          "command": "find <path> -name <pattern>",
+          "description": "Find files matching a name pattern in a directory tree"
+        },
+        {
+          "command": "find <path> -type f",
+          "description": "Find only regular files within a directory tree"
+        },
+        {
+          "command": "find <path> -type d",
+          "description": "Find only directories within a directory tree"
+        },
+        {
+          "command": "find <path> -name \"*.txt\"",
+          "description": "Find all files with a .txt extension"
+        },
+        {
+          "command": "find <path> -iname <pattern>",
+          "description": "Find files matching a name pattern, case-insensitively"
+        },
+        {
+          "command": "find <path> -size +<n>M",
+          "description": "Find files larger than the specified size"
+        },
+        {
+          "command": "find <path> -size -<n>M",
+          "description": "Find files smaller than the specified size"
+        },
+        {
+          "command": "find <path> -mtime -<n>",
+          "description": "Find files modified within the last <n> days"
+        },
+        {
+          "command": "find <path> -mtime +<n>",
+          "description": "Find files modified more than <n> days ago"
+        },
+        {
+          "command": "find <path> -newer <file>",
+          "description": "Find files newer than a reference file"
+        },
+        {
+          "command": "find <path> -empty",
+          "description": "Find empty files and directories"
+        },
+        {
+          "command": "find <path> -perm <mode>",
+          "description": "Find files with specific permissions"
+        },
+        {
+          "command": "find <path> -user <username>",
+          "description": "Find files owned by a specific user"
+        },
+        {
+          "command": "find <path> -group <groupname>",
+          "description": "Find files belonging to a specific group"
+        },
+        {
+          "command": "find <path> -maxdepth <n>",
+          "description": "Limit find depth to <n> levels of subdirectories"
+        },
+        {
+          "command": "find <path> -mindepth <n>",
+          "description": "Start find at least <n> levels deep"
+        },
+        {
+          "command": "find <path> -exec <command> {} \\;",
+          "description": "Execute a command on each file found"
+        },
+        {
+          "command": "find <path> -exec <command> {} +",
+          "description": "Execute a command on all found files at once"
+        },
+        {
+          "command": "find <path> -delete",
+          "description": "Delete all files found matching the criteria"
+        },
+        {
+          "command": "find <path> -not -name <pattern>",
+          "description": "Find files that do NOT match the specified name pattern"
+        },
+        {
+          "command": "find <path> \\( -name <p1> -o -name <p2> \\)",
+          "description": "Find files matching either of two name patterns"
+        },
+        {
+          "command": "grep <pattern> <file>",
+          "description": "Search for a pattern in a file and print matching lines"
+        },
+        {
+          "command": "grep -r <pattern> <path>",
+          "description": "Recursively search for a pattern in all files under a path"
+        },
+        {
+          "command": "grep -i <pattern> <file>",
+          "description": "Search for a pattern case-insensitively"
+        },
+        {
+          "command": "grep -v <pattern> <file>",
+          "description": "Print lines that do NOT match the pattern"
+        },
+        {
+          "command": "grep -n <pattern> <file>",
+          "description": "Print matching lines along with their line numbers"
+        },
+        {
+          "command": "grep -l <pattern> <path>",
+          "description": "Print only the names of files that contain matches"
+        },
+        {
+          "command": "grep -c <pattern> <file>",
+          "description": "Count the number of matching lines in a file"
+        },
+        {
+          "command": "grep -w <pattern> <file>",
+          "description": "Match only whole words, not partial matches"
+        },
+        {
+          "command": "grep -x <pattern> <file>",
+          "description": "Match only whole lines that exactly match the pattern"
+        },
+        {
+          "command": "grep -A <n> <pattern> <file>",
+          "description": "Print <n> lines of context after each match"
+        },
+        {
+          "command": "grep -B <n> <pattern> <file>",
+          "description": "Print <n> lines of context before each match"
+        },
+        {
+          "command": "grep -C <n> <pattern> <file>",
+          "description": "Print <n> lines of context before and after each match"
+        },
+        {
+          "command": "grep -E <pattern> <file>",
+          "description": "Use extended regular expressions for matching"
+        },
+        {
+          "command": "grep -P <pattern> <file>",
+          "description": "Use Perl-compatible regular expressions for matching"
+        },
+        {
+          "command": "grep -o <pattern> <file>",
+          "description": "Print only the matched part of each line"
+        },
+        {
+          "command": "grep -q <pattern> <file>",
+          "description": "Quietly check if a pattern matches, returning exit code only"
+        },
+        {
+          "command": "grep --include=<pattern> -r <search> <path>",
+          "description": "Recursively search only files matching a filename pattern"
+        },
+        {
+          "command": "grep --exclude=<pattern> -r <search> <path>",
+          "description": "Recursively search excluding files matching a filename pattern"
+        },
+        {
+          "command": "locate <pattern>",
+          "description": "Quickly find files by name using a prebuilt database"
+        },
+        {
+          "command": "updatedb",
+          "description": "Update the file database used by locate"
+        },
+        {
+          "command": "which <command>",
+          "description": "Show the full path of an executable command"
+        },
+        {
+          "command": "whereis <command>",
+          "description": "Find the binary, source, and manual page for a command"
+        },
+        {
+          "command": "type <command>",
+          "description": "Show how a command name would be interpreted by the shell"
+        }
+      ]
+    },
+    {
+      "title": "Permissions & Ownership",
+      "commands": [
+        {
+          "command": "chmod <mode> <file>",
+          "description": "Change the file permissions using numeric or symbolic mode"
+        },
+        {
+          "command": "chmod 755 <file>",
+          "description": "Set permissions to rwxr-xr-x (owner full, others read/execute)"
+        },
+        {
+          "command": "chmod 644 <file>",
+          "description": "Set permissions to rw-r--r-- (owner read/write, others read)"
+        },
+        {
+          "command": "chmod 600 <file>",
+          "description": "Set permissions to rw------- (owner read/write only)"
+        },
+        {
+          "command": "chmod +x <file>",
+          "description": "Add execute permission for all users"
+        },
+        {
+          "command": "chmod -x <file>",
+          "description": "Remove execute permission for all users"
+        },
+        {
+          "command": "chmod u+x <file>",
+          "description": "Add execute permission for the file owner only"
+        },
+        {
+          "command": "chmod g+w <file>",
+          "description": "Add write permission for the group"
+        },
+        {
+          "command": "chmod o-r <file>",
+          "description": "Remove read permission for others"
+        },
+        {
+          "command": "chmod -R <mode> <directory>",
+          "description": "Recursively change permissions for a directory and its contents"
+        },
+        {
+          "command": "chown <user> <file>",
+          "description": "Change the owner of a file"
+        },
+        {
+          "command": "chown <user>:<group> <file>",
+          "description": "Change both the owner and group of a file"
+        },
+        {
+          "command": "chown -R <user>:<group> <directory>",
+          "description": "Recursively change owner and group for a directory"
+        },
+        {
+          "command": "chgrp <group> <file>",
+          "description": "Change the group ownership of a file"
+        },
+        {
+          "command": "chgrp -R <group> <directory>",
+          "description": "Recursively change group ownership of a directory"
+        },
+        {
+          "command": "umask",
+          "description": "Display the current default file creation permission mask"
+        },
+        {
+          "command": "umask <mode>",
+          "description": "Set the default file creation permission mask"
+        },
+        {
+          "command": "stat <file>",
+          "description": "Display detailed metadata and status of a file"
+        },
+        {
+          "command": "stat -c \"%a %n\" <file>",
+          "description": "Display the numeric permissions and name of a file"
+        },
+        {
+          "command": "getfacl <file>",
+          "description": "Get the access control list for a file"
+        },
+        {
+          "command": "setfacl -m u:<user>:<perms> <file>",
+          "description": "Set an access control list entry for a specific user"
+        },
+        {
+          "command": "setfacl -x u:<user> <file>",
+          "description": "Remove a user's access control list entry"
+        }
+      ]
+    },
+    {
+      "title": "Process Management",
+      "commands": [
+        {
+          "command": "ps",
+          "description": "Show currently running processes for the current shell"
+        },
+        {
+          "command": "ps aux",
+          "description": "Show all running processes with detailed information"
+        },
+        {
+          "command": "ps aux | grep <process>",
+          "description": "Filter running processes by name"
+        },
+        {
+          "command": "ps -ef",
+          "description": "Show all processes in full-format listing"
+        },
+        {
+          "command": "ps -p <pid>",
+          "description": "Show information for a specific process ID"
+        },
+        {
+          "command": "ps --sort=-%cpu",
+          "description": "List processes sorted by CPU usage descending"
+        },
+        {
+          "command": "ps --sort=-%mem",
+          "description": "List processes sorted by memory usage descending"
+        },
+        {
+          "command": "top",
+          "description": "Display real-time view of running processes and system resources"
+        },
+        {
+          "command": "top -u <user>",
+          "description": "Show only processes belonging to a specific user in top"
+        },
+        {
+          "command": "top -p <pid>",
+          "description": "Monitor a specific process by PID in top"
+        },
+        {
+          "command": "htop",
+          "description": "Display an interactive process viewer with mouse support"
+        },
+        {
+          "command": "kill <pid>",
+          "description": "Send the default SIGTERM signal to a process to terminate it"
+        },
+        {
+          "command": "kill -9 <pid>",
+          "description": "Send SIGKILL to forcefully terminate a process immediately"
+        },
+        {
+          "command": "kill -l",
+          "description": "List all available signal names"
+        },
+        {
+          "command": "killall <name>",
+          "description": "Terminate all processes with the specified name"
+        },
+        {
+          "command": "killall -9 <name>",
+          "description": "Forcefully terminate all processes with the specified name"
+        },
+        {
+          "command": "pkill <pattern>",
+          "description": "Kill processes matching a name pattern"
+        },
+        {
+          "command": "pkill -u <user>",
+          "description": "Kill all processes owned by a specific user"
+        },
+        {
+          "command": "pgrep <pattern>",
+          "description": "List PIDs of processes matching a name pattern"
+        },
+        {
+          "command": "jobs",
+          "description": "List all background jobs in the current shell session"
+        },
+        {
+          "command": "bg",
+          "description": "Resume the most recently suspended job in the background"
+        },
+        {
+          "command": "bg %<n>",
+          "description": "Resume a specific job number in the background"
+        },
+        {
+          "command": "fg",
+          "description": "Bring the most recently backgrounded job to the foreground"
+        },
+        {
+          "command": "fg %<n>",
+          "description": "Bring a specific job number to the foreground"
+        },
+        {
+          "command": "<command> &",
+          "description": "Run a command in the background"
+        },
+        {
+          "command": "nohup <command> &",
+          "description": "Run a command immune to hangups, continuing after logout"
+        },
+        {
+          "command": "wait",
+          "description": "Wait for all background jobs to complete"
+        },
+        {
+          "command": "wait <pid>",
+          "description": "Wait for a specific process ID to complete"
+        },
+        {
+          "command": "nice -n <value> <command>",
+          "description": "Run a command with a modified scheduling priority"
+        },
+        {
+          "command": "renice <value> -p <pid>",
+          "description": "Change the priority of a currently running process"
+        },
+        {
+          "command": "sleep <seconds>",
+          "description": "Pause execution for a specified number of seconds"
+        },
+        {
+          "command": "timeout <seconds> <command>",
+          "description": "Run a command and kill it if it exceeds the timeout"
+        },
+        {
+          "command": "watch <command>",
+          "description": "Repeatedly run a command every 2 seconds and display output"
+        },
+        {
+          "command": "watch -n <seconds> <command>",
+          "description": "Repeatedly run a command at a custom interval"
+        }
+      ]
+    },
+    {
+      "title": "System Information",
+      "commands": [
+        {
+          "command": "uname -a",
+          "description": "Print all system information including kernel and architecture"
+        },
+        {
+          "command": "uname -r",
+          "description": "Print the kernel release version"
+        },
+        {
+          "command": "uname -s",
+          "description": "Print the operating system name"
+        },
+        {
+          "command": "uname -m",
+          "description": "Print the machine hardware architecture"
+        },
+        {
+          "command": "hostname",
+          "description": "Print or set the system's hostname"
+        },
+        {
+          "command": "hostname -I",
+          "description": "Print all IP addresses of the host"
+        },
+        {
+          "command": "whoami",
+          "description": "Print the username of the currently logged-in user"
+        },
+        {
+          "command": "id",
+          "description": "Print the UID, GID, and group memberships of the current user"
+        },
+        {
+          "command": "id <user>",
+          "description": "Print the UID, GID, and groups for a specific user"
+        },
+        {
+          "command": "uptime",
+          "description": "Show how long the system has been running and load averages"
+        },
+        {
+          "command": "date",
+          "description": "Display the current date and time"
+        },
+        {
+          "command": "date +\"%Y-%m-%d\"",
+          "description": "Display the current date in YYYY-MM-DD format"
+        },
+        {
+          "command": "date -d \"<string>\"",
+          "description": "Display a date parsed from a human-readable string"
+        },
+        {
+          "command": "cal",
+          "description": "Display a calendar for the current month"
+        },
+        {
+          "command": "cal <year>",
+          "description": "Display a calendar for the entire specified year"
+        },
+        {
+          "command": "df",
+          "description": "Report file system disk space usage"
+        },
+        {
+          "command": "df -h",
+          "description": "Report disk space usage in human-readable format"
+        },
+        {
+          "command": "df -T",
+          "description": "Report disk space usage including file system type"
+        },
+        {
+          "command": "du",
+          "description": "Estimate file and directory space usage"
+        },
+        {
+          "command": "du -h",
+          "description": "Show disk usage in human-readable format"
+        },
+        {
+          "command": "du -sh <directory>",
+          "description": "Show total disk usage of a directory in human-readable format"
+        },
+        {
+          "command": "du -ah <directory>",
+          "description": "Show disk usage of all files and directories recursively"
+        },
+        {
+          "command": "du --max-depth=1 -h",
+          "description": "Show disk usage for immediate subdirectories only"
+        },
+        {
+          "command": "free",
+          "description": "Display memory usage statistics"
+        },
+        {
+          "command": "free -h",
+          "description": "Display memory usage in human-readable format"
+        },
+        {
+          "command": "free -m",
+          "description": "Display memory usage in megabytes"
+        },
+        {
+          "command": "lscpu",
+          "description": "Display detailed CPU architecture information"
+        },
+        {
+          "command": "lsblk",
+          "description": "List information about all available block storage devices"
+        },
+        {
+          "command": "lsusb",
+          "description": "List all USB buses and devices connected"
+        },
+        {
+          "command": "lspci",
+          "description": "List all PCI buses and devices connected"
+        },
+        {
+          "command": "lshw",
+          "description": "List detailed hardware configuration information"
+        },
+        {
+          "command": "dmidecode",
+          "description": "Read hardware information from the DMI/SMBIOS table"
+        },
+        {
+          "command": "env",
+          "description": "Print all environment variables for the current session"
+        },
+        {
+          "command": "printenv",
+          "description": "Print the values of environment variables"
+        },
+        {
+          "command": "printenv <variable>",
+          "description": "Print the value of a specific environment variable"
+        },
+        {
+          "command": "echo $<variable>",
+          "description": "Print the value of a shell or environment variable"
+        },
+        {
+          "command": "export <variable>=<value>",
+          "description": "Set and export an environment variable to child processes"
+        },
+        {
+          "command": "unset <variable>",
+          "description": "Remove an environment variable from the current session"
+        }
+      ]
+    },
+    {
+      "title": "Network",
+      "commands": [
+        {
+          "command": "ping <host>",
+          "description": "Send ICMP echo requests to test connectivity to a host"
+        },
+        {
+          "command": "ping -c <n> <host>",
+          "description": "Send exactly <n> ping packets to a host"
+        },
+        {
+          "command": "ping -i <seconds> <host>",
+          "description": "Set the interval between ping packets"
+        },
+        {
+          "command": "ping -s <size> <host>",
+          "description": "Set the packet size for ping"
+        },
+        {
+          "command": "curl <url>",
+          "description": "Transfer data from or to a URL"
+        },
+        {
+          "command": "curl -o <file> <url>",
+          "description": "Download a URL and save it to a specific file"
+        },
+        {
+          "command": "curl -O <url>",
+          "description": "Download a file keeping its original remote filename"
+        },
+        {
+          "command": "curl -L <url>",
+          "description": "Follow HTTP redirects automatically"
+        },
+        {
+          "command": "curl -I <url>",
+          "description": "Fetch only the HTTP response headers"
+        },
+        {
+          "command": "curl -X POST -d <data> <url>",
+          "description": "Send a POST request with data to a URL"
+        },
+        {
+          "command": "curl -H \"<header>\" <url>",
+          "description": "Send a request with a custom HTTP header"
+        },
+        {
+          "command": "curl -u <user>:<pass> <url>",
+          "description": "Authenticate with a username and password"
+        },
+        {
+          "command": "curl --silent <url>",
+          "description": "Run curl without progress meter or error messages"
+        },
+        {
+          "command": "curl -k <url>",
+          "description": "Allow insecure connections, skipping SSL certificate verification"
+        },
+        {
+          "command": "wget <url>",
+          "description": "Download a file from a URL"
+        },
+        {
+          "command": "wget -O <file> <url>",
+          "description": "Download a URL and save it to a specific filename"
+        },
+        {
+          "command": "wget -q <url>",
+          "description": "Download a URL quietly without output"
+        },
+        {
+          "command": "wget -r <url>",
+          "description": "Recursively download a website"
+        },
+        {
+          "command": "wget -c <url>",
+          "description": "Continue a previously interrupted download"
+        },
+        {
+          "command": "wget --no-check-certificate <url>",
+          "description": "Download skipping SSL certificate verification"
+        },
+        {
+          "command": "ifconfig",
+          "description": "Display or configure network interface parameters"
+        },
+        {
+          "command": "ip addr",
+          "description": "Show all network interface addresses"
+        },
+        {
+          "command": "ip addr show <interface>",
+          "description": "Show the address of a specific network interface"
+        },
+        {
+          "command": "ip link",
+          "description": "Show or modify the state of network interfaces"
+        },
+        {
+          "command": "ip route",
+          "description": "Show the kernel routing table"
+        },
+        {
+          "command": "netstat -tuln",
+          "description": "List all listening TCP and UDP ports"
+        },
+        {
+          "command": "netstat -anp",
+          "description": "List all network connections with process IDs"
+        },
+        {
+          "command": "ss -tuln",
+          "description": "List all listening sockets (modern replacement for netstat)"
+        },
+        {
+          "command": "ss -anp",
+          "description": "List all sockets with process information"
+        },
+        {
+          "command": "traceroute <host>",
+          "description": "Trace the network path packets take to reach a host"
+        },
+        {
+          "command": "nslookup <domain>",
+          "description": "Query DNS to find the IP address of a domain"
+        },
+        {
+          "command": "dig <domain>",
+          "description": "Perform a detailed DNS lookup for a domain"
+        },
+        {
+          "command": "dig <domain> <type>",
+          "description": "Perform a DNS lookup for a specific record type"
+        },
+        {
+          "command": "host <domain>",
+          "description": "Look up a domain's IP address"
+        },
+        {
+          "command": "ssh <user>@<host>",
+          "description": "Connect to a remote host over SSH"
+        },
+        {
+          "command": "ssh -p <port> <user>@<host>",
+          "description": "Connect to a remote host on a specific SSH port"
+        },
+        {
+          "command": "ssh -i <keyfile> <user>@<host>",
+          "description": "Connect using a specific private key file"
+        },
+        {
+          "command": "ssh-keygen -t rsa -b 4096",
+          "description": "Generate a new 4096-bit RSA SSH key pair"
+        },
+        {
+          "command": "ssh-copy-id <user>@<host>",
+          "description": "Copy your public key to a remote host for passwordless login"
+        },
+        {
+          "command": "scp <file> <user>@<host>:<path>",
+          "description": "Securely copy a file to a remote host"
+        },
+        {
+          "command": "scp <user>@<host>:<path> <local>",
+          "description": "Securely copy a file from a remote host"
+        },
+        {
+          "command": "scp -r <dir> <user>@<host>:<path>",
+          "description": "Recursively copy a directory to a remote host"
+        },
+        {
+          "command": "rsync -av <source> <destination>",
+          "description": "Synchronize files with verbose archive mode"
+        },
+        {
+          "command": "rsync -avz <source> <user>@<host>:<path>",
+          "description": "Synchronize files to a remote host with compression"
+        },
+        {
+          "command": "rsync --delete <source> <destination>",
+          "description": "Synchronize and delete files at destination not in source"
+        },
+        {
+          "command": "rsync -n <source> <destination>",
+          "description": "Dry run sync to preview what would be transferred"
+        }
+      ]
+    },
+    {
+      "title": "Text Processing",
+      "commands": [
+        {
+          "command": "echo <text>",
+          "description": "Print text or variable values to standard output"
+        },
+        {
+          "command": "echo -n <text>",
+          "description": "Print text without a trailing newline"
+        },
+        {
+          "command": "echo -e <text>",
+          "description": "Print text interpreting backslash escape sequences"
+        },
+        {
+          "command": "printf <format> <args>",
+          "description": "Format and print data according to a format string"
+        },
+        {
+          "command": "sed 's/<old>/<new>/' <file>",
+          "description": "Replace the first occurrence of a pattern in each line"
+        },
+        {
+          "command": "sed 's/<old>/<new>/g' <file>",
+          "description": "Replace all occurrences of a pattern in each line"
+        },
+        {
+          "command": "sed -i 's/<old>/<new>/g' <file>",
+          "description": "Edit a file in-place replacing all occurrences of a pattern"
+        },
+        {
+          "command": "sed -n '<n>p' <file>",
+          "description": "Print only line number <n> of a file"
+        },
+        {
+          "command": "sed -n '<start>,<end>p' <file>",
+          "description": "Print only lines from start to end of a file"
+        },
+        {
+          "command": "sed '/<pattern>/d' <file>",
+          "description": "Delete lines matching a pattern"
+        },
+        {
+          "command": "sed -n '/<pattern>/p' <file>",
+          "description": "Print only lines matching a pattern"
+        },
+        {
+          "command": "awk '{print $1}' <file>",
+          "description": "Print the first field of each line"
+        },
+        {
+          "command": "awk -F '<delim>' '{print $1}' <file>",
+          "description": "Print the first field using a custom delimiter"
+        },
+        {
+          "command": "awk 'NR==<n>' <file>",
+          "description": "Print a specific line number from a file"
+        },
+        {
+          "command": "awk '/pattern/ {print}' <file>",
+          "description": "Print lines matching a pattern using awk"
+        },
+        {
+          "command": "awk '{sum += $1} END {print sum}' <file>",
+          "description": "Sum the values of the first column in a file"
+        },
+        {
+          "command": "awk 'NR > 1' <file>",
+          "description": "Skip the first line (header) and print the rest"
+        },
+        {
+          "command": "cut -d '<delim>' -f <fields> <file>",
+          "description": "Cut fields from each line of a file using a delimiter"
+        },
+        {
+          "command": "cut -c <range> <file>",
+          "description": "Cut specific character positions from each line"
+        },
+        {
+          "command": "cut -f <n> <file>",
+          "description": "Cut a specific field from tab-delimited input"
+        },
+        {
+          "command": "sort <file>",
+          "description": "Sort the lines of a file alphabetically"
+        },
+        {
+          "command": "sort -r <file>",
+          "description": "Sort lines in reverse order"
+        },
+        {
+          "command": "sort -n <file>",
+          "description": "Sort lines numerically"
+        },
+        {
+          "command": "sort -k <n> <file>",
+          "description": "Sort by a specific field/column number"
+        },
+        {
+          "command": "sort -u <file>",
+          "description": "Sort and remove duplicate lines"
+        },
+        {
+          "command": "sort -t '<delim>' -k <n> <file>",
+          "description": "Sort by a specific field using a custom delimiter"
+        },
+        {
+          "command": "uniq <file>",
+          "description": "Remove adjacent duplicate lines from a file"
+        },
+        {
+          "command": "uniq -c <file>",
+          "description": "Count and print the number of occurrences of each unique line"
+        },
+        {
+          "command": "uniq -d <file>",
+          "description": "Print only the duplicate lines"
+        },
+        {
+          "command": "uniq -u <file>",
+          "description": "Print only unique, non-duplicated lines"
+        },
+        {
+          "command": "tr '<set1>' '<set2>'",
+          "description": "Translate or replace characters from set1 with set2"
+        },
+        {
+          "command": "tr -d '<chars>'",
+          "description": "Delete specified characters from input"
+        },
+        {
+          "command": "tr -s '<chars>'",
+          "description": "Squeeze repeated characters into one"
+        },
+        {
+          "command": "tr a-z A-Z",
+          "description": "Convert lowercase letters to uppercase"
+        },
+        {
+          "command": "tee <file>",
+          "description": "Read from stdin and write to both stdout and a file"
+        },
+        {
+          "command": "tee -a <file>",
+          "description": "Append stdin to a file while also printing to stdout"
+        },
+        {
+          "command": "xargs <command>",
+          "description": "Build and execute commands from standard input"
+        },
+        {
+          "command": "xargs -n <n> <command>",
+          "description": "Pass at most <n> arguments per command invocation"
+        },
+        {
+          "command": "xargs -I {} <command> {}",
+          "description": "Replace {} with each input line when running a command"
+        },
+        {
+          "command": "xargs -P <n> <command>",
+          "description": "Run up to <n> commands in parallel"
+        },
+        {
+          "command": "diff <file1> <file2>",
+          "description": "Compare two files line by line"
+        },
+        {
+          "command": "diff -u <file1> <file2>",
+          "description": "Compare two files showing unified diff format"
+        },
+        {
+          "command": "diff -r <dir1> <dir2>",
+          "description": "Recursively compare two directories"
+        },
+        {
+          "command": "patch <file> < <patch>",
+          "description": "Apply a patch file to an original file"
+        },
+        {
+          "command": "join <file1> <file2>",
+          "description": "Join lines of two files on a common field"
+        },
+        {
+          "command": "paste <file1> <file2>",
+          "description": "Merge lines of files side by side"
+        }
+      ]
+    },
+    {
+      "title": "Redirection & Pipelines",
+      "commands": [
+        {
+          "command": "<command> > <file>",
+          "description": "Redirect standard output to a file, overwriting it"
+        },
+        {
+          "command": "<command> >> <file>",
+          "description": "Redirect standard output and append to a file"
+        },
+        {
+          "command": "<command> < <file>",
+          "description": "Redirect a file as standard input to a command"
+        },
+        {
+          "command": "<command> 2> <file>",
+          "description": "Redirect standard error output to a file"
+        },
+        {
+          "command": "<command> 2>> <file>",
+          "description": "Append standard error to a file"
+        },
+        {
+          "command": "<command> &> <file>",
+          "description": "Redirect both stdout and stderr to a file"
+        },
+        {
+          "command": "<command> 2>&1",
+          "description": "Redirect stderr to the same destination as stdout"
+        },
+        {
+          "command": "<command> > /dev/null",
+          "description": "Discard standard output"
+        },
+        {
+          "command": "<command> > /dev/null 2>&1",
+          "description": "Discard both standard output and standard error"
+        },
+        {
+          "command": "<command1> | <command2>",
+          "description": "Pipe the output of command1 as input to command2"
+        },
+        {
+          "command": "<command1> | <command2> | <command3>",
+          "description": "Chain multiple commands together with pipes"
+        },
+        {
+          "command": "<command1> && <command2>",
+          "description": "Run command2 only if command1 succeeds"
+        },
+        {
+          "command": "<command1> || <command2>",
+          "description": "Run command2 only if command1 fails"
+        },
+        {
+          "command": "<command1> ; <command2>",
+          "description": "Run command1 then command2 regardless of exit status"
+        },
+        {
+          "command": "command <<EOF ... EOF",
+          "description": "Provide a here-document as standard input to a command"
+        },
+        {
+          "command": "<command> <<< \"<string>\"",
+          "description": "Feed a here-string directly as stdin to a command"
+        },
+        {
+          "command": "exec <n>< <file>",
+          "description": "Open a file on file descriptor <n> for reading"
+        },
+        {
+          "command": "exec <n>> <file>",
+          "description": "Open a file on file descriptor <n> for writing"
+        }
+      ]
+    },
+    {
+      "title": "Archiving & Compression",
+      "commands": [
+        {
+          "command": "tar -cvf <archive>.tar <files>",
+          "description": "Create a tar archive from specified files or directories"
+        },
+        {
+          "command": "tar -xvf <archive>.tar",
+          "description": "Extract all files from a tar archive"
+        },
+        {
+          "command": "tar -tvf <archive>.tar",
+          "description": "List the contents of a tar archive without extracting"
+        },
+        {
+          "command": "tar -cvzf <archive>.tar.gz <files>",
+          "description": "Create a gzip-compressed tar archive"
+        },
+        {
+          "command": "tar -xvzf <archive>.tar.gz",
+          "description": "Extract a gzip-compressed tar archive"
+        },
+        {
+          "command": "tar -cvjf <archive>.tar.bz2 <files>",
+          "description": "Create a bzip2-compressed tar archive"
+        },
+        {
+          "command": "tar -xvjf <archive>.tar.bz2",
+          "description": "Extract a bzip2-compressed tar archive"
+        },
+        {
+          "command": "tar -cvJf <archive>.tar.xz <files>",
+          "description": "Create an xz-compressed tar archive"
+        },
+        {
+          "command": "tar -xvJf <archive>.tar.xz",
+          "description": "Extract an xz-compressed tar archive"
+        },
+        {
+          "command": "tar -xvf <archive>.tar -C <directory>",
+          "description": "Extract a tar archive into a specific directory"
+        },
+        {
+          "command": "tar --exclude=<pattern> -cvzf <archive>.tar.gz <files>",
+          "description": "Create a tar archive excluding files matching a pattern"
+        },
+        {
+          "command": "gzip <file>",
+          "description": "Compress a file using gzip, replacing the original"
+        },
+        {
+          "command": "gzip -d <file>.gz",
+          "description": "Decompress a gzip-compressed file"
+        },
+        {
+          "command": "gzip -k <file>",
+          "description": "Compress a file with gzip while keeping the original"
+        },
+        {
+          "command": "gzip -l <file>.gz",
+          "description": "List the compression ratio of a gzip file"
+        },
+        {
+          "command": "gunzip <file>.gz",
+          "description": "Decompress a gzip file"
+        },
+        {
+          "command": "bzip2 <file>",
+          "description": "Compress a file using bzip2"
+        },
+        {
+          "command": "bzip2 -d <file>.bz2",
+          "description": "Decompress a bzip2-compressed file"
+        },
+        {
+          "command": "bunzip2 <file>.bz2",
+          "description": "Decompress a bzip2 file"
+        },
+        {
+          "command": "xz <file>",
+          "description": "Compress a file using xz"
+        },
+        {
+          "command": "xz -d <file>.xz",
+          "description": "Decompress an xz-compressed file"
+        },
+        {
+          "command": "zip <archive>.zip <files>",
+          "description": "Create a zip archive from specified files"
+        },
+        {
+          "command": "zip -r <archive>.zip <directory>",
+          "description": "Recursively zip an entire directory"
+        },
+        {
+          "command": "unzip <archive>.zip",
+          "description": "Extract all files from a zip archive"
+        },
+        {
+          "command": "unzip <archive>.zip -d <directory>",
+          "description": "Extract a zip archive into a specific directory"
+        },
+        {
+          "command": "unzip -l <archive>.zip",
+          "description": "List files in a zip archive without extracting"
+        }
+      ]
+    },
+    {
+      "title": "User Management",
+      "commands": [
+        {
+          "command": "who",
+          "description": "Show who is currently logged into the system"
+        },
+        {
+          "command": "w",
+          "description": "Show logged-in users and their current activity"
+        },
+        {
+          "command": "last",
+          "description": "Show a list of recent logins"
+        },
+        {
+          "command": "lastlog",
+          "description": "Show the most recent login for all users"
+        },
+        {
+          "command": "useradd <username>",
+          "description": "Create a new user account"
+        },
+        {
+          "command": "useradd -m <username>",
+          "description": "Create a new user and create their home directory"
+        },
+        {
+          "command": "useradd -s <shell> <username>",
+          "description": "Create a user with a specific default shell"
+        },
+        {
+          "command": "useradd -g <group> <username>",
+          "description": "Create a user and set their primary group"
+        },
+        {
+          "command": "useradd -G <groups> <username>",
+          "description": "Create a user and add them to supplementary groups"
+        },
+        {
+          "command": "usermod -aG <group> <username>",
+          "description": "Add an existing user to a supplementary group"
+        },
+        {
+          "command": "usermod -s <shell> <username>",
+          "description": "Change the default shell of a user"
+        },
+        {
+          "command": "usermod -l <new> <old>",
+          "description": "Rename a user account"
+        },
+        {
+          "command": "usermod -L <username>",
+          "description": "Lock a user account"
+        },
+        {
+          "command": "usermod -U <username>",
+          "description": "Unlock a user account"
+        },
+        {
+          "command": "userdel <username>",
+          "description": "Delete a user account"
+        },
+        {
+          "command": "userdel -r <username>",
+          "description": "Delete a user account and their home directory"
+        },
+        {
+          "command": "passwd",
+          "description": "Change the password for the current user"
+        },
+        {
+          "command": "passwd <username>",
+          "description": "Change the password for a specific user"
+        },
+        {
+          "command": "passwd -l <username>",
+          "description": "Lock a user's password"
+        },
+        {
+          "command": "passwd -u <username>",
+          "description": "Unlock a user's password"
+        },
+        {
+          "command": "groupadd <groupname>",
+          "description": "Create a new group"
+        },
+        {
+          "command": "groupdel <groupname>",
+          "description": "Delete an existing group"
+        },
+        {
+          "command": "groups <username>",
+          "description": "Show which groups a user belongs to"
+        },
+        {
+          "command": "su <username>",
+          "description": "Switch to another user account"
+        },
+        {
+          "command": "su -",
+          "description": "Switch to root with a full login environment"
+        },
+        {
+          "command": "sudo <command>",
+          "description": "Execute a command with superuser privileges"
+        },
+        {
+          "command": "sudo -u <user> <command>",
+          "description": "Execute a command as a specific user via sudo"
+        },
+        {
+          "command": "sudo -i",
+          "description": "Open an interactive root shell via sudo"
+        },
+        {
+          "command": "sudo !!",
+          "description": "Re-run the previous command with sudo"
+        },
+        {
+          "command": "visudo",
+          "description": "Safely edit the sudoers file"
+        }
+      ]
+    },
+    {
+      "title": "Shell Scripting",
+      "commands": [
+        {
+          "command": "#!/bin/bash",
+          "description": "Shebang line to specify bash as the script interpreter"
+        },
+        {
+          "command": "bash <script>.sh",
+          "description": "Execute a shell script using bash"
+        },
+        {
+          "command": "chmod +x <script>.sh && ./<script>.sh",
+          "description": "Make a script executable and then run it"
+        },
+        {
+          "command": "source <script>.sh",
+          "description": "Execute a script in the current shell environment"
+        },
+        {
+          "command": ". <script>.sh",
+          "description": "Dot-source a script, executing it in the current shell"
+        },
+        {
+          "command": "set -e",
+          "description": "Exit the script immediately if any command fails"
+        },
+        {
+          "command": "set -u",
+          "description": "Exit the script if any undefined variable is used"
+        },
+        {
+          "command": "set -x",
+          "description": "Print each command before executing it for debugging"
+        },
+        {
+          "command": "set -o pipefail",
+          "description": "Return the exit status of the last failed command in a pipeline"
+        },
+        {
+          "command": "set -euxo pipefail",
+          "description": "Enable strict mode: exit on error, undefined vars, and pipefail"
+        },
+        {
+          "command": "<variable>=<value>",
+          "description": "Assign a value to a shell variable (no spaces around =)"
+        },
+        {
+          "command": "readonly <variable>=<value>",
+          "description": "Declare a read-only variable that cannot be changed"
+        },
+        {
+          "command": "local <variable>=<value>",
+          "description": "Declare a variable local to a function"
+        },
+        {
+          "command": "declare -i <variable>",
+          "description": "Declare a variable as an integer type"
+        },
+        {
+          "command": "declare -a <array>",
+          "description": "Declare an indexed array variable"
+        },
+        {
+          "command": "declare -A <array>",
+          "description": "Declare an associative array (dictionary) variable"
+        },
+        {
+          "command": "if [ <condition> ]; then ... fi",
+          "description": "Basic if-then-fi conditional block"
+        },
+        {
+          "command": "if [ <condition> ]; then ... else ... fi",
+          "description": "If-else conditional block"
+        },
+        {
+          "command": "if [[ <condition> ]]; then ... fi",
+          "description": "If block using bash extended test syntax"
+        },
+        {
+          "command": "for <var> in <list>; do ... done",
+          "description": "Loop over a list of items"
+        },
+        {
+          "command": "for (( i=0; i<n; i++ )); do ... done",
+          "description": "C-style arithmetic for loop"
+        },
+        {
+          "command": "while [ <condition> ]; do ... done",
+          "description": "Execute a block while a condition is true"
+        },
+        {
+          "command": "while read line; do ... done < <file>",
+          "description": "Read and process a file line by line"
+        },
+        {
+          "command": "until [ <condition> ]; do ... done",
+          "description": "Execute a block until a condition becomes true"
+        },
+        {
+          "command": "case <var> in <pattern>) ... ;; esac",
+          "description": "Match a variable against multiple patterns"
+        },
+        {
+          "command": "function <name>() { ... }",
+          "description": "Define a reusable function"
+        },
+        {
+          "command": "<name>() { ... }",
+          "description": "Define a function without the function keyword"
+        },
+        {
+          "command": "return <code>",
+          "description": "Exit a function with a specific return code"
+        },
+        {
+          "command": "exit <code>",
+          "description": "Exit the script with a specific exit code"
+        },
+        {
+          "command": "$?",
+          "description": "Get the exit status of the last executed command"
+        },
+        {
+          "command": "$0",
+          "description": "Get the name of the current script"
+        },
+        {
+          "command": "$1, $2 ...",
+          "description": "Access positional arguments passed to the script"
+        },
+        {
+          "command": "$@",
+          "description": "Access all positional arguments as separate quoted strings"
+        },
+        {
+          "command": "$*",
+          "description": "Access all positional arguments as a single string"
+        },
+        {
+          "command": "$#",
+          "description": "Get the count of positional arguments"
+        },
+        {
+          "command": "$!",
+          "description": "Get the PID of the most recently backgrounded process"
+        },
+        {
+          "command": "$$",
+          "description": "Get the PID of the current shell process"
+        },
+        {
+          "command": "$(<command>)",
+          "description": "Capture the output of a command into a variable"
+        },
+        {
+          "command": "`<command>`",
+          "description": "Command substitution using backticks (older syntax)"
+        },
+        {
+          "command": "$(( <expression> ))",
+          "description": "Perform arithmetic expression evaluation"
+        },
+        {
+          "command": "trap '<command>' <signal>",
+          "description": "Execute a command when a specific signal is received"
+        },
+        {
+          "command": "trap '<command>' EXIT",
+          "description": "Execute a cleanup command when the script exits"
+        },
+        {
+          "command": "getopts <optstring> <variable>",
+          "description": "Parse command-line options in a script"
+        },
+        {
+          "command": "shift",
+          "description": "Shift positional arguments left by one"
+        },
+        {
+          "command": "shift <n>",
+          "description": "Shift positional arguments left by <n>"
+        },
+        {
+          "command": "read <variable>",
+          "description": "Read a line from stdin into a variable"
+        },
+        {
+          "command": "read -p \"<prompt>\" <variable>",
+          "description": "Prompt the user and read their input"
+        },
+        {
+          "command": "read -s <variable>",
+          "description": "Read input silently without echoing characters"
+        },
+        {
+          "command": "read -a <array>",
+          "description": "Read input into an indexed array"
+        },
+        {
+          "command": "test -f <file>",
+          "description": "Check if a file exists and is a regular file"
+        },
+        {
+          "command": "test -d <directory>",
+          "description": "Check if a path exists and is a directory"
+        },
+        {
+          "command": "test -z <string>",
+          "description": "Check if a string is empty"
+        },
+        {
+          "command": "test -n <string>",
+          "description": "Check if a string is non-empty"
+        },
+        {
+          "command": "[ <expr1> -eq <expr2> ]",
+          "description": "Test if two integers are equal"
+        },
+        {
+          "command": "[ <expr1> -ne <expr2> ]",
+          "description": "Test if two integers are not equal"
+        },
+        {
+          "command": "[ <expr1> -lt <expr2> ]",
+          "description": "Test if the first integer is less than the second"
+        },
+        {
+          "command": "[ <expr1> -gt <expr2> ]",
+          "description": "Test if the first integer is greater than the second"
+        }
+      ]
+    },
+    {
+      "title": "Package Management",
+      "commands": [
+        {
+          "command": "apt update",
+          "description": "Update the list of available packages and their versions"
+        },
+        {
+          "command": "apt upgrade",
+          "description": "Install the newest versions of all installed packages"
+        },
+        {
+          "command": "apt install <package>",
+          "description": "Install a specific package"
+        },
+        {
+          "command": "apt install -y <package>",
+          "description": "Install a package automatically answering yes to prompts"
+        },
+        {
+          "command": "apt remove <package>",
+          "description": "Remove a package but keep its configuration files"
+        },
+        {
+          "command": "apt purge <package>",
+          "description": "Remove a package and all its configuration files"
+        },
+        {
+          "command": "apt autoremove",
+          "description": "Remove packages that were automatically installed and no longer needed"
+        },
+        {
+          "command": "apt search <query>",
+          "description": "Search for a package in the repository"
+        },
+        {
+          "command": "apt show <package>",
+          "description": "Show detailed information about a specific package"
+        },
+        {
+          "command": "apt list --installed",
+          "description": "List all installed packages"
+        },
+        {
+          "command": "apt-cache policy <package>",
+          "description": "Show the installed and candidate version of a package"
+        },
+        {
+          "command": "dpkg -i <package>.deb",
+          "description": "Install a .deb package file"
+        },
+        {
+          "command": "dpkg -r <package>",
+          "description": "Remove an installed package"
+        },
+        {
+          "command": "dpkg -l",
+          "description": "List all installed packages"
+        },
+        {
+          "command": "dpkg -L <package>",
+          "description": "List all files installed by a package"
+        },
+        {
+          "command": "dpkg -s <package>",
+          "description": "Show the status and info of an installed package"
+        },
+        {
+          "command": "yum install <package>",
+          "description": "Install a package on RPM-based systems"
+        },
+        {
+          "command": "yum update",
+          "description": "Update all packages on RPM-based systems"
+        },
+        {
+          "command": "yum remove <package>",
+          "description": "Remove a package from RPM-based systems"
+        },
+        {
+          "command": "yum search <query>",
+          "description": "Search for a package on RPM-based systems"
+        },
+        {
+          "command": "dnf install <package>",
+          "description": "Install a package using the modern DNF package manager"
+        },
+        {
+          "command": "dnf update",
+          "description": "Update all packages using DNF"
+        },
+        {
+          "command": "dnf remove <package>",
+          "description": "Remove a package using DNF"
+        },
+        {
+          "command": "snap install <package>",
+          "description": "Install a snap package"
+        },
+        {
+          "command": "snap remove <package>",
+          "description": "Remove a snap package"
+        },
+        {
+          "command": "snap list",
+          "description": "List all installed snap packages"
+        },
+        {
+          "command": "flatpak install <package>",
+          "description": "Install a Flatpak application"
+        },
+        {
+          "command": "flatpak remove <package>",
+          "description": "Remove a Flatpak application"
+        }
+      ]
+    },
+    {
+      "title": "Disk & Storage",
+      "commands": [
+        {
+          "command": "mount <device> <mountpoint>",
+          "description": "Mount a filesystem device to a directory"
+        },
+        {
+          "command": "umount <mountpoint>",
+          "description": "Unmount a mounted filesystem"
+        },
+        {
+          "command": "mount | grep <device>",
+          "description": "Check if a device is currently mounted"
+        },
+        {
+          "command": "fdisk -l",
+          "description": "List all disk partitions"
+        },
+        {
+          "command": "fdisk <device>",
+          "description": "Open an interactive partition editor for a disk"
+        },
+        {
+          "command": "parted <device>",
+          "description": "Open the parted partition editor for a disk"
+        },
+        {
+          "command": "mkfs.ext4 <device>",
+          "description": "Format a device with the ext4 filesystem"
+        },
+        {
+          "command": "mkfs.vfat <device>",
+          "description": "Format a device with the FAT filesystem"
+        },
+        {
+          "command": "mkswap <device>",
+          "description": "Set up a swap space on a device"
+        },
+        {
+          "command": "swapon <device>",
+          "description": "Enable a swap space"
+        },
+        {
+          "command": "swapoff <device>",
+          "description": "Disable a swap space"
+        },
+        {
+          "command": "dd if=<input> of=<output> bs=<size>",
+          "description": "Copy and convert data from input to output block by block"
+        },
+        {
+          "command": "dd if=/dev/zero of=<file> bs=1M count=100",
+          "description": "Create a 100MB file filled with zeros"
+        },
+        {
+          "command": "dd if=<image>.iso of=<device>",
+          "description": "Write an ISO image to a device"
+        },
+        {
+          "command": "fsck <device>",
+          "description": "Check and repair a filesystem"
+        },
+        {
+          "command": "e2fsck -f <device>",
+          "description": "Force a check of an ext2/3/4 filesystem"
+        },
+        {
+          "command": "resize2fs <device>",
+          "description": "Resize an ext2/3/4 filesystem"
+        }
+      ]
+    },
+    {
+      "title": "Scheduling & Automation",
+      "commands": [
+        {
+          "command": "crontab -e",
+          "description": "Edit the current user's crontab file"
+        },
+        {
+          "command": "crontab -l",
+          "description": "List the current user's cron jobs"
+        },
+        {
+          "command": "crontab -r",
+          "description": "Remove the current user's crontab file"
+        },
+        {
+          "command": "crontab -u <user> -e",
+          "description": "Edit the crontab for a specific user"
+        },
+        {
+          "command": "at <time>",
+          "description": "Schedule a command to run once at a specific time"
+        },
+        {
+          "command": "atq",
+          "description": "List all pending at jobs"
+        },
+        {
+          "command": "atrm <job>",
+          "description": "Remove a pending at job by its job number"
+        },
+        {
+          "command": "systemctl start <service>",
+          "description": "Start a systemd service"
+        },
+        {
+          "command": "systemctl stop <service>",
+          "description": "Stop a running systemd service"
+        },
+        {
+          "command": "systemctl restart <service>",
+          "description": "Restart a systemd service"
+        },
+        {
+          "command": "systemctl status <service>",
+          "description": "Check the status of a systemd service"
+        },
+        {
+          "command": "systemctl enable <service>",
+          "description": "Enable a service to start automatically at boot"
+        },
+        {
+          "command": "systemctl disable <service>",
+          "description": "Disable a service from starting at boot"
+        },
+        {
+          "command": "systemctl list-units --type=service",
+          "description": "List all active systemd services"
+        },
+        {
+          "command": "journalctl -u <service>",
+          "description": "View the logs for a specific systemd service"
+        },
+        {
+          "command": "journalctl -f",
+          "description": "Follow the system journal in real-time"
+        },
+        {
+          "command": "journalctl --since \"<date>\"",
+          "description": "Show journal entries since a specific date"
+        }
+      ]
+    },
+    {
+      "title": "Miscellaneous",
+      "commands": [
+        {
+          "command": "history",
+          "description": "Show the command history for the current session"
+        },
+        {
+          "command": "history -c",
+          "description": "Clear all command history"
+        },
+        {
+          "command": "history | grep <command>",
+          "description": "Search through command history for a specific command"
+        },
+        {
+          "command": "!<n>",
+          "description": "Re-run command number <n> from history"
+        },
+        {
+          "command": "!!",
+          "description": "Re-run the most recently executed command"
+        },
+        {
+          "command": "!<string>",
+          "description": "Re-run the most recent command starting with a string"
+        },
+        {
+          "command": "alias <name>='<command>'",
+          "description": "Create a shortcut alias for a command"
+        },
+        {
+          "command": "alias",
+          "description": "List all currently defined aliases"
+        },
+        {
+          "command": "unalias <name>",
+          "description": "Remove a defined alias"
+        },
+        {
+          "command": "man <command>",
+          "description": "Display the manual page for a command"
+        },
+        {
+          "command": "man -k <keyword>",
+          "description": "Search manual page descriptions for a keyword"
+        },
+        {
+          "command": "info <command>",
+          "description": "Display the info manual for a command"
+        },
+        {
+          "command": "--help",
+          "description": "Display help information for most commands when appended"
+        },
+        {
+          "command": "clear",
+          "description": "Clear the terminal screen"
+        },
+        {
+          "command": "reset",
+          "description": "Reset the terminal to its initial state"
+        },
+        {
+          "command": "exit",
+          "description": "Exit the current shell session"
+        },
+        {
+          "command": "logout",
+          "description": "Log out of a login shell"
+        },
+        {
+          "command": "script <file>",
+          "description": "Record a terminal session to a file"
+        },
+        {
+          "command": "tmux",
+          "description": "Start a new tmux terminal multiplexer session"
+        },
+        {
+          "command": "tmux new -s <name>",
+          "description": "Start a new named tmux session"
+        },
+        {
+          "command": "tmux attach -t <name>",
+          "description": "Attach to an existing tmux session"
+        },
+        {
+          "command": "tmux ls",
+          "description": "List all active tmux sessions"
+        },
+        {
+          "command": "screen",
+          "description": "Start a new GNU screen session"
+        },
+        {
+          "command": "screen -r",
+          "description": "Resume a detached screen session"
+        },
+        {
+          "command": "xdg-open <file>",
+          "description": "Open a file with the default associated application"
+        },
+        {
+          "command": "xclip -sel clip < <file>",
+          "description": "Copy file contents to the system clipboard"
+        },
+        {
+          "command": "bc",
+          "description": "Open an interactive arbitrary precision calculator"
+        },
+        {
+          "command": "bc -l",
+          "description": "Open bc with math library for floating point operations"
+        },
+        {
+          "command": "factor <number>",
+          "description": "Print the prime factorization of a number"
+        },
+        {
+          "command": "seq <start> <end>",
+          "description": "Generate a sequence of numbers from start to end"
+        },
+        {
+          "command": "seq -s '<sep>' <start> <end>",
+          "description": "Generate a sequence of numbers using a custom separator"
+        },
+        {
+          "command": "yes",
+          "description": "Repeatedly output 'y' to auto-accept prompts"
+        },
+        {
+          "command": "yes <string>",
+          "description": "Repeatedly output a custom string"
+        }
+      ]
+    }
+  ]
+}

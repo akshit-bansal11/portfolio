@@ -1,0 +1,559 @@
+{
+  "name": "Vitest",
+  "slug": "vitest",
+  "logo": "https://svgl.app/library/vitest.svg",
+  "accent": "#729B1B",
+  "description": "Vite-native unit testing framework with Jest-compatible API",
+  "categories": [
+    {
+      "title": "Running Tests",
+      "commands": [
+        {
+          "command": "vitest",
+          "description": "Run all tests in watch mode"
+        },
+        {
+          "command": "vitest run",
+          "description": "Run all tests once without watch mode"
+        },
+        {
+          "command": "vitest watch",
+          "description": "Run all tests in explicit watch mode, re-running on file changes"
+        },
+        {
+          "command": "vitest dev",
+          "description": "Alias for vitest watch — run tests in interactive watch mode"
+        },
+        {
+          "command": "vitest run src/utils",
+          "description": "Run tests matching a specific file path or pattern once"
+        },
+        {
+          "command": "vitest run src/utils/math.test.ts",
+          "description": "Run a single specific test file once"
+        },
+        {
+          "command": "vitest run --reporter=verbose",
+          "description": "Run all tests once with verbose output showing each test name"
+        },
+        {
+          "command": "vitest run --reporter=dot",
+          "description": "Run all tests once with minimal dot-style reporter output"
+        },
+        {
+          "command": "vitest run --reporter=json",
+          "description": "Run all tests once and output results as JSON to stdout"
+        },
+        {
+          "command": "vitest run --reporter=json --outputFile=results.json",
+          "description": "Run all tests and write JSON results to a file"
+        },
+        {
+          "command": "vitest run --reporter=junit",
+          "description": "Run all tests and output results in JUnit XML format"
+        },
+        {
+          "command": "vitest run --reporter=junit --outputFile=junit.xml",
+          "description": "Run all tests and write JUnit XML results to a file"
+        },
+        {
+          "command": "vitest run --reporter=html",
+          "description": "Run all tests and generate an HTML report"
+        },
+        {
+          "command": "vitest run --reporter=verbose --reporter=json --outputFile=results.json",
+          "description": "Run tests with multiple reporters simultaneously"
+        },
+        {
+          "command": "vitest run --silent",
+          "description": "Run all tests suppressing console output from test files"
+        },
+        {
+          "command": "vitest run --bail=1",
+          "description": "Stop running tests after the first test failure"
+        },
+        {
+          "command": "vitest run --bail=3",
+          "description": "Stop running tests after 3 test failures"
+        },
+        {
+          "command": "vitest run --no-color",
+          "description": "Run tests without ANSI color codes in the output"
+        },
+        {
+          "command": "vitest run --allowOnly",
+          "description": "Allow test.only and describe.only in CI without throwing an error"
+        },
+        {
+          "command": "vitest run --passWithNoTests",
+          "description": "Exit with code 0 even when no test files are found"
+        },
+        {
+          "command": "vitest run --hideSkippedTests",
+          "description": "Run tests hiding skipped test entries from the output"
+        },
+        {
+          "command": "vitest --testNamePattern=\"should return\"",
+          "description": "Run only tests whose names match a given regex pattern"
+        },
+        {
+          "command": "vitest run --testNamePattern=\"auth\"",
+          "description": "Run once only tests whose names contain the word auth"
+        },
+        {
+          "command": "vitest run --project=frontend",
+          "description": "Run tests for a specific named project in a multi-project setup"
+        },
+        {
+          "command": "vitest run --project=frontend --project=backend",
+          "description": "Run tests for multiple specified projects in a multi-project setup"
+        }
+      ]
+    },
+    {
+      "title": "Watch Mode",
+      "commands": [
+        {
+          "command": "vitest --changed",
+          "description": "Run only tests related to files changed since the last git commit"
+        },
+        {
+          "command": "vitest --changed HEAD~1",
+          "description": "Run only tests related to files changed in the last git commit"
+        },
+        {
+          "command": "vitest --changed origin/main",
+          "description": "Run only tests related to files changed compared to origin/main"
+        },
+        {
+          "command": "vitest --force-rerun-triggers src/utils",
+          "description": "Force a full test rerun when files in a specific path change"
+        },
+        {
+          "command": "vitest --watch --reporter=verbose",
+          "description": "Run in watch mode with verbose output showing individual test names"
+        }
+      ]
+    },
+    {
+      "title": "Coverage",
+      "commands": [
+        {
+          "command": "vitest run --coverage",
+          "description": "Run all tests once and collect code coverage using the default provider"
+        },
+        {
+          "command": "vitest --coverage",
+          "description": "Run tests in watch mode with code coverage enabled"
+        },
+        {
+          "command": "vitest run --coverage --coverage.provider=v8",
+          "description": "Run tests with coverage using the V8 native coverage provider"
+        },
+        {
+          "command": "vitest run --coverage --coverage.provider=istanbul",
+          "description": "Run tests with coverage using the Istanbul coverage provider"
+        },
+        {
+          "command": "vitest run --coverage --coverage.reporter=text",
+          "description": "Run tests and output a text coverage summary to the terminal"
+        },
+        {
+          "command": "vitest run --coverage --coverage.reporter=lcov",
+          "description": "Run tests and generate an lcov coverage report"
+        },
+        {
+          "command": "vitest run --coverage --coverage.reporter=html",
+          "description": "Run tests and generate an HTML coverage report"
+        },
+        {
+          "command": "vitest run --coverage --coverage.reporter=json",
+          "description": "Run tests and generate a JSON coverage report"
+        },
+        {
+          "command": "vitest run --coverage --coverage.reporter=text --coverage.reporter=html",
+          "description": "Run tests generating both text and HTML coverage reports"
+        },
+        {
+          "command": "vitest run --coverage --coverage.include=\"src/**\"",
+          "description": "Collect coverage only for files matching the specified glob pattern"
+        },
+        {
+          "command": "vitest run --coverage --coverage.exclude=\"src/**/*.d.ts\"",
+          "description": "Exclude specific files from coverage collection"
+        },
+        {
+          "command": "vitest run --coverage --coverage.all",
+          "description": "Include all project files in coverage even if they have no tests"
+        },
+        {
+          "command": "vitest run --coverage --coverage.thresholds.lines=80",
+          "description": "Fail the run if line coverage falls below 80 percent"
+        },
+        {
+          "command": "vitest run --coverage --coverage.thresholds.functions=80",
+          "description": "Fail the run if function coverage falls below 80 percent"
+        },
+        {
+          "command": "vitest run --coverage --coverage.thresholds.branches=80",
+          "description": "Fail the run if branch coverage falls below 80 percent"
+        },
+        {
+          "command": "vitest run --coverage --coverage.thresholds.statements=80",
+          "description": "Fail the run if statement coverage falls below 80 percent"
+        },
+        {
+          "command": "vitest run --coverage --coverage.reportsDirectory=./coverage",
+          "description": "Write coverage reports to a specific output directory"
+        }
+      ]
+    },
+    {
+      "title": "Configuration",
+      "commands": [
+        {
+          "command": "vitest run --config vitest.config.ts",
+          "description": "Run tests using a specific Vitest configuration file"
+        },
+        {
+          "command": "vitest run --config ./config/vitest.config.ts",
+          "description": "Run tests using a configuration file at a custom path"
+        },
+        {
+          "command": "vitest run --root ./packages/core",
+          "description": "Set the root directory for test file discovery"
+        },
+        {
+          "command": "vitest run --dir src",
+          "description": "Run tests only in files found within a specific directory"
+        },
+        {
+          "command": "vitest run --environment node",
+          "description": "Run tests in a Node.js environment"
+        },
+        {
+          "command": "vitest run --environment jsdom",
+          "description": "Run tests in a jsdom browser-simulated environment"
+        },
+        {
+          "command": "vitest run --environment happy-dom",
+          "description": "Run tests in a happy-dom browser-simulated environment"
+        },
+        {
+          "command": "vitest run --environment edge-runtime",
+          "description": "Run tests in an edge runtime environment"
+        },
+        {
+          "command": "vitest run --globals",
+          "description": "Run tests with Vitest globals like describe and expect injected without imports"
+        },
+        {
+          "command": "vitest run --isolate",
+          "description": "Run each test file in an isolated module environment"
+        },
+        {
+          "command": "vitest run --no-isolate",
+          "description": "Disable module isolation, sharing module state across test files"
+        },
+        {
+          "command": "vitest run --pool=threads",
+          "description": "Run tests using worker threads pool"
+        },
+        {
+          "command": "vitest run --pool=forks",
+          "description": "Run tests using child process forks pool"
+        },
+        {
+          "command": "vitest run --pool=vmThreads",
+          "description": "Run tests in a VM context within worker threads"
+        },
+        {
+          "command": "vitest run --pool=vmForks",
+          "description": "Run tests in a VM context within child process forks"
+        },
+        {
+          "command": "vitest run --poolOptions.threads.maxThreads=4",
+          "description": "Set the maximum number of worker threads for the threads pool"
+        },
+        {
+          "command": "vitest run --poolOptions.threads.minThreads=1",
+          "description": "Set the minimum number of worker threads for the threads pool"
+        },
+        {
+          "command": "vitest run --poolOptions.forks.maxForks=4",
+          "description": "Set the maximum number of child process forks"
+        },
+        {
+          "command": "vitest run --singleThread",
+          "description": "Run all tests in a single worker thread sequentially"
+        },
+        {
+          "command": "vitest run --singleFork",
+          "description": "Run all tests in a single child process fork sequentially"
+        },
+        {
+          "command": "vitest run --maxWorkers=4",
+          "description": "Limit the number of concurrent worker processes or threads"
+        },
+        {
+          "command": "vitest run --minWorkers=1",
+          "description": "Set the minimum number of concurrent worker processes or threads"
+        },
+        {
+          "command": "vitest run --sequence.shuffle",
+          "description": "Run test files and suites in a randomized order"
+        },
+        {
+          "command": "vitest run --sequence.seed=42",
+          "description": "Run tests in a shuffled order seeded with a specific value for reproducibility"
+        },
+        {
+          "command": "vitest run --sequence.concurrent",
+          "description": "Run tests within each file concurrently"
+        },
+        {
+          "command": "vitest run --no-threads",
+          "description": "Disable worker threads, running tests in the main process"
+        },
+        {
+          "command": "vitest run --inspect",
+          "description": "Run tests with Node.js inspector enabled for debugging"
+        },
+        {
+          "command": "vitest run --inspect-brk",
+          "description": "Run tests with Node.js inspector enabled, pausing on the first line"
+        },
+        {
+          "command": "vitest run --logHeapUsage",
+          "description": "Log heap memory usage after each test for memory profiling"
+        },
+        {
+          "command": "vitest run --disable-console-intercept",
+          "description": "Disable interception and buffering of console output during tests"
+        }
+      ]
+    },
+    {
+      "title": "Filtering & Targeting",
+      "commands": [
+        {
+          "command": "vitest run src/auth",
+          "description": "Run all tests within the src/auth directory"
+        },
+        {
+          "command": "vitest run auth login",
+          "description": "Run tests whose file paths match both auth and login"
+        },
+        {
+          "command": "vitest run --exclude src/legacy",
+          "description": "Exclude tests matching a path pattern from the run"
+        },
+        {
+          "command": "vitest run --include=\"**/*.spec.ts\"",
+          "description": "Run only test files matching a specific glob pattern"
+        },
+        {
+          "command": "vitest run --include=\"**/*.test.ts\" --include=\"**/*.spec.ts\"",
+          "description": "Run test files matching multiple glob patterns"
+        },
+        {
+          "command": "vitest run --testTimeout=10000",
+          "description": "Set the timeout in milliseconds for each individual test"
+        },
+        {
+          "command": "vitest run --hookTimeout=10000",
+          "description": "Set the timeout in milliseconds for before and after hooks"
+        },
+        {
+          "command": "vitest run --teardownTimeout=5000",
+          "description": "Set the timeout in milliseconds for teardown functions"
+        },
+        {
+          "command": "vitest run --retry=3",
+          "description": "Retry failing tests up to 3 times before marking them as failed"
+        },
+        {
+          "command": "vitest run --repeat=5",
+          "description": "Repeat every test 5 times to detect flakiness"
+        }
+      ]
+    },
+    {
+      "title": "UI Mode",
+      "commands": [
+        {
+          "command": "vitest --ui",
+          "description": "Open the Vitest browser UI for interactive test inspection"
+        },
+        {
+          "command": "vitest --ui --open=false",
+          "description": "Start the Vitest UI server without auto-opening the browser"
+        },
+        {
+          "command": "vitest --ui --coverage",
+          "description": "Open the Vitest UI with code coverage enabled"
+        },
+        {
+          "command": "vitest --ui --port=51205",
+          "description": "Start the Vitest UI server on a specific port"
+        }
+      ]
+    },
+    {
+      "title": "Browser Mode",
+      "commands": [
+        {
+          "command": "vitest run --browser",
+          "description": "Run tests in a real browser environment using the default provider"
+        },
+        {
+          "command": "vitest run --browser=chromium",
+          "description": "Run tests in a Chromium browser instance"
+        },
+        {
+          "command": "vitest run --browser=firefox",
+          "description": "Run tests in a Firefox browser instance"
+        },
+        {
+          "command": "vitest run --browser=webkit",
+          "description": "Run tests in a WebKit browser instance"
+        },
+        {
+          "command": "vitest run --browser --browser.headless",
+          "description": "Run browser tests in headless mode without opening a visible window"
+        },
+        {
+          "command": "vitest run --browser --browser.provider=playwright",
+          "description": "Run browser tests using Playwright as the browser provider"
+        },
+        {
+          "command": "vitest run --browser --browser.provider=webdriverio",
+          "description": "Run browser tests using WebdriverIO as the browser provider"
+        }
+      ]
+    },
+    {
+      "title": "Benchmark",
+      "commands": [
+        {
+          "command": "vitest bench",
+          "description": "Run all benchmark files in watch mode"
+        },
+        {
+          "command": "vitest bench --run",
+          "description": "Run all benchmark files once without watch mode"
+        },
+        {
+          "command": "vitest bench --run src/utils.bench.ts",
+          "description": "Run a specific benchmark file once"
+        },
+        {
+          "command": "vitest bench --run --reporter=verbose",
+          "description": "Run benchmarks once with verbose output showing all results"
+        },
+        {
+          "command": "vitest bench --run --outputFile=benchmark-results.json",
+          "description": "Run benchmarks once and write results to a JSON file"
+        }
+      ]
+    },
+    {
+      "title": "Type Checking",
+      "commands": [
+        {
+          "command": "vitest typecheck",
+          "description": "Run type checking on test files using TypeScript without executing tests"
+        },
+        {
+          "command": "vitest typecheck --run",
+          "description": "Run type checking on test files once without watch mode"
+        },
+        {
+          "command": "vitest typecheck src/auth",
+          "description": "Run type checking only on test files matching a path pattern"
+        },
+        {
+          "command": "vitest run --typecheck",
+          "description": "Run tests and type checking simultaneously"
+        },
+        {
+          "command": "vitest run --typecheck.only",
+          "description": "Run only type checking, skipping actual test execution"
+        },
+        {
+          "command": "vitest run --typecheck --typecheck.checker=tsc",
+          "description": "Run type checking using tsc as the type checker"
+        },
+        {
+          "command": "vitest run --typecheck --typecheck.checker=vue-tsc",
+          "description": "Run type checking using vue-tsc for Vue project test files"
+        }
+      ]
+    },
+    {
+      "title": "Miscellaneous",
+      "commands": [
+        {
+          "command": "vitest --version",
+          "description": "Display the currently installed version of Vitest"
+        },
+        {
+          "command": "vitest --help",
+          "description": "Display help information and all available CLI options"
+        },
+        {
+          "command": "vitest list",
+          "description": "List all test files that would be collected without running them"
+        },
+        {
+          "command": "vitest list src/auth",
+          "description": "List test files matching a path pattern without running them"
+        },
+        {
+          "command": "vitest list --json",
+          "description": "List collected test files and output as JSON"
+        },
+        {
+          "command": "vitest run --update",
+          "description": "Update all outdated snapshot files to match current output"
+        },
+        {
+          "command": "vitest run --update src/components",
+          "description": "Update snapshots only for test files matching a path pattern"
+        },
+        {
+          "command": "vitest run --watch --update",
+          "description": "Run in watch mode updating snapshots automatically on change"
+        },
+        {
+          "command": "vitest run --clearCache",
+          "description": "Clear the Vitest transform cache and exit"
+        },
+        {
+          "command": "vitest run --cache=false",
+          "description": "Disable transform caching for this run"
+        },
+        {
+          "command": "vitest run --cacheDir=.vitest-cache",
+          "description": "Use a custom directory for the transform cache"
+        },
+        {
+          "command": "vitest run --diff=vitest-diff-options.ts",
+          "description": "Use a custom diff configuration file for test failure output"
+        },
+        {
+          "command": "vitest run --expand-snapshot-diff",
+          "description": "Show the full diff in snapshot failure output without truncation"
+        },
+        {
+          "command": "vitest run --printConsoleTrace",
+          "description": "Print a stack trace alongside each console.log call in tests"
+        },
+        {
+          "command": "vitest run --segfaultRetry=3",
+          "description": "Retry a test suite if it exits with a segfault up to 3 times"
+        }
+      ]
+    }
+  ]
+}

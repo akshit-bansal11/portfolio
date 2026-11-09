@@ -17,7 +17,10 @@ const LABELS: Record<CopyState, string> = {
   failed: "Copy failed",
 };
 
-export default function CopyButton({ code }: { code: string }) {
+// `label` is the accessible name; pages listing many buttons pass one that says what is copied.
+type CopyButtonProps = { code: string; label?: string };
+
+export default function CopyButton({ code, label = "Copy code" }: CopyButtonProps) {
   const [state, setState] = useState<CopyState>("idle");
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
@@ -48,7 +51,7 @@ export default function CopyButton({ code }: { code: string }) {
         <Copy className="h-4 w-4" aria-hidden />
       )}
       <span aria-hidden>{LABELS[state]}</span>
-      <span className="sr-only">Copy code</span>
+      <span className="sr-only">{label}</span>
       <span role="status" aria-live="polite" className="sr-only">
         {state === "idle" ? "" : LABELS[state]}
       </span>

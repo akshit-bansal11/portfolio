@@ -4,9 +4,11 @@
  * (newest first), linking to /tutorials/<slug>.
  */
 
+import Link from "next/link";
 import PostCard from "@/components/blog/PostCard";
 import ScrollSection from "@/components/layout/ScrollSection";
 import SectionTitle from "@/components/layout/SectionTitle";
+import { commandTools } from "@/data/commands";
 import { getAllTutorials } from "@/lib/tutorials/posts";
 
 // Top-level Tutorials section component.
@@ -27,6 +29,12 @@ export default async function Tutorials() {
           />
         ))}
       </ul>
+      <Link
+        href="/tutorials/commands"
+        className="w-fit text-ink underline underline-offset-4 hover:text-pen focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pen"
+      >
+        Command reference: cheat sheets for {commandTools.length} tools
+      </Link>
     </ScrollSection>
   );
 }
