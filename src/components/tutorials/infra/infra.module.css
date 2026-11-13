@@ -98,11 +98,6 @@
     animation: fade-in 0.25s ease var(--done, 0s) both;
   }
 
-  /* Pressed buttons sink a little. */
-  .press:active:not(:disabled) {
-    transform: scale(0.96);
-  }
-
   .press {
     transition:
       transform 0.12s ease,
@@ -110,6 +105,11 @@
       border-color 0.2s ease,
       color 0.2s ease,
       opacity 0.2s ease;
+  }
+
+  /* Pressed buttons sink a little. */
+  .press:active:not(:disabled) {
+    transform: scale(0.96);
   }
 }
 

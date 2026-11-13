@@ -143,10 +143,7 @@ function TopicRow({
           className="pointer-events-none absolute inset-0.5 h-4 w-4 scale-50 text-paper opacity-0 transition-[opacity,transform] duration-200 peer-checked:scale-100 peer-checked:opacity-100"
         />
       </span>
-      <label
-        htmlFor={id}
-        className="flex-1 cursor-pointer py-2 text-sm leading-snug"
-      >
+      <label htmlFor={id} className="flex-1 cursor-pointer py-2 text-sm leading-snug">
         <span
           className={cn(
             "bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1px] bg-[position:0_58%] bg-no-repeat [box-decoration-break:clone]",

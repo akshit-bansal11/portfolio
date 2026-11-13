@@ -146,7 +146,8 @@ function shareOf(frame: Frame, pod: Pod): number {
 }
 
 function routeLabel(id: string, frame: Frame): string {
-  if (id === "blue-green") return `selector: version=${frame.v2 === 100 ? "green (v2)" : "blue (v1)"}`;
+  if (id === "blue-green")
+    return `selector: version=${frame.v2 === 100 ? "green (v2)" : "blue (v1)"}`;
   if (id === "canary") return `route weights ${100 - frame.v2} / ${frame.v2}`;
   return "sends to every ready pod";
 }
@@ -215,7 +216,10 @@ function Stage({
               {share > 0 ? (
                 <Wire axis="y" className="h-9" />
               ) : (
-                <span aria-hidden className="block h-9 border-l-[1.5px] border-dashed border-rule" />
+                <span
+                  aria-hidden
+                  className="block h-9 border-l-[1.5px] border-dashed border-rule"
+                />
               )}
               <span
                 className={cn(
@@ -271,8 +275,7 @@ export default function RolloutStrategies() {
   const frame = strategy.frames[step];
   const last = strategy.frames.length - 1;
 
-  const go = (next: number) =>
-    setView((v) => ({ step: next, prev: v.step, n: v.n + 1 }));
+  const go = (next: number) => setView((v) => ({ step: next, prev: v.step, n: v.n + 1 }));
 
   // Auto-advance while playing; stop at the end.
   useEffect(() => {

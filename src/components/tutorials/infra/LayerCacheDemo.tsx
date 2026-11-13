@@ -171,9 +171,7 @@ export default function LayerCacheDemo() {
                   )}
                   style={{ "--delay": `${start}s`, "--dur": `${length}s` } as CSSProperties}
                 />
-                <span className="relative font-mono text-xs text-ink-muted">
-                  {index + 1}
-                </span>
+                <span className="relative font-mono text-xs text-ink-muted">{index + 1}</span>
                 <code className="relative min-w-0 font-mono text-sm break-words text-ink">
                   {step.line}
                 </code>
@@ -237,7 +235,9 @@ export default function LayerCacheDemo() {
           {rebuilt} of {steps.length} steps rebuilt.
         </b>
         {order === "bad" && change === "app" && " A one-line code edit reinstalls every package."}
-        {order === "good" && change === "app" && " The slow install stays cached: only your code is copied again."}
+        {order === "good" &&
+          change === "app" &&
+          " The slow install stays cached: only your code is copied again."}
         {change === "base" && " A new base image invalidates everything, in any order."}
       </p>
     </div>

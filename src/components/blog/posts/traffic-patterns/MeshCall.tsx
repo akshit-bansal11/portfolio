@@ -12,7 +12,6 @@
 
 "use client";
 
-import { useReducedMotion } from "framer-motion";
 import {
   ChevronLeft,
   ChevronRight,
@@ -23,7 +22,13 @@ import {
   ShoppingCart,
   Wallet,
 } from "lucide-react";
-import { type CSSProperties, type ReactNode, useEffect, useState } from "react";
+import {
+  type CSSProperties,
+  type ReactNode,
+  useEffect,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { Wire } from "@/components/tutorials/Diagram";
 import { cn } from "@/lib/utils";
 
@@ -173,12 +178,27 @@ function Pipe({
   );
 }
 
+// Whether motion is welcome. The server (and hydration) says no, so the first client
+// render matches the HTML; the real value arrives right after.
+const MOTION_OK = "(prefers-reduced-motion: no-preference)";
+function subscribeMotion(onChange: () => void) {
+  const query = window.matchMedia(MOTION_OK);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+}
+const useMotionOk = () =>
+  useSyncExternalStore(
+    subscribeMotion,
+    () => window.matchMedia(MOTION_OK).matches,
+    () => false,
+  );
+
 export default function MeshCall() {
   const [step, setStep] = useState(0);
   // "auto" plays only when motion is welcome; the Play/Pause button overrides it.
   const [mode, setMode] = useState<"auto" | "play" | "pause">("auto");
-  const reduced = useReducedMotion();
-  const playing = mode === "play" || (mode === "auto" && reduced === false);
+  const motionOk = useMotionOk();
+  const playing = mode === "play" || (mode === "auto" && motionOk);
   const [held, setHeld] = useState(false);
   const current = STEPS[step];
   const lit = (part: Part) => current.lit.includes(part);

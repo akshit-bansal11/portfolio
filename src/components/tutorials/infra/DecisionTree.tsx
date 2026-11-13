@@ -233,7 +233,10 @@ export default function DecisionTree() {
         </ol>
 
         {/* The outcomes: each answer rules some out. */}
-        <ul aria-label="Possible outcomes" className="mt-5 grid list-none grid-cols-2 gap-2 p-0 sm:grid-cols-4">
+        <ul
+          aria-label="Possible outcomes"
+          className="mt-5 grid list-none grid-cols-2 gap-2 p-0 sm:grid-cols-4"
+        >
           {ANSWERS.map((id) => {
             const a = TREE[id] as Answer;
             const chosen = here === id;
@@ -249,11 +252,15 @@ export default function DecisionTree() {
                   !chosen && !out && "border-(--tone-line) text-ink",
                   out && "border-rule text-ink-muted opacity-40",
                   kept && !previewed && !out && "opacity-40",
-                  previewed && !chosen && "-translate-y-0.5 border-dashed border-(--tone) bg-(--tone-soft)",
+                  previewed &&
+                    !chosen &&
+                    "-translate-y-0.5 border-dashed border-(--tone) bg-(--tone-soft)",
                 )}
               >
                 <span className="flex shrink-0 text-(--tone)">{icon(a)}</span>
-                <span className={cn("min-w-0 leading-tight", out && "line-through")}>{a.short}</span>
+                <span className={cn("min-w-0 leading-tight", out && "line-through")}>
+                  {a.short}
+                </span>
               </li>
             );
           })}
@@ -264,9 +271,7 @@ export default function DecisionTree() {
             <p className="font-mono text-xs font-bold text-(--tone)">
               Question {QUESTIONS.indexOf(here as QuestionId) + 1} of 4
             </p>
-            <p className="mt-1 text-lg font-semibold text-ink">
-              {current.text}
-            </p>
+            <p className="mt-1 text-lg font-semibold text-ink">{current.text}</p>
             <div className="mt-4 flex flex-wrap gap-3">
               {(["Yes", "No"] as const).map((said) => (
                 <button
@@ -303,7 +308,10 @@ export default function DecisionTree() {
         )}
 
         {asked.length > 0 && (
-          <ol aria-label="Your answers" className="mt-4 flex list-none flex-wrap gap-1.5 p-0 text-xs">
+          <ol
+            aria-label="Your answers"
+            className="mt-4 flex list-none flex-wrap gap-1.5 p-0 text-xs"
+          >
             {asked.map((step, i) => (
               <li
                 key={step.id}

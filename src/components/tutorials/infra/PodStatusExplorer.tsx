@@ -174,7 +174,10 @@ const STATUSES: Status[] = [
 function StageStrip({ status }: { status: Status }) {
   const StuckIcon = status.mode === "wait" ? Loader2 : status.mode === "loop" ? RotateCw : X;
   return (
-    <ol aria-label="Pod life stages" className="relative grid list-none grid-cols-5 p-0 text-center">
+    <ol
+      aria-label="Pod life stages"
+      className="relative grid list-none grid-cols-5 p-0 text-center"
+    >
       <span aria-hidden className="absolute top-4 right-[10%] left-[10%] h-[2px] bg-rule" />
       <span
         aria-hidden
@@ -291,7 +294,10 @@ function DetailView({ status }: { status: Status }) {
                 </span>
                 <span className="relative mt-1 block h-2 overflow-hidden rounded-full bg-rule">
                   <span
-                    className={cn(motion.fill, "absolute inset-y-0 left-0 rounded-full bg-(--tone)")}
+                    className={cn(
+                      motion.fill,
+                      "absolute inset-y-0 left-0 rounded-full bg-(--tone)",
+                    )}
                     style={
                       {
                         width: `${(free / 2) * 100}%`,
@@ -332,7 +338,10 @@ function DetailView({ status }: { status: Status }) {
           </p>
           <span className="relative mt-1.5 block h-3 rounded-full bg-rule">
             <span
-              className={cn(motion.fill, "absolute inset-y-0 left-0 w-full rounded-full bg-(--tone-line)")}
+              className={cn(
+                motion.fill,
+                "absolute inset-y-0 left-0 w-full rounded-full bg-(--tone-line)",
+              )}
               style={{ "--dur": "2s" } as CSSProperties}
             />
             <span
@@ -344,7 +353,10 @@ function DetailView({ status }: { status: Status }) {
           </span>
           <p
             data-tone="red"
-            className={cn(motion.done, "mt-1.5 text-right font-mono text-xs font-semibold text-(--tone)")}
+            className={cn(
+              motion.done,
+              "mt-1.5 text-right font-mono text-xs font-semibold text-(--tone)",
+            )}
             style={{ "--done": "2s" } as CSSProperties}
           >
             killed by the kernel · exit code 137
