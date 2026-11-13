@@ -1,173 +1,346 @@
 /*
  * DecouplingDiagram.tsx
- * "How it works" diagram: three ways Checkout can talk to
- * Inventory, from tightest to loosest:
- *   1. reaching into its internals,
- *   2. calling a small interface,
- *   3. dropping a message in a queue.
+ * Three ways for Checkout to talk to Inventory, as a small simulator: reach into its
+ * table, call its interface, or leave a message in a queue. A packet rides the link.
+ * Two "what if" switches show the two kinds of coupling: renaming a column (change-time)
+ * breaks only the first wiring; Inventory going down (run-time) breaks the first two,
+ * while the queue just piles up messages and drains when Inventory is back. A scorecard
+ * keeps all three side by side.
  */
 
-import { DrawnPath } from "@/components/blog/Annotation";
-import { sketchArrow, sketchLine, sketchRect } from "@/lib/blog/sketch";
+"use client";
 
-interface Step {
-  title: string;
-  note: string;
-  description: string;
-}
+import { Check, Database, PackageOpen, ShoppingCart, X } from "lucide-react";
+import { type CSSProperties, type ReactNode, useEffect, useState } from "react";
+import type { Tone } from "@/components/tutorials/Flow";
+import { cn } from "@/lib/utils";
+import styles from "./motion.module.css";
 
-const STEPS: Step[] = [
+type ModeId = "reach" | "interface" | "message";
+
+const MODES: { id: ModeId; name: string; carry: string; knows: string }[] = [
   {
-    title: "1 · Reach inside",
-    note: "knows the table names!",
-    description:
-      "Checkout's arrow goes straight through Inventory's wall and touches its private database table.",
+    id: "reach",
+    name: "Reach inside",
+    carry: "SELECT qty FROM inventory_stock",
+    knows: "Checkout knows Inventory's table and column names.",
   },
   {
-    title: "2 · Call an interface",
-    note: "only knows reserve()",
-    description:
-      "Checkout's arrow stops at a small door on Inventory's wall labelled reserve. The internals stay hidden.",
+    id: "interface",
+    name: "Call an interface",
+    carry: "reserve(sku, quantity)",
+    knows: "Checkout knows one function and two fields.",
   },
   {
-    title: "3 · Leave a message",
-    note: "doesn't even wait",
-    description:
-      "Checkout drops a message into a queue between them. Inventory picks it up whenever it is ready.",
+    id: "message",
+    name: "Leave a message",
+    carry: "OrderPlaced",
+    knows: "Checkout knows a message format, and doesn't wait.",
   },
 ];
 
-// Shared frame: Checkout on the left, Inventory (with visible guts) on the right.
-function Frame({ index }: { index: number }) {
-  const seed = index * 10 + 1;
+// Does Checkout keep working when...
+const SURVIVES: Record<ModeId, { rename: boolean; down: boolean }> = {
+  reach: { rename: false, down: false },
+  interface: { rename: true, down: false },
+  message: { rename: true, down: true },
+};
+
+const MAX_BACKLOG = 6;
+
+// A link with a packet on it: down on phones, across from `sm` up.
+function Track({ label, tone, stuck }: { label: string; tone: Tone; stuck?: boolean }) {
+  const dot = "absolute hidden h-2.5 w-2.5 rounded-full bg-(--tone) motion-safe:block";
   return (
-    <>
-      <path
-        d={sketchRect(8, 34, 92, 46, { seed })}
-        fill="none"
-        strokeWidth={1.8}
-        className="stroke-ink"
-      />
-      <text x={54} y={62} textAnchor="middle" className="fill-ink text-[13px] font-semibold">
-        Checkout
-      </text>
-      <path
-        d={sketchRect(282, 22, 110, 70, { seed: seed + 1 })}
-        fill="none"
-        strokeWidth={1.8}
-        className="stroke-ink"
-      />
-      <text x={337} y={16} textAnchor="middle" className="fill-ink text-[13px] font-semibold">
-        Inventory
-      </text>
-      {/* Internals: a little table and some gears-ish scribbles */}
-      <path
-        d={sketchRect(300, 40, 46, 34, { seed: seed + 2, bow: 1 })}
-        fill="none"
-        strokeWidth={1.2}
-        className="stroke-ink-muted"
-      />
-      <path
-        d={sketchLine(300, 52, 346, 52, { seed: seed + 3 })}
-        fill="none"
-        strokeWidth={1}
-        className="stroke-ink-muted"
-      />
-      <path
-        d={sketchLine(300, 63, 346, 63, { seed: seed + 4 })}
-        fill="none"
-        strokeWidth={1}
-        className="stroke-ink-muted"
-      />
-      <circle cx={370} cy={58} r={8} fill="none" strokeWidth={1.2} className="stroke-ink-muted" />
-    </>
+    <div data-tone={tone} className="flex min-w-0 flex-1 items-center gap-2 sm:flex-col sm:gap-1">
+      <div
+        className={cn(
+          "relative ml-6 h-10 w-[2px] shrink-0 rounded-full sm:hidden",
+          stuck ? "bg-(--tone)/60" : "bg-(--tone-line)",
+        )}
+      >
+        {!stuck && (
+          <span
+            aria-hidden
+            className={cn(dot, "left-1/2 -translate-x-1/2 -translate-y-1/2", styles.rideDown)}
+            style={{ "--dur": "1.6s" } as CSSProperties}
+          />
+        )}
+      </div>
+      <p className="min-w-0 font-mono text-xs break-words text-(--tone) sm:text-center">{label}</p>
+      <div
+        className={cn(
+          "relative hidden h-[2px] w-full rounded-full sm:block",
+          stuck ? "bg-(--tone)/60" : "bg-(--tone-line)",
+        )}
+      >
+        {!stuck && (
+          <span
+            aria-hidden
+            className={cn(dot, "top-1/2 -translate-x-1/2 -translate-y-1/2", styles.ride)}
+            style={{ "--dur": "1.6s" } as CSSProperties}
+          />
+        )}
+      </div>
+    </div>
   );
 }
 
-function StepSvg({ step, index }: { step: Step; index: number }) {
-  const arrow =
-    index === 0
-      ? sketchArrow(102, 57, 318, 58, { seed: 71, curve: 0.04 })
-      : index === 1
-        ? sketchArrow(102, 57, 276, 57, { seed: 72, curve: 0.03 })
-        : sketchArrow(102, 57, 160, 57, { seed: 73, curve: 0.02 });
-
+function Toggle({
+  on,
+  onClick,
+  children,
+}: {
+  on: boolean;
+  onClick: () => void;
+  children: ReactNode;
+}) {
   return (
-    <svg
-      viewBox="0 0 400 112"
-      role="img"
-      aria-label={`${step.title}. ${step.description}`}
-      className="w-full"
+    <button
+      type="button"
+      role="switch"
+      aria-checked={on}
+      data-tone="red"
+      onClick={onClick}
+      className={cn(
+        "inline-flex min-h-11 items-center gap-2 rounded-xl border px-3 text-sm font-semibold transition active:translate-y-px",
+        on ? "border-(--tone) bg-(--tone-soft) text-(--tone)" : "border-rule text-ink hover:border-ink-muted",
+      )}
     >
-      <Frame index={index} />
-
-      {index === 1 && (
-        <g>
-          <rect x={274} y={48} width={12} height={18} className="fill-ink" />
-          <text x={262} y={44} textAnchor="end" className="fill-ink-muted font-mono text-[11px]">
-            reserve()
-          </text>
-        </g>
-      )}
-
-      {index === 2 && (
-        <g>
-          <path
-            d={sketchRect(168, 44, 76, 26, { seed: 81, bow: 1 })}
-            fill="none"
-            strokeWidth={1.6}
-            className="stroke-pen-blue"
-          />
-          {[180, 198, 216].map((x) => (
-            <rect key={x} x={x} y={50} width={12} height={14} rx={2} className="fill-pen-blue/60" />
-          ))}
-          <text x={206} y={86} textAnchor="middle" className="fill-pen-blue font-hand text-[15px]">
-            queue
-          </text>
-          <path
-            d={sketchArrow(246, 57, 278, 57, { seed: 82, curve: 0.02 }).shaft}
-            fill="none"
-            strokeWidth={1.6}
-            strokeDasharray="4 3"
-            className="stroke-pen-blue"
-          />
-          <path
-            d={sketchArrow(246, 57, 278, 57, { seed: 82, curve: 0.02 }).head}
-            fill="none"
-            strokeWidth={1.6}
-            className="stroke-pen-blue"
-          />
-        </g>
-      )}
-
-      <g className={index === 0 ? "text-danger" : "text-ink"}>
-        <DrawnPath d={arrow.shaft} strokeWidth={2.2} duration={0.7} />
-        <DrawnPath d={arrow.head} strokeWidth={2.2} delay={0.7} duration={0.2} />
-      </g>
-
-      <text
-        x={index === 2 ? 120 : 140}
-        y={index === 1 ? 84 : 100}
-        className="fill-pen font-hand text-[17px]"
+      <span
+        aria-hidden
+        className={cn(
+          "relative inline-flex h-5 w-9 shrink-0 items-center rounded-full border transition-colors",
+          on ? "border-(--tone) bg-(--tone-soft)" : "border-rule bg-paper",
+        )}
       >
-        {step.note}
-      </text>
-    </svg>
+        <span
+          className={cn(
+            "absolute h-3.5 w-3.5 rounded-full transition-transform",
+            on ? "translate-x-4 bg-(--tone)" : "translate-x-0.5 bg-ink-muted",
+          )}
+        />
+      </span>
+      {children}
+    </button>
   );
 }
 
 export default function DecouplingDiagram() {
+  const [mode, setMode] = useState<ModeId>("reach");
+  const [renamed, setRenamed] = useState(false);
+  const [down, setDown] = useState(false);
+  const [backlog, setBacklog] = useState(0);
+  const current = MODES.find((m) => m.id === mode) ?? MODES[0];
+  const queue = mode === "message";
+
+  // While Inventory is down, messages pile up in the queue; when it's back, they drain.
+  useEffect(() => {
+    if (!queue) return;
+    const timer = window.setInterval(
+      () => setBacklog((n) => (down ? Math.min(MAX_BACKLOG, n + 1) : Math.max(0, n - 1))),
+      down ? 1100 : 450,
+    );
+    return () => window.clearInterval(timer);
+  }, [queue, down]);
+
+  const brokenByRename = renamed && !SURVIVES[mode].rename;
+  const brokenByDown = down && !SURVIVES[mode].down;
+  const checkoutBroken = brokenByRename || brokenByDown;
+  const linkTone: Tone = checkoutBroken ? "red" : queue ? "blue" : "violet";
+
+  let status = current.knows;
+  if (brokenByRename)
+    status = "Inventory renamed qty to quantity. Checkout's query now fails: a change inside one module broke another.";
+  else if (brokenByDown)
+    status =
+      mode === "reach"
+        ? "Inventory's database is down, so Checkout's query hangs and the order fails."
+        : "The interface hides the table, but Checkout still waits for an answer that never comes. The order fails.";
+  else if (down && queue)
+    status = `Inventory is down. Checkout still confirms orders; ${backlog} message${backlog === 1 ? "" : "s"} wait in the queue for Inventory to come back.`;
+  else if (renamed)
+    status = "Inventory renamed a column behind its interface. Checkout never noticed.";
+
   return (
-    <div className="mx-auto max-w-xl space-y-3">
-      {STEPS.map((step, index) => (
+    <div className="space-y-4">
+      <div role="group" aria-label="How Checkout talks to Inventory" className="grid gap-2 sm:grid-cols-3">
+        {MODES.map((m, i) => (
+          <button
+            key={m.id}
+            type="button"
+            aria-pressed={mode === m.id}
+            data-tone={i === 0 ? "red" : i === 1 ? "amber" : "green"}
+            onClick={() => {
+              setMode(m.id);
+              setBacklog(0);
+            }}
+            className={cn(
+              "flex min-h-11 items-center gap-2 rounded-xl border px-3 py-2 text-left text-sm font-semibold transition active:translate-y-px",
+              mode === m.id
+                ? "border-(--tone) bg-(--tone-soft) text-(--tone)"
+                : "border-(--tone-line) text-ink hover:bg-(--tone-soft)",
+            )}
+          >
+            <span className="font-mono text-xs">{i + 1}</span>
+            {m.name}
+          </button>
+        ))}
+      </div>
+
+      {/* The scene */}
+      <div className="dg-canvas flex flex-col items-stretch gap-1 rounded-xl border border-rule p-3 sm:flex-row sm:items-center sm:gap-3 sm:p-5">
         <div
-          key={step.title}
-          className="rounded-xl border-2 border-dashed border-rule bg-paper-raised px-3 pt-2 pb-1"
+          data-tone={checkoutBroken ? "red" : "violet"}
+          className={cn(
+            "flex shrink-0 items-center gap-2 rounded-xl border border-(--tone-line) bg-paper px-3 py-2.5 transition-colors sm:w-36 sm:flex-col sm:text-center",
+            checkoutBroken && "tut-shake border-(--tone)",
+          )}
         >
-          <p className="text-sm font-semibold text-ink">{step.title}</p>
-          <StepSvg step={step} index={index} />
+          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-(--tone-soft) text-(--tone)">
+            {checkoutBroken ? (
+              <X className="h-5 w-5" aria-hidden />
+            ) : (
+              <ShoppingCart className="h-5 w-5" aria-hidden />
+            )}
+          </span>
+          <span>
+            <span className="block font-semibold text-ink">Checkout</span>
+            <span className="block text-xs text-(--tone)">
+              {checkoutBroken ? "order failed" : "order confirmed"}
+            </span>
+          </span>
         </div>
-      ))}
+
+        <Track
+          label={brokenByRename ? "column qty not found" : current.carry}
+          tone={linkTone}
+          stuck={checkoutBroken}
+        />
+
+        {queue && (
+          <>
+            <div
+              data-tone="blue"
+              className="flex shrink-0 items-center gap-2 rounded-xl border border-(--tone-line) bg-(--tone-soft) px-3 py-2 sm:flex-col"
+            >
+              <span className="text-xs font-bold tracking-[0.08em] text-(--tone) uppercase">
+                queue
+              </span>
+              <span className="flex h-5 min-w-[5.5rem] items-end gap-0.5" aria-hidden>
+                {Array.from({ length: backlog }, (_, n) => (
+                  <span
+                    // biome-ignore lint/suspicious/noArrayIndexKey: identical, positional blocks.
+                    key={n}
+                    className={cn("h-full w-3 rounded-sm bg-(--tone) opacity-60", styles.drop)}
+                  />
+                ))}
+              </span>
+              <span className="font-mono text-xs text-ink-muted">{backlog} waiting</span>
+            </div>
+            <Track label={down ? "paused" : "read when ready"} tone="blue" stuck={down} />
+          </>
+        )}
+
+        <div
+          data-tone={down ? "red" : "green"}
+          className={cn(
+            "shrink-0 rounded-xl border border-(--tone-line) bg-paper p-2.5 transition-colors sm:w-52",
+            down && "border-dashed opacity-70",
+          )}
+        >
+          <p className="flex items-center gap-2 font-semibold text-ink">
+            <PackageOpen className="h-4 w-4 text-(--tone)" aria-hidden />
+            Inventory
+            <span className="ml-auto font-mono text-xs text-(--tone)">{down ? "down" : "up"}</span>
+          </p>
+          <p
+            data-tone={mode === "reach" ? "red" : "violet"}
+            className={cn(
+              "mt-2 rounded-md border px-2 py-1 font-mono text-xs transition-colors",
+              mode === "reach"
+                ? "border-dashed border-rule text-ink-muted"
+                : "border-(--tone) bg-(--tone-soft) text-ink",
+            )}
+          >
+            reserve() <span className="text-ink-muted">· public</span>
+          </p>
+          <div
+            data-tone={mode === "reach" ? "red" : "term"}
+            className={cn(
+              "mt-1.5 rounded-md border px-2 py-1 transition-colors",
+              mode === "reach" ? "border-(--tone) bg-(--tone-soft)" : "border-rule",
+            )}
+          >
+            <p className="flex items-center gap-1 font-mono text-[0.7rem] text-ink-muted">
+              <Database className="h-3 w-3" aria-hidden /> inventory_stock · private
+            </p>
+            <p className="mt-0.5 grid grid-cols-3 gap-1 font-mono text-[0.7rem] text-ink">
+              <span>sku</span>
+              <span key={renamed ? "new" : "old"} className={cn(renamed && "tut-pop text-(--tone)")}>
+                {renamed ? "quantity" : "qty"}
+              </span>
+              <span>warehouse</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        <Toggle on={renamed} onClick={() => setRenamed(!renamed)}>
+          Rename a column
+        </Toggle>
+        <Toggle on={down} onClick={() => setDown(!down)}>
+          Inventory goes down
+        </Toggle>
+      </div>
+
+      <p aria-live="polite" className="min-h-12 leading-snug text-ink">
+        {status}
+      </p>
+
+      {/* Scorecard */}
+      <div className="overflow-x-auto rounded-xl border border-rule">
+        <table className="w-full border-collapse text-left text-sm">
+          <thead>
+            <tr className="bg-paper-raised text-ink-muted">
+              <th className="p-2.5 font-semibold">Wiring</th>
+              <th className="p-2.5 font-semibold">Survives a rename</th>
+              <th className="p-2.5 font-semibold">Survives Inventory down</th>
+            </tr>
+          </thead>
+          <tbody>
+            {MODES.map((m) => (
+              <tr
+                key={m.id}
+                className={cn(
+                  "border-t border-rule transition-colors",
+                  mode === m.id ? "bg-paper-raised" : "opacity-70",
+                )}
+              >
+                <th scope="row" className="p-2.5 font-semibold text-ink">
+                  {m.name}
+                </th>
+                {(["rename", "down"] as const).map((k) => {
+                  const ok = SURVIVES[m.id][k];
+                  return (
+                    <td key={k} data-tone={ok ? "green" : "red"} className="p-2.5 text-(--tone)">
+                      <span className="inline-flex items-center gap-1 font-semibold">
+                        {ok ? (
+                          <Check className="h-4 w-4" aria-hidden />
+                        ) : (
+                          <X className="h-4 w-4" aria-hidden />
+                        )}
+                        {ok ? "yes" : "no"}
+                      </span>
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

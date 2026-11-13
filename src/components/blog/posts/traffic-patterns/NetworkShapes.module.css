@@ -1,0 +1,49 @@
+/*
+ * NetworkShapes.module.css
+ * Motion for the tree vs leaf-spine diagram: the chosen path draws itself in, packets
+ * ride it, and the tree's single core breathes to show it carries every cross-branch
+ * call. Screen only; with reduced motion the path is simply drawn and packets hidden.
+ */
+
+.packet {
+  display: none;
+}
+
+@media screen and (prefers-reduced-motion: no-preference) {
+  .packet {
+    display: inline;
+  }
+
+  .draw {
+    stroke-dasharray: 1;
+    animation: draw 0.7s ease-out both;
+  }
+
+  .busy {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: busy 1.6s ease-out infinite;
+  }
+}
+
+@keyframes draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes busy {
+  0% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}

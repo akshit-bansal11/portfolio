@@ -1,0 +1,138 @@
+/*
+ * motion.module.css
+ * Keyframes for the Tight Coupling diagrams and demos. Screen only, and only when motion
+ * is welcome; under reduced motion everything sits in its final state.
+ *  - .flow: dashes running along an SVG stroke (current, messages, calls).
+ *  - .flowBack: the same, the other way.
+ *  - .ring: a soft ring that grows out of a shape and fades ("this just broke").
+ *  - .twinkle: a slow, small brightness wobble for lit bulbs.
+ *  - .ride / .rideDown: a packet riding along an HTML track (across / down), looping.
+ *  - .drop: a packet that falls into place once.
+ *  - .meter: a bar that grows to its width when it appears.
+ */
+
+.flow,
+.flowBack {
+  stroke-dasharray: 3 9;
+}
+
+@media screen and (prefers-reduced-motion: no-preference) {
+  .flow {
+    animation: flow 0.9s linear infinite;
+  }
+
+  .flowBack {
+    animation: flow 0.9s linear infinite reverse;
+  }
+
+  .ring {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: ring 1.4s ease-out infinite;
+  }
+
+  .twinkle {
+    animation: twinkle 2.6s ease-in-out var(--delay, 0s) infinite;
+  }
+
+  .ride {
+    animation: ride var(--dur, 2.2s) cubic-bezier(0.45, 0, 0.55, 1) var(--delay, 0s) infinite;
+  }
+
+  .rideDown {
+    animation: rideDown var(--dur, 2.2s) cubic-bezier(0.45, 0, 0.55, 1) var(--delay, 0s) infinite;
+  }
+
+  .drop {
+    animation: drop 0.5s ease-out both;
+  }
+
+  .meter {
+    animation: meter 0.6s ease-out both;
+  }
+}
+
+@keyframes flow {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+@keyframes ring {
+  0% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.72;
+  }
+}
+
+@keyframes ride {
+  0% {
+    left: 0%;
+    opacity: 0;
+  }
+
+  12%,
+  88% {
+    opacity: 1;
+  }
+
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes rideDown {
+  0% {
+    top: 0%;
+    opacity: 0;
+  }
+
+  12%,
+  88% {
+    opacity: 1;
+  }
+
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes drop {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes meter {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}

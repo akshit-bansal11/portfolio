@@ -1,0 +1,283 @@
+/*
+ * motion.module.css
+ * Motion for the Blast Radius diagrams and demos:
+ *  - rings: a shockwave that grows from the bug to the wall that stops it, and the wall
+ *    flexing as it lands;
+ *  - ship: a rolling sea, compartments filling from the bottom, walls growing, water
+ *    spilling over a wall top, the hull tipping bow-down;
+ *  - wires: dashes flowing along SVG lines (requests on their way);
+ *  - packets: calls riding the circuit breaker's lane (through, failing, or bounced);
+ *  - small feedback: pops and shakes.
+ * Screen only and only when motion is welcome; otherwise every part sits in its final
+ * state.
+ */
+
+.wave,
+.wall,
+.fill,
+.bugPulse {
+  transform-box: fill-box;
+}
+
+.wave {
+  transform-origin: center;
+  opacity: 0;
+}
+
+.fill,
+.wall {
+  transform-origin: bottom;
+}
+
+.bugPulse {
+  transform-origin: center;
+  opacity: 0;
+}
+
+.tilt {
+  transform-box: view-box;
+  transform-origin: 200px 104px;
+}
+
+.packet {
+  position: absolute;
+  top: 50%;
+  left: var(--to, 100%);
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 9999px;
+  background: var(--tone);
+  box-shadow: 0 0 0 3px var(--tone-soft);
+  opacity: 0;
+}
+
+@media screen and (prefers-reduced-motion: no-preference) {
+  .wave {
+    animation: wave 2.4s cubic-bezier(0.2, 0.7, 0.3, 1) infinite;
+  }
+
+  .wallHit {
+    animation: wall-hit 2.4s ease-out infinite;
+  }
+
+  .bugPulse {
+    animation: bug-pulse 1.6s ease-out infinite;
+  }
+
+  .sea {
+    animation: sea 5s linear infinite;
+  }
+
+  .fill {
+    transition: transform 0.8s cubic-bezier(0.3, 0.7, 0.3, 1);
+  }
+
+  .wall {
+    transition: transform 0.6s cubic-bezier(0.3, 0.7, 0.3, 1);
+  }
+
+  .tilt {
+    transition: transform 1.1s ease-in-out;
+  }
+
+  .ease {
+    transition:
+      fill 0.45s ease,
+      stroke 0.45s ease,
+      opacity 0.45s ease,
+      background-color 0.35s ease,
+      border-color 0.35s ease,
+      color 0.35s ease;
+    transition-delay: var(--delay, 0s);
+  }
+
+  .flow {
+    stroke-dasharray: 3 7;
+    animation: flow 0.9s linear infinite;
+  }
+
+  .stream {
+    stroke-dasharray: 3 4;
+    animation: flow 0.45s linear infinite;
+  }
+
+  .packet {
+    animation: ride var(--dur, 1.2s) cubic-bezier(0.4, 0, 0.6, 1) both;
+  }
+
+  .packetBack {
+    animation-name: ride-back;
+  }
+
+  .packetBounce {
+    animation-name: bounce;
+  }
+
+  .pop {
+    animation: pop 0.4s ease-out both;
+  }
+
+  .shake {
+    animation: shake 0.45s ease-in-out 2;
+  }
+}
+
+/* Without motion: the wave and pulse hide, packets don't render (see components). */
+@media screen and (prefers-reduced-motion: reduce) {
+  .packet {
+    display: none;
+  }
+}
+
+@keyframes wave {
+  0% {
+    opacity: 0.85;
+    transform: scale(0.08);
+  }
+
+  70% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+@keyframes wall-hit {
+  0%,
+  62% {
+    stroke-width: 2px;
+  }
+
+  72% {
+    stroke-width: 4.5px;
+  }
+
+  100% {
+    stroke-width: 2px;
+  }
+}
+
+@keyframes bug-pulse {
+  0% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(3.2);
+  }
+}
+
+@keyframes sea {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-40px);
+  }
+}
+
+@keyframes flow {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+/* A call: app -> service, fade at the far end. */
+@keyframes ride {
+  0% {
+    left: 0%;
+    opacity: 0;
+  }
+
+  12%,
+  85% {
+    opacity: 1;
+  }
+
+  100% {
+    left: var(--to, 100%);
+    opacity: 0;
+  }
+}
+
+/* A successful call: there and back. */
+@keyframes ride-back {
+  0% {
+    left: 0%;
+    opacity: 0;
+  }
+
+  8%,
+  92% {
+    opacity: 1;
+  }
+
+  50% {
+    left: var(--to, 100%);
+  }
+
+  100% {
+    left: 0%;
+    opacity: 0;
+  }
+}
+
+/* Failed fast: reaches the breaker and comes straight back. */
+@keyframes bounce {
+  0% {
+    left: 0%;
+    opacity: 0;
+  }
+
+  12% {
+    opacity: 1;
+  }
+
+  50% {
+    left: var(--to, 50%);
+  }
+
+  90% {
+    opacity: 1;
+  }
+
+  100% {
+    left: 0%;
+    opacity: 0;
+  }
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-3px);
+  }
+
+  75% {
+    transform: translateX(3px);
+  }
+}

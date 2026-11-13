@@ -1,0 +1,213 @@
+/*
+ * BucketSim.module.css
+ * Motion for the token and leaky bucket scenes: requests flying in along the lane, a tap
+ * dripping tokens into the bucket (or spilling them when it is full), and a steady leak
+ * out of the leaky bucket. All of it is off without motion; the bucket's fill level still
+ * shows the state.
+ */
+
+.flight,
+.drip,
+.leak {
+  display: none;
+  position: absolute;
+  border-radius: 9999px;
+  pointer-events: none;
+}
+
+.flight {
+  z-index: 5;
+  top: var(--lane);
+  width: 0.8rem;
+  height: 0.8rem;
+  margin: -0.4rem 0 0 -0.4rem;
+  background: var(--tone);
+  box-shadow: 0 0 0 3px var(--tone-soft);
+}
+
+.drip {
+  z-index: 1;
+  left: 50%;
+  width: 0.6rem;
+  height: 0.6rem;
+  margin-left: -0.3rem;
+  background: var(--tone);
+}
+
+.leak {
+  z-index: 5;
+  top: var(--lane);
+  width: 0.7rem;
+  height: 0.7rem;
+  margin: -0.35rem 0 0 -0.35rem;
+  background: var(--tone);
+  box-shadow: 0 0 0 3px var(--tone-soft);
+}
+
+@media screen and (prefers-reduced-motion: no-preference) {
+  .flight,
+  .drip,
+  .leak {
+    display: block;
+  }
+
+  .flight {
+    animation: pass 0.9s ease-in-out both;
+  }
+
+  .flight[data-out="rejected"] {
+    animation-name: bounce;
+  }
+
+  .flight[data-out="queued"] {
+    animation-name: enter;
+  }
+
+  .drip {
+    animation: drip 0.5s ease-in infinite;
+  }
+
+  .drip[data-full="true"] {
+    animation: spill 1s ease-in-out infinite;
+  }
+
+  .leak {
+    animation: leak 0.5s linear infinite;
+  }
+
+  .cell {
+    transition: background-color 0.3s ease;
+  }
+}
+
+@keyframes pass {
+  0% {
+    left: 0%;
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  45% {
+    left: 50%;
+    scale: 1.2;
+  }
+
+  90% {
+    left: 82%;
+    opacity: 1;
+    scale: 1;
+  }
+
+  100% {
+    left: 84%;
+    opacity: 0;
+  }
+}
+
+@keyframes bounce {
+  0% {
+    left: 0%;
+    top: var(--lane);
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  45% {
+    left: 36%;
+    top: var(--lane);
+  }
+
+  100% {
+    left: 26%;
+    top: 96%;
+    opacity: 0;
+  }
+}
+
+@keyframes enter {
+  0% {
+    left: 0%;
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  55% {
+    left: 46%;
+    opacity: 1;
+    scale: 1;
+  }
+
+  100% {
+    left: 50%;
+    opacity: 0;
+    scale: 0.4;
+  }
+}
+
+@keyframes drip {
+  0% {
+    top: 12%;
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  100% {
+    top: 34%;
+    opacity: 0;
+  }
+}
+
+@keyframes spill {
+  0% {
+    top: 12%;
+    translate: 0 0;
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  40% {
+    top: 20%;
+    translate: 0 0;
+  }
+
+  100% {
+    top: 34%;
+    translate: -4.5rem 0;
+    opacity: 0;
+  }
+}
+
+@keyframes leak {
+  0% {
+    left: 62%;
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  85% {
+    opacity: 1;
+  }
+
+  100% {
+    left: 82%;
+    opacity: 0;
+  }
+}

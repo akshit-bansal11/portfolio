@@ -1,68 +1,192 @@
 /*
  * RadiusRingsDiagram.tsx
- * "What it is" diagram: the same bug, drawn as rings of
- * growing damage depending on how far it is allowed to reach
- * (one request -> one server -> one cell -> one region -> everyone).
+ * "What it is": the same bug, drawn as five nested rings of growing damage (one request,
+ * one server, one cell, one region, everyone). A shockwave grows from the bug and stops
+ * at the wall you pick; rings outside the wall stay safe. It walks through the five
+ * fates on its own until you pick one (hovering a fate previews it). Reduced motion shows
+ * the chosen fate without the wave.
  */
 
-import { DrawnPath } from "@/components/blog/Annotation";
-import { sketchArrow, sketchEllipse } from "@/lib/blog/sketch";
+"use client";
 
-const RINGS = [
-  { label: "one request", rx: 34, ry: 22, note: "a retry fixes it" },
-  { label: "one server", rx: 66, ry: 42, note: "the load balancer routes around it" },
-  { label: "one cell", rx: 100, ry: 64, note: "a slice of customers notice" },
-  { label: "one region", rx: 136, ry: 88, note: "a country notices" },
-  { label: "everyone", rx: 172, ry: 112, note: "it's on the news" },
+import { useReducedMotion } from "framer-motion";
+import { type CSSProperties, useEffect, useRef, useState } from "react";
+import type { Tone } from "@/components/tutorials/Flow";
+import { cn } from "@/lib/utils";
+import styles from "./motion.module.css";
+import { useInView } from "./useInView";
+
+interface Ring {
+  label: string;
+  note: string;
+  rx: number;
+  ry: number;
+  tone: Tone;
+}
+
+const RINGS: Ring[] = [
+  { label: "one request", note: "a retry fixes it", rx: 42, ry: 24, tone: "green" },
+  { label: "one server", note: "the load balancer routes around it", rx: 78, ry: 46, tone: "cyan" },
+  { label: "one cell", note: "a slice of customers notice", rx: 114, ry: 68, tone: "amber" },
+  { label: "one region", note: "a country notices", rx: 150, ry: 90, tone: "pink" },
+  { label: "everyone", note: "it's on the news", rx: 186, ry: 112, tone: "red" },
 ];
 
-const ARROW = sketchArrow(316, 58, 266, 96, { seed: 5, curve: 0.25 });
+const CX = 200;
+const CY = 124;
+const CYCLE_MS = 2400;
 
 export default function RadiusRingsDiagram() {
+  const [picked, setPicked] = useState(0);
+  const [preview, setPreview] = useState<number | null>(null);
+  const [auto, setAuto] = useState(true);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(rootRef);
+  const reduced = useReducedMotion();
+
+  // Walk through the five fates until the reader picks one.
+  useEffect(() => {
+    if (!auto || !inView || reduced) return;
+    const timer = window.setInterval(() => setPicked((p) => (p + 1) % RINGS.length), CYCLE_MS);
+    return () => window.clearInterval(timer);
+  }, [auto, inView, reduced]);
+
+  const shown = preview ?? picked;
+  const wall = RINGS[shown];
+
+  const choose = (index: number) => {
+    setAuto(false);
+    setPicked(index);
+  };
+
   return (
-    <svg
-      viewBox="0 0 400 250"
-      role="img"
-      aria-label="Five nested rings around one bug: one request, one server, one cell, one region, everyone. The wider the ring, the more people a single failure reaches."
-      className="w-full"
-    >
-      {RINGS.map((ring, index) => (
-        <g
-          key={ring.label}
-          className={index === RINGS.length - 1 ? "text-danger" : "text-ink-muted"}
-        >
-          <DrawnPath
-            d={sketchEllipse(186, 132, ring.rx, ring.ry, { seed: index + 2, jitter: 0.03 })}
-            strokeWidth={index === RINGS.length - 1 ? 2.2 : 1.5}
-            delay={index * 0.25}
+    <div ref={rootRef} className="grid items-center gap-5 md:grid-cols-[1.35fr_1fr]">
+      <svg
+        viewBox="0 0 400 244"
+        role="img"
+        aria-label={`Five nested rings around one bug: one request, one server, one cell, one region, everyone. Showing: the wall holds at ${wall.label}, so ${wall.note}.`}
+        className="w-full"
+      >
+        {/* Rings, outside in, so the inner ones sit on top. */}
+        {RINGS.map((_, k) => {
+          const index = RINGS.length - 1 - k;
+          const ring = RINGS[index];
+          const inside = index <= shown;
+          const isWall = index === shown;
+          return (
+            <ellipse
+              key={ring.label}
+              data-tone={inside ? wall.tone : undefined}
+              cx={CX}
+              cy={CY}
+              rx={ring.rx}
+              ry={ring.ry}
+              strokeWidth={isWall ? 2 : 1.2}
+              strokeDasharray={inside ? undefined : "4 4"}
+              className={cn(
+                styles.ease,
+                inside ? "fill-(--tone-soft) stroke-(--tone)" : "fill-transparent stroke-rule",
+                isWall && !reduced && styles.wallHit,
+              )}
+              style={{ "--delay": `${(RINGS.length - index) * 40}ms` } as CSSProperties}
+            />
+          );
+        })}
+
+        {/* The shockwave: restarts whenever the wall moves. */}
+        {!reduced && (
+          <ellipse
+            key={`wave-${shown}`}
+            data-tone={wall.tone}
+            cx={CX}
+            cy={CY}
+            rx={wall.rx}
+            ry={wall.ry}
+            fill="none"
+            strokeWidth={3}
+            className={cn("stroke-(--tone)", styles.wave)}
           />
-          <text
-            x={186}
-            y={132 - ring.ry + 15}
-            textAnchor="middle"
-            className="fill-current font-hand text-[15px]"
-          >
-            {ring.label}
+        )}
+
+        {RINGS.map((ring, index) => {
+          const inside = index <= shown;
+          return (
+            <text
+              key={ring.label}
+              data-tone={inside ? wall.tone : undefined}
+              x={CX}
+              y={CY - ring.ry + 15}
+              textAnchor="middle"
+              className={cn(
+                "text-[12.5px] font-semibold",
+                styles.ease,
+                inside ? "fill-(--tone)" : "fill-ink-muted",
+              )}
+            >
+              {ring.label}
+              {!inside && index === shown + 1 ? " · safe" : ""}
+            </text>
+          );
+        })}
+
+        <g data-tone="red">
+          {!reduced && <circle cx={CX} cy={CY + 4} r={6} className={cn("fill-(--tone)", styles.bugPulse)} />}
+          <circle cx={CX} cy={CY + 4} r={6} className="fill-(--tone)" />
+          <text x={CX} y={CY + 24} textAnchor="middle" className="fill-ink font-mono text-[11px] font-semibold">
+            bug
           </text>
         </g>
-      ))}
-      <circle cx={186} cy={138} r={6} className="fill-danger" />
-      <text x={186} y={156} textAnchor="middle" className="fill-ink text-[11px] font-semibold">
-        bug
-      </text>
-      <g className="text-pen">
-        <DrawnPath d={ARROW.shaft} delay={1.4} duration={0.4} />
-        <DrawnPath d={ARROW.head} delay={1.8} duration={0.2} />
-        <text x={292} y={16} className="fill-pen font-hand text-[16px]">
-          same bug,
-        </text>
-        <text x={292} y={32} className="fill-pen font-hand text-[16px]">
-          five fates.
-        </text>
-        <text x={292} y={48} className="fill-pen font-hand text-[16px]">
-          keep it small!
-        </text>
-      </g>
-    </svg>
+      </svg>
+
+      <div>
+        <p className="mb-2 text-xs font-semibold tracking-[0.12em] text-ink-muted uppercase">
+          Where does the wall hold?
+        </p>
+        <ul className="grid list-none gap-1.5 p-0">
+          {RINGS.map((ring, index) => {
+            const active = index === shown;
+            return (
+              <li key={ring.label}>
+                <button
+                  type="button"
+                  data-tone={ring.tone}
+                  aria-pressed={!auto && picked === index}
+                  onClick={() => choose(index)}
+                  onPointerEnter={() => setPreview(index)}
+                  onPointerLeave={() => setPreview(null)}
+                  onFocus={() => setPreview(index)}
+                  onBlur={() => setPreview(null)}
+                  className={cn(
+                    styles.ease,
+                    "flex min-h-10 w-full items-center gap-3 rounded-lg border px-3 py-1.5 text-left text-sm",
+                    "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--tone)",
+                    active
+                      ? "border-(--tone-line) bg-(--tone-soft)"
+                      : "border-transparent hover:border-rule",
+                  )}
+                >
+                  <span
+                    aria-hidden
+                    className={cn(
+                      "h-2.5 w-2.5 shrink-0 rounded-full border-2 border-(--tone)",
+                      index <= shown && "bg-(--tone)",
+                    )}
+                  />
+                  <span className="min-w-0">
+                    <span className={cn("font-semibold", active ? "text-(--tone)" : "text-ink")}>
+                      {ring.label}
+                    </span>
+                    <span className="text-ink-muted"> · {ring.note}</span>
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+        <p aria-live="polite" className="mt-3 text-sm text-ink-muted">
+          {auto ? "Playing through all five. Pick one to stop." : `Wall at ${wall.label}: ${wall.note}.`}
+        </p>
+      </div>
+    </div>
   );
 }

@@ -1,0 +1,232 @@
+/*
+ * motion.module.css
+ * Keyframes for the CRDT post's diagrams, on top of the shared dg-* / tut-* kit:
+ *  - .pipe / .packet: a wire between two cards with a packet riding it once per step.
+ *    The wire runs down on phones and across from `md` up; .reverse flips the trip.
+ *  - .flow: marching dashes on SVG links ("edits are moving along here").
+ *  - .crossDown / .crossUp: an operation chip crossing the network band.
+ *  - .flash: a one-shot tint when a value changes.
+ * Screen only, and only when motion is welcome; otherwise everything sits still in its
+ * final state.
+ */
+
+.pipe {
+  position: relative;
+  flex: none;
+  align-self: center;
+  width: 2px;
+  height: 2.75rem;
+  border-radius: 999px;
+  background: var(--tone-line);
+}
+
+.packet {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  display: none;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 999px;
+  background: var(--tone);
+  box-shadow: 0 0 0 3px var(--tone-soft);
+  translate: -50% -50%;
+}
+
+.head {
+  position: absolute;
+  bottom: -0.35rem;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-inline: 0.3rem solid transparent;
+  border-top: 0.4rem solid var(--tone);
+  translate: -50% 0;
+}
+
+.reverse .head {
+  top: -0.35rem;
+  bottom: auto;
+  rotate: 180deg;
+}
+
+.idle .head {
+  display: none;
+}
+
+@media (min-width: 48rem) {
+  .pipe {
+    width: 3.5rem;
+    height: 2px;
+  }
+
+  .packet {
+    top: 50%;
+    left: 0;
+  }
+
+  .head {
+    top: 50%;
+    right: -0.35rem;
+    bottom: auto;
+    left: auto;
+    border-block: 0.3rem solid transparent;
+    border-inline: 0;
+    border-left: 0.4rem solid var(--tone);
+    translate: 0 -50%;
+  }
+
+  .reverse .head {
+    top: 50%;
+    right: auto;
+    left: -0.35rem;
+    rotate: 180deg;
+  }
+}
+
+/* SVG links. */
+.link {
+  transition:
+    opacity 0.35s ease,
+    stroke 0.35s ease;
+}
+
+.svgNode {
+  transition:
+    opacity 0.35s ease,
+    transform 0.25s ease;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@media screen and (prefers-reduced-motion: no-preference) {
+  .packet {
+    display: block;
+    animation: pipe-y 1.1s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  }
+
+  .reverse .packet {
+    animation-direction: reverse;
+  }
+
+  .idle .packet {
+    display: none;
+  }
+
+  @media (min-width: 48rem) {
+    .packet {
+      animation-name: pipe-x;
+    }
+  }
+
+  .flow {
+    stroke-dasharray: 3 7;
+    animation: flow 0.9s linear infinite;
+  }
+
+  .flowSlow {
+    stroke-dasharray: 3 7;
+    animation: flow 1.8s linear infinite;
+  }
+
+  .svgNode:hover {
+    transform: scale(1.06);
+  }
+
+  .crossDown {
+    animation: cross-down 1.6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  }
+
+  .crossUp {
+    animation: cross-up 1.6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  }
+
+  .flash {
+    animation: flash 0.9s ease-out both;
+  }
+}
+
+@keyframes pipe-y {
+  0% {
+    top: 0;
+    opacity: 0;
+  }
+
+  15%,
+  85% {
+    opacity: 1;
+  }
+
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes pipe-x {
+  0% {
+    left: 0;
+    opacity: 0;
+  }
+
+  15%,
+  85% {
+    opacity: 1;
+  }
+
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes flow {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+@keyframes cross-down {
+  0% {
+    top: 0%;
+    opacity: 0;
+  }
+
+  15%,
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes cross-up {
+  0% {
+    top: 100%;
+    opacity: 0;
+  }
+
+  15%,
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    top: 0%;
+    opacity: 0;
+  }
+}
+
+@keyframes flash {
+  0% {
+    background-color: color-mix(in srgb, var(--tone) 32%, transparent);
+    border-color: var(--tone);
+  }
+
+  100% {
+    background-color: var(--tone-soft);
+  }
+}

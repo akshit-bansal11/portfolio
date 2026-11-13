@@ -1,0 +1,139 @@
+/*
+ * LimiterGate.module.css
+ * Requests stream towards the rate limiter. Allowed ones carry on to the server and turn
+ * green; the extras turn red at the gate and drop to the 429 lane. One loop of ten
+ * requests every 6 s. Without motion, a still frame of the same scene is shown instead.
+ */
+
+.dot {
+  display: none;
+  position: absolute;
+  z-index: 0;
+  width: 0.7rem;
+  height: 0.7rem;
+  margin: -0.35rem 0 0 -0.35rem;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--color-ink) 45%, transparent);
+  box-shadow: 0 0 0 3px var(--tone-soft);
+}
+
+.still {
+  position: absolute;
+  z-index: 0;
+  width: 0.7rem;
+  height: 0.7rem;
+  margin: -0.35rem 0 0 -0.35rem;
+  border-radius: 9999px;
+  background: var(--tone);
+  box-shadow: 0 0 0 3px var(--tone-soft);
+}
+
+@media screen and (prefers-reduced-motion: no-preference) {
+  .dot {
+    display: block;
+    animation: pass 6s linear calc(var(--i) * -0.6s) infinite;
+  }
+
+  .dot[data-out="reject"] {
+    animation-name: reject;
+  }
+
+  .still {
+    display: none;
+  }
+
+  /* The gate gives a small nod every time a request reaches it. */
+  .gate {
+    animation: nod 0.6s ease-in-out infinite;
+  }
+
+  .scene:hover .dot,
+  .scene:hover .gate {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes pass {
+  0% {
+    left: 2%;
+    top: var(--lane);
+    opacity: 0;
+  }
+
+  6% {
+    opacity: 1;
+  }
+
+  40% {
+    left: 50%;
+    top: var(--lane);
+    background: color-mix(in srgb, var(--color-ink) 45%, transparent);
+  }
+
+  46% {
+    background: var(--tone);
+  }
+
+  82% {
+    left: 84%;
+    opacity: 1;
+    background: var(--tone);
+  }
+
+  88%,
+  100% {
+    left: 86%;
+    opacity: 0;
+    background: var(--tone);
+  }
+}
+
+@keyframes reject {
+  0% {
+    left: 2%;
+    top: var(--lane);
+    opacity: 0;
+  }
+
+  6% {
+    opacity: 1;
+  }
+
+  40% {
+    left: 50%;
+    top: var(--lane);
+    background: color-mix(in srgb, var(--color-ink) 45%, transparent);
+  }
+
+  46% {
+    left: 50%;
+    top: var(--lane);
+    background: var(--tone);
+  }
+
+  72% {
+    left: 50%;
+    top: 78%;
+    opacity: 1;
+    background: var(--tone);
+  }
+
+  80%,
+  100% {
+    left: 50%;
+    top: 80%;
+    opacity: 0;
+    background: var(--tone);
+  }
+}
+
+@keyframes nod {
+  0% {
+    scale: 1.04;
+  }
+
+  30%,
+  100% {
+    scale: 1;
+  }
+}

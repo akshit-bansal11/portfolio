@@ -1,81 +1,211 @@
 /*
  * ShipDiagram.tsx
- * History diagram: a ship split into watertight compartments.
- * The bow compartments flood, and because the walls between
- * compartments stop below the top deck, water spills over
- * into the next one, like the Titanic in 1912.
+ * Where the idea came from: a ship split into nine watertight compartments by eight
+ * bulkheads. The bow is holed and its three compartments flood. Pick the wall height:
+ * walls that stop below the deck let the water spill over the top into the next
+ * compartment, one after another, while the bow tips down; walls that reach the deck
+ * keep the flood where it started. The scene plays on a loop while on screen. A generic
+ * ship, not a scale drawing of the Titanic. Reduced motion shows the end state.
  */
 
-import { DrawnPath } from "@/components/blog/Annotation";
-import { sketchArrow, sketchLine } from "@/lib/blog/sketch";
+"use client";
 
-// Hull outline (stern on the left, bow on the right).
-const HULL = "M14 70 L392 70 Q386 128 352 146 L54 146 Q22 132 14 70 Z";
-const WATERLINE = sketchLine(0, 104, 420, 104, { seed: 3, bow: 3 });
-const BULKHEADS = [64, 108, 152, 196, 240, 284, 318, 350];
-const FLOODED_FROM = 240;
-const SPILL = sketchArrow(256, 84, 228, 112, { seed: 7, curve: -0.6, headSize: 6 });
+import { useReducedMotion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { SegmentedControl } from "@/components/blog/DemoControls";
+import { cn } from "@/lib/utils";
+import styles from "./motion.module.css";
+import { useInView } from "./useInView";
+
+type Walls = "short" | "full";
+
+const DECK = 60;
+const KEEL = 150;
+const WALL_X = [66, 104, 142, 180, 218, 256, 294, 332];
+const EDGES = [20, ...WALL_X, 384];
+const COMPARTMENTS = EDGES.length - 1;
+const DAMAGED = [6, 7, 8];
+const SHORT_TOP = 86;
+const HULL = `M14 ${DECK} L390 ${DECK} L378 118 Q370 ${KEEL} 340 ${KEEL} L54 ${KEEL} Q24 ${KEEL} 18 112 Z`;
+const STEP_MS = 850;
+
+// A clean sine for the sea surface, a little wider than the view so it can slide.
+const SEA = (() => {
+  let d = "M-40 104";
+  for (let x = -40; x <= 480; x += 10) d += ` L${x} ${(104 + Math.sin(x / 10) * 2).toFixed(2)}`;
+  return `${d} L480 210 L-40 210 Z`;
+})();
+
+const OPTIONS = [
+  { value: "short" as const, label: "Stop below the deck" },
+  { value: "full" as const, label: "Reach the deck" },
+];
+
+// Compartment index -> step at which it floods (Infinity = never).
+function floodStep(index: number, walls: Walls) {
+  if (DAMAGED.includes(index)) return 1;
+  if (walls === "full") return Number.POSITIVE_INFINITY;
+  return 2 + (DAMAGED[0] - 1 - index);
+}
+
+const LAST_STEP: Record<Walls, number> = { short: 2 + DAMAGED[0] - 1, full: 1 };
+const HOLD_STEPS = 3;
 
 export default function ShipDiagram() {
+  const [walls, setWalls] = useState<Walls>("short");
+  const [step, setStep] = useState(0);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(rootRef);
+  const reduced = useReducedMotion();
+  const last = LAST_STEP[walls];
+
+  // Play the flood, hold the end for a moment, then start again.
+  useEffect(() => {
+    if (!inView || reduced) return;
+    const timer = window.setInterval(
+      () => setStep((s) => (s >= last + HOLD_STEPS ? 0 : s + 1)),
+      STEP_MS,
+    );
+    return () => window.clearInterval(timer);
+  }, [inView, reduced, last]);
+
+  const now = reduced ? last : Math.min(step, last);
+  const flooded = Array.from({ length: COMPARTMENTS }, (_, i) => floodStep(i, walls) <= now);
+  const floodedCount = flooded.filter(Boolean).length;
+  const spills = floodedCount - DAMAGED.length;
+  const tilt = walls === "short" ? floodedCount * 0.45 : floodedCount * 0.3;
+  const wallScale = walls === "short" ? (KEEL - SHORT_TOP) / (KEEL - DECK) : 1;
+  const waterTop = walls === "short" ? SHORT_TOP - 8 : DECK + 6;
+
+  const status =
+    walls === "short"
+      ? spills > 0
+        ? `Water spilled over ${spills} wall${spills === 1 ? "" : "s"}: ${floodedCount} of ${COMPARTMENTS} compartments flooded and the bow is going under.`
+        : `${floodedCount} of ${COMPARTMENTS} compartments flooded at the bow. Watch the wall tops.`
+      : `${floodedCount} of ${COMPARTMENTS} compartments flooded. The walls reach the deck, so the water stays where it came in.`;
+
   return (
-    <svg
-      viewBox="0 0 420 206"
-      role="img"
-      aria-label="Side view of a ship split into watertight compartments. The front compartments are flooded. The walls between compartments stop below the top deck, so water spills over the top of one wall into the next compartment."
-      className="w-full"
-    >
-      {/* Sea */}
-      <path d={`${WATERLINE} L420 196 L0 196 Z`} className="fill-pen-blue/10" />
-      <path d={WATERLINE} fill="none" strokeWidth={1.5} className="stroke-pen-blue" />
-
-      {/* Flooded compartments at the bow */}
-      <clipPath id="ship-hull">
-        <path d={HULL} />
-      </clipPath>
-      <g clipPath="url(#ship-hull)">
-        <rect x={FLOODED_FROM} y={92} width={180} height={60} className="fill-pen-blue/40" />
-        <rect x={196} y={124} width={44} height={30} className="fill-pen-blue/30" />
-      </g>
-
-      <path d={HULL} fill="none" strokeWidth={2} className="stroke-ink" />
-      <path
-        d={sketchLine(14, 70, 392, 70, { seed: 9 })}
-        fill="none"
-        strokeWidth={2}
-        className="stroke-ink"
+    <div ref={rootRef} className="space-y-4">
+      <SegmentedControl
+        label="Bulkheads (the walls)"
+        options={OPTIONS}
+        value={walls}
+        onChange={(value) => {
+          setWalls(value);
+          setStep(0);
+        }}
       />
-      <text x={30} y={62} className="fill-ink-muted font-hand text-[14px]">
-        stern
-      </text>
-      <text x={360} y={62} className="fill-ink-muted font-hand text-[14px]">
-        bow
-      </text>
 
-      {/* Bulkheads stop short of the deck */}
-      {BULKHEADS.map((x, index) => (
-        <path
-          key={x}
-          d={sketchLine(x, 146, x, 86, { seed: index + 30, bow: 0.6 })}
-          fill="none"
-          strokeWidth={2}
-          className="stroke-ink"
-        />
-      ))}
+      <svg
+        viewBox="0 0 400 200"
+        role="img"
+        aria-label={`Side view of a ship split into ${COMPARTMENTS} compartments by walls called bulkheads. The bow is holed. ${status}`}
+        className="w-full overflow-visible"
+      >
+        <defs>
+          <clipPath id="br-ship-hull">
+            <path d={HULL} />
+          </clipPath>
+        </defs>
 
-      {/* Annotations */}
-      <g className="text-pen">
-        <DrawnPath d={SPILL.shaft} delay={0.4} duration={0.6} />
-        <DrawnPath d={SPILL.head} delay={1} duration={0.2} />
-      </g>
-      <text x={150} y={182} className="fill-pen font-hand text-[16px]">
-        walls stopped below the deck,
-      </text>
-      <text x={150} y={196} className="fill-pen font-hand text-[16px]">
-        so water spilled over the top
-      </text>
-      <text x={170} y={30} className="fill-pen-blue font-hand text-[16px]">
-        iceberg damage: front compartments
-      </text>
-    </svg>
+        <g className={styles.tilt} style={{ transform: `rotate(${tilt}deg)` }}>
+          {/* Hull body */}
+          <path d={HULL} className="fill-paper stroke-none" />
+
+          {/* Water inside the compartments */}
+          <g clipPath="url(#br-ship-hull)" data-tone="blue">
+            {flooded.map((isFlooded, index) => (
+              <rect
+                key={EDGES[index]}
+                x={EDGES[index]}
+                y={waterTop}
+                width={EDGES[index + 1] - EDGES[index]}
+                height={KEEL - waterTop + 4}
+                className={cn("fill-(--tone) opacity-35", styles.fill)}
+                style={{ transform: `scaleY(${isFlooded ? 1 : 0})` }}
+              />
+            ))}
+          </g>
+
+          {/* Spill streams over the tops of short walls */}
+          {walls === "short" && (
+            <g data-tone="blue" fill="none" strokeWidth={2.2} strokeLinecap="round">
+              {WALL_X.map((x, k) => {
+                // Wall k sits between compartment k and k+1; water pours sternwards over it.
+                const pouring = flooded[k + 1] && floodStep(k, walls) === now;
+                if (!pouring) return null;
+                return (
+                  <path
+                    key={x}
+                    d={`M${x + 6} ${SHORT_TOP - 4} Q${x} ${SHORT_TOP - 10} ${x - 6} ${SHORT_TOP + 2} L${x - 8} ${KEEL - 12}`}
+                    className={cn("stroke-(--tone)", styles.stream)}
+                  />
+                );
+              })}
+            </g>
+          )}
+
+          {/* Bulkheads */}
+          {WALL_X.map((x) => (
+            <rect
+              key={x}
+              x={x - 1.5}
+              y={DECK}
+              width={3}
+              height={KEEL - DECK}
+              rx={1}
+              className={cn("fill-ink", styles.wall)}
+              style={{ transform: `scaleY(${wallScale})` }}
+            />
+          ))}
+
+          {/* Hull outline and deck */}
+          <path d={HULL} fill="none" strokeWidth={2} className="stroke-ink" />
+
+          {/* Damage at the bow */}
+          <g data-tone="red" strokeWidth={2.5} strokeLinecap="round">
+            {[
+              [300, 136, 312, 132],
+              [322, 140, 334, 135],
+              [346, 138, 358, 130],
+            ].map(([x1, y1, x2, y2]) => (
+              <line key={x1} x1={x1} y1={y1} x2={x2} y2={y2} className="stroke-(--tone)" />
+            ))}
+          </g>
+
+          <text x={30} y={52} className="fill-ink-muted text-[13px] font-semibold">
+            stern
+          </text>
+          <text x={370} y={52} textAnchor="end" className="fill-ink-muted text-[13px] font-semibold">
+            bow
+          </text>
+        </g>
+
+        {/* Sea in front of the hull */}
+        <g data-tone="blue">
+          <path d={SEA} className={cn("fill-(--tone-soft) stroke-(--tone-line)", styles.sea)} />
+        </g>
+
+        <g data-tone="red">
+          <text x={330} y={186} textAnchor="middle" className="fill-(--tone) text-[13px] font-semibold">
+            holed here
+          </text>
+        </g>
+        <text x={16} y={186} className="fill-ink-muted text-[13px]">
+          {walls === "short" ? "walls stop below the deck" : "walls reach the deck"}
+        </text>
+      </svg>
+
+      <p
+        aria-live="polite"
+        data-tone={walls === "short" && spills > 0 ? "red" : "green"}
+        className={cn(
+          styles.ease,
+          "rounded-xl border border-(--tone-line) bg-(--tone-soft) px-4 py-3 text-sm leading-relaxed text-ink",
+        )}
+      >
+        {status}
+      </p>
+    </div>
   );
 }

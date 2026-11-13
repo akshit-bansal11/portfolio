@@ -1,0 +1,88 @@
+/*
+ * SpeedPipe.module.css
+ * Motion for the speed pipe: packets falling through every hop, a wobble on the Wi-Fi
+ * hop, width changes that ease when the bottleneck moves, and a pop for the
+ * "bottleneck" badge. Without motion (reduced motion or print) the packets sit still.
+ */
+
+.dot {
+  position: absolute;
+  top: var(--y, 50%);
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  border-radius: 9999px;
+  background: var(--tone);
+  opacity: 0.85;
+}
+
+@media screen and (prefers-reduced-motion: no-preference) {
+  .dot {
+    animation: fall var(--dur, 1.6s) linear var(--delay, 0s) infinite;
+  }
+
+  .wobble {
+    animation-name: fall-wobble;
+  }
+
+  .ease {
+    transition:
+      width 0.55s cubic-bezier(0.2, 0.8, 0.2, 1),
+      border-color 0.3s ease,
+      background-color 0.3s ease;
+  }
+
+  .pop {
+    animation: pop 0.5s ease-out both;
+  }
+}
+
+@keyframes fall {
+  from {
+    top: -6px;
+  }
+
+  to {
+    top: 100%;
+  }
+}
+
+@keyframes fall-wobble {
+  0% {
+    top: -6px;
+    translate: 0 0;
+  }
+
+  25% {
+    translate: 2px 0;
+  }
+
+  50% {
+    translate: -2px 0;
+  }
+
+  75% {
+    translate: 1.5px 0;
+  }
+
+  100% {
+    top: 100%;
+    translate: 0 0;
+  }
+}
+
+@keyframes pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  60% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+
+  100% {
+    transform: none;
+  }
+}
