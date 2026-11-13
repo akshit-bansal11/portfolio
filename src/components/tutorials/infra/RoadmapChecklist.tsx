@@ -145,13 +145,17 @@ function TopicRow({
       </span>
       <label
         htmlFor={id}
-        className={cn(
-          "flex-1 cursor-pointer py-2 text-sm leading-snug transition-colors duration-300",
-          "bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1px] bg-[position:0_55%] bg-no-repeat motion-safe:transition-[background-size,color] motion-safe:duration-300",
-          done ? "bg-[length:100%_1px] text-ink-muted" : "text-ink",
-        )}
+        className="flex-1 cursor-pointer py-2 text-sm leading-snug"
       >
-        {topic.label}
+        <span
+          className={cn(
+            "bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1px] bg-[position:0_58%] bg-no-repeat [box-decoration-break:clone]",
+            "motion-safe:transition-[background-size,color] motion-safe:duration-300",
+            done ? "bg-[length:100%_1px] text-ink-muted" : "text-ink",
+          )}
+        >
+          {topic.label}
+        </span>
       </label>
       {topic.href && (
         <a
