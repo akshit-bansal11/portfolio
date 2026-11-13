@@ -86,7 +86,7 @@ function Box({
   const w = wide ? 92 : 56;
   const h = sub ? 36 : 26;
   return (
-    <g data-tone={down ? "red" : tone} className={styles.svgNode}>
+    <g data-tone={down ? "red" : tone} className={styles["svg-node"]}>
       <rect x={at.x - w / 2} y={at.y - h / 2} width={w} height={h} rx={8} className="fill-paper" />
       <rect
         x={at.x - w / 2}

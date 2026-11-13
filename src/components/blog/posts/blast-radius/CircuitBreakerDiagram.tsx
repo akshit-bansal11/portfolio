@@ -59,10 +59,10 @@ const MOVES: { id: Move; from: State; to: State; label: string }[] = [
 ];
 
 const PACKET: Record<PacketKind, { tone: Tone; to: string; dur: string; anim?: string }> = {
-  ok: { tone: "green", to: "100%", dur: "1.4s", anim: styles.packetBack },
+  ok: { tone: "green", to: "100%", dur: "1.4s", anim: styles["packet-back"] },
   lost: { tone: "red", to: "100%", dur: "0.9s" },
-  fast: { tone: "amber", to: "50%", dur: "0.8s", anim: styles.packetBounce },
-  "test-ok": { tone: "blue", to: "100%", dur: "1.4s", anim: styles.packetBack },
+  fast: { tone: "amber", to: "50%", dur: "0.8s", anim: styles["packet-bounce"] },
+  "test-ok": { tone: "blue", to: "100%", dur: "1.4s", anim: styles["packet-back"] },
   "test-lost": { tone: "blue", to: "100%", dur: "0.9s" },
 };
 

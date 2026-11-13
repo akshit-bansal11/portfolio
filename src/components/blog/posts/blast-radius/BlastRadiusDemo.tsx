@@ -457,7 +457,7 @@ export default function BlastRadiusDemo() {
           >
             <circle r={24} fill="transparent" />
             {!drag && !prefersReducedMotion && (
-              <circle r={10} className={cn("fill-(--tone-line)", styles.bugPulse)} />
+              <circle r={10} className={cn("fill-(--tone-line)", styles["bug-pulse"])} />
             )}
             <polygon points={BLAST_SHAPE} className="fill-(--tone)" />
             {!drag && (

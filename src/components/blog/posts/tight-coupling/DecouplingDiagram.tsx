@@ -62,7 +62,7 @@ function Track({ label, tone, stuck }: { label: string; tone: Tone; stuck?: bool
         {!stuck && (
           <span
             aria-hidden
-            className={cn(dot, "left-1/2 -translate-x-1/2 -translate-y-1/2", styles.rideDown)}
+            className={cn(dot, "left-1/2 -translate-x-1/2 -translate-y-1/2", styles["ride-down"])}
             style={{ "--dur": "1.6s" } as CSSProperties}
           />
         )}

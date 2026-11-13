@@ -251,7 +251,7 @@ export default function DependencyGraphDemo() {
                       strokeLinecap="round"
                       className={cn(
                         "transition-[stroke-width]",
-                        hot ? styles.flowBack : isEvent && !quiet ? styles.flow : undefined,
+                        hot ? styles["flow-back"] : isEvent && !quiet ? styles.flow : undefined,
                         quiet && "[stroke-dasharray:3_9]",
                       )}
                     />
@@ -369,7 +369,7 @@ export default function DependencyGraphDemo() {
                         rx={rx}
                         fill="none"
                         strokeWidth={1.5}
-                        className={cn("stroke-(--tone)", styles.ringSoft)}
+                        className={cn("stroke-(--tone)", styles["ring-soft"])}
                       />
                     )}
                     <text

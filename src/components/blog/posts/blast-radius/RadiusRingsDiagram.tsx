@@ -86,7 +86,7 @@ export default function RadiusRingsDiagram() {
               className={cn(
                 styles.ease,
                 inside ? "fill-(--tone-soft) stroke-(--tone)" : "fill-transparent stroke-rule",
-                isWall && !reduced && styles.wallHit,
+                isWall && !reduced && styles["wall-hit"],
               )}
               style={{ "--delay": `${(RINGS.length - index) * 40}ms` } as CSSProperties}
             />
@@ -131,7 +131,12 @@ export default function RadiusRingsDiagram() {
 
         <g data-tone="red">
           {!reduced && (
-            <circle cx={CX} cy={CY + 6} r={6} className={cn("fill-(--tone)", styles.bugPulse)} />
+            <circle
+              cx={CX}
+              cy={CY + 6}
+              r={6}
+              className={cn("fill-(--tone)", styles["bug-pulse"])}
+            />
           )}
           <circle cx={CX} cy={CY + 6} r={6} className="fill-(--tone)" />
           <text

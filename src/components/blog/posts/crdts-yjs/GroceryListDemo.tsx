@@ -257,7 +257,7 @@ export default function GroceryListDemo() {
         <span
           key={syncs}
           aria-hidden
-          className={cn("pointer-events-none absolute inset-0 rounded-2xl", styles.flashOut)}
+          className={cn("pointer-events-none absolute inset-0 rounded-2xl", styles["flash-out"])}
         />
       )}
       <div className="relative flex items-center justify-between gap-2">

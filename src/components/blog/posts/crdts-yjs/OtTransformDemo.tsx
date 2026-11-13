@@ -173,7 +173,7 @@ export default function OtTransformDemo() {
               <span
                 className={cn(
                   "absolute top-1/2 left-[24%] -translate-x-1/2 -translate-y-1/2",
-                  styles.crossDown,
+                  styles["cross-down"],
                 )}
               >
                 <OpChip tone="violet">insert “oat ” @5 ↓</OpChip>
@@ -181,7 +181,7 @@ export default function OtTransformDemo() {
               <span
                 className={cn(
                   "absolute top-1/2 left-[76%] -translate-x-1/2 -translate-y-1/2",
-                  styles.crossUp,
+                  styles["cross-up"],
                 )}
               >
                 <OpChip tone="blue">delete @2 ↑</OpChip>

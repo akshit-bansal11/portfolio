@@ -15,7 +15,7 @@
 .wave,
 .wall,
 .fill,
-.bugPulse {
+.bug-pulse {
   transform-box: fill-box;
 }
 
@@ -29,7 +29,7 @@
   transform-origin: bottom;
 }
 
-.bugPulse {
+.bug-pulse {
   transform-origin: center;
   opacity: 0;
 }
@@ -57,11 +57,11 @@
     animation: wave 2.4s cubic-bezier(0.2, 0.7, 0.3, 1) infinite;
   }
 
-  .wallHit {
+  .wall-hit {
     animation: wall-hit 2.4s ease-out infinite;
   }
 
-  .bugPulse {
+  .bug-pulse {
     animation: bug-pulse 1.6s ease-out infinite;
   }
 
@@ -106,11 +106,11 @@
     animation: ride var(--dur, 1.2s) cubic-bezier(0.4, 0, 0.6, 1) both;
   }
 
-  .packetBack {
+  .packet-back {
     animation-name: ride-back;
   }
 
-  .packetBounce {
+  .packet-bounce {
     animation-name: bounce;
   }
 
