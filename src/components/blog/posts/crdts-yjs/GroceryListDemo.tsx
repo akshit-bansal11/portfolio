@@ -99,6 +99,9 @@ const freshLww = (): Record<PhoneId, LwwState> => ({
 });
 
 export default function GroceryListDemo() {
+  // The Y.Docs are mutable objects that change under React. Opt out of React Compiler
+  // memoisation so reads like the document size are never served from a stale cache.
+  "use no memo";
   const [docs, setDocs] = useState(createDocs);
   const [, setVersion] = useState(0);
   const [online, setOnline] = useState<Record<PhoneId, boolean>>({ a: true, b: true });
@@ -254,7 +257,7 @@ export default function GroceryListDemo() {
         <span
           key={syncs}
           aria-hidden
-          className={cn("pointer-events-none absolute inset-0 rounded-2xl", styles.flash)}
+          className={cn("pointer-events-none absolute inset-0 rounded-2xl", styles.flashOut)}
         />
       )}
       <div className="relative flex items-center justify-between gap-2">

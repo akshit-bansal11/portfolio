@@ -149,7 +149,12 @@ export default function StateVectorSync() {
           />
         </Doc>
         <Pipe tone={step === 1 ? "violet" : "green"} {...pipe} />
-        <Doc name="Phone (offline a day)" icon={<Smartphone />} tone="violet" vector={fmt(done ? merged : PHONE)}>
+        <Doc
+          name="Phone (offline a day)"
+          icon={<Smartphone />}
+          tone="violet"
+          vector={fmt(done ? merged : PHONE)}
+        >
           <Squares
             have={PHONE}
             tone="violet"

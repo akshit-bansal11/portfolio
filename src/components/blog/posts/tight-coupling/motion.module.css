@@ -5,6 +5,7 @@
  *  - .flow: dashes running along an SVG stroke (current, messages, calls).
  *  - .flowBack: the same, the other way.
  *  - .ring: a soft ring that grows out of a shape and fades ("this just broke").
+ *  - .ringSoft: the same, barely growing, for big shapes.
  *  - .twinkle: a slow, small brightness wobble for lit bulbs.
  *  - .ride / .rideDown: a packet riding along an HTML track (across / down), looping.
  *  - .drop: a packet that falls into place once.
@@ -29,6 +30,12 @@
     transform-box: fill-box;
     transform-origin: center;
     animation: ring 1.4s ease-out infinite;
+  }
+
+  .ringSoft {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: ringSoft 1.6s ease-out infinite;
   }
 
   .twinkle {
@@ -67,6 +74,18 @@
   100% {
     opacity: 0;
     transform: scale(1.35);
+  }
+}
+
+@keyframes ringSoft {
+  0% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.05);
   }
 }
 

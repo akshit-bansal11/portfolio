@@ -71,6 +71,8 @@ function Cable({ a, b }: { a: Point; b: Point }) {
 function Switch({ p, label, hot }: { p: Point; label: string; hot: boolean }) {
   return (
     <g>
+      {/* Opaque base so the lit path never shows through the label. */}
+      <rect x={p.x - 20} y={p.y - 9} width={40} height={18} rx={5} className="fill-paper" />
       <rect
         x={p.x - 20}
         y={p.y - 9}

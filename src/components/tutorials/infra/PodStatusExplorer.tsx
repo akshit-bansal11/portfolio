@@ -426,26 +426,26 @@ export default function PodStatusExplorer() {
           {/* The line you would see. */}
           <div className="overflow-x-auto rounded-lg border border-rule bg-paper-raised px-3 py-2 font-mono text-xs">
             <p className="text-ink-muted">$ kubectl get pods</p>
-            <table className="mt-1 w-full min-w-[26rem] text-left">
+            <table className="mt-1 text-left whitespace-nowrap">
               <thead className="text-ink-muted">
                 <tr>
-                  <th className="pr-3 font-normal">NAME</th>
-                  <th className="pr-3 font-normal">READY</th>
-                  <th className="pr-3 font-normal">STATUS</th>
-                  <th className="pr-3 font-normal">RESTARTS</th>
+                  <th className="pr-6 font-normal">NAME</th>
+                  <th className="pr-6 font-normal">READY</th>
+                  <th className="pr-6 font-normal">STATUS</th>
+                  <th className="pr-6 font-normal">RESTARTS</th>
                   <th className="font-normal">AGE</th>
                 </tr>
               </thead>
               <tbody className="text-ink">
                 <tr>
-                  <td className="pr-3">web-7d4f9</td>
-                  <td className="pr-3">{s.row[0]}</td>
-                  <td className="pr-3">
+                  <td className="pr-6">web-7d4f9</td>
+                  <td className="pr-6">{s.row[0]}</td>
+                  <td className="pr-6">
                     <span className="rounded bg-(--tone-soft) px-1 font-semibold text-(--tone)">
                       {s.row[1]}
                     </span>
                   </td>
-                  <td className="pr-3">{s.row[2]}</td>
+                  <td className="pr-6">{s.row[2]}</td>
                   <td>3m</td>
                 </tr>
               </tbody>

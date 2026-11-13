@@ -54,7 +54,7 @@
     background-image: repeating-linear-gradient(
       -45deg,
       transparent 0 6px,
-      color-mix(in srgb, var(--tone) 14%, transparent) 6px 12px
+      color-mix(in srgb, var(--tone) 10%, transparent) 6px 12px
     );
     background-size: 34px 34px;
     animation: stripes 1.1s linear infinite;

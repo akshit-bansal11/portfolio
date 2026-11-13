@@ -266,9 +266,9 @@ export default function CouplingLadder() {
   const [picked, setPicked] = useState(0);
 
   return (
-    <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:items-start">
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:items-start">
       {/* The ladder. On phones the selected rung opens in place. */}
-      <div className="pl-6">
+      <div className="min-w-0 pl-6">
         <p className="mb-2 flex items-center gap-1 text-xs font-bold tracking-[0.08em] text-ink-muted uppercase">
           <ChevronUp className="h-3.5 w-3.5" aria-hidden /> tighter: avoid
         </p>

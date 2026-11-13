@@ -276,6 +276,25 @@ export default function BlastRadiusDemo() {
           </text>
         </g>
 
+        {/* Wires to the shared database run under the cells */}
+        {sharedDatabase && (
+          <g data-tone={failure ? "red" : "amber"}>
+            {cells.map((cell) => (
+              <path
+                key={`db-${cell.index}`}
+                d={`M${cell.x + cell.w / 2} ${cell.y + cell.h} L${WIDTH / 2} ${dbY - 12}`}
+                fill="none"
+                strokeWidth={1.2}
+                className={cn(
+                  styles.ease,
+                  "stroke-(--tone-line)",
+                  !prefersReducedMotion && styles.flow,
+                )}
+              />
+            ))}
+          </g>
+        )}
+
         {/* Cells */}
         {cells.map((cell) => {
           const hit = isCellHit(cell.index);
@@ -334,8 +353,8 @@ export default function BlastRadiusDemo() {
                       }
                       className="fill-(--tone-soft) stroke-(--tone-line)"
                       strokeWidth={1}
-                      initial={{ r: prefersReducedMotion ? 400 : 0 }}
-                      animate={{ r: 400 }}
+                      initial={{ r: prefersReducedMotion ? 400 : 0, opacity: 1 }}
+                      animate={{ r: 400, opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{
                         duration: prefersReducedMotion ? 0 : 1.1,
@@ -390,19 +409,6 @@ export default function BlastRadiusDemo() {
         {/* Optional shared database */}
         {sharedDatabase && (
           <g data-tone={failure ? "red" : "amber"}>
-            {cells.map((cell) => (
-              <path
-                key={`db-${cell.index}`}
-                d={`M${cell.x + cell.w / 2} ${cell.y + cell.h} L${WIDTH / 2} ${dbY - 12}`}
-                fill="none"
-                strokeWidth={1.2}
-                className={cn(
-                  styles.ease,
-                  "stroke-(--tone-line)",
-                  !prefersReducedMotion && styles.flow,
-                )}
-              />
-            ))}
             <rect
               x={WIDTH / 2 - 60}
               y={dbY - 12}

@@ -369,7 +369,7 @@ export default function DependencyGraphDemo() {
                         rx={rx}
                         fill="none"
                         strokeWidth={1.5}
-                        className={cn("stroke-(--tone)", styles.ring)}
+                        className={cn("stroke-(--tone)", styles.ringSoft)}
                       />
                     )}
                     <text
@@ -387,17 +387,20 @@ export default function DependencyGraphDemo() {
                     {look.tag && (
                       <motion.text
                         key={state}
-                        y={halfH + 12}
+                        y={halfH + 13}
                         textAnchor="middle"
-                        initial={{ opacity: 0, y: halfH + 6 }}
+                        initial={{ opacity: 0, y: -6 }}
                         animate={{
                           opacity: 1,
-                          y: halfH + 12,
-                          transition: { delay: delay + 0.15 },
+                          y: 0,
+                          transition: { delay: delay + 0.15, duration: reduced ? 0 : 0.3 },
                         }}
                         exit={{ opacity: 0 }}
+                        paintOrder="stroke"
+                        strokeWidth={4}
+                        strokeLinejoin="round"
                         className={cn(
-                          "font-mono text-[11px] font-bold",
+                          "stroke-paper font-mono text-[12px] font-bold",
                           look.tone ? "fill-(--tone)" : "fill-ink-muted",
                         )}
                       >

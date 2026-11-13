@@ -68,7 +68,7 @@ function Panel({ title, pairs, poison }: { title: string; pairs: Pair[]; poison:
   const summary =
     down.length > 0
       ? `Customer ${down.join(", ")} lost both workers and is down too.`
-      : `Nobody else is down. ${degraded} customer${degraded === 1 ? "" : "s"} lost one worker and carry on with the other.`;
+      : `Nobody else is down. ${degraded} customer${degraded === 1 ? "" : "s"} lost one worker and ${degraded === 1 ? "carries" : "carry"} on with the other.`;
 
   return (
     <figure

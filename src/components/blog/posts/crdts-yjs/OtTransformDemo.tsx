@@ -41,7 +41,9 @@ function meeraCells(step: number): Cell[] {
 
 function kabirCells(step: number, transform: boolean): Cell[] {
   if (step === 0) return cells(START);
-  if (step < 3) return cells(START, { 2: "removed" });
+  if (step === 1) return cells(START, { 2: "removed" });
+  // The delete has happened: everything after position 2 has moved left by one.
+  if (step === 2) return cells("tea milk");
   return transform
     ? cells("tea oat milk", range(4, 4, "added"))
     : cells("tea moat ilk", range(5, 4, "wrong"));
@@ -161,7 +163,7 @@ export default function OtTransformDemo() {
 
         {/* The network band between the two phones. */}
         <div className="relative my-2 h-20 rounded-xl border border-dashed border-rule">
-          {step !== 3 && (
+          {step < 2 && (
             <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[0.65rem] font-semibold tracking-[0.12em] text-ink-muted/70 uppercase">
               network
             </span>

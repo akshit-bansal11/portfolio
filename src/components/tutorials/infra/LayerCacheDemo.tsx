@@ -69,6 +69,15 @@ function plan(steps: Step[], change: Change): boolean[] {
   });
 }
 
+// When each step starts and how long it runs in the replay: a build runs one step at a time.
+function schedule(steps: Step[], rerun: boolean[]): { start: number; length: number }[] {
+  const lengths = steps.map((step, i) => (rerun[i] ? (step.slow ? SLOW_S : RUN_S) : CACHED_S));
+  return lengths.map((length, i) => ({
+    start: 0.25 + lengths.slice(0, i).reduce((sum, l) => sum + l, 0),
+    length,
+  }));
+}
+
 // A row of pressable choices; the pressed one is tinted.
 function Choice<T extends string>({
   label,
@@ -113,14 +122,7 @@ export default function LayerCacheDemo() {
   const miss = rerun.indexOf(true);
   const file = CHANGES.find((c) => c.id === change)?.file;
 
-  // When each step starts and finishes in the replay: a build runs one step at a time.
-  let clock = 0.25;
-  const timing = steps.map((step, i) => {
-    const length = rerun[i] ? (step.slow ? SLOW_S : RUN_S) : CACHED_S;
-    const start = clock;
-    clock += length;
-    return { start, length };
-  });
+  const timing = schedule(steps, rerun);
 
   return (
     <div data-widget="layer-cache" data-tone="docker" className={FRAME}>

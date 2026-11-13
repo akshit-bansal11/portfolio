@@ -248,7 +248,7 @@ export default function DecouplingDiagram() {
               <span className="text-xs font-bold tracking-[0.08em] text-(--tone) uppercase">
                 queue
               </span>
-              <span className="flex h-5 min-w-[5.5rem] items-end gap-0.5" aria-hidden>
+              <span className="flex h-5 min-w-[5.5rem] items-end gap-1" aria-hidden>
                 {Array.from({ length: backlog }, (_, n) => (
                   <span
                     // biome-ignore lint/suspicious/noArrayIndexKey: identical, positional blocks.

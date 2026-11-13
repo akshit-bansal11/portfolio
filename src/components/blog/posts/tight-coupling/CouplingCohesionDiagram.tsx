@@ -190,7 +190,7 @@ export default function CouplingCohesionDiagram() {
                   rx={14}
                   fill="none"
                   strokeWidth={1.5}
-                  className={cn("stroke-(--tone)", styles.ring)}
+                  className={cn("stroke-(--tone)", styles.ringSoft)}
                 />
               )}
             </g>

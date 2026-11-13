@@ -342,16 +342,16 @@ Those costs are exactly why sidecar-less designs appeared: one shared proxy per 
 <Diagram caption="Same three services, two ways to place the proxies. A sidecar per service, or one shared proxy per machine (Istio's ambient mode works this way).">
   <Row>
     <Group title="Sidecar per service" tone="blue" icon={<Server />} cols={3}>
-      <Node title="A + proxy" tone="blue" icon={<Lock />} />
-      <Node title="B + proxy" tone="blue" icon={<Lock />} />
-      <Node title="C + proxy" tone="blue" icon={<Lock />} />
+      <Node title="A + proxy" note="its own sidecar" tone="blue" icon={<Lock />} />
+      <Node title="B + proxy" note="its own sidecar" tone="blue" icon={<Lock />} />
+      <Node title="C + proxy" note="its own sidecar" tone="blue" icon={<Lock />} />
     </Group>
     <Group title="Sidecar-less (shared per machine)" tone="green" icon={<Server />}>
-      <Row>
-        <Node title="A" tone="green" icon={<Boxes />} />
-        <Node title="B" tone="green" icon={<Boxes />} />
-        <Node title="C" tone="green" icon={<Boxes />} />
-      </Row>
+      <Group title="Services, no sidecars" tone="green" icon={<Boxes />} cols={3}>
+        <Node title="A" note="just your code" tone="green" icon={<Boxes />} />
+        <Node title="B" note="just your code" tone="green" icon={<Boxes />} />
+        <Node title="C" note="just your code" tone="green" icon={<Boxes />} />
+      </Group>
       <Link label="all share" tone="green" />
       <Node title="One proxy per machine" note="or eBPF in the kernel" tone="green" icon={<Network />} pulse />
     </Group>

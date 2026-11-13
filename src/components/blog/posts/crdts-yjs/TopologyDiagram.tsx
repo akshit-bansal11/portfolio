@@ -72,6 +72,7 @@ function Box({
   tone,
   wide,
   down,
+  downSub,
 }: {
   at: Point;
   label: string;
@@ -79,6 +80,8 @@ function Box({
   tone: Tone;
   wide?: boolean;
   down?: boolean;
+  /** Second line while the box is down. */
+  downSub?: string;
 }) {
   const w = wide ? 92 : 56;
   const h = sub ? 36 : 26;
@@ -112,7 +115,7 @@ function Box({
           dominantBaseline="central"
           className="fill-(--tone) text-[9px]"
         >
-          {down ? "no one to referee" : sub}
+          {down ? downSub : sub}
         </text>
       )}
     </g>
@@ -177,6 +180,7 @@ export default function TopologyDiagram() {
             at={OT_SERVER}
             label="server"
             sub="orders + transforms"
+            downSub="no one to referee"
             tone="pink"
             wide
             down={down}
@@ -208,7 +212,15 @@ export default function TopologyDiagram() {
           {RING.map(([a, b]) => (
             <LinkLine key={`${a.x}-${a.y}-${b.x}-${b.y}`} a={a} b={b} live tone="green" />
           ))}
-          <Box at={MESH_SERVER} label="server" sub="optional relay" tone="cyan" wide down={down} />
+          <Box
+            at={MESH_SERVER}
+            label="server"
+            sub="optional relay"
+            downSub="peers don't need it"
+            tone="cyan"
+            wide
+            down={down}
+          />
           {PEERS.map((p, i) => (
             <Box key={`${p.x}-${p.y}`} at={p} label={`peer ${i + 1}`} tone="green" />
           ))}

@@ -191,25 +191,25 @@ export default function TrafficFlowDemo() {
         {/* Data centre wall */}
         <rect
           x={8}
-          y={80}
+          y={108}
           width={364}
-          height={332}
+          height={304}
           rx={16}
           fill="none"
           strokeWidth={1.4}
           strokeDasharray="6 5"
           className="stroke-ink-muted/50"
         />
-        <text x={22} y={100} className="fill-ink-muted text-[11px] font-semibold tracking-wider">
+        <text x={20} y={142} className="fill-ink-muted text-[12px] font-semibold tracking-wider">
           YOUR DATA CENTRE
         </text>
         <g data-tone="amber">
-          <text x={366} y={70} textAnchor="end" className="fill-(--tone) text-[11px] font-bold">
+          <text x={366} y={70} textAnchor="end" className="fill-(--tone) text-[12px] font-bold">
             ↕ NORTH-SOUTH
           </text>
         </g>
         <g data-tone="blue">
-          <text x={358} y={402} textAnchor="end" className="fill-(--tone) text-[11px] font-bold">
+          <text x={358} y={402} textAnchor="end" className="fill-(--tone) text-[12px] font-bold">
             ↔ EAST-WEST
           </text>
         </g>
@@ -260,18 +260,26 @@ export default function TrafficFlowDemo() {
               className={cn("stroke-(--tone)", styles.march)}
             />
             <circle r={4.5} className={cn("fill-(--tone) stroke-paper", styles.packet)}>
-              <animateMotion dur="2.2s" repeatCount="indefinite" path={ATTACK} />
+              {/* Blocked: the intruder's packet stops at the database's proxy. */}
+              <animateMotion
+                dur="2.2s"
+                repeatCount="indefinite"
+                path={ATTACK}
+                keyPoints={attackBlocked ? "0;0.9" : "0;1"}
+                keyTimes="0;1"
+                calcMode="linear"
+              />
             </circle>
             {attackBlocked && (
               <g className={styles.shake}>
-                <circle cx={140} cy={378} r={10} className="fill-paper stroke-(--tone)" />
+                <circle cx={158} cy={381} r={10} className="fill-paper stroke-(--tone)" />
                 <path
-                  d="M135 373 L145 383 M145 373 L135 383"
+                  d="M153 376 L163 386 M163 376 L153 386"
                   strokeWidth={2.4}
                   strokeLinecap="round"
                   className="stroke-(--tone)"
                 />
-                <text x={156} y={366} className="fill-(--tone) text-[12px] font-bold">
+                <text x={172} y={368} className="fill-(--tone) text-[12px] font-bold">
                   denied
                 </text>
               </g>
@@ -303,6 +311,15 @@ export default function TrafficFlowDemo() {
                   className={cn("stroke-(--tone)", styles.alarm)}
                 />
               )}
+              {/* Opaque base so lines behind never show through the tinted fill. */}
+              <rect
+                x={x}
+                y={y}
+                width={node.w}
+                height={node.h}
+                rx={id === "users" ? 16 : 8}
+                className="fill-paper"
+              />
               <rect
                 x={x}
                 y={y}
@@ -322,7 +339,7 @@ export default function TrafficFlowDemo() {
                 y={node.y}
                 textAnchor="middle"
                 dominantBaseline="central"
-                className="fill-ink text-[13px] font-semibold"
+                className="fill-ink text-[14px] font-semibold"
               >
                 {node.label}
               </text>
@@ -347,9 +364,9 @@ export default function TrafficFlowDemo() {
               )}
               {compromised && (
                 <text
-                  x={node.x}
+                  x={x + node.w - 16}
                   y={y - 6}
-                  textAnchor="middle"
+                  textAnchor="end"
                   className="fill-(--tone) text-[12px] font-bold"
                 >
                   intruder!

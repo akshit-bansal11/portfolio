@@ -37,7 +37,7 @@ interface World {
 
 const THREADS = 100;
 const TICK_MS = 170;
-const LOG = 24;
+const LOG = 10;
 const ARRIVALS: Kind[] = ["recs", "pay", "recs", "other"];
 
 const POOLS: { kind: Kind; title: string; from: number; to: number; cols: string }[] = [
@@ -107,8 +107,8 @@ function ThreadSlot({ slot }: { slot: Slot | null }) {
         styles.ease,
         "block h-[22px] w-[22px] rounded-[5px] border",
         !slot && "border-rule bg-paper",
-        slot && !stuck && "border-(--tone) bg-(--tone)",
-        stuck && "border-(--tone) bg-(--tone)",
+        slot && !stuck && "border-(--tone-line) bg-(--tone-line)",
+        stuck && "border-2 border-(--tone) bg-(--tone-line)",
       )}
     />
   );
@@ -235,13 +235,16 @@ export default function BulkheadPoolDemo() {
           <li key={kind} data-tone={KIND[kind].tone} className="inline-flex items-center gap-2">
             <span
               aria-hidden
-              className="h-3 w-3 rounded-sm border border-(--tone) bg-(--tone-line)"
+              className="h-3 w-3 rounded-sm border border-(--tone-line) bg-(--tone-line)"
             />
             {KIND[kind].label}
           </li>
         ))}
         <li data-tone="amber" className="inline-flex items-center gap-2">
-          <span aria-hidden className="h-3 w-3 rounded-sm border border-(--tone) bg-(--tone)" />
+          <span
+            aria-hidden
+            className="h-3 w-3 rounded-sm border-2 border-(--tone) bg-(--tone-line)"
+          />
           stuck waiting
         </li>
       </ul>

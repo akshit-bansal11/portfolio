@@ -1,11 +1,12 @@
 /*
  * motion.module.css
  * Keyframes for the CRDT post's diagrams, on top of the shared dg-* / tut-* kit:
- *  - .pipe / .packet: a wire between two cards with a packet riding it once per step.
+ *  - .pipe / .packet: a wire between two cards with a packet riding it while it is active.
  *    The wire runs down on phones and across from `md` up; .reverse flips the trip.
  *  - .flow: marching dashes on SVG links ("edits are moving along here").
  *  - .crossDown / .crossUp: an operation chip crossing the network band.
- *  - .flash: a one-shot tint when a value changes.
+ *  - .flash: a one-shot tint when a value changes (settles on the soft tone);
+ *    .flashOut fades all the way back to transparent, for overlays.
  * Screen only, and only when motion is welcome; otherwise everything sits still in its
  * final state.
  */
@@ -144,6 +145,10 @@
   .flash {
     animation: flash 0.9s ease-out both;
   }
+
+  .flashOut {
+    animation: flash-out 1.1s ease-out both;
+  }
 }
 
 @keyframes pipe-y {
@@ -228,5 +233,15 @@
 
   100% {
     background-color: var(--tone-soft);
+  }
+}
+
+@keyframes flash-out {
+  0% {
+    background-color: color-mix(in srgb, var(--tone) 22%, transparent);
+  }
+
+  100% {
+    background-color: transparent;
   }
 }

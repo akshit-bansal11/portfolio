@@ -43,8 +43,8 @@ const DEVICE_TONE: Record<DeviceState, Tone | undefined> = {
 
 const DEVICE_CLASS: Record<DeviceState, string> = {
   old: "border-rule bg-paper",
-  updated: "border-(--tone) bg-(--tone-line)",
-  crashed: "border-(--tone) bg-(--tone)",
+  updated: "border-(--tone-line) bg-(--tone-line)",
+  crashed: "border-(--tone) bg-(--tone-line)",
   rolledBack: "border-(--tone) bg-(--tone-soft)",
 };
 
@@ -217,7 +217,7 @@ export default function StagedRolloutDemo() {
                 )}
                 <li
                   aria-current={index === stageIndex ? "step" : undefined}
-                  data-tone={stopped ? "red" : done ? "green" : "violet"}
+                  data-tone={stopped || (done && crashed > 0) ? "red" : done ? "green" : "violet"}
                   className={cn(
                     styles.ease,
                     "rounded-full border px-3 py-1 font-mono font-semibold",

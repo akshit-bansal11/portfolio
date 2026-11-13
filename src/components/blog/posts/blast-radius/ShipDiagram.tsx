@@ -106,6 +106,30 @@ export default function ShipDiagram() {
           <clipPath id="br-ship-hull">
             <path d={HULL} />
           </clipPath>
+          {/* Fade the sea out at the sides and the bottom, so it has no hard box edges. */}
+          <linearGradient id="br-sea-x" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0" stopColor="white" stopOpacity="0" />
+            <stop offset="0.12" stopColor="white" stopOpacity="1" />
+            <stop offset="0.88" stopColor="white" stopOpacity="1" />
+            <stop offset="1" stopColor="white" stopOpacity="0" />
+          </linearGradient>
+          <linearGradient id="br-sea-y" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0.5" stopColor="white" stopOpacity="1" />
+            <stop offset="1" stopColor="white" stopOpacity="0" />
+          </linearGradient>
+          <mask id="br-sea-fade-y" maskUnits="userSpaceOnUse" x="0" y="0" width="400" height="200">
+            <rect x="0" y="90" width="400" height="110" fill="url(#br-sea-y)" />
+          </mask>
+          <mask id="br-sea-fade" maskUnits="userSpaceOnUse" x="0" y="0" width="400" height="200">
+            <rect
+              x="0"
+              y="0"
+              width="400"
+              height="200"
+              fill="url(#br-sea-x)"
+              mask="url(#br-sea-fade-y)"
+            />
+          </mask>
         </defs>
 
         <g className={styles.tilt} style={{ transform: `rotate(${tilt}deg)` }}>
@@ -188,7 +212,9 @@ export default function ShipDiagram() {
 
         {/* Sea in front of the hull */}
         <g data-tone="blue">
-          <path d={SEA} className={cn("fill-(--tone-soft) stroke-(--tone-line)", styles.sea)} />
+          <g mask="url(#br-sea-fade)">
+            <path d={SEA} className={cn("fill-(--tone-soft) stroke-(--tone-line)", styles.sea)} />
+          </g>
         </g>
 
         <g data-tone="red">
