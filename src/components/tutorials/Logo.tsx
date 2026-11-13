@@ -60,7 +60,7 @@ export function LogoRow({ techs, points }: LogoRowProps) {
           <li
             key={tech}
             data-tone={tone}
-            className="tut-glow rounded-2xl border-2 border-(--tone) bg-(image:--tone-fill) p-4"
+            className="dg-node rounded-2xl border border-(--tone-line) bg-(image:--tone-fill) p-4"
           >
             <p className="flex items-center gap-3 text-lg font-bold text-ink">
               <Icon className="h-10 w-10 shrink-0 text-(--tone)" aria-hidden />

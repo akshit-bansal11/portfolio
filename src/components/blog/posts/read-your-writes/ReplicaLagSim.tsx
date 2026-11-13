@@ -327,12 +327,12 @@ function NodeCard({ id, world, now }: { id: NodeId; world: World; now: number })
       data-tone={node.tone}
       aria-label={`${node.name}: ${rupees(node.balance)}, log position ${node.lsn}`}
       className={cn(
-        "tut-glow rounded-xl border-2 border-(--tone) bg-(image:--tone-fill) p-3 transition-shadow",
+        "dg-node rounded-xl border border-(--tone-line) bg-(image:--tone-fill) p-3",
         serving && "tut-ping",
       )}
     >
       <div className="flex items-start justify-between gap-2">
-        <p className="flex items-center gap-1.5 font-hand text-2xl leading-6 font-bold text-(--tone)">
+        <p className="flex items-center gap-1.5 font-bold text-(--tone)">
           <Database className="h-5 w-5" aria-hidden />
           {node.name}
         </p>
@@ -350,7 +350,7 @@ function NodeCard({ id, world, now }: { id: NodeId; world: World; now: number })
       </div>
       <p className="mt-1 text-2xl font-bold text-ink">{rupees(node.balance)}</p>
       {serving && (
-        <p className="mt-1 font-hand text-lg leading-5 text-(--tone)">answering your refresh…</p>
+        <p className="tut-pop mt-1 text-sm font-medium text-(--tone)">answering your refresh…</p>
       )}
       {incoming.length > 0 && (
         <ul className="mt-2 list-none space-y-1.5 p-0">
@@ -366,6 +366,11 @@ function NodeCard({ id, world, now }: { id: NodeId; world: World; now: number })
                   <div
                     className="h-full rounded-full bg-(--tone)"
                     style={{ width: `${progress * 100}%` }}
+                  />
+                  <span
+                    aria-hidden
+                    className="absolute top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--tone) shadow-[0_0_0_3px_var(--tone-soft)]"
+                    style={{ left: `${progress * 100}%` }}
                   />
                 </div>
               </li>
@@ -431,7 +436,7 @@ export default function ReplicaLagSim() {
               data-tone={s.id === "any" ? "red" : "violet"}
               onClick={() => reset(s.id)}
               className={cn(
-                "min-h-10 rounded-lg border-2 border-(--tone) px-3 text-sm font-semibold transition",
+                "min-h-10 rounded-lg border border-(--tone-line) px-3 text-sm font-semibold transition",
                 strategy === s.id
                   ? "bg-(--tone) text-paper"
                   : "text-(--tone) hover:bg-(--tone-soft)",
@@ -469,8 +474,8 @@ export default function ReplicaLagSim() {
       <div className="grid gap-4 lg:grid-cols-[17rem_minmax(0,1fr)]">
         {/* The phone */}
         <div className="flex flex-col items-center gap-3">
-          <div className="tut-sketch-alt w-full max-w-[17rem] border-[2.5px] border-ink bg-paper p-2">
-            <div className="flex min-h-[15rem] flex-col rounded-[1.1rem] border border-rule bg-paper-raised p-3">
+          <div className="w-full max-w-[17rem] rounded-[1.75rem] border border-rule bg-paper p-1.5">
+            <div className="flex min-h-[15rem] flex-col rounded-[1.4rem] bg-paper-raised p-3.5">
               <p className="flex items-center gap-1.5 text-sm font-bold text-ink">
                 <Smartphone className="h-4 w-4" aria-hidden /> PayWallet
               </p>
@@ -487,7 +492,7 @@ export default function ReplicaLagSim() {
               <p
                 aria-live="polite"
                 data-tone={world.screen.stale ? "red" : "violet"}
-                className="mt-2 font-hand text-xl leading-5 text-(--tone)"
+                className="mt-2 text-sm font-semibold text-(--tone)"
               >
                 {world.screen.status}
               </p>
@@ -504,7 +509,7 @@ export default function ReplicaLagSim() {
               data-tone="green"
               disabled={busyWrite}
               onClick={() => setWorld((w) => sendWrite(w, clock(), settings, false))}
-              className="tut-glow min-h-11 rounded-xl bg-(--tone) text-sm font-bold text-paper disabled:opacity-50"
+              className="min-h-11 rounded-xl bg-(--tone) text-sm font-bold text-paper transition-transform active:scale-95 disabled:opacity-50"
             >
               Add ₹100
             </button>
@@ -514,7 +519,7 @@ export default function ReplicaLagSim() {
                 data-tone="violet"
                 disabled={busyRead}
                 onClick={() => setWorld((w) => sendRead(w, clock(), settings))}
-                className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border-2 border-(--tone) text-sm font-semibold text-(--tone) disabled:opacity-50"
+                className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-(--tone-line) bg-(--tone-soft) text-sm font-semibold text-(--tone) transition-transform active:scale-95 disabled:opacity-50"
               >
                 <RefreshCw className="h-4 w-4" aria-hidden /> Refresh
               </button>
@@ -523,7 +528,7 @@ export default function ReplicaLagSim() {
                 data-tone="amber"
                 disabled={busyWrite || busyRead}
                 onClick={() => setWorld((w) => sendWrite(w, clock(), settings, true))}
-                className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border-2 border-(--tone) px-1 text-sm font-semibold text-(--tone) disabled:opacity-50"
+                className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-(--tone-line) bg-(--tone-soft) px-1 text-sm font-semibold text-(--tone) transition-transform active:scale-95 disabled:opacity-50"
               >
                 <Zap className="h-4 w-4" aria-hidden /> Add + refresh
               </button>

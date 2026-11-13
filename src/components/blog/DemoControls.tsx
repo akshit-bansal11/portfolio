@@ -109,7 +109,7 @@ export function DemoButton({
         "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pen",
         "active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50",
         variant === "solid"
-          ? "tut-glow bg-(--tone) text-paper"
+          ? "bg-(--tone) text-paper"
           : "bg-paper text-(--tone) hover:bg-(--tone-soft)",
         className,
       )}
@@ -147,7 +147,9 @@ export function DemoSlider({
         <span className="text-xs font-semibold tracking-[0.12em] text-ink-muted uppercase">
           {label}
         </span>
-        <span className="font-hand text-xl leading-none text-(--tut-violet)">{valueText}</span>
+        <span className="font-mono text-sm leading-none font-semibold text-(--tut-violet)">
+          {valueText}
+        </span>
       </label>
       <input
         id={id}

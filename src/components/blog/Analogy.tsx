@@ -23,7 +23,7 @@ export default function Analogy({ title, children, mapping, className }: Analogy
       aria-label={`Real-life analogy: ${title}`}
       data-tone="violet"
       className={cn(
-        "tut-glow my-8 rounded-xl border border-l-[6px] border-(--tone) bg-(image:--tone-fill) p-4 sm:p-5",
+        "my-8 rounded-xl border border-l-4 border-(--tone-line) border-l-(--tone) bg-(image:--tone-fill) p-4 sm:p-5",
         className,
       )}
     >
@@ -32,7 +32,7 @@ export default function Analogy({ title, children, mapping, className }: Analogy
           <Globe className="h-3.5 w-3.5 shrink-0" aria-hidden />
           Real-life analogy
         </span>
-        <span className="font-hand text-2xl leading-none font-bold text-(--tone)">{title}</span>
+        <span className="text-lg leading-tight font-bold text-(--tone)">{title}</span>
       </p>
       <div className="mt-3 leading-relaxed text-ink [&_p]:my-2 [&_p]:leading-relaxed [&_p:first-child]:mt-0 [&_p:last-child]:mb-0">
         {children}
@@ -43,9 +43,9 @@ export default function Analogy({ title, children, mapping, className }: Analogy
           {mapping.map(([everyday, technical]) => (
             <li
               key={everyday}
-              className="flex flex-wrap items-baseline gap-x-2 rounded-lg bg-paper/60 px-3 py-1.5"
+              className="dg-node flex flex-wrap items-baseline gap-x-2 rounded-lg border border-(--tone-line) bg-paper/70 px-3 py-1.5 text-sm"
             >
-              <span className="font-hand text-xl leading-tight text-(--tone)">{everyday}</span>
+              <span className="font-medium text-(--tone)">{everyday}</span>
               <span aria-hidden className="text-ink-muted">
                 →
               </span>

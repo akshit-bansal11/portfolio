@@ -41,7 +41,7 @@ export default function DemoFrame({ title, hint, caption, children, className }:
           <span className="font-semibold text-ink sm:text-lg">{title}</span>
         </div>
         {hint && (
-          <span data-tone="term" className="font-hand text-xl text-(--tone)">
+          <span data-tone="term" className="text-sm font-medium text-(--tone)">
             {hint}
           </span>
         )}
@@ -73,8 +73,8 @@ export function DemoSkeleton({ height = "md" }: DemoSkeletonProps) {
         SKELETON_HEIGHT[height],
       )}
     >
-      <span className="font-hand text-2xl text-ink-muted motion-safe:animate-pulse">
-        sharpening pencils…
+      <span className="text-sm font-medium text-ink-muted motion-safe:animate-pulse">
+        loading the demo…
       </span>
     </div>
   );

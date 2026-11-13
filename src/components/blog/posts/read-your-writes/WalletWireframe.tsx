@@ -1,42 +1,57 @@
 /*
  * WalletWireframe.tsx
- * Three hand-drawn phone wireframes of a wallet app: add ₹100, see "added", refresh and
- * see the balance. In the "bug" variant the refresh is served by a replica that has not
- * caught up, so the balance reads ₹0. In the "fixed" variant it reads ₹100. Each phone
- * says which database node answered it. Server-rendered; motion is CSS only.
+ * A looping storyboard of three phone wireframes: tap "Add ₹100", see "added", refresh
+ * and see the balance. Packets travel along the connectors as each step happens. In
+ * "Without a fix" the refresh lands on a replica that is behind and the balance reads ₹0;
+ * in "With a fix" the router only uses a node that has the write. Hover pauses the loop;
+ * reduced motion and print show the final frame.
  */
 
-import { CheckCircle2, RefreshCw, Wallet } from "lucide-react";
-import type { CSSProperties, ReactNode } from "react";
-import { Link, Row } from "@/components/tutorials/Diagram";
+"use client";
+
+import { CheckCircle2, Loader2, Pause, Play, RefreshCw, Wallet } from "lucide-react";
+import { type ReactNode, useEffect, useState } from "react";
+import { Wire } from "@/components/tutorials/Diagram";
 import type { Tone } from "@/components/tutorials/Flow";
-import { sketchEllipse } from "@/lib/blog/sketch";
 import { cn } from "@/lib/utils";
 
-const CIRCLE = sketchEllipse(100, 32, 92, 28, { seed: 7 });
+// 0 tap → 1 write travels → 2 success → 3 refresh travels → 4 balance shown
+const LAST = 4;
+const STEP_MS = 1400;
 
 interface PhoneProps {
-  step: string;
+  title: string;
   server: string;
   serverTone: Tone;
+  active: boolean;
   children: ReactNode;
 }
 
-// One phone: handwritten step label, sketched outline, fake status bar, screen, and a chip
-// saying which node served this screen.
-function Phone({ step, server, serverTone, children }: PhoneProps) {
+function Phone({ title, server, serverTone, active, children }: PhoneProps) {
   return (
     <div className="flex min-w-0 flex-1 flex-col items-center gap-2">
-      <p className="font-hand text-2xl leading-none font-bold text-ink">{step}</p>
-      <div className="tut-sketch-alt w-full max-w-[16rem] border-[2.5px] border-ink bg-paper p-2">
-        <div className="flex min-h-[19rem] flex-col rounded-[1.1rem] border border-rule bg-paper-raised p-3">
+      <p
+        className={cn(
+          "text-xs font-bold tracking-[0.08em] uppercase transition-colors",
+          active ? "text-ink" : "text-ink-muted",
+        )}
+      >
+        {title}
+      </p>
+      <div
+        className={cn(
+          "w-full max-w-[15.5rem] rounded-[1.75rem] border bg-paper p-1.5 transition-[border-color,translate] duration-300",
+          active ? "border-ink/40 motion-safe:-translate-y-1" : "border-rule",
+        )}
+      >
+        <div className="flex min-h-[18rem] flex-col rounded-[1.4rem] bg-paper-raised p-3.5">
           <div
             aria-hidden
             className="mb-3 flex items-center justify-between text-[0.65rem] text-ink-muted"
           >
             <span className="font-semibold">9:41</span>
             <span className="h-1.5 w-12 rounded-full bg-rule" />
-            <span>●●● ▮</span>
+            <span className="font-mono">5G</span>
           </div>
           <p className="mb-3 flex items-center gap-1.5 text-sm font-bold text-ink">
             <Wallet className="h-4 w-4" aria-hidden /> PayWallet
@@ -46,106 +61,183 @@ function Phone({ step, server, serverTone, children }: PhoneProps) {
       </div>
       <p
         data-tone={serverTone}
-        className="rounded-full border border-(--tone) bg-(--tone-soft) px-2.5 py-0.5 text-xs font-semibold text-(--tone)"
+        className="rounded-full border border-(--tone-line) bg-(--tone-soft) px-2.5 py-0.5 text-xs font-semibold text-(--tone)"
       >
-        answered by: {server}
+        answered by {server}
       </p>
     </div>
   );
 }
 
-export default function WalletWireframe({ variant = "bug" }: { variant?: "bug" | "fixed" }) {
-  const fixed = variant === "fixed";
+// Connector between phones: packets flow only while its step is happening.
+function Hop({ label, tone, active }: { label: string; tone: Tone; active: boolean }) {
+  return (
+    <div
+      data-tone={tone}
+      className={cn(
+        "dg-link flex flex-none flex-col items-center justify-center gap-1 py-2 text-(--tone) transition-opacity duration-300 md:px-1",
+        active ? "opacity-100" : "opacity-55",
+      )}
+    >
+      <span className="flex flex-col items-center md:hidden">
+        <Wire axis="y" className="h-8" />
+        <svg aria-hidden viewBox="0 0 12 8" className="h-2 w-3 fill-(--tone)">
+          <path d="M0 0 L12 0 L6 8 Z" />
+        </svg>
+      </span>
+      <span className="hidden items-center md:flex">
+        <Wire axis="x" className="w-14" />
+        <svg aria-hidden viewBox="0 0 8 12" className="h-3 w-2 fill-(--tone)">
+          <path d="M0 0 L8 6 L0 12 Z" />
+        </svg>
+      </span>
+      <span className="max-w-[9rem] text-center text-xs leading-snug font-medium">{label}</span>
+    </div>
+  );
+}
+
+export default function WalletWireframe() {
+  const [fixed, setFixed] = useState(false);
+  const [step, setStep] = useState(LAST);
+  const [playing, setPlaying] = useState(true);
+  const [hovered, setHovered] = useState(false);
+
+  // Loop the story unless paused, hovered or the reader prefers less motion.
+  useEffect(() => {
+    if (!playing || hovered) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const timer = window.setTimeout(
+      () => setStep((s) => (s >= LAST ? 0 : s + 1)),
+      step >= LAST ? STEP_MS * 2.2 : STEP_MS,
+    );
+    return () => window.clearTimeout(timer);
+  }, [playing, hovered, step]);
+
+  const shown = step >= LAST;
+  const stale = !fixed && shown;
 
   return (
     <figure className="my-10">
-      <div className="tut-paper rounded-md border border-rule p-4 pl-6 sm:p-8 sm:pl-14">
-        <Row>
-          <Phone step="1. add money" server="primary" serverTone="pink">
+      <div
+        className="dg-canvas rounded-2xl border border-rule p-4 sm:p-6"
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+      >
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-2 print:hidden">
+          <div role="tablist" aria-label="Scenario" className="flex gap-2">
+            {[
+              { label: "Without a fix", value: false, tone: "red" },
+              { label: "With a fix", value: true, tone: "green" },
+            ].map((option) => (
+              <button
+                key={option.label}
+                type="button"
+                role="tab"
+                aria-selected={fixed === option.value}
+                data-tone={option.tone}
+                onClick={() => {
+                  setFixed(option.value);
+                  setStep(0);
+                  setPlaying(true);
+                }}
+                className={cn(
+                  "min-h-10 rounded-lg border border-(--tone-line) px-3 text-sm font-semibold transition-colors",
+                  fixed === option.value
+                    ? "bg-(--tone) text-paper"
+                    : "text-(--tone) hover:bg-(--tone-soft)",
+                )}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={() => setPlaying(!playing)}
+            className="inline-flex min-h-10 items-center gap-1.5 rounded-lg border border-rule px-3 text-sm text-ink-muted hover:text-ink"
+          >
+            {playing ? (
+              <Pause className="h-4 w-4" aria-hidden />
+            ) : (
+              <Play className="h-4 w-4" aria-hidden />
+            )}
+            {playing ? "Pause" : "Play"}
+          </button>
+        </div>
+
+        <div className="flex flex-col items-stretch md:flex-row md:items-center">
+          <Phone title="1 · Add money" server="primary" serverTone="pink" active={step === 0}>
             <p className="text-xs text-ink-muted">Amount</p>
             <p className="mt-1 rounded-lg border border-rule bg-paper px-3 py-2 text-2xl font-bold text-ink">
               ₹ 100
             </p>
-            <div className="mt-3 flex gap-2 text-xs">
-              <span className="rounded-full border border-rule px-2 py-0.5 text-ink-muted">
-                +₹100
-              </span>
-              <span className="rounded-full border border-rule px-2 py-0.5 text-ink-muted">
-                +₹500
-              </span>
-            </div>
             <span
               data-tone="green"
-              className="tut-ping mt-auto block rounded-xl bg-(--tone) py-2.5 text-center text-sm font-bold text-paper"
+              className={cn(
+                "mt-auto block rounded-xl bg-(--tone) py-2.5 text-center text-sm font-bold text-paper transition-transform duration-200",
+                step === 0 && "dg-pulse motion-safe:scale-95",
+              )}
             >
               Add ₹100
             </span>
           </Phone>
 
-          <Link dir="right" label="UPDATE goes to the primary" tone="pink" seed={4} />
+          <Hop label="UPDATE to the primary" tone="pink" active={step === 1} />
 
-          <Phone step="2. success!" server="primary" serverTone="pink">
+          <Phone title="2 · Success" server="primary" serverTone="pink" active={step === 2}>
             <div className="flex flex-1 flex-col items-center justify-center text-center">
-              <span data-tone="green" className="tut-pop text-(--tone)">
-                <CheckCircle2 className="h-14 w-14" aria-hidden />
-              </span>
-              <p className="mt-3 font-bold text-ink">₹100 added</p>
-              <p className="mt-1 text-xs text-ink-muted">Txn #8812 · just now</p>
+              {step < 2 ? (
+                <Loader2
+                  className="h-12 w-12 text-ink-muted motion-safe:animate-spin"
+                  aria-hidden
+                />
+              ) : (
+                <span data-tone="green" className="tut-pop text-(--tone)">
+                  <CheckCircle2 className="h-12 w-12" aria-hidden />
+                </span>
+              )}
+              <p className="mt-3 font-bold text-ink">{step < 2 ? "Adding…" : "₹100 added"}</p>
+              <p className="mt-1 text-xs text-ink-muted">Txn #8812</p>
             </div>
-            <span className="mt-auto block rounded-xl border border-rule py-2 text-center text-sm font-semibold text-ink">
-              Go to wallet
-            </span>
           </Phone>
 
-          <Link
-            dir="right"
-            label={fixed ? "refresh, routed safely" : "refresh 0.1 s later"}
+          <Hop
+            label={fixed ? "refresh, routed to a fresh node" : "refresh 0.1 s later"}
             tone={fixed ? "green" : "red"}
-            seed={9}
+            active={step === 3}
           />
 
           <Phone
-            step={fixed ? "3. refresh: correct" : "3. refresh: ???"}
+            title="3 · Refresh"
             server={fixed ? "replica 1 (caught up)" : "replica 2 (behind)"}
             serverTone={fixed ? "green" : "red"}
+            active={step === 4}
           >
             <p className="flex items-center gap-1.5 text-xs text-ink-muted">
-              <RefreshCw className="h-3 w-3" aria-hidden /> Wallet balance
+              <RefreshCw
+                className={cn("h-3 w-3", step === 3 && "motion-safe:animate-spin")}
+                aria-hidden
+              />
+              Wallet balance
             </p>
-            <div className="relative mt-1 w-fit">
-              <p
-                data-tone={fixed ? "green" : "red"}
-                style={{ "--delay": "0.6s" } as CSSProperties}
-                className={cn("text-4xl font-bold text-(--tone)", !fixed && "tut-shake")}
-              >
-                {fixed ? "₹100.00" : "₹0.00"}
-              </p>
-              {!fixed && (
-                <svg
-                  aria-hidden
-                  viewBox="0 0 200 64"
-                  data-tone="red"
-                  className="pointer-events-none absolute -inset-x-5 -inset-y-3 h-[calc(100%+1.5rem)] w-[calc(100%+2.5rem)] overflow-visible text-(--tone)"
-                  preserveAspectRatio="none"
-                >
-                  <path
-                    d={CIRCLE}
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={2.5}
-                    strokeLinecap="round"
-                  />
-                </svg>
+            <p
+              key={`${fixed}-${shown}`}
+              data-tone={!shown ? "violet" : stale ? "red" : "green"}
+              className={cn(
+                "mt-1 w-fit rounded-lg px-1 text-4xl font-bold text-(--tone)",
+                stale && "tut-shake bg-(--tone-soft) ring-2 ring-(--tone-line)",
               )}
-            </div>
-            {!fixed && (
-              <p data-tone="red" className="mt-2 font-hand text-xl leading-5 text-(--tone)">
-                wait... where did my ₹100 go?
+            >
+              {!shown ? "…" : fixed ? "₹100.00" : "₹0.00"}
+            </p>
+            {stale && (
+              <p data-tone="red" className="tut-pop mt-2 text-sm font-semibold text-(--tone)">
+                Where did my ₹100 go?
               </p>
             )}
             <p className="mt-4 text-xs font-semibold text-ink-muted">Recent</p>
-            {fixed ? (
-              <p className="mt-1 flex justify-between rounded-lg border border-rule bg-paper px-2 py-1.5 text-xs text-ink">
+            {shown && fixed ? (
+              <p className="tut-pop mt-1 flex justify-between rounded-lg border border-rule bg-paper px-2 py-1.5 text-xs text-ink">
                 <span>Added money</span>
                 <span data-tone="green" className="font-bold text-(--tone)">
                   +₹100
@@ -153,15 +245,18 @@ export default function WalletWireframe({ variant = "bug" }: { variant?: "bug" |
               </p>
             ) : (
               <p className="mt-1 rounded-lg border border-dashed border-rule px-2 py-1.5 text-xs text-ink-muted">
-                No transactions yet
+                {shown ? "No transactions yet" : "Loading…"}
               </p>
             )}
           </Phone>
-        </Row>
+        </div>
       </div>
-      <figcaption className="mt-2 text-center font-hand text-xl text-ink-muted">
+      <figcaption
+        aria-live="polite"
+        className="mx-auto mt-3 max-w-3xl text-center text-sm leading-relaxed text-ink-muted"
+      >
         {fixed
-          ? "Same three screens, but the refresh is only served by a node that already has the write."
+          ? "With a fix, the refresh is only answered by a node that already has the write."
           : "The write landed on the primary. The refresh was answered by a replica that hasn't heard about it yet."}
       </figcaption>
     </figure>

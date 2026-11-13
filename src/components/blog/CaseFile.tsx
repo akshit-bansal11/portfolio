@@ -55,7 +55,7 @@ export default function CaseFile({
       aria-label={`Case file: ${company}`}
       data-tone={CARD_TONES[(number - 1) % CARD_TONES.length]}
       className={cn(
-        "tut-glow my-10 rounded-xl border-2 border-(--tone) bg-(image:--tone-fill) p-4 sm:p-6",
+        "dg-enter my-10 rounded-2xl border border-(--tone-line) bg-(image:--tone-fill) p-4 sm:p-6",
         className,
       )}
     >
@@ -69,7 +69,7 @@ export default function CaseFile({
             <span className="font-semibold">{kind}</span> · {period}
           </p>
         </div>
-        <p className="tut-marker max-w-xs -rotate-1 font-hand text-2xl leading-tight text-(--tone)">
+        <p className="max-w-xs rounded-lg bg-(--tone-soft) px-3 py-1.5 text-sm font-medium italic text-(--tone)">
           {note}
         </p>
       </header>
@@ -79,7 +79,7 @@ export default function CaseFile({
           <div
             key={key}
             data-tone={tone}
-            className="rounded-lg border border-(--tone)/50 border-t-4 border-t-(--tone) bg-paper/70 p-3"
+            className="dg-node rounded-xl border border-(--tone-line) border-t-[3px] border-t-(--tone) bg-paper/70 p-3"
           >
             <dt className="flex items-center gap-1.5 text-xs font-bold tracking-[0.12em] text-(--tone) uppercase">
               <Icon className="h-4 w-4" aria-hidden />

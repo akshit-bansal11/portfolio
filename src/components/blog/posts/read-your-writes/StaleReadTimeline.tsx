@@ -186,7 +186,7 @@ function Arrow({ message, live }: { message: Message; live: boolean }) {
     >
       <p
         className={cn(
-          "absolute inset-x-0 top-0 truncate px-2 text-center font-hand text-lg leading-6 font-bold text-(--tone) sm:text-xl",
+          "absolute inset-x-0 top-1 truncate px-2 text-center text-xs leading-5 font-semibold text-(--tone) sm:text-sm",
           message.slow && "opacity-80",
         )}
       >
@@ -212,7 +212,7 @@ function Arrow({ message, live }: { message: Message; live: boolean }) {
         <div className="absolute inset-x-1 top-8">
           <span
             className={cn(
-              "tut-travel absolute -top-[7px] block h-3 w-3 -translate-x-1/2 rounded-full bg-(--tone) shadow-[0_0_10px_var(--tone)]",
+              "tut-travel absolute -top-[7px] block h-3 w-3 -translate-x-1/2 rounded-full bg-(--tone) shadow-[0_0_0_4px_var(--tone-soft)]",
               !rightward && "[animation-direction:reverse]",
             )}
             style={{ "--dur": message.slow ? "3s" : "1.1s" } as CSSProperties}
@@ -260,7 +260,7 @@ export default function StaleReadTimeline() {
               data-tone={i === 0 ? "red" : "green"}
               onClick={() => choose(i)}
               className={cn(
-                "rounded-lg border-2 border-(--tone) px-3 py-1.5 text-sm font-semibold transition",
+                "min-h-10 rounded-lg border border-(--tone-line) px-3 text-sm font-semibold transition",
                 picked === i ? "bg-(--tone) text-paper" : "text-(--tone) hover:bg-(--tone-soft)",
               )}
             >
@@ -268,7 +268,7 @@ export default function StaleReadTimeline() {
             </button>
           ))}
         </div>
-        <span data-tone="term" className="font-hand text-xl text-(--tone)">
+        <span data-tone="term" className="text-sm font-medium text-(--tone)">
           press play, or step through
         </span>
       </div>
@@ -281,9 +281,9 @@ export default function StaleReadTimeline() {
             <div
               key={lane.name}
               data-tone={lane.tone}
-              className="tut-glow rounded-lg border-2 border-(--tone) bg-(image:--tone-fill) px-2 py-1.5 text-center"
+              className="dg-node rounded-xl border border-(--tone-line) bg-(image:--tone-fill) px-2 py-1.5 text-center"
             >
-              <p className="font-hand text-xl leading-6 font-bold text-(--tone)">{lane.name}</p>
+              <p className="text-sm leading-6 font-bold text-(--tone)">{lane.name}</p>
               <p className="font-mono text-[0.7rem] text-ink sm:text-xs">
                 {i === 0 ? "phone + server" : current.state[i - 1]}
               </p>

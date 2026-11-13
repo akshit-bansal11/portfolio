@@ -1,7 +1,8 @@
 /*
  * Glossary.tsx
- * "Words you need": each term on a slightly tilted sticky note with its plain meaning and
- * an everyday comparison. Put it before the first section that uses the words.
+ * "Words you need": each term on a clean, tone-tinted card with its plain meaning and an
+ * everyday comparison. Cards rise in as they scroll into view and lift on hover. Put it
+ * before the first section that uses the words.
  */
 
 import type { Tone } from "@/components/tutorials/Flow";
@@ -19,18 +20,19 @@ const TONES: Tone[] = ["amber", "blue", "green", "pink", "violet", "cyan"];
 
 export default function Glossary({ items }: { items: GlossaryItem[] }) {
   return (
-    <ul className="my-8 grid list-none grid-cols-1 gap-5 p-0 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+    <ul className="my-8 grid list-none grid-cols-1 gap-3 p-0 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
       {items.map((item, i) => (
         <li
           key={item.term}
           data-tone={item.tone ?? TONES[i % TONES.length]}
-          className="tut-note relative border-t-[6px] border-(--tone) bg-(--tone-soft) p-4 shadow-sm"
+          className="dg-node dg-enter relative overflow-hidden rounded-xl border border-(--tone-line) bg-(image:--tone-fill) p-4 pl-5"
         >
-          <p className="font-hand text-3xl leading-none font-bold text-(--tone)">{item.term}</p>
-          <p className="mt-2 text-ink">{item.means}</p>
+          <span aria-hidden className="absolute inset-y-0 left-0 w-1 bg-(--tone)" />
+          <p className="text-lg leading-tight font-bold text-(--tone)">{item.term}</p>
+          <p className="mt-1.5 text-[0.95rem] leading-relaxed text-ink">{item.means}</p>
           {item.like && (
-            <p className="mt-2 font-hand text-xl leading-6 text-ink-muted">
-              <span className="font-bold text-(--tone)">like: </span>
+            <p className="mt-2 border-t border-dashed border-(--tone-line) pt-2 text-sm leading-snug text-ink-muted">
+              <span className="font-semibold text-(--tone)">Like </span>
               {item.like}
             </p>
           )}

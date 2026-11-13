@@ -11,7 +11,7 @@ html {
   /* Fixed light surface behind command-reference logos, same in both themes. */
   --cmd-logo-chip: #fffdf8;
 
-  /* Tutorial palette ("signal"): its own hues, not the blog's. */
+  /* Tutorial palette: its own hues, not the blog's. Dark values are muted on purpose (no neon). */
   --tut-blue: #0369a1;
   --tut-violet: #7c3aed;
   --tut-green: #047857;
@@ -41,18 +41,18 @@ html {
 /* Raw palette, dark: the OS asks for it and the reader has not forced light. */
 @media (prefers-color-scheme: dark) {
   html:not([data-blog-theme="light"]) {
-    --tut-blue: #4cc9f0;
-    --tut-violet: #b388ff;
-    --tut-green: #3ddc97;
-    --tut-amber: #ffc857;
-    --tut-pink: #ff6b9d;
-    --tut-cyan: #00e5d4;
-    --tut-red: #ff7a45;
-    --tut-docker: #2496ed;
-    --tut-k8s: #5b8def;
-    --tut-vm: #b388ff;
-    --tut-term: #ffd166;
-    --tut-glow-amt: 32%;
+    --tut-blue: #7db4e0;
+    --tut-violet: #a99cec;
+    --tut-green: #74c69d;
+    --tut-amber: #e2b866;
+    --tut-pink: #e391b0;
+    --tut-cyan: #6cc5bd;
+    --tut-red: #e8907a;
+    --tut-docker: #6aa6e0;
+    --tut-k8s: #8ea6ea;
+    --tut-vm: #a99cec;
+    --tut-term: #e9c97a;
+    --tut-glow-amt: 0%;
 
     /* VS Code Dark+ feel. */
     --code-bg: #1e1e1e;
@@ -70,18 +70,18 @@ html {
 
 /* Raw palette, dark: the reader picked dark with the theme toggle. */
 html[data-blog-theme="dark"] {
-  --tut-blue: #4cc9f0;
-  --tut-violet: #b388ff;
-  --tut-green: #3ddc97;
-  --tut-amber: #ffc857;
-  --tut-pink: #ff6b9d;
-  --tut-cyan: #00e5d4;
-  --tut-red: #ff7a45;
-  --tut-docker: #2496ed;
-  --tut-k8s: #5b8def;
-  --tut-vm: #b388ff;
-  --tut-term: #ffd166;
-  --tut-glow-amt: 32%;
+  --tut-blue: #7db4e0;
+  --tut-violet: #a99cec;
+  --tut-green: #74c69d;
+  --tut-amber: #e2b866;
+  --tut-pink: #e391b0;
+  --tut-cyan: #6cc5bd;
+  --tut-red: #e8907a;
+  --tut-docker: #6aa6e0;
+  --tut-k8s: #8ea6ea;
+  --tut-vm: #a99cec;
+  --tut-term: #e9c97a;
+  --tut-glow-amt: 0%;
   --code-bg: #1e1e1e;
   --code-fg: #d4d4d4;
   --code-gutter: #8b8b8b;
@@ -97,11 +97,12 @@ html[data-blog-theme="dark"] {
 /* A tone paints with --tone (borders, icons, bold text) and --tone-soft (fills). */
 [data-tone] {
   --tone: var(--tone-base);
-  --tone-soft: color-mix(in srgb, var(--tone-base) 14%, transparent);
+  --tone-soft: color-mix(in srgb, var(--tone-base) 11%, transparent);
+  --tone-line: color-mix(in srgb, var(--tone-base) 45%, transparent);
   --tone-fill: linear-gradient(
     135deg,
-    color-mix(in srgb, var(--tone-base) 22%, transparent),
-    color-mix(in srgb, var(--tone-base) 6%, transparent)
+    color-mix(in srgb, var(--tone-base) 13%, transparent),
+    color-mix(in srgb, var(--tone-base) 4%, transparent)
   );
 }
 
@@ -162,19 +163,6 @@ html[data-blog-theme="dark"] {
   content: counter(tut-step);
 }
 
-/* Marching-ants arrows: screen only, and only when motion is welcome. */
-@media screen and (prefers-reduced-motion: no-preference) {
-  .tut-flow {
-    animation: tut-march 1s linear infinite;
-  }
-}
-
-@keyframes tut-march {
-  to {
-    stroke-dashoffset: -10;
-  }
-}
-
 /* Tutorial surface: true white / true black instead of the blog's paper tones. */
 html:has([data-tutorial-article]) {
   --blog-paper: #fff;
@@ -205,74 +193,18 @@ html:has([data-tutorial-article])[data-blog-theme="dark"] {
   overflow-wrap: anywhere;
 }
 
-/* Diagram paper: ruled lines with a red margin, like a notebook page. */
-.tut-paper {
-  background-image:
-    linear-gradient(
-      to right,
-      transparent 1.4rem,
-      var(--tut-red) 1.4rem,
-      var(--tut-red) calc(1.4rem + 1.5px),
-      transparent calc(1.4rem + 1.5px)
-    ),
-    repeating-linear-gradient(
-      to bottom,
-      transparent 0,
-      transparent 31px,
-      var(--blog-rule) 31px,
-      var(--blog-rule) 32px
-    );
-}
-
-@media (width >= 40rem) {
-  .tut-paper {
-    background-image:
-      linear-gradient(
-        to right,
-        transparent 2.6rem,
-        var(--tut-red) 2.6rem,
-        var(--tut-red) calc(2.6rem + 1.5px),
-        transparent calc(2.6rem + 1.5px)
-      ),
-      repeating-linear-gradient(
-        to bottom,
-        transparent 0,
-        transparent 31px,
-        var(--blog-rule) 31px,
-        var(--blog-rule) 32px
-      );
-  }
-}
-
-/* Hand-drawn outlines: uneven corner radii read as a pen line, not a ruler. */
-.tut-sketch {
-  border-radius: 18px 225px 15px 255px / 255px 15px 225px 18px;
-}
-
-.tut-sketch-alt {
-  border-radius: 255px 15px 225px / 15px 225px 15px 255px;
-}
-
-.tut-sketch:nth-child(even) {
-  rotate: 0.4deg;
-}
-
-.tut-sketch:nth-child(odd) {
-  rotate: -0.3deg;
-}
-
-/* Highlighter-pen stroke behind a word. */
+/* Highlighter stroke behind a word. */
 .tut-marker {
   background: linear-gradient(
-    transparent 55%,
-    color-mix(in srgb, var(--tone) 30%, transparent) 55%
+    transparent 60%,
+    color-mix(in srgb, var(--tone) 24%, transparent) 60%
   );
   padding-inline: 0.15em;
 }
 
-/* Glow on coloured boxes in dark mode only (the light value is transparent). */
+/* Kept for older markup: a quiet shadow, never a coloured glow. */
 .tut-glow {
-  box-shadow: 0 0 18px color-mix(in srgb, var(--tone) var(--tut-glow-amt), transparent);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 6%);
 }
 
 /* Term tooltip: shown on hover or keyboard focus, never printed. */
@@ -290,15 +222,6 @@ html:has([data-tutorial-article])[data-blog-theme="dark"] {
   .tut-term-tip {
     display: none;
   }
-}
-
-/* Sticky notes lean a little, alternately. */
-.tut-note:nth-child(odd) {
-  rotate: -0.8deg;
-}
-
-.tut-note:nth-child(even) {
-  rotate: 0.7deg;
 }
 
 /*
@@ -371,5 +294,167 @@ html:has([data-tutorial-article])[data-blog-theme="dark"] {
 
   100% {
     box-shadow: 0 0 0 12px transparent;
+  }
+}
+
+/*
+ * Diagram kit (Diagram.tsx, Flow.tsx and post diagrams).
+ * Clean geometry, semi-transparent tone fills, and motion in three layers:
+ *  - macro: parts rise into place as they scroll into view (.dg-enter), and a spotlight
+ *    walks along a flow (.dg-spot);
+ *  - ambient: packets travel along every connector (.dg-dot on .dg-wire-x / .dg-wire-y);
+ *  - micro: hovering a node lifts it and dims the rest of its diagram (.dg-node).
+ * All motion is screen-only and off under reduced motion; print shows the final state.
+ */
+.dg-canvas {
+  background-color: var(--blog-paper-raised);
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--blog-ink) 13%, transparent) 1px,
+    transparent 1.3px
+  );
+  background-size: 18px 18px;
+}
+
+.dg-node {
+  transition:
+    translate 0.25s ease,
+    opacity 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background-color 0.25s ease;
+}
+
+.dg-node:hover {
+  border-color: var(--tone);
+  box-shadow: 0 10px 24px -14px color-mix(in srgb, var(--tone) 70%, transparent);
+}
+
+.dg-canvas:has(.dg-node:hover) .dg-node:not(:hover, :has(.dg-node:hover)) {
+  opacity: 0.45;
+}
+
+.dg-wire-x,
+.dg-wire-y {
+  background: var(--tone-line);
+}
+
+.dg-dot {
+  display: none;
+}
+
+@media screen and (prefers-reduced-motion: no-preference) {
+  .dg-node:hover {
+    translate: 0 -2px;
+  }
+
+  .dg-node:hover .dg-icon {
+    animation: dg-nudge 0.5s ease;
+  }
+
+  .dg-dot {
+    display: block;
+    animation: dg-run-y var(--dur, 1.9s) cubic-bezier(0.45, 0, 0.55, 1) var(--delay, 0s) infinite;
+  }
+
+  .dg-wire-x .dg-dot {
+    animation-name: dg-run-x;
+  }
+
+  .dg-dot-back {
+    animation-direction: reverse;
+  }
+
+  .dg-link:hover .dg-dot {
+    --dur: 0.9s;
+  }
+
+  .dg-spot {
+    animation: dg-spot calc(var(--n, 4) * 1.5s) ease-in-out calc(var(--i, 0) * 1.5s) infinite;
+  }
+
+  .dg-flow:hover .dg-spot {
+    animation-play-state: paused;
+  }
+
+  .dg-pulse {
+    animation: tut-ping 1.8s ease-out infinite;
+  }
+
+  @supports (animation-timeline: view()) {
+    .dg-enter {
+      animation: dg-enter linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 70%;
+    }
+  }
+}
+
+@keyframes dg-enter {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes dg-run-y {
+  0% {
+    top: 0;
+    opacity: 0;
+  }
+
+  15%,
+  85% {
+    opacity: 1;
+  }
+
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes dg-run-x {
+  0% {
+    left: 0;
+    opacity: 0;
+  }
+
+  15%,
+  85% {
+    opacity: 1;
+  }
+
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes dg-spot {
+  0%,
+  22% {
+    background-color: color-mix(in srgb, var(--tone) 22%, transparent);
+    border-color: var(--tone);
+  }
+
+  34%,
+  100% {
+    background-color: var(--tone-soft);
+    border-color: var(--tone-line);
+  }
+}
+
+@keyframes dg-nudge {
+  40% {
+    transform: translateY(-3px) rotate(-6deg);
+  }
+
+  70% {
+    transform: translateY(0) rotate(3deg);
   }
 }

@@ -1,7 +1,7 @@
 /*
  * FeatureGrid.tsx
- * A grid of coloured cards (icon, title, text) for "these N things work together"
- * explanations. Server-rendered, prints as-is.
+ * A grid of tone-tinted cards (icon, title, text) for "these N things work together"
+ * explanations. Cards rise in on scroll and lift on hover. Server-rendered, prints as-is.
  */
 
 import type { ReactNode } from "react";
@@ -23,10 +23,14 @@ export default function FeatureGrid({ items }: { items: Feature[] }) {
         <li
           key={item.title}
           data-tone={item.tone}
-          className="tut-glow rounded-xl border-2 border-(--tone) bg-(image:--tone-fill) p-4"
+          className="dg-node dg-enter rounded-xl border border-(--tone-line) bg-(image:--tone-fill) p-4"
         >
-          <p className="flex items-center gap-2 font-bold text-(--tone) [&_svg]:h-5 [&_svg]:w-5">
-            {item.icon}
+          <p className="flex items-center gap-2.5 font-bold text-(--tone)">
+            {item.icon && (
+              <span className="dg-icon flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-(--tone-soft) [&_svg]:h-[18px] [&_svg]:w-[18px]">
+                {item.icon}
+              </span>
+            )}
             {item.title}
           </p>
           {item.tag && (

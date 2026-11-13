@@ -1,12 +1,13 @@
 /*
  * Flow.tsx
- * Coloured step boxes joined by hand-drawn arrows with marching-ants dashes. Boxes stack
- * vertically on phones and sit in a row from `md` up (or always stack with
- * direction="vertical"). Plain server-rendered HTML/SVG.
+ * Numbered step cards joined by connectors with packets flowing along them. A spotlight
+ * walks from step to step on a loop (paused while you hover the flow), and each card
+ * lifts on hover. Cards stack on phones and sit in a row from `md` up (or always stack
+ * with direction="vertical"). Server-rendered; motion is CSS only.
  */
 
-import { Fragment, type ReactNode } from "react";
-import { sketchArrow } from "@/lib/blog/sketch";
+import { type CSSProperties, Fragment, type ReactNode } from "react";
+import { Wire } from "@/components/tutorials/Diagram";
 import { cn } from "@/lib/utils";
 
 export type Tone =
@@ -36,38 +37,25 @@ interface FlowProps {
   direction?: "horizontal" | "vertical";
 }
 
-const ACROSS = sketchArrow(2, 12, 46, 12, { seed: 3, curve: 0.08, headSize: 7 });
-const DOWN = sketchArrow(12, 2, 12, 46, { seed: 5, curve: 0.08, headSize: 7 });
-
-// One arrow between two boxes; `across` points right, otherwise down.
-function Arrow({ across, tone, className }: { across: boolean; tone: Tone; className?: string }) {
-  const path = across ? ACROSS : DOWN;
-
+// Connector between two cards: down on phones (or always), right in a row.
+function Connector({ tone, row }: { tone: Tone; row: boolean }) {
   return (
-    <svg
-      aria-hidden
-      data-tone={tone}
-      viewBox={across ? "0 0 48 24" : "0 0 24 48"}
-      className={cn(across ? "h-6 w-12" : "h-12 w-6", "shrink-0 text-(--tone)", className)}
-    >
-      <path
-        d={path.shaft}
-        className="tut-flow"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={2}
-        strokeLinecap="round"
-        strokeDasharray="5 5"
-      />
-      <path
-        d={path.head}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={2}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+    <li aria-hidden data-tone={tone} className="dg-link flex items-center justify-center">
+      <span className={cn("flex flex-col items-center py-0.5", row && "md:hidden")}>
+        <Wire axis="y" className="h-7" />
+        <svg viewBox="0 0 12 8" className="h-2 w-3 fill-(--tone)">
+          <path d="M0 0 L12 0 L6 8 Z" />
+        </svg>
+      </span>
+      {row && (
+        <span className="hidden items-center md:flex">
+          <Wire axis="x" className="w-7" />
+          <svg viewBox="0 0 8 12" className="h-3 w-2 fill-(--tone)">
+            <path d="M0 0 L8 6 L0 12 Z" />
+          </svg>
+        </span>
+      )}
+    </li>
   );
 }
 
@@ -77,38 +65,36 @@ export default function Flow({ steps, direction = "horizontal" }: FlowProps) {
   return (
     <ol
       className={cn(
-        "my-8 flex list-none flex-col items-center gap-1 p-0",
+        "dg-flow my-8 flex list-none flex-col items-stretch gap-0 p-0",
         row && "md:flex-row md:items-stretch",
       )}
+      style={{ "--n": steps.length } as CSSProperties}
     >
       {steps.map((step, index) => (
         <Fragment key={step.title}>
           <li
             data-tone={step.tone}
+            style={{ "--i": index } as CSSProperties}
             className={cn(
-              "tut-sketch-alt w-full min-w-0 border-[2.5px] border-(--tone) bg-(--tone-soft) px-3 py-2 text-center",
+              "dg-node dg-spot dg-enter relative w-full min-w-0 rounded-xl border border-(--tone-line) bg-(--tone-soft) px-3 pt-3 pb-2.5 text-center",
               row && "md:flex-1",
             )}
           >
+            <span className="absolute top-2 left-2.5 font-mono text-[0.7rem] font-bold text-(--tone) opacity-80">
+              {String(index + 1).padStart(2, "0")}
+            </span>
             {step.icon && (
               <span
                 aria-hidden
-                className="mb-1 flex justify-center text-(--tone) [&_svg]:h-6 [&_svg]:w-6"
+                className="dg-icon mx-auto mb-1.5 flex h-9 w-9 items-center justify-center rounded-lg bg-paper text-(--tone) [&_svg]:h-5 [&_svg]:w-5"
               >
                 {step.icon}
               </span>
             )}
-            <p className="font-hand text-2xl leading-6 font-bold text-ink">{step.title}</p>
-            {step.note && (
-              <p className="mt-0.5 font-hand text-lg leading-5 text-ink-muted">{step.note}</p>
-            )}
+            <p className="font-semibold leading-snug text-ink">{step.title}</p>
+            {step.note && <p className="mt-0.5 text-sm leading-snug text-ink-muted">{step.note}</p>}
           </li>
-          {index < steps.length - 1 && (
-            <li aria-hidden className="flex items-center justify-center">
-              <Arrow across={false} tone={step.tone} className={row ? "md:hidden" : undefined} />
-              {row && <Arrow across tone={step.tone} className="hidden md:block" />}
-            </li>
-          )}
+          {index < steps.length - 1 && <Connector tone={step.tone} row={row} />}
         </Fragment>
       ))}
     </ol>

@@ -1,7 +1,7 @@
 /*
  * TLDR.tsx
- * End-of-post takeaways as tilted, tone-coloured sticky notes (the same
- * notes as the tutorial glossary).
+ * End-of-post takeaways as numbered, tone-tinted cards (the same cards
+ * as the tutorial glossary).
  * Usage in MDX: <TLDR><Takeaway>…</Takeaway>…</TLDR>
  */
 
@@ -40,9 +40,9 @@ export function Takeaway({ children, className }: TakeawayProps) {
     <li
       data-tone=""
       className={cn(
-        "tut-note relative border-t-[6px] border-(--tone) bg-(--tone-soft) px-4 pt-8 pb-4 text-ink shadow-sm",
+        "dg-node dg-enter relative rounded-xl border border-(--tone-line) bg-(image:--tone-fill) px-4 pt-9 pb-4 text-ink",
         "[counter-increment:takeaway]",
-        "before:absolute before:top-2 before:left-4 before:font-hand before:text-2xl before:leading-none before:font-bold before:text-(--tone) before:content-['#'_counter(takeaway)]",
+        "before:absolute before:top-3 before:left-4 before:font-mono before:text-xs before:font-bold before:text-(--tone) before:content-[counter(takeaway,decimal-leading-zero)]",
         className,
       )}
     >
