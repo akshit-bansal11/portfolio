@@ -3,7 +3,7 @@
  * One call through a service mesh, step by step. A control plane configures two
  * sidecars; Orders calls localhost; its sidecar finds and picks a Payments copy; the
  * sidecars connect over mutual TLS; the Payments sidecar checks the policy and hands the
- * call over; both record metrics. The scene plays on a loop (paused on hover or focus,
+ * call over; both record metrics. The scene plays on a loop (Pause stops it,
  * and never auto-played under reduced motion) and can be stepped by hand. The lit part
  * of each step carries flowing packets; job chips pop onto the sidecars. Plain HTML, so
  * it reflows: side by side from `md` up, a U-shape on phones. The printed copy lists
@@ -199,16 +199,15 @@ export default function MeshCall() {
   const [mode, setMode] = useState<"auto" | "play" | "pause">("auto");
   const motionOk = useMotionOk();
   const playing = mode === "play" || (mode === "auto" && motionOk);
-  const [held, setHeld] = useState(false);
   const current = STEPS[step];
   const lit = (part: Part) => current.lit.includes(part);
   const dim = (part: Part) => !lit(part);
 
   useEffect(() => {
-    if (!playing || held) return;
+    if (!playing) return;
     const timer = window.setTimeout(() => setStep((s) => (s + 1) % STEPS.length), 2600);
     return () => window.clearTimeout(timer);
-  }, [playing, held, step]);
+  }, [playing, step]);
 
   const go = (next: number) => {
     setMode("pause");
@@ -216,13 +215,8 @@ export default function MeshCall() {
   };
 
   return (
-    // Hover or focus inside pauses the loop so the reader can read.
-    <div
-      onMouseEnter={() => setHeld(true)}
-      onMouseLeave={() => setHeld(false)}
-      onFocus={() => setHeld(true)}
-      onBlur={() => setHeld(false)}
-    >
+    // Pause, Back, Next or a step button stop the loop; Play restarts it.
+    <div>
       <div
         role="img"
         aria-label="A service mesh. A control plane at the top configures two sidecars. On the left, the Orders service sits next to its sidecar in one pod. On the right, the Payments service sits next to its sidecar. Each service only talks to its own sidecar on localhost; the two sidecars talk to each other over mutual TLS."

@@ -3,7 +3,7 @@
  * A looping storyboard of three phone wireframes: tap "Add ₹100", see "added", refresh
  * and see the balance. Packets travel along the connectors as each step happens. In
  * "Without a fix" the refresh lands on a replica that is behind and the balance reads ₹0;
- * in "With a fix" the router only uses a node that has the write. Hover pauses the loop;
+ * in "With a fix" the router only uses a node that has the write. Pause stops the loop;
  * reduced motion and print show the final frame.
  */
 
@@ -100,29 +100,24 @@ export default function WalletWireframe() {
   const [fixed, setFixed] = useState(false);
   const [step, setStep] = useState(LAST);
   const [playing, setPlaying] = useState(true);
-  const [hovered, setHovered] = useState(false);
 
-  // Loop the story unless paused, hovered or the reader prefers less motion.
+  // Loop the story unless paused or the reader prefers less motion.
   useEffect(() => {
-    if (!playing || hovered) return;
+    if (!playing) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const timer = window.setTimeout(
       () => setStep((s) => (s >= LAST ? 0 : s + 1)),
       step >= LAST ? STEP_MS * 2.2 : STEP_MS,
     );
     return () => window.clearTimeout(timer);
-  }, [playing, hovered, step]);
+  }, [playing, step]);
 
   const shown = step >= LAST;
   const stale = !fixed && shown;
 
   return (
     <figure className="my-10">
-      <div
-        className="dg-canvas rounded-2xl border border-rule p-4 sm:p-6"
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-      >
+      <div className="dg-canvas rounded-2xl border border-rule p-4 sm:p-6">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-2 print:hidden">
           <div role="tablist" aria-label="Scenario" className="flex gap-2">
             {[
