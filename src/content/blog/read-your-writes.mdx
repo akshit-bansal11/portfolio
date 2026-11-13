@@ -1,0 +1,543 @@
+import { Activity, ArrowRightLeft, Clock, Cloud, Database, Eye, FlaskConical, Gauge, Globe, HardDrive, KeyRound, Layers, ListOrdered, Network, PenLine, Repeat, Route, ServerCrash, ShieldCheck, Smartphone, Split, Timer, Turtle, Workflow } from "lucide-react";
+import ReplicaLagSim from "@/components/blog/posts/read-your-writes/ReplicaLagSim";
+import StaleReadTimeline from "@/components/blog/posts/read-your-writes/StaleReadTimeline";
+import WalletWireframe from "@/components/blog/posts/read-your-writes/WalletWireframe";
+
+## In one minute
+
+- Your database cluster has one **primary** that takes every write and **replicas** that copy it a moment later. That moment is **replication lag**.
+- Write to the primary, read from a replica before the copy arrives, and you get old data: a **stale read**. The ₹100 you just added "vanishes".
+- The promise you want is **read-your-writes**: once *your* write succeeds, *your* reads always include it. Other people can be a beat behind.
+- Fixes, from simplest to most precise: return the new value from the write itself, read the user's own data from the primary, stick to the primary for a few seconds, or carry a **version token** so reads only hit replicas that have caught up. Synchronous replication also works, at a price.
+
+## Words you need
+
+<Glossary
+  items={[
+    { term: "Primary", means: "The one database server that accepts writes. Also called the leader (older docs say master).", like: "the bank's head-office ledger" },
+    { term: "Replica", means: "A read-only copy of the primary on another server. It replays the primary's changes to stay up to date. Also called a follower or read replica.", like: "a branch office holding a photocopy of the ledger" },
+    { term: "Replication", means: "Shipping every change from the primary to the replicas, in order.", like: "the courier carrying fresh photocopies to the branches" },
+    { term: "Async replication", means: "The primary says 'done' as soon as it has saved the change, without waiting for any replica. The default in PostgreSQL and MySQL.", like: "dropping a letter in the post box and walking away" },
+    { term: "Sync replication", means: "The primary says 'done' only after a replica confirms it has the change.", like: "a registered letter: you wait for the signature" },
+    { term: "Replication lag", means: "How far behind a replica is, in time or in log entries. Usually tiny; under load it can grow to seconds or more.", like: "how old the branch's photocopy is" },
+    { term: "WAL / binlog", means: "The primary's numbered diary of every change. Replicas replay it. PostgreSQL calls it the write-ahead log (WAL), MySQL the binary log.", like: "the courier's numbered delivery list" },
+    { term: "LSN / GTID", means: "A position in that diary. PostgreSQL uses a Log Sequence Number (LSN), MySQL a Global Transaction ID (GTID). Later changes have bigger positions.", like: "a page number in the diary" },
+    { term: "Stale read", means: "A read that returns older data than something you already know has happened.", like: "the branch saying your cheque hasn't cleared when head office cleared it a minute ago" },
+    { term: "Read-your-writes", means: "A promise: after your write succeeds, your own reads always include it. Also called read-after-write consistency.", like: "after you post a photo, you always see your own photo" },
+    { term: "Session", means: "One user (or device) talking to your app over time. A session guarantee is a promise to that user, not to everyone.", like: "one customer's visit to the bank" },
+    { term: "Router", means: "Whatever decides which server a query goes to: your app code, a library such as Rails, or a proxy such as ProxySQL or Pgpool-II.", like: "the receptionist sending you to a counter" },
+  ]}
+/>
+
+## The ₹0 shock
+
+Here is the bug from the user's side. Three screens, a fraction of a second apart.
+
+<WalletWireframe />
+
+- **Nothing was lost.** The primary has ₹100. Replica 2 will have it in a moment.
+- **It still looks broken.** For that moment, money vanished. In a payments app that means a support ticket, a second top-up (now they've paid twice), or an uninstall.
+- **It's the same bug everywhere**: an edited profile that reverts on refresh, a comment that disappears after you post it, a "your order" page that says you have no orders.
+
+<Callout kind="important">
+
+Correct-but-late data is a bug when the person seeing it is the person who just changed it. "Eventually consistent" is fine for strangers, not for the author.
+
+</Callout>
+
+## Why it happens
+
+<Diagram caption="Writes go to the primary. Reads are spread over all three nodes. Copies reach the replicas a little later, and not all at the same time.">
+  <Node title="Your app" note="sends writes and reads" tone="violet" icon={<Smartphone />} />
+  <Link label="every query" tone="violet" />
+  <Node title="Router / load balancer" note="writes → primary, reads → any of the three" tone="amber" icon={<Split />} />
+  <Link label="the write" tone="pink" />
+  <Row>
+    <Group title="Primary" tone="pink" icon={<Database />}>
+      <Node title="accepts writes" note="balance ₹100 · LSN 42" tone="pink" icon={<PenLine />} />
+    </Group>
+    <Link dir="right" label="WAL stream, a bit later" tone="amber" />
+    <Group title="Replicas (read-only copies)" tone="blue" icon={<Layers />} cols={2}>
+      <Node title="Replica 1" note="LSN 42 · ₹100, caught up" tone="green" icon={<Database />} />
+      <Node title="Replica 2" note="LSN 41 · ₹0, still behind" tone="red" icon={<Database />} />
+    </Group>
+  </Row>
+</Diagram>
+
+Why bother with replicas at all? Because most apps read far more than they write, and one server only goes so far.
+
+<FeatureGrid
+  items={[
+    { title: "Scale reads", tone: "blue", icon: <Gauge />, text: "Spread reads over many servers instead of one. Add a replica, get more read capacity." },
+    { title: "Survive a crash", tone: "green", icon: <ShieldCheck />, text: "If the primary dies, a replica can be promoted to take over (failover)." },
+    { title: "Keep heavy work away", tone: "amber", icon: <HardDrive />, text: "Reports, exports and analytics run on a replica so they don't slow down payments." },
+    { title: "Be near the user", tone: "violet", icon: <Globe />, text: "A replica in another region answers reads without a round trip across the world." },
+  ]}
+/>
+
+### Step through the race
+
+The bug is a race between two things: the change travelling to the replica, and your read travelling to the replica. The read is a single hop. The change has to be shipped and replayed. The read often wins.
+
+<StaleReadTimeline />
+
+### Why replicas fall behind
+
+Lag is not a fixed number. It is small most of the time and jumps when something is busy.
+
+<FeatureGrid
+  items={[
+    { title: "Nobody waits", tone: "amber", icon: <Clock />, text: "With async replication the primary answers before any replica has the change. Some lag is built in by design." },
+    { title: "Distance", tone: "blue", icon: <Network />, text: "A replica in another zone or region is further away, so every change takes longer to arrive." },
+    { title: "Busy replica", tone: "pink", icon: <Activity />, text: "Replaying changes competes with the replica's own read queries for CPU and disk." },
+    { title: "Big writes", tone: "red", icon: <Turtle />, text: "A migration or an UPDATE that touches millions of rows has to be replayed in full on every replica." },
+    { title: "Long queries", tone: "violet", icon: <Timer />, text: "PostgreSQL can pause replay rather than cancel a long query on the replica (max_standby_streaming_delay). Lag grows while it waits." },
+    { title: "Catching up", tone: "cyan", icon: <ServerCrash />, text: "A replica that restarted or was just added has a backlog to replay before it is current." },
+  ]}
+/>
+
+<Callout kind="insight">
+
+Think of lag as a range, not a number. If it is usually a few milliseconds, a deploy, a backfill or a traffic spike can still push it to seconds. Your fix has to hold on the bad day, not the average one.
+
+</Callout>
+
+<Quiz
+  question="Replication lag on your dashboard is usually around 20 ms. Is adding a 50 ms sleep after each write a good fix?"
+  options={["Yes, 50 ms is more than the lag", "No: lag spikes far above its usual value, and the sleep slows every write", "Yes, but only for writes over ₹1,000", "No, because sleeps don't work in Node.js"]}
+  answer={1}
+>
+
+The sleep covers the normal case and fails exactly when the system is under stress, which is when users notice. It also adds 50 ms to every single write.
+
+</Quiz>
+
+## Name it: read-your-writes
+
+This guarantee has a name, and it comes from a 1994 paper by Doug Terry and colleagues at Xerox PARC on the Bayou system: **"Session Guarantees for Weakly Consistent Replicated Data"**. They noticed that users don't need *every* copy to be perfect. They need the system to never contradict what *they* already did or saw. They wrote down four such promises.
+
+<Compare
+  label="Session guarantee"
+  columns={[{ title: "Plain meaning", tone: "blue" }, { title: "How it breaks in a wallet", tone: "red" }]}
+  rows={[
+    ["Read your writes", "You always see your own changes.", "Add ₹100, refresh, see ₹0."],
+    ["Monotonic reads", "Time never goes backwards for you.", "Refresh shows ₹100, refresh again (different replica) shows ₹0."],
+    ["Monotonic writes", "Your writes apply in the order you made them.", "'Add ₹100' then 'pay ₹50' applied in reverse, so the payment is declined."],
+    ["Writes follow reads", "A write you make because of something you read is ordered after it.", "You pay a friend's request; someone else sees your payment before the request exists."],
+  ]}
+/>
+
+Where it sits among the usual consistency levels:
+
+<Compare
+  label=""
+  columns={[{ title: "Eventual", tone: "amber" }, { title: "Read-your-writes", tone: "green" }, { title: "Strong (linearizable)", tone: "violet" }]}
+  rows={[
+    ["Promise", "Copies agree… someday", "You see your own writes right away", "Everyone sees every write right away, in one order"],
+    ["Who sees your ₹100 at once?", "Nobody is promised", "You", "Everyone"],
+    ["Your friend, 1 s later", "Might see ₹0", "Might see ₹0", "Sees ₹100"],
+    ["Cost", "Cheapest", "Cheap: only your reads need care", "Every read or write pays for coordination"],
+    ["Good for", "Like counts, view counts, feeds", "Profiles, settings, your own orders and balance", "Balances used to approve a payment, unique usernames, stock levels"],
+  ]}
+/>
+
+<Callout kind="note">
+
+Read-your-writes is per user. If your friend checks your shared wallet one second later and sees the old number, that is usually acceptable. When it isn't (an approval step, a fraud check, stock control), that read needs the primary.
+
+</Callout>
+
+## Try it: break it, then fix it
+
+<DemoFrame
+  title="Wallet on a replicated database"
+  hint="tap “Add + refresh”"
+  caption="Writes commit on the primary and ship to each replica after the lag you set (Replica 2 is 1.6× slower). Refresh goes through the router using the strategy you pick. Times are slowed down so you can watch them."
+>
+  <ReplicaLagSim />
+</DemoFrame>
+
+Things to try:
+
+1. **Any node**, lag 1.5 s, press "Add + refresh" a few times. Roughly two refreshes in three hit a replica that hasn't caught up yet.
+2. **Primary after a write**, set the window to 1 s and the lag to 2.5 s. The window expires before the replicas catch up, and the bug comes back.
+3. **Version token**. Never stale, and reads go back to replicas as soon as one catches up. Check "reads on primary".
+4. **Sync replication**. Never stale, but look at "last write took": every write now waits for the slowest replica.
+
+## The fixes
+
+### Fix 1: don't read at all
+
+The cheapest read is the one you skip. The write already knows the new balance, so send it back.
+
+```sql
+-- file: add_money.sql
+-- One round trip: change the balance and return the new value from the primary.
+UPDATE wallets
+SET balance = balance + $2
+WHERE user_id = $1
+RETURNING balance;
+```
+
+- The success screen shows the balance from this response, not from a fresh query.
+- Pair it with **optimistic UI**: show "₹100 added" as soon as the server says OK, and keep that value on the device for the next screen.
+- **Limit:** it only covers the screen that made the write. Reload, another tab, the transaction history, another device: all of those still read. You need one of the fixes below as well.
+
+### Fix 2: read your own data from the primary
+
+Split reads by whose data they are.
+
+<Diagram caption="The user's own money data reads from the primary. Everything else reads from replicas.">
+  <Node title="Incoming read" note="who owns this data?" tone="violet" icon={<Route />} />
+  <Row>
+    <Group title="The user's own data" tone="pink" icon={<KeyRound />}>
+      <Node title="balance, transactions, profile" note="→ primary, always fresh" tone="pink" icon={<Database />} />
+    </Group>
+    <Group title="Everyone else's / shared data" tone="blue" icon={<Eye />}>
+      <Node title="offers, merchant list, feed" note="→ replicas, a little late is fine" tone="blue" icon={<Layers />} />
+    </Group>
+  </Row>
+</Diagram>
+
+```ts
+// file: db.ts
+// The few queries that must see the user's latest writes are marked; the rest use replicas.
+export function dbFor(read: { ownData: boolean }) {
+  return read.ownData ? primary : pickReplica();
+}
+
+const wallet = await dbFor({ ownData: true }).query(
+  "SELECT balance FROM wallets WHERE user_id = $1",
+  [userId],
+);
+```
+
+- **Cost:** the primary serves every "my data" read. For a wallet that is usually fine: a balance is one indexed row.
+- **Breaks when** "my data" is most of your traffic. Then the replicas sit idle and the primary is the bottleneck again.
+
+### Fix 3: stick to the primary for a while after a write
+
+After a user writes, send *their* reads to the primary for a few seconds. After that, the replicas have almost certainly caught up.
+
+<Flow
+  steps={[
+    { title: "User writes", note: "commit on primary", tone: "pink", icon: <PenLine /> },
+    { title: "Remember when", note: "wrote:user = now, expires in 2 s", tone: "amber", icon: <Timer /> },
+    { title: "Next read", note: "flag still there?", tone: "violet", icon: <Route /> },
+    { title: "Yes → primary", note: "no → any replica", tone: "green", icon: <Split /> },
+  ]}
+/>
+
+```ts
+// file: sticky.ts
+// The window must be longer than your worst realistic lag, not your average lag.
+const WINDOW_MS = 2_000;
+
+export async function afterWrite(userId: string) {
+  // Kept per user in Redis (not a cookie), so it also covers the user's other devices.
+  await redis.set(`wrote:${userId}`, "1", { PX: WINDOW_MS });
+}
+
+export async function dbForRead(userId: string) {
+  return (await redis.exists(`wrote:${userId}`)) ? primary : pickReplica();
+}
+```
+
+Rails has this built in (Rails 6 and later), with a 2-second default:
+
+```ruby
+# file: config/environments/production.rb
+config.active_record.database_selector = { delay: 2.seconds }
+config.active_record.database_resolver = ActiveRecord::Middleware::DatabaseSelector::Resolver
+config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
+```
+
+<Callout kind="warn">
+
+The window is a guess about lag, not a measurement of it. If a migration pushes lag past the window, you're back to ₹0. Pair it with lag monitoring and take replicas that are too far behind out of the read pool.
+
+</Callout>
+
+### Fix 4: version tokens (the precise one)
+
+Instead of guessing *how long* to wait, remember *how far* the primary had got when your write committed, and only read from a replica that has got at least that far.
+
+<Flow
+  steps={[
+    { title: "Write", note: "commit on the primary", tone: "pink", icon: <PenLine /> },
+    { title: "Read its position", note: "LSN 0/3A0 or a GTID", tone: "amber", icon: <ListOrdered /> },
+    { title: "Save the token", note: "per user, in Redis", tone: "violet", icon: <KeyRound /> },
+    { title: "Pick a replica", note: "replayed ≥ token?", tone: "blue", icon: <Route /> },
+    { title: "None ready?", note: "wait a little or use the primary", tone: "green", icon: <ArrowRightLeft /> },
+  ]}
+/>
+
+PostgreSQL, with node-postgres:
+
+```ts
+// file: wallet.ts
+// 1. Write on the primary. With autocommit, the UPDATE has committed when it returns.
+const { rows } = await primary.query(
+  "UPDATE wallets SET balance = balance + $2 WHERE user_id = $1 RETURNING balance",
+  [userId, 100],
+);
+// 2. Ask how far the primary's log has got. It is at or past our commit.
+const { rows: pos } = await primary.query("SELECT pg_current_wal_insert_lsn() AS lsn");
+await redis.set(`ryw:${userId}`, pos[0].lsn, { EX: 60 });
+
+// 3. Later, for a read: use a replica that has replayed at least that far.
+export async function dbForRead(userId: string) {
+  const token = await redis.get(`ryw:${userId}`);
+  if (!token) return pickReplica();
+  for (const replica of shuffle(replicas)) {
+    const { rows } = await replica.query(
+      "SELECT pg_last_wal_replay_lsn() >= $1::pg_lsn AS fresh",
+      [token],
+    );
+    if (rows[0].fresh) return replica;
+  }
+  return primary; // nobody has caught up yet
+}
+```
+
+MySQL, with GTIDs. The replica can even *wait* for the change instead of refusing:
+
+```sql
+-- file: mysql_token.sql
+-- On the primary, right after the write: which transactions have committed?
+SELECT @@GLOBAL.gtid_executed;
+
+-- On the replica, before the read: wait up to 1 second for that set.
+-- Returns 0 when caught up (run the read here), 1 on timeout (use the primary).
+SELECT WAIT_FOR_EXECUTED_GTID_SET('3E11FA47-71CA-11E1-9E33-C80AA9429562:1-77', 1);
+```
+
+MongoDB has the token built in, called a **causally consistent session**:
+
+```js
+// file: mongo.js
+// Inside one session, reads see the session's earlier writes, even on a secondary.
+const session = client.startSession({ causalConsistency: true });
+const wallets = client.db("pay").collection("wallets");
+
+await wallets.updateOne(
+  { userId },
+  { $inc: { balance: 100 } },
+  { session, writeConcern: { w: "majority" } },
+);
+const wallet = await wallets.findOne(
+  { userId },
+  { session, readPreference: "secondary", readConcern: { level: "majority" } },
+);
+```
+
+- Across HTTP requests, save the session's `operationTime` and `clusterTime`, and call `advanceOperationTime` and `advanceClusterTime` on the next request's session.
+- **Cost:** one extra tiny query per read in the simple version. Routers avoid it by checking each replica's position a few times a second and keeping it in memory.
+- **Breaks when** the token store is down. Then treat every read as "no token" or send it to the primary; never fail the request.
+
+<Callout kind="tip">
+
+Keep the *highest* token you've seen per user, from writes and reads. That gives you **monotonic reads** for free: a user can never bounce from a fresh replica to a staler one and watch their balance go backwards.
+
+</Callout>
+
+### Fix 5: synchronous replication
+
+Make the primary wait until replicas have *applied* the change before it says OK. Then any replica you read from is fresh.
+
+```ini
+# file: postgresql.conf
+# Wait for both standbys to replay the change before COMMIT returns.
+synchronous_standby_names = 'FIRST 2 (replica1, replica2)'
+synchronous_commit = remote_apply
+```
+
+<Compare
+  label="synchronous_commit"
+  columns={[{ title: "COMMIT returns after…", tone: "blue" }, { title: "Read-your-writes on the replica?", tone: "green" }]}
+  rows={[
+    ["off / local", "the primary alone has it", "No"],
+    ["remote_write", "the standby received it (not yet on its disk)", "No"],
+    ["on (with sync standbys)", "the standby saved it to disk", "No: saved is not yet replayed"],
+    ["remote_apply", "the standby replayed it, so queries there can see it", "Yes"],
+  ]}
+/>
+
+- **MySQL:** semi-synchronous replication is *not* enough. It waits for a replica to receive the change, not to apply it. Group Replication's `group_replication_consistency` setting (`BEFORE` or `AFTER`) is the one that gives fresh reads.
+- **Cost:** every write now takes as long as the slowest synchronous replica. Cross-region, that is very noticeable.
+
+<Callout kind="warn">
+
+If a synchronous replica is slow or dead, writes slow down or stop until it is removed from the list. You've turned a read problem into a write-availability problem. Use synchronous replication when you need it for durability (no data loss on failover), not as your read-your-writes fix.
+
+</Callout>
+
+### Don't forget the cache
+
+If you cache balances in Redis or Memcached, the cache is one more copy that can lag.
+
+- On a write, update or delete the cached value in the same code path.
+- Never fill the cache from a replica that is behind, or you'll freeze the stale value in place for the whole TTL. Facebook hit exactly this (case file #1).
+
+<Quiz
+  question="You use 'primary after a write' with a 2-second window. A big migration pushes replica lag to 10 seconds. What does a user see if they add money and refresh after 3 seconds?"
+  options={["₹100, the window protects them", "Possibly ₹0: the window has expired but the replicas are still behind", "An error, because the replicas are locked", "₹100, because Rails waits for the replica"]}
+  answer={1}
+>
+
+A time window is a guess. When lag beats it, you're back to the original bug. Version tokens or lag-aware routing don't have this hole.
+
+</Quiz>
+
+## Which fix should you ship?
+
+<Compare
+  label=""
+  columns={[
+    { title: "Return from write", tone: "cyan" },
+    { title: "Own data on primary", tone: "pink" },
+    { title: "Primary after a write", tone: "amber" },
+    { title: "Version token", tone: "green" },
+    { title: "Sync replication", tone: "violet" },
+  ]}
+  rows={[
+    ["Always fresh for the user?", "Only on that screen", "Yes", "Only while lag stays under the window", "Yes", "Yes"],
+    ["Extra load on the primary", "None", "High: every own-data read", "Medium: reads just after writes", "Low: only while replicas are behind", "None"],
+    ["Write latency", "Unchanged", "Unchanged", "Unchanged", "One tiny extra query", "Plus the slowest replica's replay"],
+    ["Works across devices?", "No", "Yes", "If stored per user on the server", "If stored per user on the server", "Yes"],
+    ["Effort", "Tiny", "Small", "Small (built into Rails)", "Medium", "A config line, plus ops work"],
+    ["Breaks when", "the user reloads or opens another screen", "the primary is overloaded", "lag spikes past the window", "the token store is down (fall back to the primary)", "a sync replica is slow or dead"],
+  ]}
+/>
+
+<Callout kind="important" title="What I'd ship for a wallet">
+
+1. Return the new balance from the write (fix 1).
+2. Read the balance and transaction history from the primary (fix 2). They're the user's money and they're cheap indexed lookups.
+3. Send everything else (offers, merchant lists, analytics) to replicas.
+4. When primary read load becomes a real problem, move own-data reads to version tokens (fix 4).
+
+</Callout>
+
+<Callout kind="warn" title="Never approve a payment from a replica">
+
+Read-your-writes is about what the user *sees*. Whether they can *spend* is a different question, and the answer must come from the primary, in the same statement that moves the money:
+
+```sql
+-- file: pay.sql
+-- Checks and debits atomically on the primary. Zero rows updated = insufficient funds.
+UPDATE wallets
+SET balance = balance - $2
+WHERE user_id = $1 AND balance >= $2
+RETURNING balance;
+```
+
+</Callout>
+
+## Production checklist
+
+<FeatureGrid
+  items={[
+    { title: "Measure lag", tone: "blue", icon: <Gauge />, tag: "pg_stat_replication · SHOW REPLICA STATUS", text: "Graph and alert on it. PostgreSQL shows replay_lag per standby on the primary; MySQL shows Seconds_Behind_Source on each replica." },
+    { title: "Eject lagging replicas", tone: "red", icon: <ServerCrash />, tag: "ProxySQL max_replication_lag", text: "A replica that is too far behind should stop getting reads until it catches up. Proxies like ProxySQL can do this per server." },
+    { title: "Pin users to a replica", tone: "violet", icon: <Repeat />, text: "Hash the user ID to pick a replica, so a user's balance doesn't flicker between two replicas at different positions (monotonic reads)." },
+    { title: "Test with a slow replica", tone: "amber", icon: <FlaskConical />, tag: "recovery_min_apply_delay = '5s'", text: "In staging, delay a replica on purpose (MySQL: SOURCE_DELAY). If the app still looks right with 5-second-old data, your fix works." },
+    { title: "Background jobs too", tone: "cyan", icon: <Workflow />, text: "A job queued right after a write may read from a replica and not find the new row. Pass the token to the job, or read from the primary." },
+    { title: "Know your failover", tone: "pink", icon: <Cloud />, text: "With async replication, promoting a lagging replica loses the writes it never got. That's durability, a separate problem from read-your-writes." },
+  ]}
+/>
+
+## What your database already gives you
+
+<Compare
+  label="Database"
+  columns={[{ title: "Reads by default", tone: "amber" }, { title: "Read-your-writes option", tone: "green" }]}
+  rows={[
+    ["PostgreSQL", "Async streaming replicas; your app or proxy picks the server", <span><code>synchronous_commit = remote_apply</code>, or an LSN token checked with <code>pg_last_wal_replay_lsn()</code></span>],
+    ["MySQL", "Async binlog replicas", <span>GTID token with <code>WAIT_FOR_EXECUTED_GTID_SET</code>; Group Replication <code>group_replication_consistency</code></span>],
+    ["MongoDB", "Reads go to the primary unless you set a readPreference", "Causally consistent sessions, with majority read and write concern"],
+    ["Amazon DynamoDB", "Eventually consistent reads", <span><code>ConsistentRead: true</code> on the table (not on global secondary indexes)</span>],
+    ["Azure Cosmos DB", "Session consistency is the default level", "A session token per client, sent with each read"],
+    ["Ruby on Rails", "Replicas for GET and HEAD with automatic role switching", <span>Primary within the <code>delay</code> window after a write (2 s default)</span>],
+  ]}
+/>
+
+## In the wild: case files
+
+<CaseFile
+  number={1}
+  company="Facebook"
+  kind="Big tech"
+  period="2013"
+  note="a marker that says 'I just changed this'"
+  problem="Facebook ran MySQL replicas in several regions, with one master region taking writes, and a huge memcache layer in front. A user who changed something from a non-master region could read it back from the local replica before replication caught up, and the stale value could end up cached."
+  fix="Their NSDI 2013 paper describes 'remote markers'. Before the write, the web server sets a marker for that key in the local region. Reads that find the marker go to the master region instead of the local replica, until replication catches up and the marker is gone. Cache refills from a replica are also held back until the replication stream has caught up."
+  lesson="A tiny per-key 'just changed' flag routes only the affected reads to the primary. And caches need the same care as replicas, or they freeze stale data in place."
+  sourceLabel="Nishtala et al., Scaling Memcache at Facebook (NSDI 2013)"
+  sourceHref="https://pdos.csail.mit.edu/6.824/papers/memcache-fb.pdf"
+/>
+
+<CaseFile
+  number={2}
+  company="GitHub"
+  kind="Big tech"
+  period="2017"
+  note="measure lag, don't guess it"
+  problem="GitHub's Rails app writes to MySQL primaries and wants to read from replicas. Right after a write, it can't know whether the replicas have the change, so those reads defaulted to the primary. Big write jobs (migrations, archiving) also pushed replicas behind."
+  fix="GitHub built freno, a highly available service that constantly checks replication lag across its MySQL replicas. Apps ask it whether replicas are caught up enough before reading from them, and heavy write jobs ask it whether to slow down. That moved reads off the primaries safely."
+  lesson="Once you can see lag, you can route reads after writes to replicas when it's safe, and make writers back off before they cause the lag."
+  sourceLabel="GitHub blog: Mitigating replication lag and reducing read load with freno"
+  sourceHref="https://github.blog/engineering/infrastructure/mitigating-replication-lag-and-reducing-read-load-with-freno/"
+/>
+
+<CaseFile
+  number={3}
+  company="Ruby on Rails"
+  kind="Open-source framework"
+  period="2019 (Rails 6.0)"
+  note="the 2-second window"
+  problem="Apps adding read replicas kept hitting the same bug: a form submit (POST, primary) redirects to a page (GET) that reads from a replica that hasn't caught up."
+  fix="Rails 6 added automatic role switching: GET and HEAD requests use replicas, unless the session wrote recently. Inside the delay window (2 seconds by default) they use the primary. The guides say plainly that it doesn't promise anything to other users, and that the delay should be tuned to your setup."
+  lesson="A time window is easy and catches the common case. It is still a guess, so tune it to your real lag and watch for spikes."
+  sourceLabel="Rails Guides: Multiple Databases with Active Record"
+  sourceHref="https://guides.rubyonrails.org/active_record_multiple_databases.html"
+/>
+
+<CaseFile
+  number={4}
+  company="Microsoft Azure Cosmos DB"
+  kind="Cloud database"
+  period="ongoing"
+  note="tokens, built into the protocol"
+  problem="Cosmos DB keeps several replicas of every database, often across regions. Strong consistency everywhere costs latency and throughput; plain eventual consistency confuses the user who just wrote."
+  fix="Cosmos DB offers five consistency levels, and Session is the default. After a write, the client gets a session token; reads that send it are served by a replica at least that up to date. Clients outside the session may see older data."
+  lesson="Read-your-writes is useful enough that a major cloud database made it the default. It's the version-token fix, done by the database for you."
+  sourceLabel="Microsoft Learn: Consistency levels in Azure Cosmos DB"
+  sourceHref="https://learn.microsoft.com/en-us/azure/cosmos-db/consistency-levels"
+/>
+
+## The 30-second interview answer
+
+If someone asks you this exact wallet question, this order covers it:
+
+1. **Name it.** Replication lag breaks *read-your-writes*, a per-user guarantee. You don't need global strong consistency.
+2. **Skip the read.** Return the new balance from the write and show it straight away.
+3. **Route by owner.** The user's own balance and transactions read from the primary; shared data reads from replicas.
+4. **Scale with tokens.** Store the commit's LSN or GTID per user; read only from replicas that have replayed past it; otherwise wait briefly or use the primary.
+5. **Trade-offs.** A time window (like Rails) is simpler but fails when lag spikes. `remote_apply` works but slows every write and can block writes.
+6. **Operate it.** Monitor lag, eject lagging replicas, keep users on one replica, test with a delayed replica, and never approve a debit from a replica.
+
+## Learn next and sources
+
+- Next ideas: monotonic reads and causal consistency; linearizability vs serializability; quorum reads in Dynamo-style databases (R + W greater than N); what async failover can lose.
+- The best long read on this: chapter 5, "Replication", of *Designing Data-Intensive Applications* by Martin Kleppmann, which has a section on reading your own writes.
+
+1. D. B. Terry, A. J. Demers, K. Petersen, M. J. Spreitzer, M. M. Theimer and B. B. Welch, "Session Guarantees for Weakly Consistent Replicated Data", PDIS 1994.
+2. R. Nishtala et al., ["Scaling Memcache at Facebook"](https://pdos.csail.mit.edu/6.824/papers/memcache-fb.pdf), NSDI 2013.
+3. GitHub, ["Mitigating replication lag and reducing read load with freno"](https://github.blog/engineering/infrastructure/mitigating-replication-lag-and-reducing-read-load-with-freno/), 2017.
+4. Rails Guides, ["Multiple Databases with Active Record"](https://guides.rubyonrails.org/active_record_multiple_databases.html).
+5. PostgreSQL docs: [synchronous_commit](https://www.postgresql.org/docs/current/runtime-config-wal.html), [replication settings](https://www.postgresql.org/docs/current/runtime-config-replication.html), [recovery control functions](https://www.postgresql.org/docs/current/functions-admin.html).
+6. MySQL docs: [GTID functions](https://dev.mysql.com/doc/refman/8.0/en/gtid-functions.html), [Group Replication variables](https://dev.mysql.com/doc/refman/8.0/en/group-replication-system-variables.html).
+7. MongoDB docs, ["Causal Consistency and Read and Write Concerns"](https://www.mongodb.com/docs/manual/core/causal-consistency-read-write-concerns/).
+8. AWS docs, ["DynamoDB read consistency"](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ReadConsistency.html).
+9. Microsoft Learn, ["Consistency levels in Azure Cosmos DB"](https://learn.microsoft.com/en-us/azure/cosmos-db/consistency-levels).

@@ -62,4 +62,13 @@ export const blogPosts: BlogPostMeta[] = [
     tags: ["windows", "networking", "how-to"],
     headerNote: "measure first, tweak second",
   },
+  {
+    slug: "read-your-writes",
+    title: "Read-Your-Writes: Why Your Wallet Says ₹0 Right After You Added ₹100",
+    description:
+      "Replication lag, stale reads and the session guarantee that fixes them. How primaries and replicas drift apart, five production fixes from returning the write to LSN tokens and synchronous replication, and how Facebook, GitHub, Rails and Cosmos DB handle it. With a live simulator.",
+    publishedAt: "2026-11-13",
+    tags: ["databases", "replication", "consistency"],
+    headerNote: "where did my ₹100 go?",
+  },
 ];

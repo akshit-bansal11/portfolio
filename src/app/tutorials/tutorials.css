@@ -300,3 +300,76 @@ html:has([data-tutorial-article])[data-blog-theme="dark"] {
 .tut-note:nth-child(even) {
   rotate: 0.7deg;
 }
+
+/*
+ * Small motion kit for animated diagrams (blog and tutorials). Screen only, and only
+ * when motion is welcome; without it every element simply sits in its final state.
+ *  - .tut-travel: a packet riding along its track (left 0 -> 100%), looping.
+ *  - .tut-pop: pops in once, after an optional --delay.
+ *  - .tut-shake: a short "that's wrong" wobble, after an optional --delay.
+ *  - .tut-ping: a soft pulse ring, looping.
+ */
+@media screen and (prefers-reduced-motion: no-preference) {
+  .tut-travel {
+    animation: tut-travel var(--dur, 1.4s) linear infinite;
+  }
+
+  .tut-pop {
+    animation: tut-pop 0.45s ease-out var(--delay, 0s) both;
+  }
+
+  .tut-shake {
+    animation: tut-shake 0.5s ease-in-out var(--delay, 0s) 3 both;
+  }
+
+  .tut-ping {
+    animation: tut-ping 1.6s ease-out infinite;
+  }
+}
+
+@keyframes tut-travel {
+  from {
+    left: 0%;
+  }
+
+  to {
+    left: 100%;
+  }
+}
+
+@keyframes tut-pop {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes tut-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-4px) rotate(-1deg);
+  }
+
+  75% {
+    transform: translateX(4px) rotate(1deg);
+  }
+}
+
+@keyframes tut-ping {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--tone) 55%, transparent);
+  }
+
+  100% {
+    box-shadow: 0 0 0 12px transparent;
+  }
+}

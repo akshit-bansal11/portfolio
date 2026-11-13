@@ -58,7 +58,8 @@ export function SegmentedControl<T extends string>({
       <div
         role="radiogroup"
         aria-labelledby={labelId}
-        className="inline-flex w-full rounded-xl border-2 border-ink bg-paper p-1 sm:w-auto"
+        data-tone="violet"
+        className="inline-flex w-full flex-wrap gap-1 rounded-xl border-2 border-(--tone) bg-paper p-1 sm:w-auto"
       >
         {options.map((option, index) => {
           const isSelected = option.value === value;
@@ -77,7 +78,7 @@ export function SegmentedControl<T extends string>({
               className={cn(
                 "min-h-11 flex-1 rounded-lg px-3 text-sm font-semibold transition-colors sm:flex-none",
                 "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pen",
-                isSelected ? "bg-ink text-paper" : "text-ink-muted hover:text-ink",
+                isSelected ? "bg-(--tone) text-paper" : "text-(--tone) hover:bg-(--tone-soft)",
               )}
             >
               {option.label}
@@ -102,11 +103,14 @@ export function DemoButton({
   return (
     <button
       type={type}
+      data-tone="violet"
       className={cn(
-        "inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border-2 border-ink px-4 text-sm font-semibold transition-transform",
+        "inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border-2 border-(--tone) px-4 text-sm font-semibold transition-transform",
         "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pen",
         "active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50",
-        variant === "solid" ? "bg-ink text-paper" : "bg-paper text-ink hover:bg-paper-raised",
+        variant === "solid"
+          ? "tut-glow bg-(--tone) text-paper"
+          : "bg-paper text-(--tone) hover:bg-(--tone-soft)",
         className,
       )}
       {...props}
@@ -143,7 +147,7 @@ export function DemoSlider({
         <span className="text-xs font-semibold tracking-[0.12em] text-ink-muted uppercase">
           {label}
         </span>
-        <span className="font-hand text-xl leading-none text-pen">{valueText}</span>
+        <span className="font-hand text-xl leading-none text-(--tut-violet)">{valueText}</span>
       </label>
       <input
         id={id}
@@ -154,7 +158,7 @@ export function DemoSlider({
         value={value}
         aria-valuetext={valueText}
         onChange={(event) => onChange(Number(event.target.value))}
-        className="h-11 w-full cursor-pointer touch-manipulation accent-[var(--blog-pen)]"
+        className="h-11 w-full cursor-pointer touch-manipulation accent-(--tut-violet)"
       />
     </div>
   );
@@ -173,6 +177,7 @@ export function DemoToggle({ label, checked, onChange, className }: DemoTogglePr
       type="button"
       role="switch"
       aria-checked={checked}
+      data-tone="green"
       onClick={() => onChange(!checked)}
       className={cn(
         "inline-flex min-h-11 items-center gap-3 rounded-xl px-1 text-left text-sm font-semibold text-ink",
@@ -183,13 +188,13 @@ export function DemoToggle({ label, checked, onChange, className }: DemoTogglePr
       <span
         aria-hidden
         className={cn(
-          "relative inline-flex h-6 w-11 shrink-0 items-center rounded-full border-2 border-ink transition-colors",
-          checked ? "bg-pen" : "bg-paper",
+          "relative inline-flex h-6 w-11 shrink-0 items-center rounded-full border-2 border-(--tone) transition-colors",
+          checked ? "bg-(--tone-soft)" : "bg-paper",
         )}
       >
         <span
           className={cn(
-            "absolute h-4 w-4 rounded-full bg-ink transition-transform",
+            "absolute h-4 w-4 rounded-full bg-(--tone) transition-transform",
             checked ? "translate-x-[1.35rem]" : "translate-x-0.5",
           )}
         />

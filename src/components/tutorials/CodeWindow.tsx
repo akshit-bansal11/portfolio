@@ -2,7 +2,8 @@
  * CodeWindow.tsx
  * Replaces <pre> in tutorials with an IDE-style window: a title bar (three dots, file name
  * or language, copy button), a line-number gutter and syntax colours from highlight.ts.
- * A first line like `# file: Dockerfile` or `// file: app.js` names the file and is not shown.
+ * A first line like `# file: Dockerfile`, `// file: app.js` or `-- file: q.sql` names the file
+ * and is not shown.
  * Only the code region scrolls sideways.
  */
 
@@ -22,7 +23,7 @@ const KIND_CLASS: Record<TokenKind, string> = {
   var: "text-(--code-var)",
 };
 
-const FILE_LINE = /^(?:#|\/\/) file: (.+)$/;
+const FILE_LINE = /^(?:#|\/\/|--) file: (.+)$/;
 
 interface CodeChildProps {
   className?: string;

@@ -65,6 +65,16 @@ const RULES: Record<string, Rule[]> = {
     [JS_WORDS, "keyword"],
     [NUMBER, "number"],
   ],
+  sql: [
+    [/--.*/y, "comment"],
+    [/'(?:''|[^'])*'?/y, "string"],
+    [
+      /\b(?:SELECT|FROM|WHERE|AND|OR|NOT|UPDATE|SET|INSERT|INTO|VALUES|DELETE|RETURNING|BEGIN|COMMIT|ROLLBACK|FOR|AS|ON|JOIN|CREATE|TABLE|ALTER|SYSTEM|NULL|TRUE|FALSE)\b/iy,
+      "keyword",
+    ],
+    [/\$\d+|@@?[\w.]+/y, "var"],
+    [NUMBER, "number"],
+  ],
   text: [],
 };
 
@@ -78,6 +88,9 @@ const ALIASES: Record<string, string> = {
   jsx: "javascript",
   ts: "javascript",
   tsx: "javascript",
+  postgres: "sql",
+  postgresql: "sql",
+  mysql: "sql",
 };
 
 // Tokenizes one line with the given rules, merging adjacent plain characters.

@@ -1,6 +1,7 @@
 /*
  * TLDR.tsx
- * End-of-post takeaways rendered as handwritten sticky notes.
+ * End-of-post takeaways as tilted, tone-coloured sticky notes (the same
+ * notes as the tutorial glossary).
  * Usage in MDX: <TLDR><Takeaway>…</Takeaway>…</TLDR>
  */
 
@@ -16,7 +17,11 @@ export function TLDR({ children, className }: TLDRProps) {
   return (
     <ol
       className={cn(
-        "my-10 grid list-none gap-6 p-0 sm:grid-cols-2 [counter-reset:takeaway]",
+        "my-8 grid list-none grid-cols-1 gap-5 p-0 sm:grid-cols-2 lg:grid-cols-3 [counter-reset:takeaway]",
+        // Cycle the tutorial tones across the notes.
+        "[&>li:nth-child(6n+1)]:[--tone-base:var(--tut-amber)] [&>li:nth-child(6n+2)]:[--tone-base:var(--tut-blue)]",
+        "[&>li:nth-child(6n+3)]:[--tone-base:var(--tut-green)] [&>li:nth-child(6n+4)]:[--tone-base:var(--tut-pink)]",
+        "[&>li:nth-child(6n+5)]:[--tone-base:var(--tut-violet)] [&>li:nth-child(6n)]:[--tone-base:var(--tut-cyan)]",
         className,
       )}
     >
@@ -33,11 +38,11 @@ interface TakeawayProps {
 export function Takeaway({ children, className }: TakeawayProps) {
   return (
     <li
+      data-tone=""
       className={cn(
-        "relative bg-sticky px-5 pt-7 pb-5 font-hand text-[1.45rem] leading-snug text-sticky-ink shadow-md",
-        "[counter-increment:takeaway] odd:-rotate-1 even:rotate-1",
-        "before:absolute before:top-1.5 before:left-4 before:text-lg before:font-bold before:opacity-60 before:content-['#'_counter(takeaway)]",
-        "motion-safe:transition-transform motion-safe:hover:rotate-0",
+        "tut-note relative border-t-[6px] border-(--tone) bg-(--tone-soft) px-4 pt-8 pb-4 text-ink shadow-sm",
+        "[counter-increment:takeaway]",
+        "before:absolute before:top-2 before:left-4 before:font-hand before:text-2xl before:leading-none before:font-bold before:text-(--tone) before:content-['#'_counter(takeaway)]",
         className,
       )}
     >

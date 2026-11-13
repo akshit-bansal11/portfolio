@@ -1,7 +1,8 @@
 /*
  * DemoFrame.tsx
- * Reusable shell for interactive demos: a notebook-style
- * frame with a title, a handwritten "try it" hint, the demo
+ * Reusable shell for interactive demos, in the tutorial
+ * widget style: a raised panel with a green "Interactive"
+ * badge, a title, a handwritten "try it" hint, the demo
  * itself, and an optional caption. DemoSkeleton is the
  * placeholder next/dynamic shows while a demo's JS loads.
  */
@@ -23,28 +24,31 @@ export default function DemoFrame({ title, hint, caption, children, className }:
   return (
     <figure
       aria-label={title}
-      className={cn(
-        "relative my-12 rounded-2xl border-2 border-ink bg-paper-raised",
-        "shadow-[5px_5px_0_0_var(--blog-ink)]",
-        className,
-      )}
+      className={cn("relative my-10 rounded-2xl border border-rule bg-paper-raised", className)}
     >
-      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b-2 border-dashed border-rule px-4 py-3">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-rule px-4 py-3 sm:px-5">
+        <div className="flex flex-wrap items-center gap-2">
           <span
-            aria-hidden
-            className="inline-block h-2.5 w-2.5 rounded-full bg-ok motion-safe:animate-pulse"
-          />
-          <span className="text-xs font-semibold tracking-[0.14em] text-ink-muted uppercase">
+            data-tone="green"
+            className="inline-flex items-center gap-1.5 rounded-full bg-(--tone) px-2.5 py-0.5 text-xs font-bold tracking-wide text-paper uppercase"
+          >
+            <span
+              aria-hidden
+              className="inline-block h-2 w-2 rounded-full bg-paper motion-safe:animate-pulse"
+            />
             Interactive
           </span>
-          <span className="text-sm font-semibold text-ink sm:text-base">{title}</span>
+          <span className="font-semibold text-ink sm:text-lg">{title}</span>
         </div>
-        {hint && <span className="font-hand text-xl text-pen">{hint}</span>}
+        {hint && (
+          <span data-tone="term" className="font-hand text-xl text-(--tone)">
+            {hint}
+          </span>
+        )}
       </div>
       <div className="p-3 sm:p-5">{children}</div>
       {caption && (
-        <figcaption className="border-t-2 border-dashed border-rule px-4 py-3 text-sm leading-relaxed text-ink-muted">
+        <figcaption className="border-t border-rule px-4 py-3 text-sm leading-relaxed text-ink-muted sm:px-5">
           {caption}
         </figcaption>
       )}

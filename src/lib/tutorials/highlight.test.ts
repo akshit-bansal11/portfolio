@@ -18,6 +18,12 @@ const SAMPLES: Record<string, string[]> = {
   yaml: ["# c", "services:", "  web:", "    image: nginx:1.27", "      - 80:80", "    tty: true"],
   json: ["{", '  "name": "app",', '  "n": -1.5e3,', '  "ok": true,', '  "x": [null]', "}"],
   javascript: ["const a = 'x'; // note", "await fetch(`/api`, { retries: 3 });"],
+  sql: [
+    "-- c",
+    "UPDATE wallets SET balance = balance + $2 WHERE user_id = $1 RETURNING balance;",
+    "SELECT WAIT_FOR_EXECUTED_GTID_SET('3E11:1-77', 1), @@global.gtid_executed;",
+    "select 'it''s' from t",
+  ],
   text: ["anything at all: $ # \" ' é", ""],
 };
 
@@ -34,4 +40,5 @@ test("joining the tokens of each line reproduces the input", () => {
 test("a dockerfile instruction is a keyword and a yaml key is a key", () => {
   assert.deepEqual(highlight("FROM node", "dockerfile")[0][0], { text: "FROM", kind: "keyword" });
   assert.deepEqual(highlight("image: x", "yaml")[0][0], { text: "image", kind: "key" });
+  assert.deepEqual(highlight("select 1", "sql")[0][0], { text: "select", kind: "keyword" });
 });
