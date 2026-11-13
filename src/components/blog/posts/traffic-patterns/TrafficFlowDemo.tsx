@@ -1,21 +1,19 @@
 /*
  * TrafficFlowDemo.tsx
- * Main Traffic Patterns demo: a small data centre where one
- * user request enters through the gateway (north-south) and
- * fans out into many service-to-service calls (east-west).
- * Toggle which direction to highlight, add a service mesh
- * (a proxy next to every service, encrypting and checking
- * every call), and drop an intruder inside to see whether it
- * can move sideways to the payments database.
+ * Main Traffic Patterns demo: a small data centre where one user request enters through
+ * the gateway (north-south) and fans out into many service-to-service calls (east-west).
+ * Highlight one direction, add a service mesh (a sidecar proxy next to every service,
+ * encrypting and checking every call), and drop an intruder inside Recs to see whether
+ * it can move sideways to the payments database. Clean SVG geometry in the tone palette;
+ * packets ride every active link, and the scene's state changes animate in.
  */
 
 "use client";
 
-import { useReducedMotion } from "framer-motion";
-import { useId, useState } from "react";
+import { type CSSProperties, useId, useState } from "react";
 import { DemoToggle, SegmentedControl } from "@/components/blog/DemoControls";
-import { clipToBox, sketchArrow, sketchCross, sketchRect } from "@/lib/blog/sketch";
 import { cn } from "@/lib/utils";
+import styles from "./TrafficFlowDemo.module.css";
 
 type NodeId =
   | "users"
@@ -38,15 +36,15 @@ interface NodeDef {
 }
 
 const NODES: Record<NodeId, NodeDef> = {
-  users: { label: "users on the internet", x: 190, y: 26, w: 170, h: 30 },
-  gateway: { label: "load balancer + gateway", x: 190, y: 104, w: 176, h: 30 },
-  web: { label: "Web", x: 190, y: 172, w: 72, h: 32 },
-  orders: { label: "Orders", x: 70, y: 240, w: 80, h: 32 },
-  recs: { label: "Recs", x: 310, y: 240, w: 72, h: 32 },
-  profile: { label: "Profile", x: 310, y: 312, w: 78, h: 32 },
-  payments: { label: "Payments", x: 70, y: 312, w: 86, h: 32 },
-  inventory: { label: "Inventory", x: 190, y: 290, w: 88, h: 32 },
-  db: { label: "Payments DB", x: 70, y: 378, w: 104, h: 30 },
+  users: { label: "users on the internet", x: 190, y: 28, w: 184, h: 32 },
+  gateway: { label: "load balancer + gateway", x: 190, y: 108, w: 196, h: 32 },
+  web: { label: "Web", x: 190, y: 178, w: 76, h: 32 },
+  orders: { label: "Orders", x: 74, y: 246, w: 88, h: 32 },
+  recs: { label: "Recs", x: 306, y: 246, w: 76, h: 32 },
+  inventory: { label: "Inventory", x: 190, y: 296, w: 98, h: 32 },
+  payments: { label: "Payments", x: 74, y: 318, w: 98, h: 32 },
+  profile: { label: "Profile", x: 306, y: 318, w: 84, h: 32 },
+  db: { label: "Payments DB", x: 74, y: 386, w: 116, h: 32 },
 };
 
 interface Edge {
@@ -67,17 +65,7 @@ const EDGES: Edge[] = [
   { from: "payments", to: "db", direction: "ew" },
 ];
 
-const NODE_IDS: NodeId[] = [
-  "users",
-  "gateway",
-  "web",
-  "orders",
-  "recs",
-  "payments",
-  "inventory",
-  "profile",
-  "db",
-];
+const NODE_IDS = Object.keys(NODES) as NodeId[];
 const SERVICES: NodeId[] = ["web", "orders", "recs", "payments", "inventory", "profile", "db"];
 const EAST_WEST_CALLS = EDGES.filter((edge) => edge.direction === "ew").length;
 
@@ -87,21 +75,59 @@ const DIRECTION_OPTIONS = [
   { value: "both" as const, label: "Both" },
 ];
 
-// Hand-drawn arrow between two node borders.
-function edgePath(from: NodeId, to: NodeId, seed: number) {
-  const a = NODES[from];
-  const b = NODES[to];
-  const [x1, y1] = clipToBox(b.x, b.y, a.x, a.y, a.w / 2, a.h / 2, 2);
-  const [x2, y2] = clipToBox(a.x, a.y, b.x, b.y, b.w / 2, b.h / 2, 5);
-  return sketchArrow(x1, y1, x2, y2, { seed, curve: 0.06, headSize: 7 });
+// Where the line from `a` towards `b` leaves a's box, `pad` units outside it.
+function exitPoint(a: NodeDef, b: NodeDef, pad: number): [number, number] {
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  const t = Math.min(
+    (a.w / 2 + pad) / Math.max(Math.abs(dx), 1e-6),
+    (a.h / 2 + pad) / Math.max(Math.abs(dy), 1e-6),
+  );
+  return [a.x + dx * t, a.y + dy * t];
 }
 
-// Tiny padlock drawn at (x, y): a shackle and a body.
-function Padlock({ x, y }: { x: number; y: number }) {
+// Straight shaft plus a small solid arrowhead at the far end.
+function edgeGeometry(edge: Edge) {
+  const a = NODES[edge.from];
+  const b = NODES[edge.to];
+  const [x1, y1] = exitPoint(a, b, 2);
+  const [x2, y2] = exitPoint(b, a, 3);
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  const size = 6.5;
+  const corner = (spread: number) =>
+    `${x2 - size * Math.cos(angle - spread)},${y2 - size * Math.sin(angle - spread)}`;
+  const head = `${x2},${y2} ${corner(0.45)} ${corner(-0.45)}`;
+  return { shaft: `M${x1} ${y1} L${x2} ${y2}`, head, mid: [(x1 + x2) / 2, (y1 + y2) / 2] };
+}
+
+// The intruder's path: from Recs, around Inventory, to the payments database.
+const ATTACK = "M282 264 Q250 372 136 384";
+
+// A clean padlock, centred on (x, y).
+function Padlock({ x, y, delay = 0 }: { x: number; y: number; delay?: number }) {
   return (
-    <g transform={`translate(${x - 5} ${y - 6})`} aria-hidden>
-      <path d="M2 6 V3.5 a3 3 0 0 1 6 0 V6" fill="none" strokeWidth={1.4} className="stroke-ok" />
-      <rect x={0} y={5.5} width={10} height={7} rx={1.5} className="fill-ok" />
+    <g
+      data-tone="green"
+      aria-hidden
+      className={styles.pop}
+      style={{ "--delay": `${delay}s` } as CSSProperties}
+    >
+      <rect
+        x={x - 8}
+        y={y - 8}
+        width={16}
+        height={16}
+        rx={5}
+        className="fill-paper stroke-(--tone)"
+        strokeWidth={1}
+      />
+      <path
+        d={`M${x - 2.5} ${y - 0.5} V${y - 2.5} a2.5 2.5 0 0 1 5 0 V${y - 0.5}`}
+        fill="none"
+        strokeWidth={1.3}
+        className="stroke-(--tone)"
+      />
+      <rect x={x - 4} y={y - 1} width={8} height={5.5} rx={1.3} className="fill-(--tone)" />
     </g>
   );
 }
@@ -110,59 +136,51 @@ export default function TrafficFlowDemo() {
   const [direction, setDirection] = useState<Direction>("both");
   const [mesh, setMesh] = useState(false);
   const [intruder, setIntruder] = useState(false);
-  const prefersReducedMotion = useReducedMotion();
   const titleId = useId();
 
   const isActive = (edge: Edge) => direction === "both" || edge.direction === direction;
   const attackBlocked = intruder && mesh;
   const attackSucceeded = intruder && !mesh;
-  const attack = sketchArrow(
-    NODES.recs.x - 40,
-    NODES.recs.y + 14,
-    NODES.db.x + 54,
-    NODES.db.y - 8,
-    {
-      seed: 99,
-      curve: -0.18,
-      headSize: 8,
-    },
-  );
 
   let note = "One click on the website = 2 north-south hops, then 7 east-west calls inside.";
-  if (direction === "ns")
+  let noteTone = "violet";
+  if (direction === "ns") {
     note = "North-south: traffic crossing the wall between the internet and your data centre.";
-  if (direction === "ew")
+    noteTone = "amber";
+  }
+  if (direction === "ew") {
     note = "East-west: services talking to each other. Notice there's far more of it.";
-  if (mesh)
+    noteTone = "blue";
+  }
+  if (mesh) {
     note =
       "With a mesh, every service gets a proxy. Every east-west call is encrypted, checked and traced.";
-  if (attackSucceeded)
+    noteTone = "green";
+  }
+  if (attackSucceeded) {
     note =
       "The front door was locked, but inside nothing checks who's calling. The intruder walks straight to the payments database.";
-  if (attackBlocked)
+    noteTone = "red";
+  }
+  if (attackBlocked) {
     note =
       "The intruder got in, but the mesh only lets Payments talk to the payments database. Denied.";
+    noteTone = "green";
+  }
+
+  const stats = [
+    { label: "east-west calls encrypted", value: mesh ? EAST_WEST_CALLS : 0 },
+    { label: "callers checked", value: mesh ? EAST_WEST_CALLS : 0 },
+    { label: "calls traced", value: mesh ? EAST_WEST_CALLS : 0 },
+  ];
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
-        <SegmentedControl
-          label="Highlight"
-          options={DIRECTION_OPTIONS}
-          value={direction}
-          onChange={setDirection}
-        />
-        <div className="flex flex-col gap-1 sm:ml-auto">
-          <DemoToggle label="Service mesh" checked={mesh} onChange={setMesh} />
-          <DemoToggle label="Intruder inside Recs" checked={intruder} onChange={setIntruder} />
-        </div>
-      </div>
-
+    <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-start">
       <svg
-        viewBox="0 0 380 410"
+        viewBox="0 0 380 420"
         role="img"
         aria-labelledby={titleId}
-        className="w-full select-none"
+        className="mx-auto block w-full max-w-[34rem] select-none lg:order-1"
       >
         <title id={titleId}>
           {`Data centre diagram. ${direction === "ns" ? "North-south" : direction === "ew" ? "East-west" : "All"} traffic highlighted. Service mesh ${
@@ -171,90 +189,92 @@ export default function TrafficFlowDemo() {
         </title>
 
         {/* Data centre wall */}
-        <path
-          d={sketchRect(8, 76, 364, 326, { seed: 3, bow: 2 })}
+        <rect
+          x={8}
+          y={80}
+          width={364}
+          height={332}
+          rx={16}
           fill="none"
-          strokeWidth={1.6}
-          strokeDasharray="6 4"
-          className="stroke-ink-muted"
+          strokeWidth={1.4}
+          strokeDasharray="6 5"
+          className="stroke-ink-muted/50"
         />
-        <text x={16} y={94} className="fill-ink-muted font-hand text-[15px]">
-          your data centre
+        <text x={22} y={100} className="fill-ink-muted text-[11px] font-semibold tracking-wider">
+          YOUR DATA CENTRE
         </text>
-        <text x={372} y={66} textAnchor="end" className="fill-pen font-hand text-[15px]">
-          ↕ north-south
-        </text>
-        <text x={372} y={392} textAnchor="end" className="fill-pen-blue font-hand text-[15px]">
-          ↔ east-west
-        </text>
+        <g data-tone="amber">
+          <text x={366} y={70} textAnchor="end" className="fill-(--tone) text-[11px] font-bold">
+            ↕ NORTH-SOUTH
+          </text>
+        </g>
+        <g data-tone="blue">
+          <text x={358} y={402} textAnchor="end" className="fill-(--tone) text-[11px] font-bold">
+            ↔ EAST-WEST
+          </text>
+        </g>
 
         {/* Edges */}
         {EDGES.map((edge, index) => {
-          const paths = edgePath(edge.from, edge.to, index + 7);
+          const { shaft, head, mid } = edgeGeometry(edge);
           const active = isActive(edge);
           const isNs = edge.direction === "ns";
-          const a = NODES[edge.from];
-          const b = NODES[edge.to];
           return (
             <g
               key={`${edge.from}-${edge.to}`}
-              className={cn(
-                "transition-opacity duration-300",
-                isNs ? "text-pen" : "text-pen-blue",
-                active ? "opacity-100" : "opacity-20",
-              )}
+              data-tone={isNs ? "amber" : "blue"}
+              className={cn("transition-opacity duration-300", active ? "" : "opacity-20")}
             >
               <path
-                d={paths.shaft}
+                d={shaft}
                 fill="none"
-                stroke="currentColor"
                 strokeWidth={active ? 2 : 1.4}
                 strokeLinecap="round"
+                className="stroke-(--tone-line) transition-[stroke-width]"
               />
-              <path
-                d={paths.head}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={active ? 2 : 1.4}
-                strokeLinecap="round"
-              />
-              {active && !prefersReducedMotion && (
-                <circle r={3.4} className={isNs ? "fill-pen" : "fill-pen-blue"}>
+              <polygon points={head} className="fill-(--tone)" />
+              {active && (
+                <circle r={3.6} className={cn("fill-(--tone) stroke-paper", styles.packet)}>
                   <animateMotion
                     dur={isNs ? "1.6s" : "1.9s"}
                     begin={`${isNs ? index * 0.35 : 0.7 + index * 0.18}s`}
                     repeatCount="indefinite"
-                    path={paths.shaft}
+                    path={shaft}
                   />
                 </circle>
               )}
-              {mesh && !isNs && <Padlock x={(a.x + b.x) / 2 + 8} y={(a.y + b.y) / 2} />}
+              {mesh && !isNs && <Padlock x={mid[0]} y={mid[1]} delay={0.25 + index * 0.05} />}
             </g>
           );
         })}
 
         {/* Attack path */}
         {intruder && (
-          <g className="text-danger">
+          <g data-tone="red">
             <path
-              d={attack.shaft}
+              d={ATTACK}
               fill="none"
-              stroke="currentColor"
-              strokeWidth={2.4}
-              strokeDasharray="5 4"
-              className="motion-safe:animate-dash-flow"
+              strokeWidth={2.2}
+              strokeDasharray="6 3"
+              strokeLinecap="round"
+              className={cn("stroke-(--tone)", styles.march)}
             />
-            {attackSucceeded && (
-              <path d={attack.head} fill="none" stroke="currentColor" strokeWidth={2.4} />
-            )}
+            <circle r={4.5} className={cn("fill-(--tone) stroke-paper", styles.packet)}>
+              <animateMotion dur="2.2s" repeatCount="indefinite" path={ATTACK} />
+            </circle>
             {attackBlocked && (
-              <path
-                d={sketchCross(NODES.db.x + 50, NODES.db.y - 14, 14, 4)}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={3}
-                strokeLinecap="round"
-              />
+              <g className={styles.shake}>
+                <circle cx={140} cy={378} r={10} className="fill-paper stroke-(--tone)" />
+                <path
+                  d="M135 373 L145 383 M145 373 L135 383"
+                  strokeWidth={2.4}
+                  strokeLinecap="round"
+                  className="stroke-(--tone)"
+                />
+                <text x={156} y={366} className="fill-(--tone) text-[12px] font-bold">
+                  denied
+                </text>
+              </g>
             )}
           </g>
         )}
@@ -265,79 +285,81 @@ export default function TrafficFlowDemo() {
           const isService = SERVICES.includes(id);
           const compromised = intruder && id === "recs";
           const stolen = attackSucceeded && id === "db";
+          const tone =
+            compromised || stolen ? "red" : id === "users" || id === "gateway" ? "amber" : "blue";
+          const x = node.x - node.w / 2;
+          const y = node.y - node.h / 2;
           return (
-            <g key={id}>
+            <g key={id} data-tone={tone}>
+              {stolen && (
+                <rect
+                  x={x}
+                  y={y}
+                  width={node.w}
+                  height={node.h}
+                  rx={8}
+                  fill="none"
+                  strokeWidth={2}
+                  className={cn("stroke-(--tone)", styles.alarm)}
+                />
+              )}
               <rect
-                x={node.x - node.w / 2}
-                y={node.y - node.h / 2}
+                x={x}
+                y={y}
                 width={node.w}
                 height={node.h}
-                rx={id === "users" ? 15 : 6}
+                rx={id === "users" ? 16 : 8}
+                strokeWidth={compromised || stolen || id === "gateway" ? 1.6 : 1}
                 className={cn(
-                  "transition-colors",
-                  compromised || stolen
-                    ? "fill-danger/20"
-                    : id === "gateway"
-                      ? "fill-pen/15"
-                      : "fill-paper-raised",
+                  "transition-colors duration-300",
+                  compromised || stolen || id === "gateway"
+                    ? "fill-(--tone-soft) stroke-(--tone)"
+                    : "fill-paper stroke-(--tone-line)",
                 )}
-              />
-              <path
-                d={sketchRect(node.x - node.w / 2, node.y - node.h / 2, node.w, node.h, {
-                  seed: index + 30,
-                  bow: 1.4,
-                })}
-                fill="none"
-                strokeWidth={1.8}
-                className={compromised || stolen ? "stroke-danger" : "stroke-ink"}
               />
               <text
                 x={node.x}
                 y={node.y}
                 textAnchor="middle"
                 dominantBaseline="central"
-                className="fill-ink text-[12.5px] font-semibold"
+                className="fill-ink text-[13px] font-semibold"
               >
                 {node.label}
               </text>
-              {/* Sidecar proxy */}
+              {/* Sidecar proxy badge */}
               {mesh && isService && (
-                <g>
+                <g
+                  data-tone="green"
+                  className={styles.pop}
+                  style={{ "--delay": `${index * 0.06}s` } as CSSProperties}
+                >
                   <rect
-                    x={node.x + node.w / 2 - 10}
-                    y={node.y - node.h / 2 - 9}
-                    width={22}
-                    height={14}
-                    rx={4}
-                    strokeWidth={1.4}
-                    className="fill-ok/25 stroke-ok"
+                    x={x + node.w - 12}
+                    y={y - 9}
+                    width={20}
+                    height={16}
+                    rx={5}
+                    strokeWidth={1.2}
+                    className="fill-(--tone-soft) stroke-(--tone)"
                   />
-                  <text
-                    x={node.x + node.w / 2 + 1}
-                    y={node.y - node.h / 2 - 2}
-                    textAnchor="middle"
-                    dominantBaseline="central"
-                    className="fill-ink text-[8px] font-bold"
-                  >
-                    proxy
-                  </text>
+                  <circle cx={x + node.w - 2} cy={y - 1} r={3} className="fill-(--tone)" />
                 </g>
               )}
               {compromised && (
                 <text
                   x={node.x}
-                  y={node.y + node.h / 2 + 13}
+                  y={y - 6}
                   textAnchor="middle"
-                  className="fill-danger font-hand text-[15px] font-bold"
+                  className="fill-(--tone) text-[12px] font-bold"
                 >
                   intruder!
                 </text>
               )}
               {stolen && (
                 <text
-                  x={node.x + node.w / 2 + 6}
+                  x={x + node.w + 8}
                   y={node.y + 4}
-                  className="fill-danger font-hand text-[15px] font-bold"
+                  className="fill-(--tone) text-[12px] font-bold"
                 >
                   data stolen
                 </text>
@@ -345,24 +367,52 @@ export default function TrafficFlowDemo() {
             </g>
           );
         })}
-        {attackBlocked && (
-          <text
-            x={NODES.db.x + 62}
-            y={NODES.db.y - 22}
-            className="fill-danger font-hand text-[15px] font-bold"
-          >
-            denied
-          </text>
-        )}
       </svg>
 
-      <div className="rounded-xl border-2 border-dashed border-rule px-4 py-3">
-        <p aria-live="polite" className="font-hand text-[1.4rem] leading-snug text-pen">
-          {note}
-        </p>
-        <p className="mt-1 text-sm text-ink-muted">
-          East-west calls encrypted: {mesh ? EAST_WEST_CALLS : 0} of {EAST_WEST_CALLS} · traced:{" "}
-          {mesh ? EAST_WEST_CALLS : 0} of {EAST_WEST_CALLS}
+      <div className="flex flex-col gap-4 lg:order-2">
+        <SegmentedControl
+          label="Highlight"
+          options={DIRECTION_OPTIONS}
+          value={direction}
+          onChange={setDirection}
+        />
+        <div className="flex flex-col gap-1">
+          <DemoToggle label="Service mesh" checked={mesh} onChange={setMesh} />
+          <DemoToggle label="Intruder inside Recs" checked={intruder} onChange={setIntruder} />
+        </div>
+
+        <div
+          data-tone={noteTone}
+          className="rounded-xl border border-(--tone-line) bg-(image:--tone-fill) px-4 py-3 transition-colors duration-300"
+        >
+          <p key={note} aria-live="polite" className="tut-pop leading-snug font-medium text-ink">
+            {note}
+          </p>
+        </div>
+
+        <ul className="grid list-none grid-cols-3 gap-2 p-0">
+          {stats.map((s) => (
+            <li
+              key={s.label}
+              data-tone={mesh ? "green" : "red"}
+              className="rounded-lg border border-(--tone-line) bg-paper px-2 py-2 text-center transition-colors duration-300"
+            >
+              <span
+                key={s.value}
+                className="tut-pop block font-mono text-lg font-bold text-(--tone)"
+              >
+                {s.value}/{EAST_WEST_CALLS}
+              </span>
+              <span className="block text-[0.7rem] leading-tight text-ink-muted">{s.label}</span>
+            </li>
+          ))}
+        </ul>
+        <p data-tone="green" className="flex items-center gap-2 text-xs text-ink-muted">
+          <span
+            aria-hidden
+            className="inline-block h-3 w-4 shrink-0 rounded-[4px] border border-(--tone) bg-(--tone-soft)"
+          />
+          badge = sidecar proxy · padlock = encrypted, checked call
         </p>
       </div>
     </div>

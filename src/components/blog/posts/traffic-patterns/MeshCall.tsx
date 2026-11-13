@@ -12,6 +12,7 @@
 
 "use client";
 
+import { useReducedMotion } from "framer-motion";
 import {
   ChevronLeft,
   ChevronRight,
@@ -174,16 +175,14 @@ function Pipe({
 
 export default function MeshCall() {
   const [step, setStep] = useState(0);
-  const [playing, setPlaying] = useState(false);
+  // "auto" plays only when motion is welcome; the Play/Pause button overrides it.
+  const [mode, setMode] = useState<"auto" | "play" | "pause">("auto");
+  const reduced = useReducedMotion();
+  const playing = mode === "play" || (mode === "auto" && reduced === false);
   const [held, setHeld] = useState(false);
   const current = STEPS[step];
   const lit = (part: Part) => current.lit.includes(part);
   const dim = (part: Part) => !lit(part);
-
-  // Auto-play only when motion is welcome.
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: no-preference)").matches) setPlaying(true);
-  }, []);
 
   useEffect(() => {
     if (!playing || held) return;
@@ -192,7 +191,7 @@ export default function MeshCall() {
   }, [playing, held, step]);
 
   const go = (next: number) => {
-    setPlaying(false);
+    setMode("pause");
     setStep((next + STEPS.length) % STEPS.length);
   };
 
@@ -372,7 +371,7 @@ export default function MeshCall() {
         <button
           type="button"
           data-tone="violet"
-          onClick={() => setPlaying(!playing)}
+          onClick={() => setMode(playing ? "pause" : "play")}
           className="inline-flex min-h-10 items-center gap-1 rounded-md bg-(--tone) px-3 text-sm font-semibold text-paper active:translate-y-px"
         >
           {playing ? (

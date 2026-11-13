@@ -1,38 +1,74 @@
+import { BookOpen, Box, Cloud, CreditCard, Database, Inbox, Layers, MessageSquare, Network, Package, Rocket, Route, Search, Server, Ship, SlidersHorizontal, UserRound } from "lucide-react";
+import BulkheadPoolDemo from "@/components/blog/posts/blast-radius/BulkheadPoolDemo";
 import CircuitBreakerDiagram from "@/components/blog/posts/blast-radius/CircuitBreakerDiagram";
 import RadiusRingsDiagram from "@/components/blog/posts/blast-radius/RadiusRingsDiagram";
 import ShipDiagram from "@/components/blog/posts/blast-radius/ShipDiagram";
 import ShuffleShardDiagram from "@/components/blog/posts/blast-radius/ShuffleShardDiagram";
 import { BlastRadiusDemo, StagedRolloutDemo } from "@/components/blog/posts/blast-radius/lazy";
 
+## In one minute
+
+- Failures are guaranteed. **Blast radius** is how much one failure is allowed to damage: one request, one server, a slice of customers, or everyone.
+- Shrink it in *space* with walls: **bulkheads** (a capped pool per dependency), **circuit breakers** (stop calling a dead service), **cells** (full copies of your stack, each serving a slice of customers) and **shuffle sharding**.
+- Shrink it in *time* with **staged rollouts**: ship to 1% first, watch, then widen. In July 2024 one CrowdStrike update reached about 8.5 million Windows devices at roughly the same time.
+- Walls only work if they are complete. One shared database or config file quietly undoes them, so find what everything shares, and test your walls on purpose.
+
+## Words you need
+
+<Glossary
+  items={[
+    { term: "Blast radius", means: "How much of your system (users, data, money, time) one failure can damage.", like: "how far the damage spreads from a bang" },
+    { term: "Failure domain", means: "A group of things that fail together because they share something: a server, a power supply, a database, a config file.", like: "all the rooms on one fuse" },
+    { term: "Single point of failure", means: "One part that takes everything down when it breaks. A failure domain the size of your whole system.", like: "the one main cable into your house" },
+    { term: "Isolation", means: "Any wall between failure domains, so a failure on one side can't cross to the other.", like: "the walls between a ship's compartments" },
+    { term: "Dependency", means: "Another service your code calls and needs: a database, a payment provider, a recommendations service.", like: "the suppliers a restaurant relies on" },
+    { term: "Thread (worker)", means: "One slot a server uses to handle one request at a time. A server has a fixed number of them.", like: "a waiter: 100 threads are 100 waiters" },
+    { term: "Bulkhead", means: "On a ship, a watertight wall. In software, a separate, capped pool of threads or connections for each dependency.", like: "a wall that keeps a flood in one compartment" },
+    { term: "Circuit breaker", means: "Code in front of a dependency that stops calling it after too many failures, then tries one test call later.", like: "the switch in your fuse box that trips" },
+    { term: "Fail fast", means: "Give up at once with an error instead of waiting for an answer that won't come.", like: "a 'closed' sign, so you don't queue for nothing" },
+    { term: "Load balancer", means: "Spreads requests over several servers and stops sending to one that looks broken.", like: "a host seating guests at free tables" },
+    { term: "Cell", means: "A complete, independent copy of your whole stack (servers, database, queues) that serves only a slice of your customers.", like: "one branch of a chain, with its own kitchen" },
+    { term: "Router (cell router)", means: "A thin layer in front of the cells that sends each customer to their own cell.", like: "a receptionist who knows which branch is yours" },
+    { term: "Monolith", means: "One system that serves every customer. In the demo below, that's a single cell.", like: "one big kitchen for the whole city" },
+    { term: "Shard", means: "A fixed group of workers that serves a fixed group of customers.", like: "a checkout lane kept for certain shoppers" },
+    { term: "Shuffle sharding", means: "Give each customer its own random mix of a few workers, so two customers almost never share all of theirs.", like: "every guest gets a different pair of waiters" },
+    { term: "Poison request", means: "A request that crashes whatever server handles it.", like: "a dish that sets off the fire alarm in any kitchen that cooks it" },
+    { term: "Region / availability zone", means: "A region is a separate geographic area of a cloud. An availability zone is a separate data centre inside a region, with its own power and network.", like: "separate cities, and separate buildings in one city" },
+    { term: "Redundancy", means: "Running spare copies (two servers, a standby database) so one takes over when another dies.", like: "a spare tyre in the boot" },
+    { term: "Deploy / config change", means: "Shipping new code, or new settings, to your servers.", like: "sending a new menu to every branch" },
+    { term: "Staged rollout (canary)", means: "Ship a change to a tiny slice first, check its health, then widen step by step. Named after the canaries miners carried to detect gas.", like: "tasting the soup before serving the whole room" },
+    { term: "Health check", means: "An automatic test that says whether a machine or service is working right now.", like: "taking a patient's pulse" },
+    { term: "Feature flag", means: "A switch in code: new code ships 'off' and is turned on for a few users at a time. Turning it off is the kill switch.", like: "a dimmer with an off button" },
+    { term: "Chaos engineering", means: "Breaking things on purpose, in a controlled way, to prove your walls hold before a real incident does it for you.", like: "a fire drill" },
+    { term: "Gray failure", means: "A part that isn't fully down, just slow and flaky. Hard to spot and hard to route around.", like: "a flickering bulb rather than a dead one" },
+    { term: "DNS / BGP", means: "DNS turns names like facebook.com into network addresses. BGP is how networks tell each other which addresses they can reach.", like: "the phone book, and the road signs between cities" },
+  ]}
+/>
+
 ## The Friday the screens went blue
 
-On Friday, 19 July 2024, airline check-in counters, hospital systems, bank branches and TV stations around the world showed the same thing: the Windows "blue screen of death". Machines crashed, rebooted and crashed again.
+- On **Friday, 19 July 2024**, airline check-in counters, hospital systems, bank branches and TV stations around the world showed the Windows "blue screen of death". Machines crashed, rebooted and crashed again.
+- It wasn't a cyberattack. The security company CrowdStrike pushed a routine content update to its **Falcon sensor**, software that runs deep inside Windows to spot threats. The sensor couldn't handle the update, and crashed the whole operating system with it.
+- Microsoft estimated about **8.5 million Windows devices** were affected, which it noted was less than one percent of all Windows machines. Less than one percent, and it still grounded flights.
+- The bug was small. What made it global was its **reach**: the update went to everyone running that sensor at roughly the same time.
 
-It wasn't a cyberattack. The security company CrowdStrike had pushed a routine content update to its Falcon sensor, software that runs deep inside Windows to spot threats. The update contained a problem the sensor couldn't handle, and the sensor crashed the whole operating system with it. Microsoft later estimated that about **8.5 million Windows devices** were affected, which it noted was less than one percent of all Windows machines.
+<Callout kind="important">
 
-Less than one percent, and it still grounded flights. The bug itself was small. What made it a global event was how far it could travel: the update went out to everyone running that sensor at roughly the same time. Engineers call that reach the **blast radius**.
+The question is not "will it break?" (it will). It is "**when it breaks, how much breaks with it?**"
 
-<MarginNote label="the question">
-  not "will it break?" (it will). It's "when it breaks, how much breaks with it?"
-</MarginNote>
+</Callout>
 
-This post covers what blast radius means, where the idea comes from (spoiler: ships), the tools teams use to keep it small (bulkheads, circuit breakers, cells, shuffle sharding and staged rollouts) and what AWS, Slack, Facebook, Netflix, CrowdStrike and Razorpay learned about it. There are two demos where you get to break things on purpose.
+## What blast radius means
 
-## What is blast radius?
+The word comes from explosives, and the picture is the same: the bang will happen somewhere; what you decide is how far the damage spreads.
 
-**Blast radius** is how much of your system (users, data, money, time) a single failure can damage. The term comes from explosives, and the picture is the same: the bang is going to happen somewhere, so the question is how far the damage spreads.
-
-<Figure caption="The same bug, five possible outcomes. Good architecture doesn't make the bug disappear; it decides which ring the bug is allowed to reach.">
+<Figure caption="The same bug, five possible fates. Good architecture doesn't make the bug disappear; it decides which ring the bug may reach. Hover or tap a fate to move the wall.">
   <RadiusRingsDiagram />
 </Figure>
 
-A few terms we'll use:
-
-- A **failure domain** is a group of things that fail together because they share something: the same server, the same power supply, the same database, the same config file. Everything in one failure domain sits inside the same blast radius.
-- A **single point of failure** is one component that, if it breaks, takes everything down with it. It's a failure domain the size of your whole system.
-- **Isolation** is anything that draws a wall between failure domains, so a failure on one side can't cross to the other.
-
-The surprising part is that blast radius is mostly not about *preventing* failures. Disks die, deploys go wrong, people fat-finger commands. Blast radius is about deciding, ahead of time, **how much each of those inevitable failures is allowed to hurt**.
+- Blast radius is mostly **not** about preventing failures. Disks die, deploys go wrong, people fat-finger commands.
+- It is about deciding, **ahead of time**, how much each of those failures is allowed to hurt.
+- Each failure domain is one blast radius. A single point of failure is a blast radius the size of your whole system.
 
 <Analogy
   title="The fuse box in your home"
@@ -46,48 +82,87 @@ The surprising part is that blast radius is mostly not about *preventing* failur
 >
   Your toaster shorts out. There's a pop, the kitchen lights go off, and… that's it. The bedroom fan keeps spinning and the fridge in the hallway keeps humming. You walk to the fuse box, see one breaker flipped down, unplug the toaster and flip it back.
 
-  That's only possible because your house's wiring is split into separate circuits, each with its own breaker. If the whole house ran on one circuit, a faulty toaster would plunge every room into darkness. And if the main cable from the street fails, every circuit goes out anyway. Separate circuits don't help against a failure in the one thing they all share.
+  That only works because the wiring is split into separate circuits, each with its own breaker. On one circuit, a faulty toaster would plunge every room into darkness. And if the main cable from the street fails, every circuit goes out anyway: separate circuits don't help against a failure in the one thing they all share.
 </Analogy>
 
 ## Where the idea came from
 
-The oldest version of this idea floats. Ships have long been divided into **watertight compartments** by walls called **bulkheads**. If the hull is punctured, water fills one compartment, the bulkheads hold, and the ship stays afloat. The damage is real, but it's contained.
+The oldest version of this idea floats.
 
-The most famous lesson in what happens when those walls aren't quite enough is the Titanic. According to the British inquiry into the sinking, the ship could have stayed afloat with its four forward compartments flooded. The iceberg opened more than that, including a boiler room further back. And the bulkheads didn't run all the way up to the top deck. As the bow sank lower, water poured over the top of one bulkhead into the next compartment, then the next.
+- Ships are split into **watertight compartments** by walls called bulkheads. Puncture the hull and water fills one compartment, the walls hold, and the ship stays afloat.
+- According to the British inquiry, the **Titanic** could have stayed afloat with its four forward compartments flooded. The iceberg opened more than that, including a boiler room further back.
+- Its bulkheads also didn't reach the top deck. As the bow sank lower, water poured over the top of one bulkhead into the next compartment, then the next.
 
-<Figure caption="Compartments only contain damage if the walls are tall enough. On the Titanic, the bulkheads stopped short of the top deck, so water spilled from one flooded compartment into the next.">
+<Figure caption="A generic ship, not a scale drawing of the Titanic. The bow is holed. With walls that stop below the deck, water spills over each wall top in turn; with walls that reach the deck, the flood stays where it came in. Switch the walls to compare.">
   <ShipDiagram />
 </Figure>
 
-<MarginNote tone="blue">
-  that's the whole post in one picture: isolation that's *almost* complete fails like no isolation at all.
-</MarginNote>
+<Callout kind="insight">
 
-Software borrowed the word. In his 2007 book *Release It!*, Michael Nygard described **bulkheads** for software: split your resources (servers, thread pools, connection pools) into separate groups, so one misbehaving dependency can't drown everything. The same book popularised the **circuit breaker** pattern, named after the switch in your fuse box. Netflix's API team started building these ideas into a Java library called **Hystrix** in 2011 and open-sourced it in 2012, and a generation of engineers learned the vocabulary from it.
+That's the whole post in one picture: **isolation that's almost complete fails like no isolation at all.**
 
-Then the cloud made the stakes bigger. When thousands of companies run on the same platform, a bad change at the platform level has a planet-sized blast radius. Cloud providers split the world into **regions** (separate geographic areas) and **availability zones** (separate data centres within a region, with their own power and networking), so that one fire, flood or power cut stays local. At re:Invent 2018, AWS engineer Peter Vosshall gave a talk on how AWS minimises the blast radius of failures, describing **cell-based architecture** and **shuffle sharding**. We'll build both below.
+</Callout>
+
+Software borrowed the word, then the cloud raised the stakes:
+
+<Flow
+  steps={[
+    { title: "Ships", note: "watertight compartments, split by bulkheads", tone: "blue", icon: <Ship /> },
+    { title: "2007: Release It!", note: "Michael Nygard describes bulkheads and circuit breakers for software", tone: "violet", icon: <BookOpen /> },
+    { title: "2011–2012: Hystrix", note: "Netflix's API team builds them into a Java library, then open-sources it", tone: "pink", icon: <Package /> },
+    { title: "The cloud", note: "regions and zones keep a fire, flood or power cut local", tone: "cyan", icon: <Cloud /> },
+    { title: "2018: re:Invent", note: "AWS's Peter Vosshall on cells and shuffle sharding", tone: "amber", icon: <Layers /> },
+  ]}
+/>
+
+- When thousands of companies run on one platform, a bad change at the platform level has a planet-sized blast radius.
+- So the steps below go from the smallest wall (one dependency) to the biggest (your whole fleet, over time).
 
 ## How to shrink the blast radius
 
 ### Step 1: Find what everything shares
 
-Before adding walls, list your failure domains. Ask, for every component: *if this broke right now, who would notice?* The scary answers are usually things nobody thinks of as "a service":
+Before adding walls, list your failure domains. For every part, ask: *if this broke right now, who would notice?* The scary answers are rarely things anyone calls "a service".
 
-- one database every feature writes to,
-- one config file or feature-flag service everything reads at startup,
-- one deploy pipeline that ships to every server at once,
-- DNS, authentication, the network between your data centres,
-- the monitoring and chat tools you'd use to *fix* the outage.
+<Diagram caption="Three services that look independent, leaning on the same five things. Each shared box is one failure domain that spans all of them. Hover a box to focus it.">
+  <Row>
+    <Node title="Checkout" note="takes payments" tone="blue" icon={<CreditCard />} />
+    <Node title="Search" note="finds products" tone="blue" icon={<Search />} />
+    <Node title="Profiles" note="accounts and settings" tone="blue" icon={<UserRound />} />
+  </Row>
+  <Link label="every one of them quietly needs…" tone="red" />
+  <Group title="Shared by everything" tone="red" cols={3} dashed>
+    <Node title="One database" note="every feature writes to it" tone="red" icon={<Database />} pulse />
+    <Node title="Config and feature flags" note="read by everything at startup" tone="red" icon={<SlidersHorizontal />} />
+    <Node title="Deploy pipeline" note="ships to every server at once" tone="red" icon={<Rocket />} />
+    <Node title="DNS, auth, the network" note="between all your data centres" tone="red" icon={<Network />} />
+    <Node title="Monitoring and chat" note="the tools you'd use to fix the outage" tone="red" icon={<MessageSquare />} />
+  </Group>
+</Diagram>
 
-That last one matters more than it sounds. When Facebook went down in October 2021, its internal tools ran on the same network that had just disappeared (case file #3).
+<Callout kind="warn">
+
+That last box matters more than it sounds. When Facebook went down in October 2021, many of the internal tools engineers would use to investigate were broken by the same outage (case file #3). **Keep your repair tools outside the failure domain they're meant to fix.**
+
+</Callout>
 
 ### Step 2: Bulkheads, so one slow thing can't eat everything
 
-Imagine a web server with 100 worker threads (think of them as 100 waiters). It calls two services: payments and recommendations. One day, recommendations gets slow, taking 30 seconds per request. Every thread that calls it gets stuck waiting. Within a minute, all 100 threads are stuck waiting on recommendations, and *nobody* can pay, even though payments is perfectly healthy.
+- A web server has **100 threads**. It calls two services: payments and recommendations.
+- One day recommendations gets slow: **30 seconds** per request. Every thread that calls it gets stuck waiting.
+- Soon all 100 threads are stuck on recommendations, and **nobody can pay**, even though payments is perfectly healthy.
+- A **bulkhead** gives each dependency its own capped pool. Recommendations can tie up its own threads and no more.
 
-A **bulkhead** fixes this by giving each dependency its own limited pool:
+<DemoFrame
+  title="Drown the thread pool"
+  hint="make it slow, then add bulkheads"
+  caption="Each square is one thread. Calls stream in and hold a thread until they finish. Slow recommendations never finish, so with one shared pool they slowly take every thread. With bulkheads, recommendations gets 10 threads, payments 40, everything else 50."
+>
+  <BulkheadPoolDemo />
+</DemoFrame>
 
 ```ts
+// file: bulkhead.ts
 // Each dependency gets its own small "compartment" of concurrent calls.
 const recommendations = new Bulkhead({ maxConcurrent: 10 });
 const payments = new Bulkhead({ maxConcurrent: 40 });
@@ -99,27 +174,64 @@ async function productPage(userId: string) {
 }
 ```
 
-Now a slow recommendations service can tie up at most 10 threads. The page shows no recommendations, payments keep working, and the flood stays in its compartment.
+- A slow recommendations service can now tie up **at most 10 threads**.
+- The page shows no recommendations; payments keep working. The flood stays in its compartment.
 
 ### Step 3: Circuit breakers, so you stop hammering a dead thing
 
-Bulkheads cap the damage. **Circuit breakers** stop it early. A circuit breaker sits in front of a dependency and watches the results. If too many calls fail, it "trips" and starts failing calls *immediately*, without even trying, for a cool-down period. Then it lets one test call through to see whether things have recovered.
+Bulkheads cap the damage. **Circuit breakers** cut it off early.
 
-<Figure caption="A circuit breaker's three states. Failing fast while a dependency is down protects you (no stuck threads) and protects it (no flood of retries while it's trying to recover).">
+- A breaker sits in front of a dependency and watches the results.
+- **Closed:** calls go through as normal.
+- **Open:** after too many failures it trips, and calls fail fast, without even trying, for a cool-down period.
+- **Half-open:** after the cool-down it lets one test call through. If it works, the breaker closes. If not, it opens again.
+
+<DemoFrame
+  title="Trip the breaker"
+  hint="break the service, then fix it"
+  caption="Green calls go through and come back. Red calls are lost at the broken service. Amber calls are refused at once by the open breaker. Blue is the single test call while half-open."
+>
   <CircuitBreakerDiagram />
-</Figure>
+</DemoFrame>
 
-That's the fuse box again: the breaker trips so the fault doesn't burn the rest of the house, and you reset it once the toaster is unplugged.
+<Callout kind="tip">
+
+Failing fast helps both sides. **You** don't pile up stuck threads, and the **dependency** isn't flooded with retries while it's trying to recover.
+
+</Callout>
 
 ### Step 4: Cells, so a failure only reaches a slice of customers
 
-Bulkheads and breakers protect you from *other* services failing. But what about your own service? A bad deploy, a poison request, a corrupted cache: any of these can take down every copy of your service, because every copy runs the same code with the same config.
+Bulkheads and breakers protect you from *other* services failing. Your own service is the next risk: a bad deploy, a poison request or a corrupted cache can take down every copy of it, because every copy runs the same code with the same config.
 
-**Cell-based architecture** answers this by running several complete, independent copies of your whole stack, called **cells**. Each cell has its own servers, its own database and its own queues, and serves only a slice of your customers. A thin **router** in front sends each customer to their cell.
+- **Cell-based architecture** runs several complete, independent copies of your whole stack, called cells.
+- Each cell has its own servers, its own database and its own queues, and serves only a slice of customers.
+- A thin **router** in front sends each customer to their cell.
+- With 10 cells, one cell failing hurts about **10%** of customers. With 100 cells, about **1%**.
 
-If you have 10 cells, the worst a single cell failure can do is hurt about 10% of customers. With 100 cells, about 1%. You've turned "everyone is down" into "some customers are down", and that is a very different day at work.
+<Diagram caption="Each cell is a full copy of the stack. Cell 2 is down; customers in cells 1 and 3 never notice.">
+  <Node title="Cell router" note="customer → their cell, nothing more" tone="violet" icon={<Route />} />
+  <Link label="each customer always goes to one cell" tone="violet" />
+  <Row>
+    <Group title="Cell 1" tone="green" icon={<Box />}>
+      <Node title="Servers" note="same code as every cell" tone="green" icon={<Server />} />
+      <Node title="Own database" note="this slice's data only" tone="green" icon={<Database />} />
+      <Node title="Own queue" note="this slice's jobs only" tone="green" icon={<Inbox />} />
+    </Group>
+    <Group title="Cell 2 · down" tone="red" icon={<Box />}>
+      <Node title="Servers" note="bad deploy landed here" tone="red" icon={<Server />} pulse />
+      <Node title="Own database" note="this slice's data only" tone="red" icon={<Database />} />
+      <Node title="Own queue" note="this slice's jobs only" tone="red" icon={<Inbox />} />
+    </Group>
+    <Group title="Cell 3" tone="green" icon={<Box />}>
+      <Node title="Servers" note="same code as every cell" tone="green" icon={<Server />} />
+      <Node title="Own database" note="this slice's data only" tone="green" icon={<Database />} />
+      <Node title="Own queue" note="this slice's jobs only" tone="green" icon={<Inbox />} />
+    </Group>
+  </Row>
+</Diagram>
 
-Try it. Start with one cell (that's a plain monolith), drop the failure on it, then add cells and try again. Then flip on the shared database.
+Try it. Start with one cell (a plain monolith), drop the failure on it, then add cells and try again. Then flip on the shared database.
 
 <DemoFrame
   title="Drop a failure"
@@ -129,27 +241,71 @@ Try it. Start with one cell (that's a plain monolith), drop the failure on it, t
   <BlastRadiusDemo />
 </DemoFrame>
 
-That shared-database switch is the Titanic's bulkheads. Cells only work if they **share nothing important**. Every shared component, whether a database, a cache or a config service, is a gap at the top of the wall.
+<Callout kind="important">
+
+That shared-database switch is the Titanic's short bulkheads. Cells only work if they **share nothing important**. Every shared database, cache or config service is a gap at the top of the wall.
+
+</Callout>
+
+<Quiz
+  question="You split your service into 20 cells, but all 20 read their settings from one shared config service. A bad config value goes out. Roughly how many customers are hit?"
+  options={["About 5%: one cell", "All of them: every cell reads the same config", "None: cells are isolated", "About half"]}
+  answer={1}
+>
+
+The config service is shared, so it's one failure domain that spans every cell. The walls exist, but the water goes over the top. Give each cell its own copy, or roll config out one cell at a time.
+
+</Quiz>
 
 ### Step 5: Shuffle sharding, so one bad customer can't sink their neighbours
 
-Cells have a weakness: everyone in a cell shares its fate. If one customer sends a "poison" request that crashes servers, everyone else in that cell suffers.
+Cells have a weakness: everyone in a cell shares its fate. If one customer sends a poison request, everyone else in that cell suffers too.
 
-**Shuffle sharding** is a clever twist. Instead of dividing customers into fixed groups, give each customer their own *random combination* of a few workers. Two customers might share one worker, but it's very unlikely they share all of them. So when a poison customer crashes its workers, everybody else still has at least one healthy worker to fall back on.
+- **Shuffle sharding** doesn't split customers into fixed groups.
+- Instead, each customer gets its own **random combination** of a few workers.
+- Two customers might share one worker, but it is very unlikely they share all of them.
+- So when a poison customer crashes its workers, everybody else still has at least one healthy worker.
 
-<Figure caption="Same 8 workers, same 8 customers, 2 workers each. With fixed shards, X's shard-mate A goes down with it. With shuffle shards, X only ever overlaps others partially, so nobody else loses both workers.">
+<DemoFrame
+  title="Pick the poison customer"
+  hint="try every letter"
+  caption="Same 8 workers, same 8 customers, 2 workers each. With fixed shards, the poison customer's shard-mate goes down with it. With shuffle shards, no two customers share the same pair, so nobody else loses both workers."
+>
   <ShuffleShardDiagram />
-</Figure>
+</DemoFrame>
 
-The maths is what makes it powerful. With 8 workers and 2 per customer, there are 28 possible pairs. Scale that up and it gets silly fast: AWS's Route 53 DNS service arranges its capacity into 2,048 virtual name servers and gives each customer domain a shuffle shard of 4. Choosing 4 out of 2,048 gives roughly 730 billion possible combinations.
+The maths is what makes it powerful:
 
-### Step 6: Shrink the blast radius in *time*
+<Compare
+  label=""
+  columns={[{ title: "Plain sharding", tone: "amber" }, { title: "Shuffle sharding", tone: "green" }]}
+  rows={[
+    ["Who shares workers", "Everyone in a shard shares all the same workers", "Customers overlap partly, almost never fully"],
+    ["One poison customer", "Takes its shard-mates down with it", "Others lose part of their capacity and carry on"],
+    ["8 workers, 2 per customer", "4 fixed shards", "28 possible pairs"],
+    ["AWS Route 53", "–", "2,048 virtual name servers, 4 per customer domain: about 730 billion combinations"],
+  ]}
+/>
 
-Everything so far shrinks blast radius in *space* (which customers a failure reaches). The CrowdStrike outage was about *time*: the bad update reached everyone before anyone could react.
+<Quiz
+  question="With shuffle sharding, customer X's poison requests crash its two workers. Customer A shares one of those workers. What happens to A?"
+  options={["A goes down too", "A keeps working on its other, healthy worker", "A is moved to another cell", "Every customer goes down"]}
+  answer={1}
+>
 
-A **staged rollout** (also called a **canary release**, after the canaries miners carried to detect gas) ships a change to a tiny slice first, maybe 1% of machines, watches health metrics, and only then widens to 10%, 50% and 100%. A **feature flag** goes further: new code ships "off", and you switch it on for a few users at a time, with a kill switch if it misbehaves.
+A only goes down if it shares *both* workers with X. Shuffle sharding makes that rare, and the more workers and combinations you have, the rarer it gets.
+
+</Quiz>
+
+### Step 6: Shrink the blast radius in time
+
+Everything so far shrinks blast radius in **space**: which customers a failure reaches. The CrowdStrike outage was about **time**: the bad update reached everyone before anyone could react.
+
+- A **staged rollout** ships a change to a tiny slice first, maybe 1% of machines, watches health metrics, and only then widens to 10%, 50% and 100%.
+- A **feature flag** goes further: new code ships "off", and you switch it on for a few users at a time, with a kill switch if it misbehaves.
 
 ```ts
+// file: checkout.ts
 if (flags.isEnabled("new-checkout", { userId, rolloutPercent: 5 })) {
   return newCheckout(cart); // 5% of users see this
 }
@@ -164,65 +320,76 @@ return oldCheckout(cart); // flip the flag off and everyone is back here instant
   <StagedRolloutDemo />
 </DemoFrame>
 
+<Callout kind="real-world">
+
+CrowdStrike's own fix after July 2024 was exactly this: a canary first, then wider stages (case file #2). **Content and config changes need the same staged rollout as code.**
+
+</Callout>
+
 ### Step 7: Test your walls on purpose
 
-Walls you've never tested are walls you're hoping work. **Chaos engineering** means deliberately injecting failures (killing servers, cutting network links, slowing dependencies) in a controlled way, to prove your isolation holds before a real incident tests it for you. Netflix made this famous with Chaos Monkey (case file #5).
+- Walls you've never tested are walls you're **hoping** work.
+- **Chaos engineering** means injecting failures on purpose: killing servers, cutting network links, slowing dependencies.
+- Do it in a controlled way, while people are watching, to prove your isolation holds before a real incident tests it for you.
+- Netflix made this famous with Chaos Monkey (case file #5).
 
 ## Other ways to deal with failure
 
-Isolation isn't the only strategy. Here are the main alternatives, each with its own picture.
+Isolation isn't the only strategy. Each alternative has its own everyday picture:
 
-### Make it never fail
+<Callout kind="real-world" title="Four everyday pictures">
 
-<Analogy title="The unsinkable hull">
-  Instead of compartments, build one hull so thick nothing could ever pierce it. Spend everything on making failure impossible.
-</Analogy>
+- **The unsinkable hull.** Instead of compartments, build one hull so thick nothing could ever pierce it.
+- **A spare tyre in the boot.** If one tyre goes flat, swap it and keep driving.
+- **Two branches of the same restaurant.** Identical kitchens in two cities. If one floods, the other keeps serving; some customers just drive a bit further.
+- **Nobody touch anything during the wedding.** On the big day nobody rewires the hall or tests the fire alarm. Change is risk, so you stop changing things.
 
-Buy better hardware, add redundant power, test more, review more. All good things, and you should do them. But they shrink the *chance* of failure, not the *damage* when it happens.
+</Callout>
 
-### Keep spare copies of everything
+<Compare
+  label="Strategy"
+  columns={[{ title: "What it is", tone: "blue" }, { title: "Good against", tone: "green" }, { title: "Blind spot", tone: "red" }]}
+  rows={[
+    ["Make it never fail (the hull)", "Better hardware, redundant power, more testing and review", "Lowers the chance of failure", "Doesn't shrink the damage. A bad config, a bad deploy or a leap-day bug hits every machine at once."],
+    ["Redundancy (the spare tyre)", "Extra copies: two servers, a standby database", "A dead disk, a dead server", "The spare runs the same code and config. A poison request kills it as soon as it's retried there."],
+    ["Active-active multi-region (two branches)", "The full system in two or more regions at once, traffic split between them", "A whole region going bad: move its users to the others", "Coarse: one wall per region, not per slice of customers"],
+    ["Change freeze (the wedding)", "No deploys in risky periods such as big sales and holidays", "A quiet, risky few days", "Changes queue up and ship later in one bigger, riskier batch. A short-term tool, not an architecture."],
+    ["Isolation (bulkheads, cells, shards)", "Walls that cap how far one failure spreads", "Bad deploys, poison requests, a slow dependency", "More to run and pay for, a router that must stay boring, and pain for features that see all customers (global search, analytics, moving a customer between cells)"],
+  ]}
+/>
 
-<Analogy title="A spare tyre in the boot">
-  Carry a spare. If one tyre goes flat, swap it and keep driving.
-</Analogy>
+<Quiz
+  question="Your app runs on two identical servers behind a load balancer. A poison request crashes server 1, and the client retries. What happens?"
+  options={["Server 2 handles it fine", "Server 2 crashes too: same code, same bug", "The load balancer blocks the request", "Server 1 restarts in time to handle it"]}
+  answer={1}
+>
 
-**Redundancy** means running extra copies (two servers instead of one, a standby database) so that when one dies, another takes over.
+Redundancy handles accidents, like a dead disk. It does nothing against a failure that hits every copy the same way. In the cells demo, this is why more replicas wouldn't help: the shared database would still take everyone down.
 
-### Run complete copies in different regions
+</Quiz>
 
-<Analogy title="Two branches of the same restaurant">
-  A restaurant chain runs identical kitchens in two cities. If one kitchen floods, the other keeps serving, and some customers just drive a bit further.
-</Analogy>
+<Callout kind="insight">
 
-**Active-active multi-region** means running your full system in two or more geographic regions at once, with traffic split between them, so a whole region can fail and the others absorb its users.
+**Redundancy** is protection from accidents. **Isolation** is protection from yourself: the bad deploy you'll ship next month.
 
-### Freeze changes and be very careful
+</Callout>
 
-<Analogy title="Nobody touch anything during the wedding">
-  On the big day, nobody rewires the hall, moves the furniture or tests the fire alarm. Change is risk, so you stop changing things.
-</Analogy>
+### When the simpler option wins
 
-**Change freezes** stop deploys during high-risk periods (big sales, holidays), on the theory that most outages are caused by changes.
+- For a small product with a few thousand users, a well-run single system with good backups, staged deploys and circuit breakers is usually the right call.
+- Cells pay off at scale, when "everyone is down" costs real money every minute.
 
-## Why isolation usually wins (and when it doesn't)
+<Callout kind="real-world" title="Netflix chose the coarser wall">
 
-**"Never fail" protects you from random failures, not correlated ones.** Better hardware won't save you from a bad config, a bad deploy, or a bug triggered by a leap day, because those hit every machine at once. Most large outages are the correlated kind.
+Instead of slicing its service into many cells, Netflix invested in **active-active multi-region**: running in multiple AWS regions, so if one region has trouble, traffic can be evacuated to the others. Its 2013 engineering post describes the project. For a streaming service where any region can serve any member, "move everyone to a healthy region" is simpler than managing hundreds of cells, and it handles the scariest failure (a whole region going bad) directly.
 
-**Redundancy has the same blind spot.** Your spare server runs the same code with the same config as the one that just crashed. If a poison request kills one, it'll kill the spare the moment the request is retried there. Redundancy handles a dead disk beautifully and a bad deploy terribly. (In the demo above, this is why more replicas wouldn't help: the shared database would still take everyone down.)
+</Callout>
 
-**Change freezes slow you down and pile up risk.** Changes don't stop being written; they queue up and ship together afterwards in a much bigger, riskier batch. They're a useful short-term tool, not an architecture.
-
-<MarginNote>
-  redundancy = protection from *accidents*. isolation = protection from *yourself*.
-</MarginNote>
-
-**Isolation isn't free either.** Cells mean more infrastructure to run and pay for, a router that must stay boring and reliable, and real headaches for any feature that needs to see *all* customers at once, like global search, analytics or moving a customer from one cell to another. For a small product with a few thousand users, a well-run single system with good backups, staged deploys and circuit breakers is usually the right call. Cells pay off at scale, when "everyone is down" costs real money every minute.
-
-### When the "alternative" is the better choice
-
-Netflix is a good example of choosing a coarser tool deliberately. Instead of slicing its service into many cells, it invested in **active-active multi-region**: running its service in multiple AWS regions so that if one region has trouble, traffic can be evacuated to the others. Its 2013 engineering post describes the project, and its later posts on regional failover build on it. For a streaming service where any region can serve any member, "move everyone to a healthy region" is simpler than managing hundreds of cells, and it handles the scariest failure (a whole region going bad) directly.
+<Callout kind="important">
 
 The lesson isn't "always use cells". It's: **know your failure domains, and choose walls that match the failures you're most afraid of.**
+
+</Callout>
 
 ## In the wild: case files
 
@@ -304,17 +471,10 @@ The lesson isn't "always use cells". It's: **know your failure domains, and choo
   sourceHref="https://razorpay.com/blog/enabling-merchant-success-razorpays-proactive-approach-to-downtime-management"
 />
 
-## TL;DR
+## Learn next and sources
 
-<TLDR>
-  <Takeaway>Failures are guaranteed. Blast radius is how much each one is allowed to hurt.</Takeaway>
-  <Takeaway>Bulkheads cap the damage, circuit breakers cut it off early, and cells limit it to a slice of customers.</Takeaway>
-  <Takeaway>Isolation that's *almost* complete (a shared DB, a shared config) fails like none at all.</Takeaway>
-  <Takeaway>Shrink blast radius in time too: canaries, staged rollouts, feature flags, kill switches.</Takeaway>
-  <Takeaway>Redundancy handles accidents. Isolation handles the bad deploy you'll ship next month.</Takeaway>
-</TLDR>
-
-## Sources
+- Next ideas: timeouts and retries with backoff, load shedding, rate limiting per customer, and how a cell router decides which customer lives where.
+- The best long reads: Michael Nygard's *Release It!* for bulkheads and circuit breakers, and the Amazon Builders' Library article on shuffle sharding (both below).
 
 1. Microsoft's estimate of affected devices, reported by [TechCrunch](https://techcrunch.com/2024/07/20/microsoft-says-8-5m-windows-devices-were-affected-by-crowdstrike-outage/), July 2024.
 2. CrowdStrike, ["Falcon Content Update Preliminary Post Incident Report"](https://www.crowdstrike.com/en-us/blog/falcon-content-update-preliminary-post-incident-report/), July 2024, and ["Root Cause Analysis" executive summary](https://crowdstrike.com/wp-content/uploads/2024/08/Executive-Summary_Root-Cause-Analysis_Channel-File-291.pdf), August 2024.

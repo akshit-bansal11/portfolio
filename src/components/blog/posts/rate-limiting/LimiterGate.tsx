@@ -63,7 +63,7 @@ function Box({
         {icon}
       </span>
       <span className="min-w-0">
-        <span className="block text-sm leading-tight font-semibold text-ink sm:text-base">
+        <span className="block text-[0.8rem] leading-tight font-semibold whitespace-nowrap text-ink sm:text-base">
           {title}
         </span>
         <span className="block font-mono text-[0.7rem] leading-snug text-ink-muted sm:text-xs">
@@ -91,7 +91,7 @@ export default function LimiterGate() {
       </p>
       <p
         data-tone="green"
-        className="absolute top-[18%] left-[62%] font-mono text-xs font-semibold text-(--tone)"
+        className="absolute top-[18%] right-0 w-[27%] text-center font-mono text-xs font-semibold text-(--tone)"
       >
         200 OK
       </p>
@@ -147,13 +147,13 @@ export default function LimiterGate() {
           tone="violet"
           icon={<ShieldCheck />}
           title="Rate limiter"
-          note="2 per second"
+          note="2 / second"
           className={styles.gate}
         />
       </div>
 
-      <div className="absolute right-0 z-10 w-[30%] -translate-y-1/2" style={{ top: LANE }}>
-        <Box tone="green" icon={<ServerCog />} title="Your server" note="stays healthy" />
+      <div className="absolute right-0 z-10 w-[27%] -translate-y-1/2" style={{ top: LANE }}>
+        <Box tone="green" icon={<ServerCog />} title="Server" note="stays healthy" />
       </div>
 
       <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center">

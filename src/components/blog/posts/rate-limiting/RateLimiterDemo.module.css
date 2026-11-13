@@ -1,0 +1,31 @@
+/*
+ * RateLimiterDemo.module.css
+ * Small motion for the simulator: marks pop from their own centre, and a panel nudges
+ * sideways when it answers 429. Screen only, and only when motion is welcome.
+ */
+
+.mark {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@media screen and (prefers-reduced-motion: no-preference) {
+  .nudge {
+    animation: nudge 0.35s ease-in-out;
+  }
+}
+
+@keyframes nudge {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  30% {
+    translate: -3px 0;
+  }
+
+  65% {
+    translate: 3px 0;
+  }
+}

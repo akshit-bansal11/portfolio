@@ -161,7 +161,7 @@ function placeVars(at: Place): CSSProperties {
 }
 
 const PLACED =
-  "absolute top-(--my) left-(--mx) h-14 w-[44%] -translate-x-1/2 -translate-y-1/2 sm:top-(--y) sm:left-(--x) sm:w-[17%]";
+  "absolute top-(--my) left-(--mx) h-16 w-[44%] sm:h-14 -translate-x-1/2 -translate-y-1/2 sm:top-(--y) sm:left-(--x) sm:w-[17%]";
 
 // The fixed tracks between states, for one map layout.
 function Tracks({ wide, from, to, n }: { wide: boolean; from?: State; to?: State; n: number }) {
@@ -261,7 +261,7 @@ export default function ContainerLifecycle() {
                 />
                 {s.label}
               </span>
-              <span className="truncate text-[0.72rem] text-ink-muted">
+              <span className="line-clamp-2 text-[0.72rem] text-ink-muted sm:truncate">
                 {noteFor(s.id, s.note)}
               </span>
             </div>
@@ -320,9 +320,9 @@ export default function ContainerLifecycle() {
               data-tone={BY_ID[c.to].tone}
               onClick={() => run(c)}
               onMouseEnter={() => setPreview(c)}
-              onMouseLeave={() => setPreview(null)}
+              onMouseLeave={() => setPreview((p) => (p === c ? null : p))}
               onFocus={() => setPreview(c)}
-              onBlur={() => setPreview(null)}
+              onBlur={() => setPreview((p) => (p === c ? null : p))}
               className={cn(BUTTON, "font-mono", ok && "border-(--tone-line)")}
             >
               {c.cmd}
@@ -362,8 +362,8 @@ export default function ContainerLifecycle() {
           </div>
         ) : (
           <p className="text-ink-muted">
-            You have an image. Press a command that is allowed right now; hover one to see where
-            it leads.
+            You have an image. Press a command that is allowed right now; hover one to see where it
+            leads.
           </p>
         )}
       </div>

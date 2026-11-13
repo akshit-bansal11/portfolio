@@ -239,18 +239,10 @@ export default function NetworkShapes() {
             <Cable key={`c${g.x}`} a={CORE} b={g} />
           ))}
           {ACCESS.map((acc, i) => (
-            <Cable
-              key={`a${acc.x}`}
-              a={AGG[Math.floor(i / 2)]}
-              b={acc}
-            />
+            <Cable key={`a${acc.x}`} a={AGG[Math.floor(i / 2)]} b={acc} />
           ))}
           {SERVERS.map((s, i) => (
-            <Cable
-              key={`s${s.x}`}
-              a={ACCESS[Math.floor(i / 2)]}
-              b={s}
-            />
+            <Cable key={`s${s.x}`} a={ACCESS[Math.floor(i / 2)]} b={s} />
           ))}
           <HotPath key={`t${to}`} points={tree.points} />
           {usesCore && (
@@ -285,20 +277,12 @@ export default function NetworkShapes() {
           {LEAVES.map((l) => (
             <Fragment key={`l${l.x}`}>
               {SPINES.map((sp) => (
-                <Cable
-                  key={`${l.x}-${sp.x}`}
-                  a={l}
-                  b={sp}
-                />
+                <Cable key={`${l.x}-${sp.x}`} a={l} b={sp} />
               ))}
             </Fragment>
           ))}
           {SERVERS.map((s, i) => (
-            <Cable
-              key={`s${s.x}`}
-              a={LEAVES[Math.floor(i / 2)]}
-              b={s}
-            />
+            <Cable key={`s${s.x}`} a={LEAVES[Math.floor(i / 2)]} b={s} />
           ))}
           {leaf.map((path, k) => (
             <HotPath key={`l${to}-${path[2].x}`} points={path} offset={k * 0.6} />

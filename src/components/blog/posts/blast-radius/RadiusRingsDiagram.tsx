@@ -25,11 +25,11 @@ interface Ring {
 }
 
 const RINGS: Ring[] = [
-  { label: "one request", note: "a retry fixes it", rx: 42, ry: 24, tone: "green" },
-  { label: "one server", note: "the load balancer routes around it", rx: 78, ry: 46, tone: "cyan" },
-  { label: "one cell", note: "a slice of customers notice", rx: 114, ry: 68, tone: "amber" },
-  { label: "one region", note: "a country notices", rx: 150, ry: 90, tone: "pink" },
-  { label: "everyone", note: "it's on the news", rx: 186, ry: 112, tone: "red" },
+  { label: "one request", note: "a retry fixes it", rx: 52, ry: 32, tone: "green" },
+  { label: "one server", note: "the load balancer routes around it", rx: 86, ry: 52, tone: "cyan" },
+  { label: "one cell", note: "a slice of customers notice", rx: 120, ry: 72, tone: "amber" },
+  { label: "one region", note: "a country notices", rx: 154, ry: 92, tone: "pink" },
+  { label: "everyone", note: "it's on the news", rx: 188, ry: 112, tone: "red" },
 ];
 
 const CX = 200;
@@ -118,7 +118,7 @@ export default function RadiusRingsDiagram() {
               y={CY - ring.ry + 15}
               textAnchor="middle"
               className={cn(
-                "text-[12.5px] font-semibold",
+                "text-[14px] font-semibold",
                 styles.ease,
                 inside ? "fill-(--tone)" : "fill-ink-muted",
               )}
@@ -130,9 +130,16 @@ export default function RadiusRingsDiagram() {
         })}
 
         <g data-tone="red">
-          {!reduced && <circle cx={CX} cy={CY + 4} r={6} className={cn("fill-(--tone)", styles.bugPulse)} />}
-          <circle cx={CX} cy={CY + 4} r={6} className="fill-(--tone)" />
-          <text x={CX} y={CY + 24} textAnchor="middle" className="fill-ink font-mono text-[11px] font-semibold">
+          {!reduced && (
+            <circle cx={CX} cy={CY + 6} r={6} className={cn("fill-(--tone)", styles.bugPulse)} />
+          )}
+          <circle cx={CX} cy={CY + 6} r={6} className="fill-(--tone)" />
+          <text
+            x={CX}
+            y={CY + 26}
+            textAnchor="middle"
+            className="fill-ink font-mono text-[12px] font-semibold"
+          >
             bug
           </text>
         </g>
@@ -184,7 +191,9 @@ export default function RadiusRingsDiagram() {
           })}
         </ul>
         <p aria-live="polite" className="mt-3 text-sm text-ink-muted">
-          {auto ? "Playing through all five. Pick one to stop." : `Wall at ${wall.label}: ${wall.note}.`}
+          {auto
+            ? "Playing through all five. Pick one to stop."
+            : `Wall at ${wall.label}: ${wall.note}.`}
         </p>
       </div>
     </div>

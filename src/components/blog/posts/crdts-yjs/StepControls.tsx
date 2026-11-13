@@ -39,7 +39,10 @@ export default function StepControls({
         <span className="mt-0.5 shrink-0 rounded-md bg-(--tone-soft) px-2 py-0.5 font-mono text-xs font-semibold text-(--tone)">
           {step + 1}/{last + 1}
         </span>
-        <p aria-live={playing ? "off" : "polite"} className="min-h-12 text-[0.95rem] leading-snug text-ink">
+        <p
+          aria-live={playing ? "off" : "polite"}
+          className="min-h-12 text-[0.95rem] leading-snug text-ink"
+        >
           {note}
         </p>
       </div>
@@ -58,7 +61,12 @@ export default function StepControls({
             {playing ? "Pause" : "Play"}
           </button>
         )}
-        <button type="button" onClick={() => go(step + 1)} disabled={step === last} className={BUTTON}>
+        <button
+          type="button"
+          onClick={() => go(step + 1)}
+          disabled={step === last}
+          className={BUTTON}
+        >
           Next <ChevronRight className="h-4 w-4" aria-hidden />
         </button>
         <span className="ml-auto flex items-center gap-1.5" aria-hidden>

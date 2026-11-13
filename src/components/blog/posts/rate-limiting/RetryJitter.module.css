@@ -1,0 +1,49 @@
+/*
+ * RetryJitter.module.css
+ * A playhead sweeps the retry timeline; each retry flashes as the playhead reaches it.
+ * The sweep and the flashes share one period, so they stay in step. Without motion the
+ * dots simply sit at their times.
+ */
+
+.head {
+  display: none;
+}
+
+@media screen and (prefers-reduced-motion: no-preference) {
+  .head {
+    display: block;
+    animation: sweep var(--period) linear infinite;
+  }
+
+  .hit {
+    animation: hit var(--period) ease-out var(--delay) infinite;
+  }
+
+  .scene:hover .head,
+  .scene:hover .hit {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes sweep {
+  from {
+    left: 0%;
+  }
+
+  to {
+    left: 100%;
+  }
+}
+
+@keyframes hit {
+  0% {
+    scale: 1.7;
+    box-shadow: 0 0 0 5px var(--tone-soft);
+  }
+
+  12%,
+  100% {
+    scale: 1;
+    box-shadow: 0 0 0 0 transparent;
+  }
+}

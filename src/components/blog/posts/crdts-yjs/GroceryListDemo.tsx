@@ -8,16 +8,20 @@
  *  - Naive last-write-wins: each phone keeps a snapshot plus a
  *    timestamp; on reconnect the newer snapshot replaces the
  *    older one wholesale.
- * Take both phones offline, edit both, reconnect, and compare.
+ * Take both phones offline, edit both, reconnect, and compare. Styled with the tutorial
+ * tones: a live link between the phones carries packets while both are online, each
+ * reconnect flashes both phones, and new items pop in.
  */
 
 "use client";
 
-import { Check, Trash2, Wifi, WifiOff } from "lucide-react";
+import { Check, RotateCcw, Trash2, Wifi, WifiOff } from "lucide-react";
 import { type FormEvent, useEffect, useId, useRef, useState } from "react";
 import * as Y from "yjs";
-import { DemoButton, DemoToggle } from "@/components/blog/DemoControls";
+import { DemoToggle } from "@/components/blog/DemoControls";
 import { cn } from "@/lib/utils";
+import styles from "./motion.module.css";
+import Pipe from "./Pipe";
 
 type PhoneId = "a" | "b";
 
@@ -101,6 +105,7 @@ export default function GroceryListDemo() {
   const [lww, setLww] = useState(freshLww);
   const [pending, setPending] = useState<Record<PhoneId, number>>({ a: 0, b: 0 });
   const [drafts, setDrafts] = useState<Record<PhoneId, string>>({ a: "", b: "" });
+  const [syncs, setSyncs] = useState(0);
   const clockRef = useRef(1);
   const idRef = useRef(0);
   const inputPrefix = useId();
@@ -183,6 +188,7 @@ export default function GroceryListDemo() {
         return { a: winner, b: winner };
       });
       setPending({ a: 0, b: 0 });
+      setSyncs((count) => count + 1);
     }
   };
 
@@ -192,6 +198,7 @@ export default function GroceryListDemo() {
     setOnline({ a: true, b: true });
     setPending({ a: 0, b: 0 });
     setDrafts({ a: "", b: "" });
+    setSyncs(0);
   };
 
   const yItems = { a: readItems(docs.a), b: readItems(docs.b) };
@@ -231,146 +238,176 @@ export default function GroceryListDemo() {
     note = "In sync. Both engines agree… for now.";
   }
 
-  return (
-    <div className="space-y-4">
-      <div className="grid gap-4 sm:grid-cols-2">
-        {(["a", "b"] as const).map((phone) => (
-          <section
-            key={phone}
-            aria-label={PHONES[phone].name}
-            className={cn(
-              "rounded-[1.4rem] border-2 border-ink bg-paper p-3 transition-opacity",
-              !online[phone] && "border-dashed",
-            )}
+  const hurt = lost.length + zombies.length > 0;
+
+  const phoneCard = (phone: PhoneId) => (
+    <section
+      key={phone}
+      data-tone={phone === "a" ? "violet" : "blue"}
+      aria-label={PHONES[phone].name}
+      className={cn(
+        "relative min-w-0 flex-1 rounded-2xl border bg-paper p-3 transition-[border-color,opacity] duration-300",
+        online[phone] ? "border-(--tone-line)" : "border-dashed border-ink-muted/60",
+      )}
+    >
+      {syncs > 0 && (
+        <span
+          key={syncs}
+          aria-hidden
+          className={cn("pointer-events-none absolute inset-0 rounded-2xl", styles.flash)}
+        />
+      )}
+      <div className="relative flex items-center justify-between gap-2">
+        <h4 className="font-semibold text-(--tone)">{PHONES[phone].name}</h4>
+        <span
+          data-tone={online[phone] ? "green" : "amber"}
+          className="inline-flex items-center gap-1 rounded-full bg-(--tone-soft) px-2 py-0.5 text-xs font-semibold text-(--tone)"
+        >
+          {online[phone] ? (
+            <Wifi className="h-3 w-3" aria-hidden />
+          ) : (
+            <WifiOff className="h-3 w-3" aria-hidden />
+          )}
+          {online[phone] ? "online" : "offline"}
+        </span>
+      </div>
+      <div className="relative flex flex-wrap items-center justify-between gap-x-3">
+        <DemoToggle
+          label="Connected"
+          checked={online[phone]}
+          onChange={(value) => setPhoneOnline(phone, value)}
+        />
+        {pending[phone] > 0 && (
+          <span
+            data-tone="amber"
+            className="tut-pop inline-flex items-center gap-1.5 rounded-full bg-(--tone-soft) px-2.5 py-0.5 text-xs font-semibold text-(--tone)"
           >
-            <div className="flex items-center justify-between gap-2">
-              <h4 className="font-bold text-ink">{PHONES[phone].name}</h4>
-              <span
-                className={cn(
-                  "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold",
-                  online[phone] ? "bg-ok/20 text-ink" : "bg-danger/15 text-ink",
-                )}
-              >
-                {online[phone] ? (
-                  <Wifi className="h-3 w-3" aria-hidden />
-                ) : (
-                  <WifiOff className="h-3 w-3" aria-hidden />
-                )}
-                {online[phone] ? "online" : "offline"}
-              </span>
-            </div>
-            <DemoToggle
-              label="Connected"
-              checked={online[phone]}
-              onChange={(value) => setPhoneOnline(phone, value)}
-            />
-            {pending[phone] > 0 && (
-              <p className="font-hand text-lg text-warn">
-                {pending[phone]} change{pending[phone] === 1 ? "" : "s"} waiting to sync
-              </p>
-            )}
-
-            <form onSubmit={(event) => addItem(phone, event)} className="mt-2 flex gap-2">
-              <label htmlFor={`${inputPrefix}-${phone}`} className="sr-only">
-                Add an item on {PHONES[phone].name}
-              </label>
-              <input
-                id={`${inputPrefix}-${phone}`}
-                value={drafts[phone]}
-                onChange={(event) =>
-                  setDrafts((previous) => ({ ...previous, [phone]: event.target.value }))
-                }
-                placeholder="add an item…"
-                maxLength={24}
-                className="min-h-11 min-w-0 flex-1 rounded-xl border-2 border-ink bg-paper-raised px-3 text-sm text-ink placeholder:text-ink-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pen"
-              />
-              <DemoButton type="submit" variant="solid">
-                Add
-              </DemoButton>
-            </form>
-
-            <p className="mt-3 text-xs font-semibold tracking-[0.12em] text-ink-muted uppercase">
-              With Yjs (CRDT)
-            </p>
-            <ul className="mt-1 space-y-1">
-              {yItems[phone].map((item) => (
-                <li
-                  key={item.id}
-                  className="flex items-center gap-2 rounded-lg bg-paper-raised px-2"
-                >
-                  <button
-                    type="button"
-                    role="checkbox"
-                    aria-checked={item.done}
-                    onClick={() => toggleItem(phone, item.id)}
-                    className="flex min-h-10 flex-1 items-center gap-2 text-left text-sm text-ink focus-visible:outline-2 focus-visible:outline-pen"
-                  >
-                    <span
-                      aria-hidden
-                      className={cn(
-                        "inline-flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 border-ink",
-                        item.done && "bg-ok",
-                      )}
-                    >
-                      {item.done && <Check className="h-3.5 w-3.5 text-paper" />}
-                    </span>
-                    <span className={cn(item.done && "text-ink-muted line-through")}>
-                      {item.text}
-                    </span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => removeItem(phone, item.id)}
-                    aria-label={`Remove ${item.text}`}
-                    className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-ink-muted hover:text-danger focus-visible:outline-2 focus-visible:outline-pen"
-                  >
-                    <Trash2 className="h-4 w-4" aria-hidden />
-                  </button>
-                </li>
-              ))}
-              {yItems[phone].length === 0 && <li className="text-sm text-ink-muted">empty list</li>}
-            </ul>
-            <p className="mt-1 text-xs text-ink-muted">Yjs document: {docBytes[phone]} bytes</p>
-
-            <p className="mt-3 text-xs font-semibold tracking-[0.12em] text-ink-muted uppercase">
-              With last-write-wins
-            </p>
-            <ul
-              aria-label={`Last-write-wins list on ${PHONES[phone].name}`}
-              className="mt-1 flex flex-wrap gap-1.5"
-            >
-              {lww[phone].items.map((item) => (
-                <li
-                  key={item.id}
-                  className={cn(
-                    "rounded-full border border-rule px-2.5 py-0.5 text-sm text-ink",
-                    item.done && "text-ink-muted line-through",
-                  )}
-                >
-                  {item.text}
-                </li>
-              ))}
-              {lww[phone].items.length === 0 && (
-                <li className="text-sm text-ink-muted">empty list</li>
-              )}
-            </ul>
-          </section>
-        ))}
+            <span aria-hidden className="tut-ping h-1.5 w-1.5 rounded-full bg-(--tone)" />
+            {pending[phone]} change{pending[phone] === 1 ? "" : "s"} waiting
+          </span>
+        )}
       </div>
 
-      <div className="flex flex-col gap-3 rounded-xl border-2 border-dashed border-rule px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-        <p
-          aria-live="polite"
-          className={cn(
-            "font-hand text-[1.4rem] leading-snug",
-            lost.length + zombies.length > 0 ? "text-danger" : "text-pen",
-          )}
+      <form onSubmit={(event) => addItem(phone, event)} className="relative mt-2 flex gap-2">
+        <label htmlFor={`${inputPrefix}-${phone}`} className="sr-only">
+          Add an item on {PHONES[phone].name}
+        </label>
+        <input
+          id={`${inputPrefix}-${phone}`}
+          value={drafts[phone]}
+          onChange={(event) =>
+            setDrafts((previous) => ({ ...previous, [phone]: event.target.value }))
+          }
+          placeholder="add an item…"
+          maxLength={24}
+          className="min-h-11 min-w-0 flex-1 rounded-xl border border-rule bg-paper-raised px-3 text-sm text-ink transition-colors placeholder:text-ink-muted focus-visible:border-(--tone) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--tone)"
+        />
+        <button
+          type="submit"
+          className="inline-flex min-h-11 items-center rounded-xl border border-(--tone-line) bg-(--tone-soft) px-4 text-sm font-semibold text-(--tone) transition-[translate,border-color] hover:border-(--tone) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--tone) active:translate-y-px"
         >
+          Add
+        </button>
+      </form>
+
+      <p className="relative mt-3 text-xs font-semibold tracking-[0.12em] text-ink-muted uppercase">
+        With Yjs (CRDT)
+      </p>
+      <ul className="relative mt-1 space-y-1">
+        {yItems[phone].map((item) => (
+          <li
+            key={item.id}
+            className="tut-pop flex items-center gap-2 rounded-lg border border-rule bg-paper-raised px-2 transition-colors hover:border-(--tone-line)"
+          >
+            <button
+              type="button"
+              role="checkbox"
+              aria-checked={item.done}
+              onClick={() => toggleItem(phone, item.id)}
+              className="flex min-h-10 flex-1 items-center gap-2 text-left text-sm text-ink focus-visible:outline-2 focus-visible:outline-(--tone)"
+            >
+              <span
+                aria-hidden
+                data-tone="green"
+                className={cn(
+                  "inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-(--tone-line) transition-colors",
+                  item.done && "bg-(--tone)",
+                )}
+              >
+                {item.done && <Check className="tut-pop h-3.5 w-3.5 text-paper" />}
+              </span>
+              <span className={cn("transition-colors", item.done && "text-ink-muted line-through")}>
+                {item.text}
+              </span>
+            </button>
+            <button
+              type="button"
+              data-tone="red"
+              onClick={() => removeItem(phone, item.id)}
+              aria-label={`Remove ${item.text}`}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-ink-muted transition-colors hover:bg-(--tone-soft) hover:text-(--tone) focus-visible:outline-2 focus-visible:outline-(--tone)"
+            >
+              <Trash2 className="h-4 w-4" aria-hidden />
+            </button>
+          </li>
+        ))}
+        {yItems[phone].length === 0 && <li className="text-sm text-ink-muted">empty list</li>}
+      </ul>
+      <p className="relative mt-1 font-mono text-xs text-ink-muted">
+        Yjs document: {docBytes[phone]} bytes
+      </p>
+
+      <p className="relative mt-3 text-xs font-semibold tracking-[0.12em] text-ink-muted uppercase">
+        With last-write-wins
+      </p>
+      <ul
+        aria-label={`Last-write-wins list on ${PHONES[phone].name}`}
+        className="relative mt-1 flex flex-wrap gap-1.5"
+      >
+        {lww[phone].items.map((item) => (
+          <li
+            key={item.id}
+            className={cn(
+              "tut-pop rounded-full border border-rule px-2.5 py-0.5 text-sm text-ink",
+              item.done && "text-ink-muted line-through",
+            )}
+          >
+            {item.text}
+          </li>
+        ))}
+        {lww[phone].items.length === 0 && <li className="text-sm text-ink-muted">empty list</li>}
+      </ul>
+    </section>
+  );
+
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-col items-stretch md:flex-row md:items-start">
+        {phoneCard("a")}
+        <div className="md:self-center">
+          <Pipe
+            active={bothOnline}
+            tone={bothOnline ? "green" : "amber"}
+            label={bothOnline ? "live updates" : "no link"}
+          />
+        </div>
+        {phoneCard("b")}
+      </div>
+
+      <div
+        data-tone={hurt ? "red" : "green"}
+        className="flex flex-col gap-3 rounded-xl border border-(--tone-line) bg-(image:--tone-fill) px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+      >
+        <p aria-live="polite" className="leading-snug font-medium text-ink">
           {note}
         </p>
-        <DemoButton onClick={reset} className="shrink-0">
-          Reset
-        </DemoButton>
+        <button
+          type="button"
+          onClick={reset}
+          className="inline-flex min-h-10 shrink-0 items-center gap-1.5 self-start rounded-lg border border-rule bg-paper px-3 text-sm font-medium text-ink transition-[translate,border-color] hover:border-(--tone-line) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--tone) active:translate-y-px sm:self-auto"
+        >
+          <RotateCcw className="h-4 w-4" aria-hidden /> Reset
+        </button>
       </div>
     </div>
   );

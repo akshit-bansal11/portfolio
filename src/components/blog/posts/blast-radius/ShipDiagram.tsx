@@ -37,7 +37,7 @@ const SEA = (() => {
 })();
 
 const OPTIONS = [
-  { value: "short" as const, label: "Stop below the deck" },
+  { value: "short" as const, label: "Stop short" },
   { value: "full" as const, label: "Reach the deck" },
 ];
 
@@ -100,7 +100,7 @@ export default function ShipDiagram() {
         viewBox="0 0 400 200"
         role="img"
         aria-label={`Side view of a ship split into ${COMPARTMENTS} compartments by walls called bulkheads. The bow is holed. ${status}`}
-        className="w-full overflow-visible"
+        className="mx-auto block w-full max-w-2xl"
       >
         <defs>
           <clipPath id="br-ship-hull">
@@ -173,10 +173,15 @@ export default function ShipDiagram() {
             ))}
           </g>
 
-          <text x={30} y={52} className="fill-ink-muted text-[13px] font-semibold">
+          <text x={30} y={52} className="fill-ink-muted text-[15px] font-semibold">
             stern
           </text>
-          <text x={370} y={52} textAnchor="end" className="fill-ink-muted text-[13px] font-semibold">
+          <text
+            x={370}
+            y={52}
+            textAnchor="end"
+            className="fill-ink-muted text-[15px] font-semibold"
+          >
             bow
           </text>
         </g>
@@ -187,13 +192,15 @@ export default function ShipDiagram() {
         </g>
 
         <g data-tone="red">
-          <text x={330} y={186} textAnchor="middle" className="fill-(--tone) text-[13px] font-semibold">
+          <text
+            x={330}
+            y={186}
+            textAnchor="middle"
+            className="fill-(--tone) text-[15px] font-semibold"
+          >
             holed here
           </text>
         </g>
-        <text x={16} y={186} className="fill-ink-muted text-[13px]">
-          {walls === "short" ? "walls stop below the deck" : "walls reach the deck"}
-        </text>
       </svg>
 
       <p

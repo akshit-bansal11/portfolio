@@ -66,6 +66,13 @@ function Track({ label, tone, stuck }: { label: string; tone: Tone; stuck?: bool
             style={{ "--dur": "1.6s" } as CSSProperties}
           />
         )}
+        <svg
+          aria-hidden
+          viewBox="0 0 12 8"
+          className="absolute -bottom-1.5 left-1/2 h-2 w-3 -translate-x-1/2 fill-(--tone)"
+        >
+          <path d="M0 0 L12 0 L6 8 Z" />
+        </svg>
       </div>
       <p className="min-w-0 font-mono text-xs break-words text-(--tone) sm:text-center">{label}</p>
       <div
@@ -81,6 +88,13 @@ function Track({ label, tone, stuck }: { label: string; tone: Tone; stuck?: bool
             style={{ "--dur": "1.6s" } as CSSProperties}
           />
         )}
+        <svg
+          aria-hidden
+          viewBox="0 0 8 12"
+          className="absolute top-1/2 -right-1 h-3 w-2 -translate-y-1/2 fill-(--tone)"
+        >
+          <path d="M0 0 L8 6 L0 12 Z" />
+        </svg>
       </div>
     </div>
   );
@@ -104,7 +118,9 @@ function Toggle({
       onClick={onClick}
       className={cn(
         "inline-flex min-h-11 items-center gap-2 rounded-xl border px-3 text-sm font-semibold transition active:translate-y-px",
-        on ? "border-(--tone) bg-(--tone-soft) text-(--tone)" : "border-rule text-ink hover:border-ink-muted",
+        on
+          ? "border-(--tone) bg-(--tone-soft) text-(--tone)"
+          : "border-rule text-ink hover:border-ink-muted",
       )}
     >
       <span
@@ -151,7 +167,8 @@ export default function DecouplingDiagram() {
 
   let status = current.knows;
   if (brokenByRename)
-    status = "Inventory renamed qty to quantity. Checkout's query now fails: a change inside one module broke another.";
+    status =
+      "Inventory renamed qty to quantity. Checkout's query now fails: a change inside one module broke another.";
   else if (brokenByDown)
     status =
       mode === "reach"
@@ -164,7 +181,11 @@ export default function DecouplingDiagram() {
 
   return (
     <div className="space-y-4">
-      <div role="group" aria-label="How Checkout talks to Inventory" className="grid gap-2 sm:grid-cols-3">
+      <div
+        role="group"
+        aria-label="How Checkout talks to Inventory"
+        className="grid gap-2 sm:grid-cols-3"
+      >
         {MODES.map((m, i) => (
           <button
             key={m.id}
@@ -245,7 +266,7 @@ export default function DecouplingDiagram() {
         <div
           data-tone={down ? "red" : "green"}
           className={cn(
-            "shrink-0 rounded-xl border border-(--tone-line) bg-paper p-2.5 transition-colors sm:w-52",
+            "shrink-0 rounded-xl border border-(--tone-line) bg-paper p-2.5 transition-colors sm:w-60",
             down && "border-dashed opacity-70",
           )}
         >
@@ -273,11 +294,15 @@ export default function DecouplingDiagram() {
             )}
           >
             <p className="flex items-center gap-1 font-mono text-[0.7rem] text-ink-muted">
-              <Database className="h-3 w-3" aria-hidden /> inventory_stock · private
+              <Database className="h-3 w-3" aria-hidden /> inventory_stock
+              <span className="ml-auto">private</span>
             </p>
             <p className="mt-0.5 grid grid-cols-3 gap-1 font-mono text-[0.7rem] text-ink">
               <span>sku</span>
-              <span key={renamed ? "new" : "old"} className={cn(renamed && "tut-pop text-(--tone)")}>
+              <span
+                key={renamed ? "new" : "old"}
+                className={cn(renamed && "tut-pop text-(--tone)")}
+              >
                 {renamed ? "quantity" : "qty"}
               </span>
               <span>warehouse</span>

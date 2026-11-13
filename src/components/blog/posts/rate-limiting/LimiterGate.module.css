@@ -8,6 +8,7 @@
 .dot {
   display: none;
   position: absolute;
+  top: var(--lane);
   z-index: 0;
   width: 0.7rem;
   height: 0.7rem;

@@ -104,7 +104,7 @@ function buildHops(kind: LinkKind, seat: Seat, width: Width, mode: Mode): Hop[] 
       place: "on the internet",
       tone: "violet",
       icon: <Download />,
-      cap: split ? 112 : 35,
+      cap: split ? 112 : 38,
       lanes: split ? 4 : 1,
       note: split
         ? "Four connections at once, each held back, added together."
@@ -162,13 +162,13 @@ function PipeCell({
   isNeck: boolean;
   wobble: boolean;
 }) {
-  const dots = Math.max(2, Math.round(stream / 16));
+  const dots = Math.max(3, Math.round(stream / 7));
   const dur = Math.min(3.2, Math.max(1.2, (1.3 * PLAN) / stream));
   const laneGap = 4; // between lanes, on the same scale as `cap`
   const total = hop.cap + (hop.lanes - 1) * laneGap;
 
   return (
-    <div className="relative w-28 shrink-0 self-stretch sm:w-56">
+    <div className="relative w-24 shrink-0 self-stretch sm:w-56 lg:w-72">
       {/* The pipe walls: one lane, or several side by side. */}
       <div
         className={cn("absolute inset-y-0 left-1/2 flex -translate-x-1/2", styles.ease)}
@@ -191,7 +191,7 @@ function PipeCell({
         className={cn("absolute inset-y-0 left-1/2 -translate-x-1/2 overflow-hidden", styles.ease)}
         style={{ width: pct(stream) }}
       >
-        <span className="absolute inset-0 bg-(--tone-soft)" />
+        <span className="absolute inset-0 bg-[color-mix(in_srgb,var(--tone)_16%,transparent)]" />
         {Array.from({ length: dots }, (_, j) => (
           <span
             // biome-ignore lint/suspicious/noArrayIndexKey: packets are identical and positional.
@@ -199,10 +199,10 @@ function PipeCell({
             className={cn(styles.dot, wobble && styles.wobble)}
             style={
               {
-                left: `${((j + 0.5) / dots) * 100}%`,
-                "--y": `${((j * 37) % 100).toString()}%`,
+                left: `${18 + ((j * 0.618) % 1) * 64}%`,
+                "--y": `${((j / dots) * 100).toFixed(1)}%`,
                 "--dur": `${dur.toFixed(2)}s`,
-                "--delay": `${(-((j * 0.618) % 1) * dur).toFixed(2)}s`,
+                "--delay": `${(-(j / dots) * dur).toFixed(2)}s`,
               } as CSSProperties
             }
           />
@@ -278,15 +278,31 @@ export default function SpeedPipe() {
           .join("; ")}. ${status}`}
         className="dg-canvas rounded-2xl border border-rule p-3 sm:p-5"
       >
-        <p className="mb-2 flex items-center gap-2 pl-1 text-xs font-semibold tracking-[0.12em] text-ink-muted uppercase">
-          <span className="w-28 text-center sm:w-56">Data flows down</span>
-        </p>
+        <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs font-semibold text-ink-muted sm:gap-x-5">
+          <span className="w-24 text-center tracking-[0.12em] uppercase sm:w-56 lg:w-72">
+            Data flows ↓
+          </span>
+          <span data-tone="violet" className="flex items-center gap-1.5">
+            <span
+              aria-hidden
+              className="h-3 w-5 rounded-sm bg-[color-mix(in_srgb,var(--tone)_27%,transparent)]"
+            />
+            Used
+          </span>
+          <span data-tone="violet" className="flex items-center gap-1.5">
+            <span
+              aria-hidden
+              className="h-3 w-5 rounded-sm border-x-[1.5px] border-(--tone-line) bg-(--tone-soft)"
+            />
+            Width it can't use
+          </span>
+        </div>
         <ol className="m-0 list-none p-0">
           {hops.map((hop) => {
             const isNeck = hop.id === neck.id;
             const tone = isNeck ? "red" : hop.tone;
             return (
-              <li key={hop.id} data-tone={tone} className="group flex items-stretch gap-3">
+              <li key={hop.id} data-tone={tone} className="group flex items-stretch gap-2 sm:gap-3">
                 <PipeCell
                   hop={hop}
                   stream={stream}
@@ -295,8 +311,8 @@ export default function SpeedPipe() {
                 />
                 <div
                   className={cn(
-                    "dg-node my-1 flex min-h-[4.5rem] min-w-0 flex-1 items-start gap-3 rounded-xl border bg-paper px-3 py-2.5",
-                    isNeck ? "border-(--tone)" : "border-(--tone-line)",
+                    "dg-node my-1 flex min-h-[4.5rem] min-w-0 flex-1 items-start gap-2.5 rounded-xl border bg-paper px-2.5 py-2.5 sm:gap-3 sm:px-3",
+                    isNeck ? "dg-pulse border-(--tone)" : "border-(--tone-line)",
                   )}
                 >
                   <span className="dg-icon mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-(--tone-soft) text-(--tone) [&_svg]:h-[18px] [&_svg]:w-[18px]">
@@ -317,7 +333,7 @@ export default function SpeedPipe() {
                         </span>
                       )}
                     </span>
-                    <span className="block text-xs text-ink-muted">{hop.place}</span>
+                    <span className="hidden text-xs text-ink-muted sm:block">{hop.place}</span>
                     <span className="mt-1 block text-sm leading-snug text-ink">{hop.note}</span>
                   </span>
                 </div>

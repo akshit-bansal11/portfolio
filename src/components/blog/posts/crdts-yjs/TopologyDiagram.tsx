@@ -173,7 +173,14 @@ export default function TopologyDiagram() {
           {OT_CLIENTS.map((c) => (
             <LinkLine key={c.x} a={OT_SERVER} b={c} live={!down} tone="amber" />
           ))}
-          <Box at={OT_SERVER} label="server" sub="orders + transforms" tone="pink" wide down={down} />
+          <Box
+            at={OT_SERVER}
+            label="server"
+            sub="orders + transforms"
+            tone="pink"
+            wide
+            down={down}
+          />
           {OT_CLIENTS.map((c, i) => (
             <Box key={c.x} at={c} label={`client ${i + 1}`} tone="violet" />
           ))}
@@ -216,7 +223,11 @@ export default function TopologyDiagram() {
           onClick={() => setDown(!down)}
           className="inline-flex min-h-10 items-center gap-1.5 rounded-lg border border-(--tone-line) bg-(--tone-soft) px-3 text-sm font-semibold text-(--tone) transition-[translate,border-color] hover:border-(--tone) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--tone) active:translate-y-px"
         >
-          {down ? <Server className="h-4 w-4" aria-hidden /> : <Power className="h-4 w-4" aria-hidden />}
+          {down ? (
+            <Server className="h-4 w-4" aria-hidden />
+          ) : (
+            <Power className="h-4 w-4" aria-hidden />
+          )}
           {down ? "Bring the server back" : "Take the server down"}
         </button>
         <p aria-live="polite" className="text-sm text-ink-muted">

@@ -107,8 +107,8 @@ function ThreadSlot({ slot }: { slot: Slot | null }) {
         styles.ease,
         "block h-[22px] w-[22px] rounded-[5px] border",
         !slot && "border-rule bg-paper",
-        slot && !stuck && "border-(--tone-line) bg-(--tone-soft)",
-        stuck && "border-(--tone) bg-(--tone-line)",
+        slot && !stuck && "border-(--tone) bg-(--tone)",
+        stuck && "border-(--tone) bg-(--tone)",
       )}
     />
   );
@@ -146,7 +146,8 @@ export default function BulkheadPoolDemo() {
     note =
       "Recommendations can only tie up its own 10 threads. Extra calls fail fast (the page just shows no recommendations). Payments keep flowing.";
   } else if (!slow && stuck > 0) {
-    note = "Recommendations recovered. New calls finish quickly; old stuck calls clear when you restart.";
+    note =
+      "Recommendations recovered. New calls finish quickly; old stuck calls clear when you restart.";
   }
 
   return (
@@ -212,7 +213,10 @@ export default function BulkheadPoolDemo() {
       ) : (
         <section
           key="shared"
-          className={cn("w-max max-w-full rounded-xl border border-rule bg-paper p-2.5", styles.pop)}
+          className={cn(
+            "w-max max-w-full rounded-xl border border-rule bg-paper p-2.5",
+            styles.pop,
+          )}
         >
           <p className="mb-2 text-xs font-bold tracking-[0.06em] text-ink-muted uppercase">
             One shared pool · 100 threads
@@ -229,12 +233,15 @@ export default function BulkheadPoolDemo() {
       <ul aria-label="Legend" className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-ink-muted">
         {(["recs", "pay", "other"] as Kind[]).map((kind) => (
           <li key={kind} data-tone={KIND[kind].tone} className="inline-flex items-center gap-2">
-            <span aria-hidden className="h-3 w-3 rounded-sm border border-(--tone-line) bg-(--tone-soft)" />
+            <span
+              aria-hidden
+              className="h-3 w-3 rounded-sm border border-(--tone) bg-(--tone-line)"
+            />
             {KIND[kind].label}
           </li>
         ))}
         <li data-tone="amber" className="inline-flex items-center gap-2">
-          <span aria-hidden className="h-3 w-3 rounded-sm border border-(--tone) bg-(--tone-line)" />
+          <span aria-hidden className="h-3 w-3 rounded-sm border border-(--tone) bg-(--tone)" />
           stuck waiting
         </li>
       </ul>

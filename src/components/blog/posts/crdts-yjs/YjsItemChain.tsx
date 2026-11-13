@@ -48,7 +48,10 @@ export default function YjsItemChain() {
   const newest = items.filter((item) => item.from === step).map((item) => item.id);
   const pointedAt = step === 0 ? [] : items.filter((i) => i.from === step).map((i) => i.after);
   const isDead = (item: Item) => item.deletedAt !== undefined && item.deletedAt <= step;
-  const visible = items.filter((item) => !isDead(item)).map((item) => item.char).join("");
+  const visible = items
+    .filter((item) => !isDead(item))
+    .map((item) => item.char)
+    .join("");
   const tombstones = items.filter(isDead).length;
 
   return (

@@ -5,10 +5,13 @@
  * algorithm of your choice on the right. Both allow 2
  * requests per second on average with bursts of up to 5.
  * Spam the button and compare who says 200 and who says 429.
+ * Marks scroll left as time passes; the newest one pops in, the latest response flashes,
+ * and a panel gives a short nudge whenever it answers 429.
  */
 
 "use client";
 
+import { RotateCcw, Send, Zap } from "lucide-react";
 import { useEffect, useEffectEvent, useId, useRef, useState } from "react";
 import { DemoButton, DemoToggle } from "@/components/blog/DemoControls";
 import { cn } from "@/lib/utils";
@@ -19,6 +22,7 @@ import {
   type Limiter,
   type LimiterConfig,
 } from "./limiters";
+import styles from "./RateLimiterDemo.module.css";
 
 const CONFIG: LimiterConfig = { rate: 2, burst: 5 };
 const WINDOW = CONFIG.burst / CONFIG.rate;
@@ -51,24 +55,25 @@ function responseLine(decision: Decision): string {
 function Gauge({ level }: { level: number }) {
   const filled = level * CONFIG.burst;
   return (
-    <svg viewBox="0 0 150 34" aria-hidden className="h-9 w-full max-w-[12rem]">
+    <svg
+      viewBox="0 0 150 34"
+      aria-hidden
+      data-tone={level < 0.2 ? "red" : "amber"}
+      className="h-9 w-full max-w-[12rem]"
+    >
       {Array.from({ length: CONFIG.burst }, (_, index) => {
         const amount = Math.max(0, Math.min(1, filled - index));
         return (
+          // biome-ignore lint/suspicious/noArrayIndexKey: fixed slots.
           <g key={index}>
             <circle
               cx={15 + index * 30}
               cy={17}
               r={12}
-              strokeWidth={2}
-              className="fill-paper stroke-ink"
+              strokeWidth={1.5}
+              className="fill-paper stroke-(--tone-line)"
             />
-            <circle
-              cx={15 + index * 30}
-              cy={17}
-              r={9 * amount}
-              className={cn(level < 0.2 ? "fill-danger" : "fill-pen")}
-            />
+            <circle cx={15 + index * 30} cy={17} r={9 * amount} className="fill-(--tone)" />
           </g>
         );
       })}
@@ -107,39 +112,45 @@ function Timeline({
           y2={40}
           strokeWidth={1}
           strokeDasharray="3 3"
-          className="stroke-ink-muted"
+          className="stroke-ink-muted/60"
         />
       ))}
       {events
         .filter((event) => event.t >= start)
-        .map((event, index) => {
+        .map((event, index, shown) => {
           const decision = event[side];
           const cx = x(event.t);
           const cy = 30 - (index % 3) * 8;
+          const newest = index === shown.length - 1;
           if (decision.outcome === "rejected") {
             return (
               <path
                 key={event.id}
+                data-tone="red"
                 d={`M${cx - 4} ${cy - 4} L${cx + 4} ${cy + 4} M${cx + 4} ${cy - 4} L${cx - 4} ${cy + 4}`}
                 strokeWidth={2}
-                className="stroke-danger"
+                strokeLinecap="round"
+                className={cn(styles.mark, "stroke-(--tone)", newest && "tut-pop")}
               />
             );
           }
           return (
             <circle
               key={event.id}
+              data-tone={decision.outcome === "queued" ? "amber" : "green"}
               cx={cx}
               cy={cy}
               r={4}
-              className={decision.outcome === "queued" ? "fill-warn" : "fill-ok"}
+              className={cn(styles.mark, "fill-(--tone)", newest && "tut-pop")}
             />
           );
         })}
-      <line x1={296} y1={2} x2={296} y2={42} strokeWidth={2} className="stroke-pen" />
-      <text x={292} y={10} textAnchor="end" className="fill-pen font-hand text-[12px]">
-        now
-      </text>
+      <g data-tone="violet">
+        <line x1={296} y1={2} x2={296} y2={42} strokeWidth={1.5} className="stroke-(--tone)" />
+        <text x={291} y={10} textAnchor="end" className="fill-(--tone) font-mono text-[9px]">
+          now
+        </text>
+      </g>
     </svg>
   );
 }
@@ -215,10 +226,17 @@ export default function RateLimiterDemo() {
   const rightSnapshot = limiters.right.snapshot(now);
 
   const panels = [
-    { side: "left" as const, title: "Token bucket", snapshot: leftSnapshot, windows: false },
+    {
+      side: "left" as const,
+      title: "Token bucket",
+      tone: "amber" as const,
+      snapshot: leftSnapshot,
+      windows: false,
+    },
     {
       side: "right" as const,
       title: ALGORITHMS[rightAlgorithm].label,
+      tone: "cyan" as const,
       snapshot: rightSnapshot,
       windows: rightAlgorithm !== "leakyBucket",
     },
@@ -232,10 +250,14 @@ export default function RateLimiterDemo() {
           onClick={() => send()}
           className="min-h-14 flex-1 text-base sm:flex-none sm:px-8"
         >
-          Send request
+          <Send className="h-4 w-4" aria-hidden /> Send request
         </DemoButton>
-        <DemoButton onClick={burst}>Burst ×10</DemoButton>
-        <DemoButton onClick={() => reset()}>Reset</DemoButton>
+        <DemoButton onClick={burst}>
+          <Zap className="h-4 w-4" aria-hidden /> Burst ×10
+        </DemoButton>
+        <DemoButton onClick={() => reset()}>
+          <RotateCcw className="h-4 w-4" aria-hidden /> Reset
+        </DemoButton>
       </div>
       <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <DemoToggle label="Steady traffic (4 per second)" checked={steady} onChange={setSteady} />
@@ -248,6 +270,7 @@ export default function RateLimiterDemo() {
           </label>
           <select
             id={selectId}
+            data-tone="violet"
             value={rightAlgorithm}
             onChange={(event) => {
               const next =
@@ -255,7 +278,7 @@ export default function RateLimiterDemo() {
               setRightAlgorithm(next);
               reset(next);
             }}
-            className="min-h-11 rounded-xl border-2 border-ink bg-paper px-3 text-sm font-semibold text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pen"
+            className="min-h-11 rounded-xl border border-(--tone-line) bg-paper px-3 text-sm font-semibold text-ink transition-colors hover:border-(--tone) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--tone)"
           >
             {RIGHT_OPTIONS.map((option) => (
               <option key={option} value={option}>
@@ -270,29 +293,49 @@ export default function RateLimiterDemo() {
         {panels.map((panel) => {
           const counts = tally(panel.side);
           const last = lastEvent?.[panel.side];
+          const turnedAway = last?.outcome === "rejected";
           return (
             <section
-              key={panel.side}
+              // Re-keyed on each 429 so the panel gives a short shake.
+              key={`${panel.side}-${turnedAway ? lastEvent?.id : "ok"}`}
+              data-tone={panel.tone}
               aria-label={`${panel.title}: ${counts.ok} allowed, ${counts.rejected} rejected`}
-              className="rounded-xl border-2 border-ink bg-paper p-3"
+              className={cn(
+                "rounded-xl border border-(--tone-line) bg-(image:--tone-fill) p-3",
+                turnedAway && styles.nudge,
+              )}
             >
               <div className="flex items-baseline justify-between gap-2">
-                <h4 className="font-bold text-ink">{panel.title}</h4>
-                <p className="text-xs text-ink-muted">
-                  <span className="font-semibold text-ok">{counts.ok} ok</span> ·{" "}
-                  <span className="font-semibold text-danger">{counts.rejected} × 429</span>
+                <h4 className="font-bold text-(--tone)">{panel.title}</h4>
+                <p className="font-mono text-xs text-ink-muted">
+                  <span data-tone="green" className="font-semibold text-(--tone)">
+                    {counts.ok} ok
+                  </span>{" "}
+                  ·{" "}
+                  <span data-tone="red" className="font-semibold text-(--tone)">
+                    {counts.rejected} × 429
+                  </span>
                 </p>
               </div>
               <Gauge level={panel.snapshot.level} />
-              <p className="font-hand text-lg leading-tight text-pen">{panel.snapshot.readout}</p>
+              <p className="font-mono text-sm leading-snug text-ink">{panel.snapshot.readout}</p>
               <Timeline events={events} side={panel.side} now={now} showWindows={panel.windows} />
               <p
+                key={lastEvent?.id ?? "none"}
+                data-tone={
+                  !last
+                    ? undefined
+                    : last.outcome === "accepted"
+                      ? "green"
+                      : last.outcome === "queued"
+                        ? "amber"
+                        : "red"
+                }
                 className={cn(
-                  "mt-1 truncate rounded-md px-2 py-1 font-mono text-xs",
-                  !last && "text-ink-muted",
-                  last?.outcome === "accepted" && "bg-ok/15 text-ink",
-                  last?.outcome === "queued" && "bg-warn/15 text-ink",
-                  last?.outcome === "rejected" && "bg-danger/15 text-ink",
+                  "mt-1 truncate rounded-md border px-2 py-1 font-mono text-xs",
+                  last
+                    ? "tut-pop border-(--tone-line) bg-(--tone-soft) text-ink"
+                    : "border-rule text-ink-muted",
                 )}
               >
                 {last ? responseLine(last) : "waiting for a request…"}
@@ -309,7 +352,7 @@ export default function RateLimiterDemo() {
       </p>
       <p className="text-sm text-ink-muted">
         Both limiters: 2 requests per second on average, bursts of up to 5. Dashed lines mark window
-        boundaries ({WINDOW}s). Green = allowed, amber = queued, red ✕ = 429.
+        boundaries ({WINDOW}s). Green dot = allowed, amber dot = queued, red ✕ = 429.
       </p>
     </div>
   );

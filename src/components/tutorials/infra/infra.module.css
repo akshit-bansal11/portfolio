@@ -11,6 +11,11 @@
   display: none;
 }
 
+/* "Working…" placeholder that gives way to a result at --done. */
+.wait {
+  display: none;
+}
+
 @media screen and (prefers-reduced-motion: no-preference) {
   /* A pod dropped onto a node by the scheduler. */
   .drop-in {
@@ -75,6 +80,22 @@
   /* One beat of a ping ring, after --delay. */
   .ping-once {
     animation: ping-once 0.9s ease-out var(--delay, 0s) both;
+  }
+
+  /* A row that waits its turn: dim until --delay. */
+  .queued {
+    animation: unqueue 0.2s ease var(--delay, 0s) both;
+  }
+
+  /* A placeholder that shows until --done, then fades. */
+  .wait {
+    display: inline-flex;
+    animation: fade-out 0.2s ease var(--done, 0s) forwards;
+  }
+
+  /* A result that appears at --done. */
+  .done {
+    animation: fade-in 0.25s ease var(--done, 0s) both;
   }
 
   /* Pressed buttons sink a little. */
@@ -212,5 +233,34 @@
 
   100% {
     box-shadow: 0 0 0 14px transparent;
+  }
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes unqueue {
+  from {
+    opacity: 0.4;
+  }
+
+  to {
+    opacity: 1;
   }
 }

@@ -104,7 +104,9 @@ export default function CounterMerge() {
     setState({ ...state, [side]: next });
     setChanged({ a: [], b: [] });
     setShot(null);
-    setNote(`Phone ${NAMES[OWNER[side]]} bumped its own slot. The phones disagree until they merge.`);
+    setNote(
+      `Phone ${NAMES[OWNER[side]]} bumped its own slot. The phones disagree until they merge.`,
+    );
   };
 
   const merge = (to: Side) => {

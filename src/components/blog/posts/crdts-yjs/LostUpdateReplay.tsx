@@ -50,10 +50,14 @@ function server(step: number, mode: Mode): Row[] {
   if (step < 5) return rows(BASE, step === 4 ? "stale" : "plain");
   return mode === "lww"
     ? [...rows(BASE), { text: "chai", state: step === 5 ? "new" : "plain" }]
-    : [...rows(BASE), { text: "eggs", state: step === 5 ? "new" : "plain" }, {
-        text: "chai",
-        state: step === 5 ? "new" : "plain",
-      }];
+    : [
+        ...rows(BASE),
+        { text: "eggs", state: step === 5 ? "new" : "plain" },
+        {
+          text: "chai",
+          state: step === 5 ? "new" : "plain",
+        },
+      ];
 }
 
 const NOTES: Record<Mode, string[]> = {
@@ -108,7 +112,9 @@ function List({ items }: { items: Row[] }) {
             )}
           />
           {row.text}
-          {row.state === "new" && <Check className="ml-auto h-3.5 w-3.5 text-(--tone)" aria-hidden />}
+          {row.state === "new" && (
+            <Check className="ml-auto h-3.5 w-3.5 text-(--tone)" aria-hidden />
+          )}
           {row.state === "lost" && (
             <span className="ml-auto font-sans text-xs font-semibold no-underline">lost</span>
           )}
@@ -208,7 +214,7 @@ export default function LostUpdateReplay() {
             ? "Meera adds eggs and Kabir adds chai while offline. On reconnect the last-write-wins server keeps Kabir's later list, so both phones end with milk, bread, chai, and Meera's eggs are lost."
             : "Meera adds eggs and Kabir adds chai while offline. On reconnect the server merges both edits, so both phones end with milk, bread, eggs, chai."
         }
-        className="flex flex-col items-stretch md:flex-row md:items-center"
+        className="flex flex-col items-stretch md:flex-row"
       >
         <Phone
           name="Meera"

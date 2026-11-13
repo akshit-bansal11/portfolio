@@ -19,7 +19,6 @@ import StepControls from "./StepControls";
 import { useStepper } from "./useStepper";
 
 const START = "teaa milk";
-const INSERT = "oat ";
 
 type Mark = "added" | "removed" | "wrong";
 interface Cell {
@@ -212,11 +211,7 @@ export default function OtTransformDemo() {
             step !== 3 && "opacity-0",
           )}
         >
-          {same ? (
-            <Check className="h-4 w-4" aria-hidden />
-          ) : (
-            <X className="h-4 w-4" aria-hidden />
-          )}
+          {same ? <Check className="h-4 w-4" aria-hidden /> : <X className="h-4 w-4" aria-hidden />}
           {same ? "Same text on both phones" : "The copies now disagree, and one is garbled"}
         </p>
       </div>

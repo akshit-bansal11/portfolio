@@ -1,41 +1,98 @@
-import CounterMergeDiagram from "@/components/blog/posts/crdts-yjs/CounterMergeDiagram";
-import LostUpdateDiagram from "@/components/blog/posts/crdts-yjs/LostUpdateDiagram";
-import OtVsCrdtDiagram from "@/components/blog/posts/crdts-yjs/OtVsCrdtDiagram";
-import YjsItemsDiagram from "@/components/blog/posts/crdts-yjs/YjsItemsDiagram";
+import { ArrowLeftRight, CheckCheck, CopyCheck, Group as GroupIcon, HardDrive, Hourglass, Layers, ListChecks, ListOrdered, Lock, Merge, Palette, PenLine, Plus, Ruler, Save, Send, Server, ShieldAlert, Smartphone, Split, Users, Wifi } from "lucide-react";
+import CounterMerge from "@/components/blog/posts/crdts-yjs/CounterMerge";
+import LostUpdateReplay from "@/components/blog/posts/crdts-yjs/LostUpdateReplay";
+import OtTransformDemo from "@/components/blog/posts/crdts-yjs/OtTransformDemo";
+import StateVectorSync from "@/components/blog/posts/crdts-yjs/StateVectorSync";
+import TopologyDiagram from "@/components/blog/posts/crdts-yjs/TopologyDiagram";
+import YjsItemChain from "@/components/blog/posts/crdts-yjs/YjsItemChain";
 import { GroceryListDemo } from "@/components/blog/posts/crdts-yjs/lazy";
+
+## In one minute
+
+- Several people (or devices) edit the same data at once, sometimes offline. Every copy must end up the same, and nothing may be lost.
+- **Last-write-wins** keeps the newest save and silently drops the rest. **Locking** avoids conflicts but kills offline editing.
+- **OT** (Google Docs) rewrites each edit through one central server. **CRDTs** are data structures whose merges work in any order, so any device can sync with any other, with no referee.
+- **Yjs**, a CRDT library: every insert gets a permanent ID, deletes leave tombstones, and sync sends only what the other side is missing. The price is extra metadata. If a server is always in the middle, a simpler design (like Figma's) can be enough.
+
+## Words you need
+
+<Glossary
+  items={[
+    { term: "Replica", means: "One copy of the shared data. Each phone, browser tab or server holding the grocery list has a replica.", like: "each family member's own copy of the holiday notebook" },
+    { term: "Concurrent edits", means: "Changes made without either side having seen the other's change yet. Two offline edits made an hour apart still count.", like: "two people writing on their own copies of the same page" },
+    { term: "Conflict", means: "Concurrent edits that touch the same thing, where the combined result isn't obvious.", like: "two people writing different names on the same blank line" },
+    { term: "Convergence", means: "Once every replica has seen the same set of edits, they all hold exactly the same data. Also called strong eventual consistency.", like: "every notebook ending up word-for-word the same" },
+    { term: "Last-write-wins (LWW)", means: "When two versions disagree, keep the one with the later timestamp and drop the other.", like: "photocopying the newest page over everyone else's" },
+    { term: "Lost update", means: "An edit that was saved fine, then silently disappears during a sync.", like: "your note vanishing under someone's photocopy" },
+    { term: "Locking", means: "Only one person may edit at a time. Everyone else waits.", like: "a talking stick: only the holder may speak" },
+    { term: "Operation", means: "One edit written as an instruction, like 'insert x at position 5' or 'delete position 2'. Positions count from 0.", like: "a move in a board game: 'knight to f3'" },
+    { term: "Operational Transformation (OT)", means: "Adjusting an incoming operation for edits it didn't know about, so it still means what its author meant.", like: "a referee who rewrites every move to fit the board as it is now" },
+    { term: "Server-authoritative", means: "One central server is the source of truth. Clients send changes; the server decides the order and the result.", like: "a teacher's attendance register: only the one at the front is official" },
+    { term: "Peer-to-peer", means: "Devices syncing directly with each other, with no server in the middle.", like: "passing notes across the table instead of through the teacher" },
+    { term: "CRDT", means: "Conflict-free Replicated Data Type: data designed so replicas can change independently and always converge when they merge, with no referee.", like: "a shared rulebook for combining notebooks that gives the same result whoever does it" },
+    { term: "Commutative, associative, idempotent", means: "Three properties of a safe merge: order doesn't matter, grouping doesn't matter, and merging the same thing twice changes nothing.", like: "pooling two stamp collections: any order, any grouping, and a stamp you already have adds nothing" },
+    { term: "Grow-only counter", means: "The simplest CRDT: each replica keeps one slot per replica, only bumps its own, and merging takes the biggest value per slot.", like: "a scoreboard where each player only writes their own score" },
+    { term: "State-based / operation-based", means: "The two CRDT families. State-based ones send their whole state; operation-based ones send each edit.", like: "posting the whole notebook vs posting just today's new lines" },
+    { term: "Yjs", means: "An open-source CRDT library for JavaScript. Its shared types (Y.Text, Y.Array, Y.Map) look like normal data and merge themselves. A document is a Y.Doc.", like: "a ready-made rulebook you import instead of writing your own" },
+    { term: "Item and ID", means: "How Yjs stores each inserted character or list entry: a permanent ID (a random client ID plus that client's counter, like A:2) and the ID of its neighbour.", like: "a numbered sticky note that says 'I go after note A:2'" },
+    { term: "Tombstone", means: "A deleted item that Yjs keeps, marked deleted, so late edits that point at it still find their place.", like: "a crossed-out line you don't erase, because someone's note says 'after line 4'" },
+    { term: "State vector", means: "For each client, the highest counter a replica has seen. Two replicas compare them to find exactly what's missing.", like: "a 'last page I've read' bookmark for each author" },
+    { term: "Metadata", means: "Extra data a CRDT keeps so merging works: IDs, links, tombstones. Users never see it.", like: "page numbers and margin notes in a notebook" },
+    { term: "Local-first", means: "Apps where your data lives on your device first and syncs when it can. The cloud is a sync partner, not the owner. Offline-first is the same idea.", like: "a diary you keep at home and share copies of, not one kept at the post office" },
+  ]}
+/>
 
 ## The grocery list in the basement
 
-Meera and Kabir share a grocery list app. On Saturday, they split up at a big supermarket whose basement floor has no mobile signal. Meera remembers they're out of eggs and adds "eggs" to the list. Two aisles away, Kabir adds "chai". Neither phone can reach the internet, so each phone saves its own version.
+- Meera and Kabir share a grocery list app. On Saturday they split up in a big supermarket whose basement has no mobile signal.
+- Meera adds "eggs". Two aisles away, Kabir adds "chai". Neither phone can reach the internet, so each saves its own version.
+- Back upstairs, both phones sync. A simple sync sees that Kabir saved a minute later, and keeps Kabir's list.
+- The eggs are gone. No error, no warning.
 
-Back upstairs, both phones reconnect and sync. A simple sync system compares the two lists, sees that Kabir saved his a minute later, and keeps Kabir's version. The eggs are gone. No error, no warning. Meera's edit just quietly disappears.
-
-<Figure caption="Two offline edits, one 'last write wins' sync, one lost update. Nobody did anything wrong; the sync strategy simply threw away a perfectly good edit.">
-  <LostUpdateDiagram />
+<Figure caption="Press play or step through, then switch the server's rule. Last-write-wins throws away a perfectly good edit; a merge keeps both.">
+  <LostUpdateReplay />
 </Figure>
 
-This is the core problem of collaboration software: **several people (or devices) changing the same data at the same time**, sometimes while disconnected, and everyone expecting to end up with the same, sensible result. Google Docs, Figma, Notion, multiplayer code editors and collaborative canvases all have to solve it.
+<Callout kind="important">
 
-<MarginNote label="the goal">
-  everyone edits freely, offline or online, and every copy ends up identical, with nothing lost.
-</MarginNote>
+Nobody did anything wrong. The sync rule threw the edit away. This is the core problem of collaboration software: **several people changing the same data at the same time**, sometimes offline, and everyone expecting the same sensible result. Google Docs, Figma, Notion, multiplayer code editors and collaborative canvases all have to solve it.
 
-This post covers the simple approaches and why they fail, the classic fix that Google Docs uses (Operational Transformation), the newer one that powers many modern collaborative apps (CRDTs), how the popular library **Yjs** works under the hood, and the trade-offs nobody puts on the landing page. There's a demo with two real Yjs documents you can take offline, and the case files cover Google Docs, Figma, Zed, Redis and JupyterLab.
+</Callout>
 
-## What's the problem, exactly?
+<Callout kind="note" title="The goal">
 
-Some terms first:
+Everyone edits freely, offline or online. Every copy ends up identical. Nothing is lost, and nobody waits.
 
-- A **replica** is one copy of the shared data. Each phone, browser tab or server holding the grocery list has a replica.
-- **Concurrent edits** are changes made at the same time, or more precisely, made without either side having seen the other's change yet. Two edits made offline an hour apart are still concurrent, because neither knew about the other.
-- **Convergence** means that once all replicas have seen the same set of edits, they hold exactly the same data.
-- A **conflict** is when concurrent edits touch the same thing and it's not obvious what the combined result should be.
+</Callout>
 
-The naive approach is called **last-write-wins (LWW)**: when two versions disagree, keep the one with the later timestamp. It converges, since everyone agrees on the winner, but it does so by **throwing data away**. That's the **lost update** problem from the hook.
+## The two easy answers, and why they fail
 
-Another approach is **locking**: only one person may edit at a time. Whoever opens the list first gets the lock, and everyone else sees "Meera is editing…". That prevents conflicts, but it means you can't edit offline, and you spend a lot of time waiting.
+### Last-write-wins
 
-What we want is a way to **merge** concurrent edits so that nothing is lost and every replica ends up the same, without anyone waiting and without needing to be online.
+- Keep the version with the latest timestamp. Used everywhere, often by accident.
+- It converges, because everyone agrees on the winner. But it gets there by **throwing data away**: the lost update above.
+- Fine where only the latest value matters: a profile photo, a "last seen" time.
+
+<Callout kind="insight">
+
+LWW **per field** is itself a valid CRDT. The basement sync is bad because it applies LWW to the *whole list*.
+
+</Callout>
+
+### Locking
+
+<Diagram caption="Locking: whoever opens the list first gets the lock. Everyone else waits, and nobody can edit offline.">
+  <Row>
+    <Node title="Meera" note="holds the lock, editing" tone="green" icon={<Lock />} pulse />
+    <Link dir="right" label="has the lock" tone="green" />
+    <Node title="Shared list" note="one editor at a time" tone="amber" icon={<ListChecks />} />
+    <Link dir="right" label="“Meera is editing…”" tone="red" />
+    <Node title="Kabir" note="waits; can't edit offline" tone="red" icon={<Hourglass />} />
+  </Row>
+</Diagram>
+
+- Prevents conflicts completely.
+- Fine for a booking system or a shared spreadsheet cell. Painful for writing together, and no use in a basement.
 
 <Analogy
   title="One shared notebook vs everyone keeping a copy"
@@ -48,80 +105,180 @@ What we want is a way to **merge** concurrent edits so that nothing is lost and 
 >
   A family plans a holiday in one physical notebook. Only the person holding it can write, so everyone else waits. Safe, but slow, and if it's left in someone's bag at work, nobody can plan anything.
 
-  So everyone gets their own copy instead. Now people write whenever they like. But when you compare notebooks, how do you combine them? Photocopying the most recent page over everyone else's loses ideas. What you really want is a set of rules everyone agrees on, so that "combining my notes with yours" always produces the same result no matter whose notebook you start with.
+  So everyone gets their own copy instead. Now people write whenever they like. But when you compare notebooks, how do you combine them? Photocopying the most recent page over everyone else's loses ideas. What you want is a set of rules everyone agrees on, so that "combining my notes with yours" always gives the same result, whichever notebook you start with.
 </Analogy>
 
-## How it came to be
+## Round 1: Operational Transformation
 
-### Round 1: Operational Transformation
+- **1989:** Clarence Ellis and Simon Gibbs publish OT, from research on software for groups.
+- Describe every edit as an **operation**. When two happen concurrently, **transform** one against the other before applying it, so it still means what its author intended.
 
-The first serious answer came from research on "groupware" (software for groups). In 1989, Clarence Ellis and Simon Gibbs published a paper introducing **Operational Transformation (OT)**.
-
-The idea: describe every edit as an **operation**, like "insert 'x' at position 5" or "delete the character at position 2". When two operations happen concurrently, **transform** one against the other before applying it. If Meera inserts at position 5 while Kabir deletes position 2, then by the time Meera's insert reaches Kabir's copy, the text has shifted left by one, so it should be applied at position 4 instead. Transformation is the art of adjusting operations so they still mean what their author intended.
-
-OT turned out to be very hard to get right for complex documents, especially with many users and no central coordinator. A practical fix came in 1995 with Xerox PARC's **Jupiter** system, which routed every edit through a **central server**. The server decides the order of operations and transforms everything against that one order, which makes the problem much more manageable. Google Wave was built on ideas from Jupiter, and **Google Docs** was built on OT with a central server (case file #1).
-
-The catch: OT needs that central server to referee. If you're offline for an hour, your edits can't be properly merged until the server sees them, and long offline sessions or peer-to-peer syncing are hard to support.
-
-### Round 2: CRDTs
-
-Researchers wanted a structure where merging didn't need a referee at all. In 2011, Marc Shapiro, Nuno Preguiça, Carlos Baquero and Marek Zawirski formalised **Conflict-free Replicated Data Types (CRDTs)**: data structures designed so that replicas can be updated independently, in any order, and **always converge**, mathematically guaranteed, without coordination.
-
-The trick is to design the data type so that merging is:
-
-- **Commutative:** merging A then B gives the same result as B then A.
-- **Associative:** it doesn't matter how you group merges.
-- **Idempotent:** merging the same thing twice is harmless.
-
-If merges have those three properties, it doesn't matter what order updates arrive in, whether they're delayed, or whether some arrive twice: everyone ends up in the same place.
-
-The simplest example is a **grow-only counter**, like counting "likes" across phones. Instead of one number, each replica keeps one slot per replica and only increments its own slot. To merge, take the **maximum** of each slot. The total is the sum of the slots.
-
-<Figure caption="A grow-only counter, one of the simplest CRDTs. Each replica only bumps its own slot; merging takes the max per slot. Merge in any order, any number of times, and you get the same answer.">
-  <CounterMergeDiagram />
+<Figure caption="Meera inserts at 5 while Kabir deletes at 2. By the time Meera's insert reaches Kabir, his text has shifted left by one. Flip Kabir's phone to 'applies it as sent' to see what goes wrong.">
+  <OtTransformDemo />
 </Figure>
 
-There are two families of CRDTs:
+- OT turned out to be very hard to get right for complex documents, especially with many users and no central coordinator.
+- **1995:** Xerox PARC's **Jupiter** system made it manageable by routing every edit through a **central server**:
 
-- **State-based CRDTs** send their whole state (like the counter above) and merge with a function like "max per slot". Simple and robust, but the state can be big.
-- **Operation-based CRDTs** send just the operations ("Meera inserted 'eggs' after 'bread'"), which is much smaller, but the network has to deliver every operation (exactly once, or the operations must be safe to replay).
+<Flow
+  steps={[
+    { title: "Client sends an op", note: "insert “oat ” @5", tone: "violet", icon: <Send /> },
+    { title: "Server orders it", note: "one official order for everyone", tone: "pink", icon: <ListOrdered /> },
+    { title: "Server transforms it", note: "against edits that client hadn't seen", tone: "amber", icon: <Split /> },
+    { title: "Everyone applies it", note: "same order, same result", tone: "green", icon: <CheckCheck /> },
+  ]}
+/>
 
-Real systems, Yjs included, mix the two: they send small operations during normal editing, and when two replicas reconnect after a long time, they exchange a compact summary of what each has seen and send just the missing pieces.
+- Google Wave was built on ideas from Jupiter. **Google Docs** was built on OT with a central server (case file #1).
 
-<Figure caption="OT relies on a central server to order and transform edits. CRDTs let any replica sync with any other, directly or through a server, and still converge.">
-  <OtVsCrdtDiagram />
+<Callout kind="warn" title="The catch">
+
+OT needs that central server to referee. Offline for an hour? Your edits can't be properly merged until the server sees them. Long offline sessions and peer-to-peer syncing are hard to support.
+
+</Callout>
+
+<Quiz
+  question="Shared text: 'teaa milk'. Kabir's phone has already deleted position 2. Meera's 'insert “oat ” at 5' arrives. Where should Kabir's phone insert it?"
+  options={["At 5, exactly as sent", "At 4, because one character before 5 was deleted", "At 6, to make room", "Nowhere: concurrent edits must be rejected"]}
+  answer={1}
+>
+
+Everything after position 2 moved left by one, so Meera's "position 5" is now position 4. Applied at 5, Kabir would read "tea moat ilk".
+
+</Quiz>
+
+## Round 2: CRDTs
+
+- **2011:** Marc Shapiro, Nuno Preguiça, Carlos Baquero and Marek Zawirski formalise **Conflict-free Replicated Data Types**.
+- Replicas update independently, in any order, and **always converge**. It's mathematically guaranteed, with no coordination.
+- The trick is to design the data type so that merging is safe in every order:
+
+<FeatureGrid
+  items={[
+    { title: "Commutative", tone: "violet", icon: <ArrowLeftRight />, tag: "merge(A, B) = merge(B, A)", text: "Merging A then B gives the same result as B then A." },
+    { title: "Associative", tone: "blue", icon: <GroupIcon />, tag: "merge(merge(A, B), C) = merge(A, merge(B, C))", text: "It doesn't matter how you group merges." },
+    { title: "Idempotent", tone: "green", icon: <CopyCheck />, tag: "merge(A, A) = A", text: "Merging the same thing twice is harmless." },
+  ]}
+/>
+
+- With all three, it doesn't matter what order updates arrive in, whether they're delayed, or whether some arrive twice. Everyone ends up in the same place.
+
+### The simplest CRDT: a grow-only counter
+
+- Say you count "likes" across phones. Instead of one number, each replica keeps **one slot per replica** and only increments its own.
+- To merge, take the **maximum of each slot**. The total is the sum of the slots.
+
+<Figure caption="Like on either phone, then merge in any order, any number of times. Both phones always land on the same slots and the same total.">
+  <CounterMerge />
+</Figure>
+
+<Callout kind="insight" title="Why max, not add?">
+
+Adding would count the same likes again every time a merge arrived twice. Taking the max is idempotent, and it never goes backwards, because each slot only grows.
+
+</Callout>
+
+<Quiz
+  question="The network retries, and phone B receives the same merge from phone A twice. Which property makes that harmless?"
+  options={["Commutative", "Associative", "Idempotent", "None: B now double-counts"]}
+  answer={2}
+>
+
+Idempotent means merging the same state twice changes nothing. Max of (3, 3) is still 3.
+
+</Quiz>
+
+### Two families of CRDTs
+
+<Compare
+  label=""
+  columns={[{ title: "State-based", tone: "blue" }, { title: "Operation-based", tone: "violet" }]}
+  rows={[
+    ["Sends", "Its whole state, like the counter above", "Just the operations: “Meera inserted 'eggs' after 'bread'”"],
+    ["Merges with", "A function like “max per slot”", "Applying each operation"],
+    ["Good", "Simple and robust", "Much smaller messages"],
+    ["Bad", "The state can be big", "The network must deliver every operation, exactly once (or operations must be safe to replay)"],
+  ]}
+/>
+
+- Real systems, Yjs included, **mix the two**. They send small operations during normal editing. When two replicas reconnect after a long time, they swap a compact summary of what each has seen, then send just the missing pieces.
+
+### Who has to be online?
+
+<Figure caption="OT relies on a central server to order and transform edits. A CRDT replica can sync with any other, directly or through a server, and still converge. Take the server down and compare.">
+  <TopologyDiagram />
 </Figure>
 
 ## How Yjs works
 
-**Yjs** is an open-source CRDT library for JavaScript, created by Kevin Jahns. It's based on an algorithm called **YATA**, described in a 2016 paper by Nicolaescu, Jahns, Derntl and Klamma. Yjs gives you shared types that look like normal data structures (`Y.Text`, `Y.Array`, `Y.Map`), and it handles the merging for you.
+- **Yjs** is an open-source CRDT library for JavaScript, created by Kevin Jahns.
+- It's based on **YATA**, an algorithm described in a 2016 paper by Nicolaescu, Jahns, Derntl and Klamma.
+- You use shared types that look like normal data structures (`Y.Text`, `Y.Array`, `Y.Map`), and Yjs handles the merging.
 
-### Step 1: Every insert gets a permanent, unique ID
+### Step 1: every insert gets a permanent ID
 
-Text editing is the hard case: "insert at position 5" breaks as soon as someone else edits before position 5. So Yjs doesn't use positions at all. Every inserted character (or list item) becomes an **item** with:
+- Text editing is the hard case. "Insert at position 5" breaks as soon as someone else edits before position 5: you just saw it in the OT demo.
+- So Yjs doesn't use positions at all. Every inserted character (or list item) becomes an **item** with:
+  - a unique ID: **who** created it (a random client ID) and **their counter** (0, 1, 2…);
+  - a reference to the item it was inserted **after** (and before), at the moment it was typed.
+- "Insert 'i' after item `A:2`" means the same thing on every replica, whatever else has changed.
 
-- a unique ID made of **who** created it (a random client ID) and **their counter** (0, 1, 2…),
-- a reference to the item it was inserted **after** (and before), at the moment it was typed.
-
-"Insert 'i' after the item `A:2`" means the same thing on every replica, no matter what else has changed.
-
-<Figure caption="How Yjs sees the word 'chai': a chain of items, each with a unique (client, counter) ID and a link to its neighbour. The deleted 'y' from client B stays in the chain as a tombstone.">
-  <YjsItemsDiagram />
+<Figure caption="How Yjs builds the word 'chai': a chain of items, each with a (client, counter) ID and a link to its neighbour. The deleted 'y' stays in the chain as a tombstone, and that's what lets a late edit land in the right place.">
+  <YjsItemChain />
 </Figure>
 
-### Step 2: Concurrent inserts at the same spot get a deterministic order
+### Step 2: inserts at the same spot get the same order everywhere
 
-If Meera and Kabir both insert something right after "bread" at the same time, both new items point to the same neighbour. Yjs breaks the tie with rules that every replica applies the same way (based on the items' IDs and origins), so everyone puts "eggs" and "chai" in the **same** order. Neither is lost; the order is just consistent everywhere.
+- Meera and Kabir both insert right after "bread" at the same time. Both new items point to the **same neighbour**.
+- Yjs breaks the tie with rules every replica applies the same way, based on the items' IDs and origins.
+- Neither item is lost. The order is just consistent everywhere.
 
-### Step 3: Deletes leave tombstones
+<Diagram caption="Two concurrent inserts after the same item. The order shown is one possible outcome; what matters is that every replica picks the same one.">
+  <Row>
+    <Group title="Meera (offline)" tone="violet" icon={<Smartphone />}>
+      <Node title="insert “eggs”" note="after “bread”" tone="violet" icon={<Plus />} />
+    </Group>
+    <Group title="Kabir (offline)" tone="blue" icon={<Smartphone />}>
+      <Node title="insert “chai”" note="after “bread”" tone="blue" icon={<Plus />} />
+    </Group>
+  </Row>
+  <Link label="sync: same neighbour, tie broken by the items' IDs" tone="amber" />
+  <Group title="Every replica, after the merge" tone="green" icon={<CheckCheck />} cols={2}>
+    <Node title="milk, bread, eggs, chai" note="Meera's phone" tone="green" pulse />
+    <Node title="milk, bread, eggs, chai" note="Kabir's phone" tone="green" pulse />
+  </Group>
+</Diagram>
 
-When you delete an item, Yjs doesn't throw it away immediately. It marks it as deleted, a **tombstone**. That's important: an edit from an offline phone might still say "insert after item `B:0`". If `B:0` were gone, nobody would know where to put the new text. Yjs keeps just enough of deleted items for this, and it does a lot of work to keep tombstones small, such as merging runs of consecutive items into one.
+### Step 3: deletes leave tombstones
 
-### Step 4: Sync by asking "what haven't you seen?"
+- When you delete an item, Yjs doesn't throw it away. It marks it deleted: a **tombstone**.
+- Why: an edit from an offline phone might still say "insert after item `B:0`". If `B:0` were gone, nobody would know where to put the new text.
+- Yjs keeps just enough of deleted items for this, and works hard to keep tombstones small, for example by merging runs of consecutive items into one.
 
-Every Yjs document keeps a **state vector**: for each client, the highest counter it has seen ("I have everything from client A up to 12, and from B up to 7"). To sync, a replica sends its state vector, and the other side replies with exactly the missing items. That's how a phone that's been offline for a day catches up quickly, and it works the same through a server, over WebRTC directly between browsers, or even by passing a file around.
+<Quiz
+  question="Why does Yjs keep a deleted item as a tombstone instead of removing it straight away?"
+  options={["So the user can undo the delete", "So edits that point at the deleted item still know where they go", "Because JavaScript can't free memory", "To make documents bigger on purpose"]}
+  answer={1}
+>
+
+Items are placed by "after item X", not by position. If X vanished, a late edit that says "after X" would have nowhere to go. In the chain above, "i" lands after the tombstone B:0.
+
+</Quiz>
+
+### Step 4: sync by asking "what haven't you seen?"
+
+- Every Yjs document keeps a **state vector**: for each client, the highest counter it has seen. "I have everything from client A up to 12, and from B up to 7."
+- To sync, a replica sends its state vector. The other side replies with exactly the missing items.
+- That's how a phone that's been offline for a day catches up quickly. It works the same through a server, directly between browsers, or even by passing a file around.
+
+<Figure caption="Each square is one item. The phone sends a few numbers; only the items the other side lacks travel back, in both directions.">
+  <StateVectorSync />
+</Figure>
+
+In code, that's all it takes to merge two documents:
 
 ```ts
+// file: merge.ts
 import * as Y from "yjs";
 
 const meera = new Y.Doc();
@@ -137,77 +294,110 @@ Y.applyUpdate(meera, Y.encodeStateAsUpdate(kabir, Y.encodeStateVector(meera)));
 meera.getArray("groceries").toArray(); // both items, in the same order on both phones
 ```
 
-That's genuinely all it takes to merge two documents. Below, both phones run *real* Yjs documents, wired together on this page with no server. Each phone also runs a naive last-write-wins copy, so you can watch them disagree.
+## Try it: two phones, one list
+
+Both phones below run *real* Yjs documents, wired together on this page with no server. Each phone also runs a naive last-write-wins copy, so you can watch them disagree.
 
 <DemoFrame
   title="Two phones, one list"
   hint="go offline, edit both!"
-  caption="Each phone holds a real Y.Doc. While both are online, updates flow instantly. Offline edits are kept locally; on reconnect, the docs swap exactly what the other is missing. The last-write-wins lists below use the same edits but keep only the newest snapshot."
+  caption="Each phone holds a real Y.Doc. While both are online, updates flow instantly. Offline edits are kept locally; on reconnect, the docs swap exactly what the other is missing. The last-write-wins lists use the same edits but keep only the newest snapshot."
 >
   <GroceryListDemo />
 </DemoFrame>
 
-Try deleting an item on one phone while the other ticks it off, both offline. Yjs keeps both intentions consistent everywhere. Last-write-wins either loses an edit or brings a deleted item back from the dead. Also keep an eye on the document size: it grows a little even when you delete things, because the history needed for merging is part of the data.
+Things to try:
 
-### Offline-first, for free
+1. **Lost update.** Take both phones offline, add a different item on each, reconnect. Yjs keeps both; last-write-wins keeps only the newer phone's list.
+2. **Back from the dead.** Offline, delete an item on one phone and tick it off on the other. Reconnect. Yjs keeps both intentions consistent everywhere. Last-write-wins either loses an edit or brings the deleted item back.
+3. **The cost.** Watch the document size. It grows a little even when you delete things, because the history needed for merging is part of the data.
 
-Because a CRDT doesn't need a referee, **offline** stops being a special case. Your app writes to its local replica immediately (so it feels instant), saves it to local storage, and syncs whenever a connection appears. This is the heart of what researchers at Ink & Switch called **local-first software** in a 2019 essay: apps where your data lives on your device first, and the cloud is a helpful sync partner rather than the owner of your data.
+## Offline-first, for free
 
-It's also why collaborative canvases are a natural fit for CRDTs. My own product, **Kiteloom**, is an infinite canvas where sketches, wireframes and diagrams are the same object, and its real-time multiplayer runs on Yjs. Every shape on the board is shared state that several people (and several offline laptops) can edit at once.
+Because a CRDT doesn't need a referee, **offline stops being a special case**.
 
-## Other ways to handle concurrent edits
+<Flow
+  steps={[
+    { title: "Edit", note: "write to the local replica: feels instant", tone: "violet", icon: <PenLine /> },
+    { title: "Save", note: "to the device's own storage", tone: "blue", icon: <Save /> },
+    { title: "Connection appears", note: "whenever it does", tone: "amber", icon: <Wifi /> },
+    { title: "Merge", note: "swap only what's missing", tone: "green", icon: <Merge /> },
+  ]}
+/>
 
-### Last-write-wins
+- This is the heart of what researchers at Ink & Switch called **local-first software**, in a 2019 essay: your data lives on your device first, and the cloud is a helpful sync partner rather than the owner of your data.
 
-<Analogy title="Photocopying the newest page over the old one">
-  Whoever saved last has their version copied over everyone else's. Simple, and always consistent, but anything the others wrote is simply gone.
-</Analogy>
+<Callout kind="real-world">
 
-Keep the version with the latest timestamp. Used everywhere, often by accident.
+Collaborative canvases are a natural fit for CRDTs. My own product, **Kiteloom**, is an infinite canvas where sketches, wireframes and diagrams are the same object, and its real-time multiplayer runs on Yjs. Every shape on the board is shared state that several people (and several offline laptops) can edit at once.
 
-### Locking
+</Callout>
 
-<Analogy title="The talking stick">
-  Only the person holding the stick may speak. Everyone else waits their turn.
-</Analogy>
+## Which approach should you use?
 
-Allow one editor at a time, or lock individual sections or cells.
+<Compare
+  label=""
+  columns={[
+    { title: "Last-write-wins", tone: "red" },
+    { title: "Locking", tone: "amber" },
+    { title: "OT", tone: "pink" },
+    { title: "Server-authoritative", tone: "blue" },
+    { title: "CRDT", tone: "green" },
+  ]}
+  rows={[
+    ["Everyday picture", "Photocopying the newest page over the old one", "The talking stick: only the holder speaks", "A referee who rewrites every move", "A teacher's attendance register: only the one at the front is official", "A shared rulebook for combining notebooks"],
+    ["How it works", "Keep the version with the latest timestamp", "One editor at a time, or lock sections or cells", "A central server orders all operations and transforms concurrent ones", "A central server is the truth; simple per-field rules, like LWW per property", "Merges that work in any order, on any replica"],
+    ["Needs a central server?", "No", "Someone has to hand out the lock", "Yes, as the referee", "Yes, it's the authority", "No: any replica can sync with any other"],
+    ["Main cost", "Silently loses data", "No offline editing; lots of waiting", "Hard to implement; rules out true peer-to-peer and long offline sessions", "The server must be in the middle", "Metadata; “converged” isn't always “what people meant”"],
+    ["Good for", "Values where only the latest matters: a profile photo, a “last seen” time", "A booking system, a shared spreadsheet cell", "Text, when every edit goes through your servers anyway (Google Docs)", "Objects with properties, with a server always in the middle (Figma)", "Offline-first, peer-to-peer, or no single referee"],
+  ]}
+/>
 
-### Operational Transformation
+### What CRDTs cost
 
-<Analogy title="A referee who rewrites every move">
-  Every player sends their move to the referee, who adjusts it to account for everything that has happened since, then announces the official result.
-</Analogy>
+<FeatureGrid
+  items={[
+    { title: "Metadata overhead", tone: "amber", icon: <HardDrive />, text: "Every item carries its ID and links, and deleted items leave tombstones, so a document can be bigger than its visible content. Yjs works hard to compress this, and for typical documents it's modest, but it never goes to zero." },
+    { title: "Converged isn't 'right'", tone: "pink", icon: <Users />, text: "CRDTs promise that replicas converge, not that the result is what humans wanted. Two people rename a file to two different names at once: the CRDT picks one, consistently. Someone still has to notice." },
+    { title: "Some rules need coordination", tone: "red", icon: <ShieldAlert />, text: "A rule like “the account balance must never go negative” can't be enforced by merging alone. That still needs someone in charge." },
+  ]}
+/>
 
-A central server orders all operations and transforms concurrent ones against each other.
+<Callout kind="insight">
 
-### Server-authoritative with simple rules
+CRDTs move complexity from "who's in charge?" to "how big is our history?".
 
-<Analogy title="A teacher's attendance register">
-  Students can call out changes from anywhere, but only the register at the front of the class is official, and it records the last thing said about each student.
-</Analogy>
+</Callout>
 
-Keep a central server as the source of truth and resolve conflicts with simple per-field rules, like "last write wins, but per property, not per document". This is roughly what Figma does (case file #2).
+### When the simpler design wins
 
-## Why we don't always use CRDTs (and when the alternative wins)
+- **Figma**'s 2019 engineering post explains that the team looked at both OT and CRDTs, then built a system *inspired* by CRDTs but simpler, because Figma always has a central server.
+- Each property on each object (a rectangle's colour, say) uses last-write-wins, and the server is the authority on the order of changes.
+- A design file is a tree of objects with properties, not one long string of text. So per-property LWW gives the right behaviour almost everywhere, and the central server avoids much of the metadata a fully decentralised CRDT needs.
+- **Google Docs** sticks with OT, which suits a world where every edit goes through Google's servers anyway.
 
-**LWW loses data.** It's fine for things where only the latest value matters (a user's profile photo, a "last seen" time), but not for anything people collaborate on. Notice, though, that LWW *per field* is itself a valid CRDT. The demo's naive version is bad because it applies LWW to the *whole list*.
+<Diagram caption="Figma's rule, as its post describes it: two changes only conflict if they hit the same property of the same object. Then the server's order decides.">
+  <Row>
+    <Group title="Different properties" tone="green" icon={<Layers />}>
+      <Node title="Meera: colour → blue" note="rectangle 1" tone="violet" icon={<Palette />} />
+      <Node title="Kabir: width → 200" note="rectangle 1" tone="blue" icon={<Ruler />} />
+      <Link label="independent" tone="green" />
+      <Node title="Both kept" note="blue, 200 wide" tone="green" icon={<CheckCheck />} pulse />
+    </Group>
+    <Group title="Same property" tone="amber" icon={<Split />}>
+      <Node title="Meera: colour → blue" note="rectangle 1" tone="violet" icon={<Palette />} />
+      <Node title="Kabir: colour → red" note="rectangle 1" tone="blue" icon={<Palette />} />
+      <Link label="conflict" tone="amber" />
+      <Node title="Server's order decides" note="the latest change wins" tone="amber" icon={<Server />} pulse />
+    </Group>
+  </Row>
+</Diagram>
 
-**Locking kills offline editing and feels slow.** Fine for a shared spreadsheet cell or a booking system, painful for writing together.
+<Callout kind="important" title="The lesson">
 
-**OT needs a central server, and it's hard to implement.** If you're Google and you run the server anyway, that's acceptable, and OT has had decades of production hardening. But it rules out true peer-to-peer and long offline sessions.
+CRDTs shine when you want **offline-first, peer-to-peer, or no single referee**. If you always have a server in the middle, a simpler server-authoritative design can be the better trade.
 
-<MarginNote tone="blue">
-  CRDTs move complexity from "who's in charge?" to "how big is our history?".
-</MarginNote>
-
-**CRDTs have their own costs.** The biggest is **metadata overhead**: every item carries its ID and links, and deleted items leave tombstones, so a document can be larger than the visible content. Libraries like Yjs work hard to compress this, and for typical documents the overhead is modest, but it never goes to zero. Second, CRDTs guarantee that replicas **converge**, not that the result is what humans wanted: if two people concurrently rename a file to two different names, the CRDT will pick one consistently, but someone still has to notice. Third, some application rules (like "the account balance must never go negative") can't be enforced by merging alone and still need coordination.
-
-### When the "alternative" is the better choice
-
-**Figma** is the famous example. Its 2019 engineering post explains that the team looked at both OT and CRDTs, and built a system *inspired* by CRDTs but simpler, because Figma always has a central server. Each property on each object (a rectangle's colour, say) uses last-write-wins, and the server is the authority on the order of changes. Since a design file is a tree of objects with properties rather than one long string of text, per-property LWW gives the right behaviour almost everywhere, and the central server avoids much of the metadata a fully decentralised CRDT needs. **Google Docs** sticks with OT, which suits a world where every edit goes through Google's servers anyway.
-
-The lesson: CRDTs shine when you want **offline-first, peer-to-peer, or no single referee**. If you always have a server in the middle, a simpler server-authoritative design can be the better trade.
+</Callout>
 
 ## In the wild: case files
 
@@ -276,17 +466,10 @@ The lesson: CRDTs shine when you want **offline-first, peer-to-peer, or no singl
   sourceHref="https://jupyterlab.readthedocs.io/en/3.6.x/user/rtc.html"
 />
 
-## TL;DR
+## Learn next and sources
 
-<TLDR>
-  <Takeaway>Concurrent edits + "last write wins" = silently lost work. Locking fixes that but kills offline.</Takeaway>
-  <Takeaway>OT transforms edits through a central referee (Google Docs). CRDTs merge in any order, with no referee.</Takeaway>
-  <Takeaway>Yjs: every insert gets a unique ID, deletes leave tombstones, and sync sends "only what you're missing".</Takeaway>
-  <Takeaway>CRDTs make offline-first easy, but cost metadata, and "converged" doesn't always mean "what humans meant".</Takeaway>
-  <Takeaway>Always have a server in the middle? A simpler server-authoritative design (like Figma's) might be enough.</Takeaway>
-</TLDR>
-
-## Sources
+- Next ideas: other CRDT types (sets, maps, registers); how rich-text editors bind to `Y.Text`; causality and vector clocks; [read-your-writes](/blog/read-your-writes) and other consistency guarantees.
+- Best long reads: the CRDT papers (source 3) and the local-first essay (source 5).
 
 1. C. A. Ellis and S. J. Gibbs, ["Concurrency control in groupware systems"](https://doi.org/10.1145/66926.66963), ACM SIGMOD, 1989.
 2. D. A. Nichols, P. Curtis, M. Dixon and J. Lamping, ["High-latency, low-bandwidth windowing in the Jupiter collaboration system"](https://doi.org/10.1145/215585.215706), ACM UIST, 1995.

@@ -117,7 +117,10 @@ function Track({ label, reverse }: { label: string; reverse?: boolean }) {
             styles.ride,
           )}
           style={
-            { animationDirection: reverse ? "reverse" : undefined, "--dur": "1.8s" } as CSSProperties
+            {
+              animationDirection: reverse ? "reverse" : undefined,
+              "--dur": "1.8s",
+            } as CSSProperties
           }
         />
       </div>
@@ -194,43 +197,98 @@ function SceneView({ rung }: { rung: Rung }) {
   return (
     <div className="flex items-center gap-1.5 sm:gap-2">
       <Box name="Module A" />
-      <Track label={reach ? `${rung.carry} → private!` : rung.carry} />
+      <Track label={rung.carry} />
       {target}
+    </div>
+  );
+}
+
+// The selected rung, as a scene with its code and a "how much A knows" meter.
+function RungDetail({ picked, onPick }: { picked: number; onPick: (index: number) => void }) {
+  const rung = RUNGS[picked];
+  const knowsWidth = ((RUNGS.length - picked) / RUNGS.length) * 100;
+
+  return (
+    <div
+      data-tone={toneFor(picked)}
+      className="rounded-2xl border border-(--tone-line) bg-paper-raised p-4 print:hidden"
+    >
+      <div key={picked} className="tut-pop">
+        <p className="text-xs font-bold tracking-[0.08em] text-(--tone) uppercase">
+          Rung {picked + 1} of {RUNGS.length}
+        </p>
+        <p className="mt-0.5 text-xl font-bold text-ink">{rung.name} coupling</p>
+        <p aria-live="polite" className="mt-1 leading-snug text-ink">
+          {rung.plain}
+        </p>
+        <div className="mt-4">
+          <SceneView rung={rung} />
+        </div>
+        <code className="mt-4 block overflow-x-auto rounded-lg border border-rule bg-paper px-3 py-2 font-mono text-[0.8rem] whitespace-pre text-ink">
+          {rung.code}
+        </code>
+        <div className="mt-4">
+          <p className="flex justify-between gap-2 text-xs text-ink-muted">
+            <span>How much A must know about B</span>
+            <span className="text-right text-ink">{rung.knows}</span>
+          </p>
+          <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-(--tone-soft)">
+            <div
+              className={cn("h-full origin-left rounded-full bg-(--tone)", styles.meter)}
+              style={{ width: `${knowsWidth}%`, opacity: 0.75 }}
+            />
+          </div>
+        </div>
+      </div>
+      <div className="mt-4 flex gap-2">
+        <button
+          type="button"
+          disabled={picked === 0}
+          onClick={() => onPick(picked - 1)}
+          className="inline-flex min-h-10 items-center gap-1 rounded-lg border border-rule bg-paper px-3 text-sm font-semibold text-ink transition hover:border-ink-muted active:translate-y-px disabled:opacity-40"
+        >
+          <ChevronUp className="h-4 w-4" aria-hidden /> Tighter
+        </button>
+        <button
+          type="button"
+          disabled={picked === RUNGS.length - 1}
+          onClick={() => onPick(picked + 1)}
+          className="inline-flex min-h-10 items-center gap-1 rounded-lg bg-(--tone) px-3 text-sm font-semibold text-paper transition active:translate-y-px disabled:opacity-40"
+        >
+          <ChevronDown className="h-4 w-4" aria-hidden /> Looser
+        </button>
+      </div>
     </div>
   );
 }
 
 export default function CouplingLadder() {
   const [picked, setPicked] = useState(0);
-  const rung = RUNGS[picked];
-  const tone = toneFor(picked);
-  const knowsWidth = ((RUNGS.length - picked) / RUNGS.length) * 100;
 
   return (
     <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:items-start">
-      {/* The ladder */}
-      <div className="relative order-2 pl-7 lg:order-1">
-        <div aria-hidden className="absolute top-1 bottom-1 left-2 flex w-1.5 flex-col gap-1">
-          {RUNGS.map((r, i) => (
-            <span
-              key={r.name}
-              data-tone={toneFor(i)}
-              className="flex-1 rounded-full bg-(--tone-line)"
-            />
-          ))}
-        </div>
-        <span
-          aria-hidden
-          data-tone={tone}
-          className="absolute left-[0.2rem] h-4 w-4 rounded-full border-2 border-paper bg-(--tone) transition-[top] duration-500 ease-out"
-          style={{ top: `calc(${((picked + 0.5) / RUNGS.length) * 100}% - 0.5rem)` }}
-        />
+      {/* The ladder. On phones the selected rung opens in place. */}
+      <div className="pl-6">
         <p className="mb-2 flex items-center gap-1 text-xs font-bold tracking-[0.08em] text-ink-muted uppercase">
           <ChevronUp className="h-3.5 w-3.5" aria-hidden /> tighter: avoid
         </p>
         <ol className="list-none space-y-2 p-0" aria-label="Kinds of coupling, tightest first">
           {RUNGS.map((r, i) => (
-            <li key={r.name} data-tone={toneFor(i)}>
+            <li key={r.name} data-tone={toneFor(i)} className="relative">
+              {/* This rung's stretch of the tight-to-loose rail. */}
+              <span
+                aria-hidden
+                className={cn(
+                  "absolute -top-1 -bottom-1 -left-5 w-1.5 rounded-full transition-colors duration-300",
+                  picked === i ? "bg-(--tone)" : "bg-(--tone-line)",
+                )}
+              />
+              {picked === i && (
+                <span
+                  aria-hidden
+                  className="tut-pop absolute top-3.5 -left-[1.6rem] h-4 w-4 rounded-full border-2 border-paper bg-(--tone)"
+                />
+              )}
               <button
                 type="button"
                 aria-pressed={picked === i}
@@ -253,6 +311,11 @@ export default function CouplingLadder() {
                   </span>
                 </span>
               </button>
+              {picked === i && (
+                <div className="mt-2 lg:hidden">
+                  <RungDetail picked={picked} onPick={setPicked} />
+                </div>
+              )}
             </li>
           ))}
         </ol>
@@ -261,56 +324,8 @@ export default function CouplingLadder() {
         </p>
       </div>
 
-      {/* The selected rung, as a scene */}
-      <div
-        data-tone={tone}
-        className="order-1 rounded-2xl border border-(--tone-line) bg-paper-raised p-4 lg:sticky lg:top-28 lg:order-2 print:hidden"
-      >
-        <div key={picked} className="tut-pop">
-          <p className="text-xs font-bold tracking-[0.08em] text-(--tone) uppercase">
-            Rung {picked + 1} of {RUNGS.length}
-          </p>
-          <p className="mt-0.5 text-xl font-bold text-ink">{rung.name} coupling</p>
-          <p aria-live="polite" className="mt-1 leading-snug text-ink">
-            {rung.plain}
-          </p>
-          <div className="mt-4">
-            <SceneView rung={rung} />
-          </div>
-          <code className="mt-4 block overflow-x-auto rounded-lg border border-rule bg-paper px-3 py-2 font-mono text-[0.8rem] whitespace-pre text-ink">
-            {rung.code}
-          </code>
-          <div className="mt-4">
-            <p className="flex justify-between gap-2 text-xs text-ink-muted">
-              <span>How much A must know about B</span>
-              <span className="text-right text-ink">{rung.knows}</span>
-            </p>
-            <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-(--tone-soft)">
-              <div
-                className={cn("h-full origin-left rounded-full bg-(--tone)", styles.meter)}
-                style={{ width: `${knowsWidth}%`, opacity: 0.75 }}
-              />
-            </div>
-          </div>
-        </div>
-        <div className="mt-4 flex gap-2">
-          <button
-            type="button"
-            disabled={picked === 0}
-            onClick={() => setPicked(picked - 1)}
-            className="inline-flex min-h-10 items-center gap-1 rounded-lg border border-rule bg-paper px-3 text-sm font-semibold text-ink transition hover:border-ink-muted active:translate-y-px disabled:opacity-40"
-          >
-            <ChevronUp className="h-4 w-4" aria-hidden /> Tighter
-          </button>
-          <button
-            type="button"
-            disabled={picked === RUNGS.length - 1}
-            onClick={() => setPicked(picked + 1)}
-            className="inline-flex min-h-10 items-center gap-1 rounded-lg bg-(--tone) px-3 text-sm font-semibold text-paper transition active:translate-y-px disabled:opacity-40"
-          >
-            <ChevronDown className="h-4 w-4" aria-hidden /> Looser
-          </button>
-        </div>
+      <div className="hidden lg:sticky lg:top-28 lg:block">
+        <RungDetail picked={picked} onPick={setPicked} />
       </div>
     </div>
   );

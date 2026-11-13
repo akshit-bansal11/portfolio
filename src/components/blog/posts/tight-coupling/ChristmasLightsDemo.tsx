@@ -196,13 +196,7 @@ export default function ChristmasLightsDemo() {
                 onKeyDown={(event) => onKey(event, i)}
                 className="group cursor-pointer outline-none"
               >
-                <rect
-                  x={x - 19}
-                  y={SOCKET - 10}
-                  width={38}
-                  height={56}
-                  fill="transparent"
-                />
+                <rect x={x - 19} y={SOCKET - 10} width={38} height={56} fill="transparent" />
                 {/* Focus / hover ring */}
                 <rect
                   x={x - 16}

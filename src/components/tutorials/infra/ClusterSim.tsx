@@ -217,15 +217,7 @@ function reducer(state: State, action: Action): State {
 }
 
 // One pod chip. Running pods can be deleted; the others show what is happening to them.
-function PodChip({
-  pod,
-  lost,
-  onDelete,
-}: {
-  pod: Pod;
-  lost: boolean;
-  onDelete: () => void;
-}) {
+function PodChip({ pod, lost, onDelete }: { pod: Pod; lost: boolean; onDelete: () => void }) {
   const status = lost ? "Unknown" : pod.terminating ? "Terminating" : "Running";
   const tone: Tone = lost ? "red" : pod.terminating ? "amber" : "green";
 
@@ -249,7 +241,10 @@ function PodChip({
       />
       <span className="min-w-0 flex-1 leading-tight">
         <span
-          className={cn("block font-mono text-sm text-ink", (lost || pod.terminating) && "line-through decoration-(--tone)")}
+          className={cn(
+            "block font-mono text-sm text-ink",
+            (lost || pod.terminating) && "line-through decoration-(--tone)",
+          )}
         >
           {pod.id}
         </span>
@@ -292,173 +287,180 @@ export default function ClusterSim() {
 
   return (
     <div data-widget="cluster-sim" data-tone="k8s" className={FRAME}>
-      {/* Control plane: what you asked for, what is true, and whether the loop is working. */}
-      <div className="flex flex-wrap items-center gap-x-5 gap-y-3 rounded-xl border border-(--tone-line) bg-(--tone-soft) p-3">
-        <p className="flex items-center gap-2 font-semibold text-ink">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-paper text-(--tone)">
-            <Cpu className="h-5 w-5" aria-hidden />
-          </span>
-          <span className="leading-tight">
-            Control plane
-            <span
-              data-tone={busy ? "amber" : "green"}
-              className="flex items-center gap-1 text-xs font-semibold text-(--tone)"
-            >
-              {busy ? (
-                <RefreshCw className={cn("h-3 w-3", motion.spin)} aria-hidden />
-              ) : (
-                <Check className="h-3 w-3" aria-hidden />
-              )}
-              {busy ? "reconciling…" : "in sync"}
+      <div className="dg-canvas rounded-xl border border-rule p-3">
+        {/* Control plane: what you asked for, what is true, and whether the loop is working. */}
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-3 rounded-xl border border-(--tone-line) bg-paper p-3 [background-image:var(--tone-fill)]">
+          <p className="flex items-center gap-2 font-semibold text-ink">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-paper text-(--tone)">
+              <Cpu className="h-5 w-5" aria-hidden />
             </span>
-          </span>
-        </p>
-
-        <div role="group" aria-label="Wanted replicas" className="flex items-center gap-1.5">
-          <button
-            type="button"
-            aria-label="Fewer replicas"
-            disabled={state.wanted <= 1}
-            onClick={() => dispatch({ type: "wanted", value: state.wanted - 1 })}
-            className={cn(BUTTON, "min-w-10 px-0 print:hidden")}
-          >
-            <Minus className="h-4 w-4" aria-hidden />
-          </button>
-          <p className="min-w-20 text-center text-sm text-ink-muted">
-            wanted{" "}
-            <output className="block font-mono text-lg leading-none font-bold text-ink">
-              {state.wanted}
-            </output>
-          </p>
-          <button
-            type="button"
-            aria-label="More replicas"
-            disabled={state.wanted >= MAX_PODS}
-            onClick={() => dispatch({ type: "wanted", value: state.wanted + 1 })}
-            className={cn(BUTTON, "min-w-10 px-0 print:hidden")}
-          >
-            <Plus className="h-4 w-4" aria-hidden />
-          </button>
-        </div>
-
-        {/* One slot per wanted pod: filled when a pod runs in it. */}
-        <div className="flex items-center gap-2 text-sm text-ink-muted">
-          <span>running</span>
-          <span aria-hidden className="flex gap-1">
-            {Array.from({ length: Math.max(state.wanted, running) }, (_, i) => (
+            <span className="leading-tight">
+              Control plane
               <span
-                // biome-ignore lint/suspicious/noArrayIndexKey: slots are positional.
-                key={i}
-                data-tone={i < running && i < state.wanted ? "green" : "amber"}
-                className={cn(
-                  "h-3 w-3 rounded-full border border-(--tone) transition-colors duration-300",
-                  i < running ? "bg-(--tone)" : "border-dashed bg-transparent",
+                data-tone={busy ? "amber" : "green"}
+                className="flex items-center gap-1 text-xs font-semibold text-(--tone)"
+              >
+                {busy ? (
+                  <RefreshCw className={cn("h-3 w-3", motion.spin)} aria-hidden />
+                ) : (
+                  <Check className="h-3 w-3" aria-hidden />
                 )}
-              />
-            ))}
-          </span>
-          <span className="font-mono font-bold text-ink">
-            {running}/{state.wanted}
-          </span>
-        </div>
-      </div>
-
-      {pending.length > 0 && (
-        <ul
-          data-tone="amber"
-          aria-label="Pending pods"
-          className="mt-3 flex list-none flex-wrap items-center gap-2 rounded-lg border border-dashed border-(--tone-line) p-2 text-sm"
-        >
-          <li className="font-semibold text-(--tone)">Pending, no node fits:</li>
-          {pending.map((pod) => (
-            <li
-              key={pod.id}
-              className={cn(
-                motion["drop-in"],
-                "rounded-md border border-dashed border-(--tone) px-2 py-0.5 font-mono text-ink",
-              )}
-            >
-              <span className={motion.breathe}>{pod.id}</span>
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {/* The nodes. A wire from the control plane carries each newly scheduled pod down. */}
-      <div className="dg-canvas mt-3 grid gap-3 rounded-xl border border-rule p-3 sm:grid-cols-3 sm:pt-0">
-        {state.nodes.map((node) => {
-          const pods = state.pods.filter((pod) => pod.node === node.id);
-          const hit = state.placed?.node === node.id ? state.placed.n : null;
-          return (
-            <div key={node.id} data-tone={node.up ? "green" : "red"} className="flex flex-col">
-              <span aria-hidden className="relative mx-auto hidden h-5 w-[2px] bg-rule sm:block">
-                {hit !== null && (
-                  <span
-                    key={hit}
-                    data-tone="k8s"
-                    className={cn(
-                      motion["drop-packet"],
-                      "absolute left-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--tone) opacity-0 shadow-[0_0_0_3px_var(--tone-soft)]",
-                    )}
-                  />
-                )}
+                {busy ? "reconciling…" : "in sync"}
               </span>
-              <section
-                aria-label={`${node.id}, ${node.up ? "ready" : "down"}`}
+            </span>
+          </p>
+
+          <div role="group" aria-label="Wanted replicas" className="flex items-center gap-1.5">
+            <button
+              type="button"
+              aria-label="Fewer replicas"
+              disabled={state.wanted <= 1}
+              onClick={() => dispatch({ type: "wanted", value: state.wanted - 1 })}
+              className={cn(BUTTON, "min-w-10 px-0 print:hidden")}
+            >
+              <Minus className="h-4 w-4" aria-hidden />
+            </button>
+            <p className="min-w-20 text-center text-sm text-ink-muted">
+              wanted{" "}
+              <output className="block font-mono text-lg leading-none font-bold text-ink">
+                {state.wanted}
+              </output>
+            </p>
+            <button
+              type="button"
+              aria-label="More replicas"
+              disabled={state.wanted >= MAX_PODS}
+              onClick={() => dispatch({ type: "wanted", value: state.wanted + 1 })}
+              className={cn(BUTTON, "min-w-10 px-0 print:hidden")}
+            >
+              <Plus className="h-4 w-4" aria-hidden />
+            </button>
+          </div>
+
+          {/* One slot per wanted pod: filled when a pod runs in it. */}
+          <div className="flex items-center gap-2 text-sm text-ink-muted">
+            <span>running</span>
+            <span aria-hidden className="flex gap-1">
+              {Array.from({ length: Math.max(state.wanted, running) }, (_, i) => (
+                <span
+                  // biome-ignore lint/suspicious/noArrayIndexKey: slots are positional.
+                  key={i}
+                  data-tone={i < running && i < state.wanted ? "green" : "amber"}
+                  className={cn(
+                    "h-3 w-3 rounded-full border border-(--tone) transition-colors duration-300",
+                    i < running ? "bg-(--tone)" : "border-dashed bg-transparent",
+                  )}
+                />
+              ))}
+            </span>
+            <span className="font-mono font-bold text-ink">
+              {running}/{state.wanted}
+            </span>
+          </div>
+        </div>
+
+        {pending.length > 0 && (
+          <ul
+            data-tone="amber"
+            aria-label="Pending pods"
+            className="mt-3 flex list-none flex-wrap items-center gap-2 rounded-lg border border-dashed border-(--tone-line) p-2 text-sm"
+          >
+            <li className="font-semibold text-(--tone)">Pending, no node fits:</li>
+            {pending.map((pod) => (
+              <li
+                key={pod.id}
                 className={cn(
-                  "relative flex flex-1 flex-col rounded-xl border bg-paper p-3 transition-[border-color,background-color,opacity] duration-300",
-                  "has-[[data-pod]:hover]:border-(--tone) has-[[data-pod]:hover]:shadow-[0_10px_24px_-16px_var(--tone)]",
-                  node.up ? "border-(--tone-line)" : "border-dashed border-(--tone) bg-(--tone-soft)",
+                  motion["drop-in"],
+                  "rounded-md border border-dashed border-(--tone) px-2 py-0.5 font-mono text-ink",
                 )}
               >
-                {hit !== null && (
-                  <span
-                    key={hit}
-                    aria-hidden
-                    data-tone="k8s"
-                    className={cn(
-                      motion["ping-once"],
-                      "pointer-events-none absolute inset-0 rounded-xl",
-                    )}
-                    style={{ "--delay": "0.45s" } as CSSProperties}
-                  />
-                )}
-                <p className="flex items-center gap-2 font-semibold text-ink">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-(--tone-soft) text-(--tone)">
-                    <Server className="h-4 w-4" aria-hidden />
-                  </span>
-                  {node.id}
-                  <span className="ml-auto rounded-full border border-(--tone-line) px-2 py-0.5 text-[0.7rem] font-bold tracking-wide text-(--tone) uppercase">
-                    {node.up ? "Ready" : "NotReady"}
-                  </span>
-                </p>
-                <ul className="my-3 flex min-h-24 list-none flex-col gap-1.5 p-0">
-                  {pods.map((pod) => (
-                    <PodChip
-                      key={pod.id}
-                      pod={pod}
-                      lost={!node.up}
-                      onDelete={() => dispatch({ type: "killPod", id: pod.id })}
-                    />
-                  ))}
-                  {pods.length === 0 && (
-                    <li className="flex flex-1 items-center justify-center rounded-lg border border-dashed border-rule text-sm text-ink-muted">
-                      {node.up ? "no pods" : "unreachable"}
-                    </li>
-                  )}
-                </ul>
-                <button
-                  type="button"
-                  onClick={() => dispatch({ type: "toggleNode", id: node.id })}
-                  data-tone={node.up ? "red" : "green"}
-                  className={cn(BUTTON, "mt-auto w-full print:hidden")}
+                <span className={motion.breathe}>{pod.id}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {/* The nodes. A wire from the control plane carries each newly scheduled pod down. */}
+        <div className="mt-3 grid gap-3 sm:mt-0 sm:grid-cols-3">
+          {state.nodes.map((node) => {
+            const pods = state.pods.filter((pod) => pod.node === node.id);
+            const hit = state.placed?.node === node.id ? state.placed.n : null;
+            return (
+              <div key={node.id} data-tone={node.up ? "green" : "red"} className="flex flex-col">
+                <span
+                  aria-hidden
+                  className="relative mx-auto hidden h-7 w-[2px] bg-(--tone-line) sm:block"
                 >
-                  {node.up ? "Take node down" : "Restore node"}
-                </button>
-              </section>
-            </div>
-          );
-        })}
+                  {hit !== null && (
+                    <span
+                      key={hit}
+                      data-tone="k8s"
+                      className={cn(
+                        motion["drop-packet"],
+                        "absolute left-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--tone) opacity-0 shadow-[0_0_0_3px_var(--tone-soft)]",
+                      )}
+                    />
+                  )}
+                </span>
+                <section
+                  aria-label={`${node.id}, ${node.up ? "ready" : "down"}`}
+                  className={cn(
+                    "relative flex flex-1 flex-col rounded-xl border bg-paper p-3 transition-[border-color,background-color,opacity] duration-300",
+                    "has-[[data-pod]:hover]:border-(--tone) has-[[data-pod]:hover]:shadow-[0_10px_24px_-16px_var(--tone)]",
+                    node.up
+                      ? "border-(--tone-line)"
+                      : "border-dashed border-(--tone) bg-(--tone-soft)",
+                  )}
+                >
+                  {hit !== null && (
+                    <span
+                      key={hit}
+                      aria-hidden
+                      data-tone="k8s"
+                      className={cn(
+                        motion["ping-once"],
+                        "pointer-events-none absolute inset-0 rounded-xl",
+                      )}
+                      style={{ "--delay": "0.45s" } as CSSProperties}
+                    />
+                  )}
+                  <p className="flex items-center gap-2 font-semibold text-ink">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-(--tone-soft) text-(--tone)">
+                      <Server className="h-4 w-4" aria-hidden />
+                    </span>
+                    {node.id}
+                    <span className="ml-auto rounded-full border border-(--tone-line) px-2 py-0.5 text-[0.7rem] font-bold tracking-wide text-(--tone) uppercase">
+                      {node.up ? "Ready" : "NotReady"}
+                    </span>
+                  </p>
+                  <ul className="my-3 flex min-h-12 list-none sm:min-h-24 flex-col gap-1.5 p-0">
+                    {pods.map((pod) => (
+                      <PodChip
+                        key={pod.id}
+                        pod={pod}
+                        lost={!node.up}
+                        onDelete={() => dispatch({ type: "killPod", id: pod.id })}
+                      />
+                    ))}
+                    {pods.length === 0 && (
+                      <li className="flex flex-1 items-center justify-center rounded-lg border border-dashed border-rule text-sm text-ink-muted">
+                        {node.up ? "no pods" : "unreachable"}
+                      </li>
+                    )}
+                  </ul>
+                  <button
+                    type="button"
+                    onClick={() => dispatch({ type: "toggleNode", id: node.id })}
+                    data-tone={node.up ? "red" : "green"}
+                    className={cn(BUTTON, "mt-auto w-full print:hidden")}
+                  >
+                    {node.up ? "Take node down" : "Restore node"}
+                  </button>
+                </section>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       <ul

@@ -1,39 +1,83 @@
-import CompassDiagram from "@/components/blog/posts/traffic-patterns/CompassDiagram";
-import NetworkShapeDiagram from "@/components/blog/posts/traffic-patterns/NetworkShapeDiagram";
-import SidecarDiagram from "@/components/blog/posts/traffic-patterns/SidecarDiagram";
+import { Activity, Ban, Boxes, Container, Cpu, Gauge, Globe, Layers, Lock, MemoryStick, Network, Search, Server, ShieldCheck, ShoppingCart, Split, Timer, Wallet, Waypoints, Workflow } from "lucide-react";
+import MeshCall from "@/components/blog/posts/traffic-patterns/MeshCall";
+import NetworkShapes from "@/components/blog/posts/traffic-patterns/NetworkShapes";
+import TrafficCompass from "@/components/blog/posts/traffic-patterns/TrafficCompass";
 import { TrafficFlowDemo } from "@/components/blog/posts/traffic-patterns/lazy";
+
+## In one minute
+
+- **North-south** traffic crosses your edge: users and partners talking to your servers. **East-west** traffic stays inside: your services calling each other.
+- Microservices, containers and big fan-out requests made east-west the bulk of data-centre traffic. Networks and security both had to change shape.
+- The front door gets a **load balancer** and an **API gateway**. The corridors get a **service mesh**: a **sidecar** proxy next to every service, plus a **control plane** that configures them all.
+- **Zero trust** between services: every call proves who it comes from and is checked against rules, so one stolen login can't walk to the payments database. The price is extra latency, memory and moving parts.
+
+## Words you need
+
+<Glossary
+  items={[
+    { term: "Data centre", means: "A building (or a cloud region) full of servers that run your system.", like: "an office building full of desks" },
+    { term: "Service", means: "One program that does one job, such as orders or payments, and talks to other services over the network. Splitting an app into many of them is called microservices.", like: "one shop in a shopping mall" },
+    { term: "North-south traffic", means: "Traffic that crosses your system's edge: between the outside world (users, partner APIs, payment networks) and your servers.", like: "shoppers walking in and out of the mall's main doors" },
+    { term: "East-west traffic", means: "Traffic that stays inside: your servers and services calling each other.", like: "shops passing stock to each other along the back corridors" },
+    { term: "Edge (perimeter)", means: "The boundary between your system and the internet. Everything outside it is a stranger.", like: "the outer wall and front door of the building" },
+    { term: "IP address and port", means: "An IP address says which machine; a port number says which program on it.", like: "a street address and a flat number" },
+    { term: "DNS", means: "The system that turns a name like api.example.com into an IP address.", like: "a phone book" },
+    { term: "CDN", means: "Content delivery network: servers spread around the world that answer from a nearby cache and soak up attacks before they reach you.", like: "local kiosks that stock the best-selling items" },
+    { term: "Load balancer", means: "Spreads incoming requests across several copies of a service, so no single server is overwhelmed.", like: "a host seating diners across all the tables" },
+    { term: "Layer 4 / Layer 7", means: "A Layer 4 load balancer only sees addresses and ports. A Layer 7 one understands HTTP, so it can route by URL or header.", like: "a courier who reads only the address vs one who reads the letter" },
+    { term: "API gateway", means: "A smarter front door. It checks who you are (authentication), limits how often you can call (rate limits) and sends each request to the right internal service.", like: "a reception desk that checks your ID and sends you to the right floor" },
+    { term: "Proxy", means: "A program in the middle of a call. It receives the call, does some work on it, and forwards it.", like: "an assistant who places your phone calls for you" },
+    { term: "Sidecar", means: "A small proxy that runs right next to one service and handles all of that service's network traffic.", like: "a sidecar bolted to a motorbike" },
+    { term: "Service mesh", means: "A sidecar next to every service, plus a central brain that configures all of them.", like: "staff at every shop's back door, all managed by the mall office" },
+    { term: "Control plane / data plane", means: "The data plane is the sidecars carrying the real calls. The control plane is the central brain that gives every sidecar its rules, policies and certificates.", like: "the trains vs the signal box" },
+    { term: "Certificate", means: "A signed digital ID card a program shows to prove who it is.", like: "a staff ID badge" },
+    { term: "TLS and mTLS", means: "TLS encrypts a connection, and the server shows a certificate (that's the S in HTTPS). Mutual TLS (mTLS): both sides show one.", like: "only the shop showing its licence vs both of you showing ID" },
+    { term: "Timeout and retry", means: "A timeout gives up on a call that takes too long. A retry tries a failed call again.", like: "hanging up after ten rings, then calling back" },
+    { term: "Firewall and VPN", means: "A firewall lets only allowed traffic through. A VPN is an encrypted tunnel into a private network.", like: "a gate guard, and a private tunnel to the building" },
+    { term: "Perimeter security", means: "A strong wall at the edge and full trust for anything inside it. Also called castle-and-moat.", like: "a castle: big walls, no locks on the inside doors" },
+    { term: "Zero trust", means: "Never trust a request because of where it comes from. Check who is asking on every request, inside or out.", like: "a badge reader on every door, not just the front one" },
+    { term: "Moving sideways", means: "An attacker spreading from their first foothold to other machines inside. Security people call it lateral movement.", like: "a thief in the corridor trying every office door" },
+    { term: "Switch", means: "A network box that connects machines with cables and passes traffic between them.", like: "a road junction" },
+    { term: "VM and container", means: "Ways to run many small, walled-off workloads on one physical machine, and move them around.", like: "flats in one building, with tenants moving in and out" },
+  ]}
+/>
 
 ## A locked front door and open offices
 
-Picture an office building with excellent front-door security. There's a guard, a badge reader and a visitor log. But once you're past the lobby, every office door is unlocked, and nobody asks who you are as you walk from floor to floor.
+Picture an office building with great front-door security: a guard, a badge reader, a visitor log. Past the lobby, every office door is unlocked, and nobody asks who you are as you walk from floor to floor.
 
-In late 2013, attackers got into the US retailer Target's network using login credentials stolen from a refrigeration and HVAC contractor that had access for its work. That first foothold wasn't anywhere near the payment systems. From there, the attackers moved through the internal network until they reached the checkout terminals in Target's stores. Data from about 40 million credit and debit cards was stolen. A US Senate committee later criticised Target for giving network access to a vendor whose security practices didn't meet common standards.
+- In late 2013 this happened to the US retailer **Target** (case file #4). Attackers logged in with credentials stolen from a refrigeration and HVAC contractor.
+- That first foothold was nowhere near the payment systems. They moved sideways through the internal network to the checkout terminals in Target's stores.
+- Data from about 40 million credit and debit cards was stolen.
 
-The lesson people took from breaches like this one: watching who comes in through the front door isn't enough. You also have to care about who talks to whom **inside** the building.
+<Callout kind="important">
 
-<MarginNote label="two directions">
-  in through the front door = north-south. walking between offices = east-west.
-</MarginNote>
+Watching who comes in through the front door isn't enough. You also have to care about who talks to whom **inside** the building.
 
-Engineers describe these two kinds of movement with compass directions: **north-south** traffic and **east-west** traffic. This post covers what they mean, why east-west traffic exploded in the last fifteen years, the tools for each (load balancers, API gateways, service meshes and sidecars) and why "zero trust" between services became the norm. Along the way we'll look at how Lyft, Netflix, Google, Target and Razorpay handled it. There's a demo where you can let an intruder in and watch what they can reach.
+</Callout>
 
-## What are north-south and east-west traffic?
+## North-south vs east-west
 
-When engineers draw a data centre, they usually put the internet at the top of the page and the servers below. So:
+Engineers draw the internet at the top of the page and the servers below it. That gives the two directions their names.
 
-- **North-south traffic** crosses the boundary of your system. A user's phone asks your app for their feed (southbound), and the answer goes back out (northbound). Traffic between your data centre and the outside world (users, partner APIs, payment networks) is north-south.
-- **East-west traffic** stays inside. Your web service asks the orders service for a user's orders, which asks the payments service for a payment status, which reads the payments database. All of that is east-west: servers talking to servers, sideways across the page.
+- **North-south** crosses the wall. A phone asks your app for a feed (southbound); the answer goes back out (northbound).
+- **East-west** runs sideways, inside. Web asks Orders for a user's orders; Orders asks Payments for a payment status; Payments reads the payments database.
 
-<Figure caption="Draw the internet at the top and your servers below: anything crossing the wall is north-south; anything moving between services inside is east-west.">
-  <CompassDiagram />
+<Figure caption="Packets cross the wall up and down (north-south) and run sideways between services (east-west). Pick a direction to focus it; hover a box to pick it out.">
+  <TrafficCompass />
 </Figure>
 
-A few more terms we'll need:
-
-- A **load balancer** spreads incoming requests across several copies of a service, so no single server is overwhelmed. Some work at the network level (**Layer 4**: they only see addresses and ports), others understand HTTP (**Layer 7**: they can route based on the URL or headers).
-- An **API gateway** is a smarter front door. It checks who you are (authentication), applies rate limits, and routes each request to the right internal service.
-- A **sidecar** is a small helper program that runs right next to each service, like a sidecar attached to a motorbike, and handles the service's network traffic for it.
-- A **service mesh** is what you get when every service has a sidecar, plus a central brain that configures them all.
+<Compare
+  label=""
+  columns={[{ title: "North-south", tone: "amber" }, { title: "East-west", tone: "blue" }]}
+  rows={[
+    ["Where it goes", "Across your edge, in and out", "Between services, inside"],
+    ["Who sends it", "Strangers on the public internet: users, partners, attackers", "Your own services (or whoever has taken one over)"],
+    ["How much", "One request in, one answer out", "That one request fans out into many internal calls"],
+    ["Old assumption", "Untrusted: check everything", "Trusted, because it's inside"],
+    ["Main tools", "DNS, CDN, load balancer, API gateway", "Libraries in each service, sidecars, a service mesh"],
+  ]}
+/>
 
 <Analogy
   title="A shopping mall"
@@ -45,71 +89,153 @@ A few more terms we'll need:
     ["mall management issuing staff badges", "the mesh's control plane"],
   ]}
 >
-  At a mall, everyone notices the main entrance: the crowds, the security guard, the opening hours. But behind the scenes, there's a second network of service corridors. Shops pass stock to each other, deliveries go from the loading dock to each store, and staff move between back rooms all day.
 
-  On a busy day, there's far more movement in the back corridors than through the front doors. And if a thief gets into the corridors, the front-door guard can't see them. That's why big malls put locks and staff on the back doors too.
+Everyone notices a mall's main entrance: the crowds, the guard, the opening hours. Behind the scenes there's a second network of service corridors. Shops pass stock to each other, deliveries go from the loading dock to each store, and staff move between back rooms all day.
+
+On a busy day there's far more movement in the corridors than through the front doors. If a thief gets into the corridors, the front-door guard can't see them. So big malls put locks and staff on the back doors too.
+
 </Analogy>
 
-## Where this came from
+## Why east-west traffic exploded
 
-In the early web era, most applications were built in three layers: a web server, an application server and a database, often called a **three-tier architecture**. Most of the interesting traffic was north-south: a request came in, went down through the layers, and the answer went back out. Networks were built to match. The classic data centre network was a tree: servers plugged into **access** switches, which fed **aggregation** switches, which fed a big **core** switch at the top that connected to the outside world.
+In the early web, most apps had three layers: a web server, an application server and a database. This is a **three-tier architecture**. A request came in, went down the layers and the answer went back out: mostly north-south. Then three things changed.
 
-Then three things changed.
+<FeatureGrid
+  items={[
+    { title: "Fan-out", tone: "violet", icon: <Waypoints />, text: "Big internet companies split work across many machines. One search or feed request might fan out to hundreds of servers, each holding a slice of the data, and their answers get combined." },
+    { title: "VMs, then containers", tone: "cyan", icon: <Container />, text: "Many small workloads packed onto shared hardware, moving around all the time. More things on the network, talking to each other." },
+    { title: "Microservices", tone: "blue", icon: <Boxes />, text: "Apps split into dozens or hundreds of small services that call each other over the network. One click can trigger a whole chain of internal calls." },
+  ]}
+/>
 
-First, big internet companies started splitting work across many machines. A single search or feed request might fan out to hundreds of servers, each holding a slice of the data, and their answers would be combined. Second, **virtualisation** and later **containers** packed many small workloads onto shared hardware, with workloads moving around constantly. Third, **microservices** split applications into dozens or hundreds of small services that call each other over the network. One click from a user can now trigger a whole chain of internal calls.
+<Callout kind="insight">
 
-The result: most traffic stopped crossing the edge at all. Cisco's Global Cloud Index forecast that more than 70% of data-centre traffic would stay *inside* the data centre. The old tree networks struggled with this, because two servers in different branches had to talk all the way up through the core and back down. So data centres moved to **leaf-spine** networks, where every "leaf" switch connects to every "spine" switch, making any two servers the same short distance apart.
+Most traffic stopped crossing the edge at all. Cisco's Global Cloud Index forecast that more than 70% of data-centre traffic would stay *inside* the data centre.
 
-<Figure caption="The same two servers talking. In a three-tier tree, the conversation climbs to a single core and back down. In a leaf-spine network, every path is equally short, and there are many of them to share the load.">
-  <NetworkShapeDiagram />
+</Callout>
+
+### The network changed shape
+
+- The classic data-centre network was a **tree**. Servers plugged into **access** switches, which fed **aggregation** switches, which fed one big **core** switch at the top, connected to the outside world. Great for traffic going up and out.
+- For east-west traffic it's a detour: two servers in different branches talk all the way up through the core and back down, and every such call shares that one core.
+- So data centres moved to **leaf-spine**: every **leaf** switch (servers plug into these) connects to every **spine** switch. Any two servers on different leaves are the same short distance apart, over many equal paths.
+
+<Figure caption="Pick where server A sends its traffic. In the tree, far-apart servers climb to the single core. In leaf-spine, every cross-leaf path is the same length, and traffic can split over both spines.">
+  <NetworkShapes />
 </Figure>
 
-<MarginNote>
-  the network literally changed shape because traffic changed direction.
-</MarginNote>
+<Callout kind="note">
 
-Security had to change too. The old model was **perimeter security**, sometimes called castle-and-moat: a strong wall at the edge (firewalls, VPNs) and a trusted network inside. Anything inside the wall was assumed to be friendly. After Google was hit by a sophisticated attack in 2009 (Operation Aurora), it began a project called **BeyondCorp**, described publicly in 2014. Its idea: stop trusting the network. Access should depend on *who* the user is and *what device* they're on, not on whether they happen to be on the office network. That idea, now called **zero trust**, soon spread to service-to-service traffic too.
+The network literally changed shape because traffic changed direction.
 
-## How traffic is handled in each direction
+</Callout>
 
-### North-south: the front door
+## From castle-and-moat to zero trust
 
-A typical request from a user's phone passes through a few layers before it reaches your code:
+Security had to change too.
 
-1. **DNS** turns `api.example.com` into an address.
-2. A **CDN** or edge network (a set of servers spread around the world) may answer directly from a cache, or absorb attacks.
-3. A **load balancer** picks a healthy server.
-4. An **API gateway** checks authentication, applies rate limits, and routes the request to the right internal service.
+<Compare
+  label=""
+  columns={[{ title: "Perimeter (castle-and-moat)", tone: "red" }, { title: "Zero trust", tone: "green" }]}
+  rows={[
+    ["The idea", "Strong wall at the edge; anything inside is friendly", "Assume someone is already inside; trust nothing by location"],
+    ["What gets checked", "Whether you're on the internal network", "Who you are, and (for people) what device you're on"],
+    ["Where checks happen", "At the edge: firewalls, VPNs", "On every request, inside and out"],
+    ["After one breach", "The attacker can move sideways freely", "The attacker only reaches what that identity is allowed"],
+  ]}
+/>
 
-North-south traffic is the part you *don't* control. It comes from strangers, over the public internet, sometimes with bad intentions. So the front door is where you put the heavy checks: TLS encryption, authentication, rate limiting and protection against attacks.
+- **Google** was hit by a sophisticated attack in 2009, Operation Aurora. It then started **BeyondCorp**, described publicly in 2014: access depends on *who* the user is and *what device* they're on, not on being on the office network.
+- That idea, now called zero trust, spread to service-to-service traffic too. Google's own services authenticate each other by identity (case file #3).
 
-### East-west: the corridors
+<Quiz
+  question="A user's phone loads their feed. To build it, the feed service asks the profile service and the ads service for data, then replies. Which hops are east-west?"
+  options={["Phone → feed service", "Feed → profile and feed → ads", "All of them, because they're all HTTP", "None: east-west means between data centres"]}
+  answer={1}
+>
 
-East-west traffic has different problems. It's internal, so in the past teams assumed it was safe, but there's *a lot* of it, and every call can fail. Every service that calls another needs answers to the same questions:
+The phone sits outside your edge, so phone → feed and the reply back are north-south. Feed → profile and feed → ads stay inside your system: east-west.
 
-- **Discovery:** where are the healthy copies of the payments service right now?
-- **Load balancing:** which copy should I call?
-- **Resilience:** what timeout? How many retries? (See the blast radius post for why this matters.)
-- **Security:** is this really the payments service? Is the orders service *allowed* to call it?
-- **Observability:** how long did the call take, and where in the chain did it fail?
+</Quiz>
 
-The first generation of answers lived **inside each service**, as libraries. Netflix famously built a set of Java libraries for discovery, load balancing and resilience. That works well if every service is written in the same language. But when your services are written in Go, Python, Java and Node, you need to rebuild and maintain those libraries in every language, and keep them all in sync.
+## North-south: the front door
+
+A request from a user's phone passes through a few layers before it reaches your code:
+
+<Flow
+  steps={[
+    { title: "DNS", note: "api.example.com → an address", tone: "violet", icon: <Globe /> },
+    { title: "CDN / edge", note: "may answer from cache, absorbs attacks", tone: "cyan", icon: <Layers /> },
+    { title: "Load balancer", note: "picks a healthy server", tone: "amber", icon: <Split /> },
+    { title: "API gateway", note: "auth, rate limits, routing", tone: "pink", icon: <ShieldCheck /> },
+    { title: "Your service", note: "finally, your code", tone: "blue", icon: <Server /> },
+  ]}
+/>
+
+<Compare
+  label="Load balancer"
+  columns={[{ title: "Layer 4", tone: "blue" }, { title: "Layer 7", tone: "violet" }]}
+  rows={[
+    ["Sees", "Addresses and ports", "The HTTP request: URL, headers"],
+    ["Can route by", "Where the packet is going", "What the request asks for, e.g. /payments vs /search"],
+  ]}
+/>
+
+<Callout kind="important">
+
+North-south traffic is the part you *don't* control. It comes from strangers, over the public internet, sometimes with bad intentions. So the front door gets the heavy checks: TLS encryption, authentication, rate limiting and protection against attacks.
+
+</Callout>
+
+## East-west: the corridors
+
+East-west traffic is internal, so teams used to assume it was safe. But there's a lot of it, and every call can fail. Every service that calls another needs answers to the same five questions:
+
+<FeatureGrid
+  items={[
+    { title: "Discovery", tone: "blue", icon: <Search />, text: "Where are the healthy copies of the payments service right now?" },
+    { title: "Load balancing", tone: "amber", icon: <Split />, text: "Which copy should I call?" },
+    { title: "Resilience", tone: "pink", icon: <Timer />, text: <span>What timeout? How many retries? (The <a href="/blog/blast-radius" className="font-medium underline decoration-2 underline-offset-4">blast radius post</a> shows why this matters.)</span> },
+    { title: "Security", tone: "green", icon: <Lock />, text: "Is this really the payments service? Is the orders service allowed to call it?" },
+    { title: "Observability", tone: "violet", icon: <Activity />, text: "How long did the call take, and where in the chain did it fail?" },
+  ]}
+/>
+
+The first answers lived **inside each service**, as libraries. Then the network work moved out into a proxy.
+
+<Compare
+  label=""
+  columns={[{ title: "Library in every service", tone: "amber" }, { title: "Sidecar proxy", tone: "green" }]}
+  rows={[
+    ["Where it runs", "Inside your code, as an import", "A separate program next to your code"],
+    ["Other languages", "Rebuild and maintain it in each one (Go, Python, Java, Node...)", "Works the same for any language"],
+    ["Shipping a fix", "Every team must upgrade; one that forgets is the weak link", "Update the proxy, not every service"],
+    ["Extra hop", "None", "Every call passes through two proxies"],
+    ["Example", "Netflix's Java libraries for discovery, load balancing and resilience", "Lyft's Envoy (case file #1)"],
+  ]}
+/>
 
 ### The sidecar: take the network out of the app
 
-The **sidecar** idea moves all of that into a separate proxy process that runs next to every service. The service makes a plain, simple call to `localhost`. Its sidecar handles discovery, load balancing, retries, timeouts, encryption and metrics, then forwards the call to the other service's sidecar, which hands it to the destination.
+- The service makes a plain, simple call to `localhost`.
+- Its sidecar handles discovery, load balancing, retries, timeouts, encryption and metrics, then forwards the call to the other service's sidecar, which hands it to the destination.
+- Lyft built a proxy called **Envoy** for exactly this and open-sourced it in 2016 (case file #1). It became the building block of most service meshes.
+- In 2017, Google, IBM and Lyft announced **Istio**, a control plane for Envoy proxies: it tells every sidecar the routing rules, security policies and certificates to use.
 
-Lyft built a proxy called **Envoy** for exactly this and open-sourced it in 2016 (case file #1). Envoy became the building block of most service meshes. In 2017, Google, IBM and Lyft announced **Istio**, a **control plane** for Envoy proxies: the central brain that tells every sidecar the routing rules, security policies and certificates to use.
-
-<Figure caption="A service mesh: services only talk to their own sidecar; sidecars talk to each other (the data plane); the control plane configures every sidecar.">
-  <SidecarDiagram />
+<Figure caption="One call through a mesh. Services only talk to their own sidecar; sidecars talk to each other (the data plane); the control plane configures every sidecar. It plays on its own; hover to pause, or pick a step.">
+  <MeshCall />
 </Figure>
 
-### Zero trust between services
+## Zero trust between services
 
-With a sidecar on every service, you can encrypt and authenticate every east-west call using **mutual TLS (mTLS)**. In normal HTTPS, only the server proves who it is. In mTLS, *both sides* show a certificate, so the payments service knows the caller really is the orders service, and vice versa. On top of that identity, you write rules:
+With a sidecar on every service, every east-west call can be encrypted and authenticated with **mTLS**.
+
+- In normal HTTPS, only the server proves who it is.
+- In mTLS, *both sides* show a certificate. The payments service knows the caller really is the orders service, and the other way round.
+- On top of that identity, you write rules:
 
 ```yaml
+# file: payments-db-policy.yaml
 # Only the payments service may talk to the payments database.
 apiVersion: security.istio.io/v1
 kind: AuthorizationPolicy
@@ -123,83 +249,132 @@ spec:
         - source: { principals: ["cluster.local/ns/prod/sa/payments"] }
 ```
 
-Now the corridors have locks, and every lock checks the badge. If an attacker compromises the recommendations service, they can't just walk over to the payments database. The proxy in front of it refuses any caller that isn't Payments.
+<Callout kind="insight">
 
-Try it below. Watch how much more east-west traffic there is than north-south, switch on the mesh, then put an intruder inside.
+Now the corridors have locks, and every lock checks the badge. If an attacker takes over the recommendations service, they can't just walk over to the payments database: the proxy in front of it refuses any caller that isn't Payments.
+
+</Callout>
 
 <DemoFrame
   title="Traffic in a data centre"
   hint="let an intruder in"
-  caption="Orange packets cross the edge (north-south); blue packets move between services (east-west). The intruder starts in the recommendations service and tries to reach the payments database."
+  caption="Amber packets cross the edge (north-south); blue packets move between services (east-west). The intruder starts in the recommendations service and tries to reach the payments database."
 >
   <TrafficFlowDemo />
 </DemoFrame>
 
-That's the mall again: the guard at the main entrance can't see the back corridors. Put staff with badge readers at every back door, and a thief in the corridor gets stopped wherever they try to go.
+Things to try:
+
+1. Switch between **North-south** and **East-west**. Count the lines: 2 against 7.
+2. Turn on **Intruder inside Recs** with the mesh off. Nothing inside checks who's calling.
+3. Now turn on **Service mesh**. Every call gets a padlock, and the intruder is denied at the database.
+
+<Quiz
+  question="With the policy above in place, an attacker takes over the Recs service and calls the payments database. What stops them?"
+  options={["The firewall at the edge", "The database's proxy: Recs' certificate doesn't say Payments, so the call is refused", "Nothing: they're already inside the network", "The load balancer, because Recs isn't a user"]}
+  answer={1}
+>
+
+The edge firewall never sees this call: it's east-west. What stops it is identity. The proxy in front of the database checks the caller's certificate against the rule, and only Payments is allowed.
+
+</Quiz>
 
 ## Other ways to manage east-west traffic
 
-### Perimeter only
+<Analogy
+  title="Five ways to secure the corridors"
+  mapping={[
+    ["a castle with a moat: huge walls, everyone inside trusts everyone", "perimeter only"],
+    ["every employee carries their own map and keys", "a smart library in every service"],
+    ["every memo between offices goes via the front desk", "a central internal gateway"],
+    ["colour-coded floors: your keycard opens only your floors", "network segments by address"],
+    ["one concierge per floor instead of one per office", "a sidecar-less mesh"],
+  ]}
+>
 
-<Analogy title="A castle with a moat">
-  Build huge walls and a moat. Inside the castle, everyone wanders freely and trusts each other completely.
+A mesh isn't the only way to guard the corridors. Each option below has a building version.
+
 </Analogy>
 
-Protect the edge with firewalls and VPNs, and treat the internal network as trusted. Simple, cheap, and how most companies ran for decades.
+<Compare
+  label="Approach"
+  columns={[{ title: "How it works", tone: "blue" }, { title: "Where it breaks", tone: "red" }]}
+  rows={[
+    ["Perimeter only", "Firewalls and VPNs at the edge; the inside is trusted. Simple, cheap, and how most companies ran for decades.", "The first time the wall is breached. With vendors, laptops, CI systems and cloud consoles, it gets breached eventually. Target's attackers came in through a contractor's account."],
+    ["Library in every service", "Discovery, retries, timeouts and security in a shared library every service imports. No extra process, no extra hop.", "Across languages and teams: every language needs its own version, and every team must ship every fix."],
+    ["Central internal gateway", "Service-to-service calls go through one gateway, which enforces the rules.", "It's a bottleneck and a single point of failure. Every call takes an extra trip; if that box has a bad day, everything does."],
+    ["Segments by IP address", "Firewall rules and separate network segments (VLANs, cloud security groups) let only some address ranges reach others.", "Containers: addresses change every restart or move, so 'which IP may talk to which IP' is impossible to keep right."],
+    ["Sidecar-less mesh", "The proxy moves out of each service into a shared per-machine component, or into the operating system's core using a technology called eBPF.", "Newer. Istio's ambient mode, announced in 2022, works like this; it reached general availability in 2024."],
+  ]}
+/>
 
-### Smart libraries in every service
+Identity-based rules ("the payments service can talk to the payments database") don't care where things run. That's why the mesh usually wins inside, and why a gateway still wins at the edge, where traffic genuinely crosses a boundary.
 
-<Analogy title="Every employee carries their own map and keys">
-  Instead of hiring staff for every back door, you train every employee to navigate the building, check badges and handle problems themselves.
-</Analogy>
+<Diagram caption="A central gateway for internal calls puts one shared box in the middle of every call. A mesh lets sidecars talk directly, and checks the caller at both ends.">
+  <Row>
+    <Group title="Central internal gateway" tone="red" icon={<Ban />}>
+      <Node title="Orders" note="wants Payments" tone="blue" icon={<ShoppingCart />} />
+      <Link label="every internal call" tone="red" />
+      <Node title="One shared gateway" note="extra trip · single point of failure" tone="red" icon={<Workflow />} pulse />
+      <Link label="and back out again" tone="red" />
+      <Node title="Payments" note="waits on the middle box" tone="pink" icon={<Wallet />} />
+    </Group>
+    <Group title="Service mesh" tone="green" icon={<ShieldCheck />}>
+      <Node title="Orders + sidecar" note="checks, encrypts, retries" tone="blue" icon={<ShoppingCart />} />
+      <Link label="direct, over mTLS" tone="green" />
+      <Node title="Payments + sidecar" note="checks the caller's identity" tone="pink" icon={<Wallet />} />
+    </Group>
+  </Row>
+</Diagram>
 
-Put discovery, retries, timeouts and security into a shared library that every service imports. No extra processes, no extra network hop.
+## What a mesh costs
 
-### Send internal traffic through a central gateway
+<FeatureGrid
+  items={[
+    { title: "Latency", tone: "amber", icon: <Gauge />, text: "Each call passes through two extra proxies, adding a little delay." },
+    { title: "CPU and memory", tone: "pink", icon: <MemoryStick />, text: "Each sidecar uses CPU and memory. Across thousands of services, that adds up." },
+    { title: "Complexity", tone: "violet", icon: <Cpu />, text: "A mesh is a complex system to run. If the control plane misbehaves, it can affect everything." },
+  ]}
+/>
 
-<Analogy title="Every memo goes through the front desk">
-  Any time one office wants to send another a note, it walks it down to reception, which logs it and walks it back up.
-</Analogy>
+Those costs are exactly why sidecar-less designs appeared: one shared proxy per machine instead of one per service.
 
-Route service-to-service calls through the same kind of central gateway you use for north-south traffic, and enforce rules there.
+<Diagram caption="Same three services, two ways to place the proxies. A sidecar per service, or one shared proxy per machine (Istio's ambient mode works this way).">
+  <Row>
+    <Group title="Sidecar per service" tone="blue" icon={<Server />} cols={3}>
+      <Node title="A + proxy" tone="blue" icon={<Lock />} />
+      <Node title="B + proxy" tone="blue" icon={<Lock />} />
+      <Node title="C + proxy" tone="blue" icon={<Lock />} />
+    </Group>
+    <Group title="Sidecar-less (shared per machine)" tone="green" icon={<Server />}>
+      <Row>
+        <Node title="A" tone="green" icon={<Boxes />} />
+        <Node title="B" tone="green" icon={<Boxes />} />
+        <Node title="C" tone="green" icon={<Boxes />} />
+      </Row>
+      <Link label="all share" tone="green" />
+      <Node title="One proxy per machine" note="or eBPF in the kernel" tone="green" icon={<Network />} pulse />
+    </Group>
+  </Row>
+</Diagram>
 
-### Network segmentation by address
+<Callout kind="tip" title="When the alternative is the better choice">
 
-<Analogy title="Colour-coded floors">
-  Your keycard only opens the floors you're allowed on. Within a floor, everything's open.
-</Analogy>
+- **A handful of services in one language?** A good library, or just sensible timeouts and TLS, is plenty.
+- **Netflix** ran one of the world's largest microservice systems for years on in-process Java libraries, because most of its services were in Java. When it later adopted Envoy, it published how it made the move with almost no per-service configuration (case file #2). The right tool depended on its language mix and scale at the time.
+- **North-south** traffic still belongs to a gateway, as Razorpay's story shows (case file #5).
 
-Use firewall rules and separate network segments (VLANs, security groups) so that only certain IP address ranges can reach certain others.
+</Callout>
 
-### Sidecar-less meshes
+<Quiz
+  question="You run six services, all written in Go, owned by one team. Requests come from a mobile app. What's the sensible starting point?"
+  options={["A full service mesh with a sidecar per service", "A gateway at the edge, plus a shared library or sensible timeouts and TLS inside", "A perimeter firewall only: everything inside is trusted", "Route every internal call through the edge gateway"]}
+  answer={1}
+>
 
-<Analogy title="One concierge per floor instead of one per office">
-  Instead of a staff member at every office door, each floor gets a shared concierge who handles everyone's visitors.
-</Analogy>
+One language and one team remove the main reason for a mesh: you can keep one library up to date. The mobile app's traffic is north-south, so it still gets a gateway. Trusting the inside completely, or hairpinning internal calls through one box, are the traps from the table above.
 
-Newer designs move the proxy out of each service and into a shared per-machine component (or into the operating system's kernel, using a technology called eBPF). Istio's **ambient mode**, announced in 2022, works like this.
-
-## Why we usually pick the mesh (and when we don't)
-
-**Perimeter-only security fails the first time the wall is breached.** And with vendors, laptops, CI systems and cloud consoles, the wall gets breached eventually. Target's attackers came in through a contractor's account. Once inside a flat, trusted network, nothing stopped them from moving sideways. Zero trust assumes the breach and limits what it can reach.
-
-**Libraries don't scale across languages and teams.** Every language needs its own version, every bug fix needs to be shipped by every team, and a service that forgets to upgrade becomes the weak link. Lyft's motivation for Envoy was exactly this: an out-of-process proxy works the same way for any language.
-
-**A central gateway for internal traffic becomes a bottleneck and a single point of failure.** Every internal call takes an extra trip through one shared box, adding latency, and if that box has a bad day, *everything* has a bad day. Gateways are great at the edge, where traffic genuinely crosses a boundary.
-
-**IP-based segmentation struggles in a world of containers.** Addresses change every time a container restarts or moves. Rules based on "which IP can talk to which IP" become impossible to keep correct. Identity-based rules ("the payments service can talk to the payments database") don't care where things run.
-
-<MarginNote tone="blue">
-  meshes aren't free: every call gets an extra hop through two proxies, and every service gets a roommate eating CPU and memory.
-</MarginNote>
-
-**But a mesh has real costs.** Each call passes through two extra proxies, adding a little latency. Each sidecar uses CPU and memory, which adds up across thousands of services. And a mesh is a complex system to run: if the control plane misbehaves, it can affect everything. That's exactly why sidecar-less designs like Istio's ambient mode appeared.
-
-### When the "alternative" is the better choice
-
-For a handful of services in one language, a good library (or just sensible timeouts and TLS) is plenty. Netflix ran one of the world's largest microservice systems for years on in-process Java libraries rather than sidecars, because most of its services were written in Java. When it later adopted Envoy, it published how it made the move with almost no per-service configuration (case file #2). The right tool depended on its language mix and scale at the time.
-
-And for north-south traffic, a gateway is still the right answer, as Razorpay's story shows (case file #5).
+</Quiz>
 
 ## In the wild: case files
 
@@ -268,17 +443,10 @@ And for north-south traffic, a gateway is still the right answer, as Razorpay's 
   sourceHref="https://engineering.razorpay.com/razorpays-authentication-revamp-turbocharging-performance-b8bb9d750fe8"
 />
 
-## TL;DR
+## Learn next and sources
 
-<TLDR>
-  <Takeaway>North-south = crossing your edge. East-west = services talking to each other inside.</Takeaway>
-  <Takeaway>Microservices made east-west traffic the majority, and changed both network design and security.</Takeaway>
-  <Takeaway>Gateways guard the front door. Meshes (a sidecar per service + a control plane) guard the corridors.</Takeaway>
-  <Takeaway>Zero trust: check identity on every call, not where it came from. Assume someone is already inside.</Takeaway>
-  <Takeaway>Meshes cost latency, memory and complexity. A few services in one language may not need one.</Takeaway>
-</TLDR>
-
-## Sources
+- Next on this blog: [blast radius](/blog/blast-radius) (why timeouts and retries on east-west calls matter) and [rate limiting](/blog/rate-limiting) (one of the gateway's front-door jobs).
+- Next ideas: how a mesh issues and rotates the certificates behind mTLS; writing authorization policies by service identity; sidecar-less meshes and eBPF.
 
 1. MPR News, ["Report: Target hackers breached account security via Penn. heating contractor"](https://www.mprnews.org/story/2014/02/05/business/target-data-security-breach), 2014, and [Dark Reading](https://www.darkreading.com/attacks-breaches/target-breach-hvac-contractor-systems-investigated), 2014.
 2. [Senate hearing coverage](https://www.govinfosecurity.com/target-cfo-grilled-in-senate-hearing-a-6683), GovInfoSecurity, 2014.

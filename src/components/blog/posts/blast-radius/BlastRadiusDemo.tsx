@@ -1,20 +1,26 @@
 /*
  * BlastRadiusDemo.tsx
- * Main Blast Radius demo. 48 customers are split across N
- * cells (N = 1 is a plain monolith). Drag the failure token
- * onto a cell, or focus a cell and press Enter, and watch the
- * red radius spread through every customer that cell serves.
- * A switch makes all cells share one database, to show how a
- * single shared dependency quietly undoes the isolation.
+ * Main Blast Radius demo. 48 customers are split across N cells (N = 1 is a plain
+ * monolith). Requests flow from the router into every healthy cell. Drag the failure
+ * token onto a cell, or tap / focus a cell and press Enter, and a shockwave spreads
+ * through every customer that cell serves, dot by dot. A switch makes all cells share
+ * one database, to show how a single shared dependency quietly undoes the isolation.
  */
 
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { type KeyboardEvent, type PointerEvent, useId, useRef, useState } from "react";
+import {
+  type CSSProperties,
+  type KeyboardEvent,
+  type PointerEvent,
+  useId,
+  useRef,
+  useState,
+} from "react";
 import { DemoButton, DemoSlider, DemoToggle } from "@/components/blog/DemoControls";
-import { sketchLine, sketchRect } from "@/lib/blog/sketch";
 import { cn } from "@/lib/utils";
+import styles from "./motion.module.css";
 
 const CUSTOMERS = 48;
 const WIDTH = 360;
@@ -22,7 +28,7 @@ const PAD = 10;
 const GAP = 10;
 const DOT_GAP = 13;
 const TOP = 70;
-const TRAY = { x: 318, y: 30 };
+const TRAY = { x: 322, y: 30 };
 
 interface CellBox {
   index: number;
@@ -63,10 +69,10 @@ function dotPosition(cell: CellBox, k: number) {
   };
 }
 
-// Jagged "explosion" star used as the failure token.
+// Eight-point star used as the failure token.
 const BLAST_SHAPE = Array.from({ length: 16 }, (_, i) => {
   const angle = (i / 16) * Math.PI * 2;
-  const radius = i % 2 === 0 ? 17 : 8;
+  const radius = i % 2 === 0 ? 16 : 8;
   return `${(Math.cos(angle) * radius).toFixed(1)},${(Math.sin(angle) * radius).toFixed(1)}`;
 }).join(" ");
 
@@ -85,8 +91,12 @@ export default function BlastRadiusDemo() {
   const prefersReducedMotion = useReducedMotion();
   const clipPrefix = useId();
 
-  const { cells, height } = layoutCells(cellCount);
-  const dbY = height - 30;
+  const layout = layoutCells(cellCount);
+  const { cells } = layout;
+  // Room for the shared database only when it is switched on.
+  const height = sharedDatabase ? layout.height : layout.height - 44;
+  const dbY = layout.height - 30;
+  const routerY = 42;
 
   // Which cells are hit: just the one, or all of them through the shared database.
   const isCellHit = (index: number) =>
@@ -147,8 +157,19 @@ export default function BlastRadiusDemo() {
   const token = drag ?? TRAY;
   const isMonolith = cellCount === 1;
 
+  // How long after the drop a dot turns red: the wave reaches near dots first.
+  const dotDelay = (cell: CellBox, x: number, y: number) => {
+    if (!failure || prefersReducedMotion) return 0;
+    const own = failure.cell === cell.index;
+    const ox = own ? failure.x : cell.x + cell.w / 2;
+    const oy = own ? failure.y : cell.y + cell.h;
+    return (own ? 0 : 0.5) + Math.hypot(x - ox, y - oy) / 260;
+  };
+
   let note = "Drag the red blast onto the system, or just tap a box.";
+  let tone = "violet";
   if (failure) {
+    tone = sharedDatabase || isMonolith ? "red" : "amber";
     if (sharedDatabase && !isMonolith) {
       note =
         "Every cell talks to the same database, so one failure reached everyone. Cells only help if they share nothing important.";
@@ -190,47 +211,70 @@ export default function BlastRadiusDemo() {
         aria-label={`${cellCount === 1 ? "A monolith" : `${cellCount} cells`} serving ${CUSTOMERS} customers. ${
           failure ? `${hitCustomers} customers affected.` : "No failures."
         }`}
-        className="w-full touch-manipulation select-none"
+        className="mx-auto block w-full max-w-xl touch-manipulation select-none"
       >
         <defs>
           {cells.map((cell) => (
             <clipPath key={cell.index} id={`${clipPrefix}-clip-${cell.index}`}>
-              <rect x={cell.x} y={cell.y} width={cell.w} height={cell.h} rx={8} />
+              <rect x={cell.x} y={cell.y} width={cell.w} height={cell.h} rx={10} />
             </clipPath>
           ))}
         </defs>
 
-        {/* Router feeding every cell */}
-        <rect
-          x={WIDTH / 2 - 44}
-          y={14}
-          width={88}
-          height={28}
-          rx={14}
-          className="fill-paper-raised stroke-ink"
-          strokeWidth={1.6}
-        />
-        <text
-          x={WIDTH / 2}
-          y={28}
-          textAnchor="middle"
-          dominantBaseline="central"
-          className="fill-ink text-[12px] font-semibold"
-        >
-          router
-        </text>
-        {cells.map((cell) => (
-          <path
-            key={`wire-${cell.index}`}
-            d={sketchLine(WIDTH / 2, 42, cell.x + cell.w / 2, cell.y, {
-              seed: cell.index + 3,
-              bow: 2,
-            })}
-            fill="none"
-            strokeWidth={1}
-            className="stroke-ink-muted/60"
+        {/* Router feeding every cell, with requests flowing down each wire */}
+        {cells.map((cell) => {
+          const hit = isCellHit(cell.index);
+          const path = `M${WIDTH / 2} ${routerY} L${cell.x + cell.w / 2} ${cell.y}`;
+          return (
+            <g key={`wire-${cell.index}`} data-tone={hit ? "red" : "violet"}>
+              <path
+                d={path}
+                fill="none"
+                strokeWidth={1.2}
+                strokeDasharray={hit ? "3 4" : undefined}
+                className={cn(styles.ease, hit ? "stroke-(--tone-line)" : "stroke-rule")}
+              />
+              {!hit && !prefersReducedMotion && (
+                <circle r={2.6} className="fill-(--tone)">
+                  <animateMotion
+                    dur="1.6s"
+                    repeatCount="indefinite"
+                    path={path}
+                    begin={`${-(cell.index * 0.37) % 1.6}s`}
+                  />
+                </circle>
+              )}
+            </g>
+          );
+        })}
+        <g data-tone="violet">
+          <rect
+            x={WIDTH / 2 - 44}
+            y={14}
+            width={88}
+            height={28}
+            rx={14}
+            strokeWidth={1.2}
+            className="fill-paper stroke-(--tone-line)"
           />
-        ))}
+          <rect
+            x={WIDTH / 2 - 44}
+            y={14}
+            width={88}
+            height={28}
+            rx={14}
+            className="fill-(--tone-soft)"
+          />
+          <text
+            x={WIDTH / 2}
+            y={28}
+            textAnchor="middle"
+            dominantBaseline="central"
+            className="fill-(--tone) text-[12px] font-semibold"
+          >
+            router
+          </text>
+        </g>
 
         {/* Cells */}
         {cells.map((cell) => {
@@ -246,6 +290,7 @@ export default function BlastRadiusDemo() {
               }. Activate to drop the failure here.`}
               onKeyDown={(event) => onCellKeyDown(event, cell)}
               onClick={() => dropOn(cell)}
+              data-tone={hit ? "red" : isHovered ? "violet" : "green"}
               className="group cursor-pointer outline-none"
             >
               <rect
@@ -253,8 +298,26 @@ export default function BlastRadiusDemo() {
                 y={cell.y}
                 width={cell.w}
                 height={cell.h}
-                rx={8}
-                className={cn("transition-colors", isHovered ? "fill-pen/15" : "fill-paper-raised")}
+                rx={10}
+                strokeWidth={hit ? 1.6 : 1.2}
+                className={cn(
+                  styles.ease,
+                  "fill-paper",
+                  hit ? "stroke-(--tone)" : isHovered ? "stroke-(--tone)" : "stroke-rule",
+                )}
+              />
+              <rect
+                x={cell.x}
+                y={cell.y}
+                width={cell.w}
+                height={cell.h}
+                rx={10}
+                className={cn(
+                  styles.ease,
+                  hit || isHovered
+                    ? "fill-(--tone-soft)"
+                    : "fill-transparent group-hover:fill-(--tone-soft)",
+                )}
               />
               <g clipPath={`url(#${clipPrefix}-clip-${cell.index})`}>
                 <AnimatePresence>
@@ -269,12 +332,13 @@ export default function BlastRadiusDemo() {
                       cy={
                         sharedDatabase && failure.cell !== cell.index ? cell.y + cell.h : failure.y
                       }
-                      className="fill-danger/20"
+                      className="fill-(--tone-soft) stroke-(--tone-line)"
+                      strokeWidth={1}
                       initial={{ r: prefersReducedMotion ? 400 : 0 }}
                       animate={{ r: 400 }}
                       exit={{ opacity: 0 }}
                       transition={{
-                        duration: prefersReducedMotion ? 0 : 0.9,
+                        duration: prefersReducedMotion ? 0 : 1.1,
                         delay: prefersReducedMotion || failure.cell === cell.index ? 0 : 0.5,
                         ease: "easeOut",
                       }}
@@ -282,27 +346,26 @@ export default function BlastRadiusDemo() {
                   )}
                 </AnimatePresence>
               </g>
-              <path
-                d={sketchRect(cell.x, cell.y, cell.w, cell.h, { seed: cell.index + 21, bow: 1.4 })}
-                fill="none"
-                strokeWidth={hit ? 2.4 : 1.6}
-                className={cn("transition-colors", hit ? "stroke-danger" : "stroke-ink")}
-              />
               <rect
                 x={cell.x - 4}
                 y={cell.y - 4}
                 width={cell.w + 8}
                 height={cell.h + 8}
-                rx={10}
+                rx={12}
                 fill="none"
-                strokeWidth={2}
-                strokeDasharray="3 3"
-                className="stroke-pen opacity-0 group-focus-visible:opacity-100"
+                strokeWidth={1.6}
+                strokeDasharray="4 3"
+                data-tone="violet"
+                className="stroke-(--tone) opacity-0 group-focus-visible:opacity-100"
               />
               <text
-                x={cell.x + 8}
-                y={cell.y + 15}
-                className={cn("font-hand text-[15px]", hit ? "fill-danger" : "fill-ink-muted")}
+                x={cell.x + 9}
+                y={cell.y + 16}
+                className={cn(
+                  styles.ease,
+                  "text-[13px] font-semibold",
+                  hit ? "fill-(--tone)" : "fill-ink-muted",
+                )}
               >
                 {isMonolith ? "monolith" : `cell ${cell.index + 1}`}
                 {hit ? " · down" : ""}
@@ -315,10 +378,8 @@ export default function BlastRadiusDemo() {
                     cx={x}
                     cy={y}
                     r={4}
-                    className={cn(
-                      "transition-colors duration-500",
-                      hit ? "fill-danger" : "fill-ok",
-                    )}
+                    className={cn(styles.ease, "fill-(--tone)")}
+                    style={{ "--delay": `${dotDelay(cell, x, y).toFixed(2)}s` } as CSSProperties}
                   />
                 );
               })}
@@ -328,17 +389,18 @@ export default function BlastRadiusDemo() {
 
         {/* Optional shared database */}
         {sharedDatabase && (
-          <g>
+          <g data-tone={failure ? "red" : "amber"}>
             {cells.map((cell) => (
               <path
                 key={`db-${cell.index}`}
-                d={sketchLine(cell.x + cell.w / 2, cell.y + cell.h, WIDTH / 2, dbY - 12, {
-                  seed: cell.index + 40,
-                })}
+                d={`M${cell.x + cell.w / 2} ${cell.y + cell.h} L${WIDTH / 2} ${dbY - 12}`}
                 fill="none"
-                strokeWidth={1}
-                strokeDasharray="3 3"
-                className={failure ? "stroke-danger" : "stroke-ink-muted"}
+                strokeWidth={1.2}
+                className={cn(
+                  styles.ease,
+                  "stroke-(--tone-line)",
+                  !prefersReducedMotion && styles.flow,
+                )}
               />
             ))}
             <rect
@@ -346,16 +408,29 @@ export default function BlastRadiusDemo() {
               y={dbY - 12}
               width={120}
               height={26}
-              rx={6}
-              strokeWidth={2}
-              className={failure ? "fill-danger/20 stroke-danger" : "fill-paper-raised stroke-ink"}
+              rx={8}
+              className="fill-paper"
+            />
+            <rect
+              key={failure ? "db-hit" : "db-ok"}
+              x={WIDTH / 2 - 60}
+              y={dbY - 12}
+              width={120}
+              height={26}
+              rx={8}
+              strokeWidth={1.4}
+              className={cn(
+                styles.ease,
+                "fill-(--tone-soft) stroke-(--tone)",
+                failure && styles.pop,
+              )}
             />
             <text
               x={WIDTH / 2}
               y={dbY + 1}
               textAnchor="middle"
               dominantBaseline="central"
-              className="fill-ink text-[12px] font-semibold"
+              className="fill-(--tone) text-[12px] font-semibold"
             >
               shared database
             </text>
@@ -366,6 +441,7 @@ export default function BlastRadiusDemo() {
         {!failure && (
           <g
             role="presentation"
+            data-tone="red"
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}
             onPointerUp={onPointerUp}
@@ -374,9 +450,17 @@ export default function BlastRadiusDemo() {
             className="cursor-grab touch-none active:cursor-grabbing"
           >
             <circle r={24} fill="transparent" />
-            <polygon points={BLAST_SHAPE} strokeWidth={1.6} className="fill-danger stroke-ink" />
+            {!drag && !prefersReducedMotion && (
+              <circle r={10} className={cn("fill-(--tone-line)", styles.bugPulse)} />
+            )}
+            <polygon points={BLAST_SHAPE} className="fill-(--tone)" />
             {!drag && (
-              <text x={-30} y={4} textAnchor="end" className="fill-pen font-hand text-[16px]">
+              <text
+                x={-26}
+                y={4}
+                textAnchor="end"
+                className="fill-ink-muted text-[13px] font-semibold"
+              >
                 drag me
               </text>
             )}
@@ -384,15 +468,23 @@ export default function BlastRadiusDemo() {
         )}
       </svg>
 
-      <div className="rounded-xl border-2 border-dashed border-rule px-4 py-3">
-        <p aria-live="polite" className="font-hand text-[1.4rem] leading-snug text-pen">
+      <div
+        data-tone={tone}
+        className={cn(
+          styles.ease,
+          "rounded-xl border border-(--tone-line) bg-(--tone-soft) px-4 py-3",
+        )}
+      >
+        <p aria-live="polite" className="leading-snug font-semibold text-ink">
           {note}
         </p>
         <p className="mt-1 text-sm text-ink-muted">
           Blast radius:{" "}
-          {failure
-            ? `${hitCustomers} of ${CUSTOMERS} customers (${percent}%)`
-            : "nothing broken yet"}
+          <span className="font-mono">
+            {failure
+              ? `${hitCustomers} of ${CUSTOMERS} customers (${percent}%)`
+              : "nothing broken yet"}
+          </span>
           {!failure &&
             !isMonolith &&
             ` · worst case with ${cellCount} cells: about ${Math.round(100 / cellCount)}%`}

@@ -82,7 +82,6 @@ const fresh = (): World => ({
 function step(world: World, healthy: boolean): World {
   const tick = world.tick + 1;
   let { state, failures, openedAt, lastMove, sent, failedFast } = world;
-  const before = lastMove === world.lastMove ? world.movedAt : 0;
   let kind: PacketKind;
 
   if (state === "closed") {
@@ -131,7 +130,7 @@ function step(world: World, healthy: boolean): World {
     failures,
     openedAt,
     lastMove,
-    movedAt: state !== world.state ? tick : before,
+    movedAt: state !== world.state ? tick : world.movedAt,
     packets,
     sent,
     failedFast,
@@ -185,14 +184,16 @@ export default function CircuitBreakerDiagram() {
   }, [inView, healthy]);
 
   const current = STATES.find((s) => s.id === world.state) ?? STATES[0];
-  const cooling = world.state === "open" ? Math.min(1, (world.tick - world.openedAt) / COOL_TICKS) : 0;
+  const cooling =
+    world.state === "open" ? Math.min(1, (world.tick - world.openedAt) / COOL_TICKS) : 0;
 
   let note = "The service is healthy. Calls go through and come back.";
   if (world.state === "closed" && !healthy) {
     note = `Calls are failing: ${world.failures} of ${THRESHOLD} in a row. One more streak and the breaker trips.`;
   }
   if (world.state === "open") {
-    note = "Open: calls fail at once, without touching the service. No stuck threads, no flood of retries while it recovers.";
+    note =
+      "Open: calls fail at once, without touching the service. No stuck threads, no flood of retries while it recovers.";
   }
   if (world.state === "half") {
     note = "Cool-down over. Half-open: one test call goes through to see if the service is back.";
@@ -294,7 +295,10 @@ export default function CircuitBreakerDiagram() {
         })}
       </div>
 
-      <ul aria-label="Ways between the states" className="grid list-none gap-1.5 p-0 sm:grid-cols-2">
+      <ul
+        aria-label="Ways between the states"
+        className="grid list-none gap-1.5 p-0 sm:grid-cols-2"
+      >
         {MOVES.map((move) => {
           const from = STATES.find((s) => s.id === move.from);
           const to = STATES.find((s) => s.id === move.to);

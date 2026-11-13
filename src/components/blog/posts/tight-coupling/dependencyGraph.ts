@@ -65,7 +65,7 @@ export interface ImpactEntry {
 
 export interface Impact {
   states: Partial<Record<ModuleId, ImpactEntry>>;
-  /** Handwritten one-liner explaining the result. */
+  /** One line explaining the result. */
   note: string;
 }
 

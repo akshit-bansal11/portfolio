@@ -120,7 +120,9 @@ export default function CouplingCohesionDiagram() {
     ? new Set(PIECES.filter((p) => p.kind === changed).map((p) => PLACE[layout][p.id][0]))
     : new Set<number>();
 
-  const spring = reduced ? { duration: 0 } : { type: "spring" as const, stiffness: 120, damping: 18 };
+  const spring = reduced
+    ? { duration: 0 }
+    : { type: "spring" as const, stiffness: 120, damping: 18 };
 
   const status = changed
     ? layout === "tangled"
@@ -191,23 +193,6 @@ export default function CouplingCohesionDiagram() {
                   className={cn("stroke-(--tone)", styles.ring)}
                 />
               )}
-              <text
-                x={box.x + 12}
-                y={box.y + 18}
-                className="fill-ink-muted text-[11px] font-semibold tracking-wide"
-              >
-                {box.label}
-              </text>
-              {editing && (
-                <text
-                  x={box.x + box.w - 12}
-                  y={box.y + 18}
-                  textAnchor="end"
-                  className="tut-pop fill-(--tone) font-mono text-[10px] font-bold"
-                >
-                  must edit
-                </text>
-              )}
             </g>
           );
         })}
@@ -267,6 +252,35 @@ export default function CouplingCohesionDiagram() {
           );
         })}
 
+        {/* Module labels, above the wires */}
+        {BOXES.map((box, i) => (
+          <g key={box.label} data-tone={editModules.has(i) ? "red" : undefined}>
+            <text
+              x={box.x + 12}
+              y={box.y + 18}
+              paintOrder="stroke"
+              strokeWidth={4}
+              strokeLinejoin="round"
+              className="fill-ink-muted stroke-paper text-[11px] font-semibold tracking-wide"
+            >
+              {box.label}
+            </text>
+            {editModules.has(i) && (
+              <text
+                x={box.x + box.w - 12}
+                y={box.y + 18}
+                textAnchor="end"
+                paintOrder="stroke"
+                strokeWidth={4}
+                strokeLinejoin="round"
+                className="tut-pop fill-(--tone) stroke-paper font-mono text-[10px] font-bold"
+              >
+                must edit
+              </text>
+            )}
+          </g>
+        ))}
+
         {/* Pieces */}
         {PIECES.map((piece) => {
           const [x, y] = pos(layout, piece.id);
@@ -281,6 +295,9 @@ export default function CouplingCohesionDiagram() {
               strokeWidth={1.5}
               className="fill-(--tone-soft) stroke-(--tone)"
             >
+              <g className="fill-paper" strokeWidth={0}>
+                <Shape kind={piece.kind} />
+              </g>
               <g className="fill-(--tone)" style={{ fillOpacity: 0.55 }}>
                 <Shape kind={piece.kind} />
               </g>
@@ -312,7 +329,11 @@ export default function CouplingCohesionDiagram() {
             )}
           >
             <svg aria-hidden viewBox="-10 -10 20 20" className="h-4 w-4">
-              <g strokeWidth={1.5} className="fill-(--tone) stroke-(--tone)" style={{ fillOpacity: 0.55 }}>
+              <g
+                strokeWidth={1.5}
+                className="fill-(--tone) stroke-(--tone)"
+                style={{ fillOpacity: 0.55 }}
+              >
                 <Shape kind={kind.id} />
               </g>
             </svg>

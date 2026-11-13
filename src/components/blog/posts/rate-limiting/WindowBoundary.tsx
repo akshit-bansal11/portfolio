@@ -233,9 +233,11 @@ export default function WindowBoundary() {
             ? `${accepted} allowed in a few seconds`
             : `${accepted} allowed · ${rejected} × 429`}
         </span>{" "}
-        {mode === "fixed"
-          ? `Each minute only ever counted ${LIMIT}, so twice the limit got through.`
-          : "The frame slides with time, so the burst can't hide behind a boundary."}
+        {!done
+          ? "Firing…"
+          : mode === "fixed"
+            ? `Each minute only ever counted ${LIMIT}, so twice the limit got through.`
+            : "The frame slides with time, so the burst can't hide behind a boundary."}
       </p>
     </div>
   );
