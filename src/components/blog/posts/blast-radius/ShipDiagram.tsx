@@ -156,7 +156,8 @@ export default function ShipDiagram() {
             <g data-tone="blue" fill="none" strokeWidth={2.2} strokeLinecap="round">
               {WALL_X.map((x, k) => {
                 // Wall k sits between compartment k and k+1; water pours sternwards over it.
-                const pouring = flooded[k + 1] && floodStep(k, walls) === now;
+                const pouring =
+                  !DAMAGED.includes(k) && flooded[k + 1] && floodStep(k, walls) === now;
                 if (!pouring) return null;
                 return (
                   <path
